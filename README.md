@@ -1,1 +1,1 @@
-Mohsin's NextJS Template
+Cyber For Tech
