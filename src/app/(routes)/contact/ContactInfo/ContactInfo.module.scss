@@ -1,0 +1,81 @@
+.contactInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .locationCard {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+  
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .infoItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: #666;
+  
+    &:last-child {
+      margin-bottom: 0;
+    }
+  
+    a {
+      color: #007bff;
+      text-decoration: none;
+      transition: color 0.2s ease;
+  
+      &:hover {
+        color: #0056b3;
+      }
+    }
+  }
+  
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+  }
+  
+  .socialLinks {
+    text-align: center;
+  
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .socialIcons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .socialIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #f8f9fa;
+    border-radius: 50%;
+    color: #666;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: #007bff;
+      color: white;
+      transform: translateY(-2px);
+    }
+  }

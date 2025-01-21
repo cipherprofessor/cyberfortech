@@ -1,0 +1,38 @@
+.courseContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .courseContent {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .mainContent {
+    min-height: 500px;
+  }
+  
+  .sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+  }
+  
+  @media (max-width: 1024px) {
+    .courseContent {
+      grid-template-columns: 1fr;
+    }
+  
+    .sidebar {
+      position: static;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .courseContainer {
+      padding: 1rem;
+    }
+  }

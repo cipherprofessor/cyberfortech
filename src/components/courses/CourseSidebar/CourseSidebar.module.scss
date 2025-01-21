@@ -1,0 +1,125 @@
+.sidebar {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+  }
+  
+  .price {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+  
+  .enrollButton {
+    width: 100%;
+    font-size: 1.125rem;
+    font-weight: 600;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  
+    &:hover {
+      background: #0056b3;
+    }
+  }
+  
+  .courseInfo {
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 1.5rem 0;
+    margin-bottom: 1.5rem;
+  }
+  
+  .infoItem {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #007bff;
+  }
+  
+  .label {
+    display: block;
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  .value {
+    display: block;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+  
+  .preview {
+    margin-bottom: 1.5rem;
+  }
+  
+  .previewButton {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  
+    &:hover {
+      background: #f1f3f5;
+    }
+  }
+  
+  .chevron {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.2s ease;
+  
+    &.rotate {
+      transform: rotate(180deg);
+    }
+  }
+  
+  .previewContent {
+    margin-top: 1rem;
+  }
+  
+  .previewVideo {
+    width: 100%;
+    border-radius: 0.5rem;
+  }
+  
+  .guarantee {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #666;
+  
+    p {
+      margin-bottom: 0.5rem;
+  
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }

@@ -1,0 +1,126 @@
+.courseProgress {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+  }
+  
+  .viewAll {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  
+    &:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+  }
+  
+  .courses {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .courseCard {
+    padding: 1.5rem;
+    border: 1px solid #eee;
+    border-radius: 0.5rem;
+    transition: border-color 0.2s ease;
+  
+    &:hover {
+      border-color: #007bff;
+    }
+  }
+  
+  .courseInfo {
+    margin-bottom: 1.5rem;
+  }
+  
+  .courseTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+  }
+  
+  .progressStats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .progressBar {
+    flex: 1;
+    height: 0.5rem;
+    background: #e9ecef;
+    border-radius: 1rem;
+    overflow: hidden;
+  
+    &::-webkit-progress-bar {
+      background: #e9ecef;
+    }
+  
+    &::-webkit-progress-value {
+      background: #007bff;
+    }
+  
+    &::-moz-progress-bar {
+      background: #007bff;
+    }
+  }
+  
+  .progressText {
+    font-size: 0.875rem;
+    color: #666;
+    min-width: 4rem;
+  }
+  
+  .lessonCount {
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  .nextLesson {
+    h4 {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  .lessonLink {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  
+    &:hover {
+      color: #0056b3;
+    }
+  }
+  
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }

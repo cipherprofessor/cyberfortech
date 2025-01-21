@@ -1,38 +1,30 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import {Providers} from "./providers";
+import { ClerkProvider } from "@clerk/nextjs";
+import { Inter } from "next/font/google";
+import Navbar from "@/components/common/Navbar/Navbar";
+// import Footer from "@/components/common/Footer/Footer";
+import "@/styles/globals.scss";
 
+const inter = Inter({ subsets: ["latin"] });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "My NextJS Templtate",
-  description: "My NextJS Templtate",
+export const metadata = {
+  title: "CyberForTech - Learn Cybersecurity and Technology",
+  description: "Expert-led cybersecurity and technology courses for all skill levels",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className='dark'>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-         <Providers>
-        {children}
-        </Providers>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.className}>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

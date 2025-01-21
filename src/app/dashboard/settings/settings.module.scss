@@ -1,0 +1,60 @@
+.settingsContainer {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .header {
+    margin-bottom: 2rem;
+  
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 0.5rem;
+    }
+  
+    p {
+      color: #666;
+      font-size: 1rem;
+    }
+  }
+  
+  .tabs {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .tabsList {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  .tabContent {
+    padding: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .settingsContainer {
+      padding: 1rem;
+    }
+  
+    .header h1 {
+      font-size: 1.5rem;
+    }
+  
+    .tabContent {
+      padding: 1rem;
+    }
+  }

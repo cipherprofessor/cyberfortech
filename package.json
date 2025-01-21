@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.9.15",
+    "@googlemaps/js-api-loader": "^1.16.8",
     "@heroui/calendar": "^2.2.9",
     "@heroui/date-input": "^2.3.8",
     "@heroui/date-picker": "^2.3.9",
@@ -48,6 +50,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "recharts": "^2.15.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^3.1.0",
