@@ -1,8 +1,5 @@
 "use client"
 import { useEffect, useState } from 'react';
-// import { CourseCard } from '../CourseCard';
-// import { Pagination } from '@/components/common/Pagination';
-// import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import styles from './CourseList.module.scss';
 import LoadingSpinner from '@/components/ui/HeroUI/Spinner/Spinner';
 import { CourseCard } from '../CourseCard/CourseCard';
