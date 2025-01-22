@@ -20,7 +20,7 @@ async function seedDatabase() {
   });
 
   try {
-    // Clear existing data (optional, but helps prevent constraint issues)
+    // Clear existing data
     await db.execute('DELETE FROM reviews');
     await db.execute('DELETE FROM enrollments');
     await db.execute('DELETE FROM course_lessons');
@@ -113,6 +113,70 @@ async function seedDatabase() {
       });
     }
 
+    // Course Sections Seed Data
+    const courseSections = courses.flatMap(course => 
+      Array.from({ length: 3 }).map((_, index) => ({
+        id: uuidv4(),
+        course_id: course.id,
+        title: faker.lorem.words(4),
+        order_index: index + 1,
+        created_at: new Date().toISOString(),
+      }))
+    );
+
+    // Insert Course Sections
+    for (const section of courseSections) {
+      await db.execute({
+        sql: `
+          INSERT INTO course_sections 
+          (id, course_id, title, order_index, created_at) 
+          VALUES (?, ?, ?, ?, ?)
+        `,
+        args: [
+          section.id, 
+          section.course_id, 
+          section.title, 
+          section.order_index, 
+          section.created_at
+        ]
+      });
+    }
+
+    // Course Lessons Seed Data
+    const courseLessons = courseSections.flatMap(section => 
+      Array.from({ length: 4 }).map((_, index) => ({
+        id: uuidv4(),
+        section_id: section.id,
+        title: faker.lorem.words(5),
+        content: faker.lorem.paragraphs(),
+        video_url: faker.internet.url(),
+        duration: `${faker.number.int({ min: 5, max: 30 })} mins`,
+        order_index: index + 1,
+        created_at: new Date().toISOString(),
+      }))
+    );
+
+    // Insert Course Lessons
+    for (const lesson of courseLessons) {
+      await db.execute({
+        sql: `
+          INSERT INTO course_lessons 
+          (id, section_id, title, content, video_url, duration, order_index, created_at) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        args: [
+          lesson.id, 
+          lesson.section_id, 
+          lesson.title, 
+          lesson.content, 
+          lesson.video_url, 
+          lesson.duration, 
+          lesson.order_index, 
+          lesson.created_at
+        ]
+      });
+    }
+
     // Enrollments Seed Data
     const enrollments = Array.from({ length: 30 }).map(() => ({
       id: uuidv4(),
@@ -174,6 +238,39 @@ async function seedDatabase() {
         ]
       });
     }
+
+    // // If you have a products table, add this section
+    // const products = Array.from({ length: 15 }).map(() => ({
+    //   id: uuidv4(),
+    //   name: faker.commerce.productName(),
+    //   description: faker.commerce.productDescription(),
+    //   price: parseFloat(faker.commerce.price({ min: 10, max: 500 })),
+    //   category: faker.commerce.department(),
+    //   image_url: faker.image.urlLoremFlickr({ category: 'technology' }),
+    //   stock: faker.number.int({ min: 0, max: 100 }),
+    //   created_at: new Date().toISOString(),
+    // }));
+
+    // // Insert Products (uncomment if you have a products table)
+    // for (const product of products) {
+    //   await db.execute({
+    //     sql: `
+    //       INSERT INTO products 
+    //       (id, name, description, price, category, image_url, stock, created_at) 
+    //       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    //     `,
+    //     args: [
+    //       product.id,
+    //       product.name,
+    //       product.description,
+    //       product.price,
+    //       product.category,
+    //       product.image_url,
+    //       product.stock,
+    //       product.created_at
+    //     ]
+    //   });
+    // }
 
     console.log('Database seeded successfully!');
   } catch (error) {
