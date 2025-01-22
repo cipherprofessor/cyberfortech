@@ -4,13 +4,15 @@
 // import { CourseDiscussion } from '@/components/dashboard/course/CourseDiscussion';
 // import { CourseProgress } from '@/components/dashboard/course/CourseProgress';
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tabs } from '@heroui/tabs';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Shadcn/tabs';
 import { CourseProgress } from '../../CourseProgress/CourseProgress';
 import { CourseCurriculum } from '../CourseCurriculum/CourseCurriculum';
 import { CourseDiscussion } from '../CourseDiscussion/CourseDiscussion';
 import { CourseResources } from '../CourseResources/CourseResources';
 import { VideoPlayer } from '../VideoPlayer/VideoPlayer';
 import styles from './course-details.module.scss';
+// import { TabsContent, TabsList, TabsTrigger } from '@/components/ui/Shadcn/tabs';
 
 // In a real app, fetch this data from your API
 const courseData = {
@@ -24,6 +26,10 @@ const courseData = {
     duration: '45:00',
     completed: false,
   },
+  progress: 50,
+  nextLesson: 'Basic Tools and Techniques',
+  totalLessons: 10,
+  completedLessons: 5,
   curriculum: [
     {
       id: 1,
@@ -33,27 +39,27 @@ const courseData = {
           id: 1,
           title: 'Understanding Penetration Testing',
           duration: '45:00',
-          type: 'video',
+          type: 'video' as 'video',
           completed: true,
         },
         {
           id: 2,
           title: 'Setting Up Your Lab Environment',
           duration: '1:15:00',
-          type: 'video',
+          type: 'video' as 'video',
           completed: true,
         },
         {
           id: 3,
           title: 'Basic Tools and Techniques',
           duration: '1:30:00',
-          type: 'video',
+          type: 'video' as 'video',
           completed: false,
         },
         {
           id: 4,
           title: 'Module Assessment',
-          type: 'quiz',
+          type: 'quiz' as 'quiz',
           completed: false,
         },
       ],
@@ -94,7 +100,7 @@ export default function CourseDetailsPage({
     <div className={styles.courseContainer}>
       <header className={styles.header}>
         <h1>{courseData.title}</h1>
-        <CourseProgress course={courseData} />
+        <CourseProgress courses={[courseData]} />
       </header>
 
       <div className={styles.content}>

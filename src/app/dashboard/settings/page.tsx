@@ -1,9 +1,14 @@
-import { ProfileSettings } from '@/components/dashboard/settings/ProfileSettings';
-import { NotificationSettings } from '@/components/dashboard/settings/NotificationSettings';
-import { SecuritySettings } from '@/components/dashboard/settings/SecuritySettings';
-import { BillingSettings } from '@/components/dashboard/settings/BillingSettings';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import { ProfileSettings } from '@/components/dashboard/settings/ProfileSettings';
+// import { NotificationSettings } from '@/components/dashboard/settings/NotificationSettings';
+// import { SecuritySettings } from '@/components/dashboard/settings/SecuritySettings';
+// import { BillingSettings } from '@/components/dashboard/settings/BillingSettings';
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Shadcn/tabs';
 import styles from './settings.module.scss';
+import { BillingSettings } from './BillingSettings/BillingSettings';
+import { SecuritySettings } from './SecuritySettings/SecuritySettings';
+import { NotificationSettings } from './NotificationSettings/NotificationSettings';
+import { ProfileSettings } from './ProfileSettings/ProfileSettings';
 
 export default function SettingsPage() {
   return (

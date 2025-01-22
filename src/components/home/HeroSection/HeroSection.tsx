@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 // import { TypewriterEffect } from "../ui/typewriter-effect";
 // import { Button } from "@/components/ui/button";
 import styles from "./HeroSection.module.scss";
+import { Button } from "@/components/common/Button/Button";
+import { TypewriterEffect } from "@/components/ui/AcUI/TypeWritterEffect/typewriter-effect";
+import { BackgroundBeams } from "@/components/ui/AcUI/BackgroundBeams/background-beams";
 
 const words = [
   {

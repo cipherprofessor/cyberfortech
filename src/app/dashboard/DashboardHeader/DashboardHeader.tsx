@@ -8,6 +8,8 @@ import { Bell, Menu } from 'lucide-react';
 //   DropdownMenuTrigger,
 // } from '@/components/ui/dropdown-menu';
 import styles from './DashboardHeader.module.scss';
+import { DropdownMenu } from '@heroui/react';
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export function DashboardHeader() {
   const [notificationCount] = useState(3); // Replace with real notification count

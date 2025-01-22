@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, Play } from 'lucide-react';
 import styles from './CourseContent.module.scss';

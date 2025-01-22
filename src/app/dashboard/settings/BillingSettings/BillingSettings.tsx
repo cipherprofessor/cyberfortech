@@ -12,15 +12,18 @@ import {
   Star,
   StarOff
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+// import { Button } from '@/components/ui/button';
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogFooter,
+// } from '@/components/ui/dialog';
 import styles from './BillingSettings.module.scss';
+import { Button } from '@/components/common/Button/Button';
+import { DialogHeader, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@radix-ui/react-dialog';
 
 type PaymentMethod = {
   id: string;

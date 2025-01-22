@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { Play, Clock, BarChart, Award, ChevronDown } from 'lucide-react';

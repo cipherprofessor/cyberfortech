@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Upload } from 'lucide-react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import styles from './ProfileSettings.module.scss';
+import { Button } from '@/components/common/Button/Button';
 
 export function ProfileSettings() {
   const { user } = useUser();

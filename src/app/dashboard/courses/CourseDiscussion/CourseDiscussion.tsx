@@ -11,6 +11,7 @@ import { MessageSquare, ThumbsUp, MoreVertical } from 'lucide-react';
 // } from '@/components/ui/dropdown-menu';
 import styles from './CourseDiscussion.module.scss';
 import { Avatar, DropdownMenu } from '@heroui/react';
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 type Comment = {
   id: number;

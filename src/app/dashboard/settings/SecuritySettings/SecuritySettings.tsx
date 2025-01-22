@@ -1,9 +1,11 @@
 // src/components/dashboard/settings/SecuritySettings/SecuritySettings.tsx
 import { useState } from 'react';
 import { KeyRound, Smartphone, Shield, Activity } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
+// import { Button } from '@/components/ui/button';
+// import { Switch } from '@/components/ui/switch';
 import styles from './SecuritySettings.module.scss';
+import { Button } from '@heroui/react';
+import { Switch } from '@heroui/switch';
 
 export function SecuritySettings() {
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -72,7 +74,8 @@ export function SecuritySettings() {
     });
   };
 
-  const handle2FAToggle = (checked: boolean) => {
+  const handle2FAToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
     setIs2FAEnabled(checked);
     if (checked) {
       // Implement 2FA setup flow
@@ -96,7 +99,7 @@ export function SecuritySettings() {
             </div>
             {!showChangePassword && (
               <Button 
-                variant="outline"
+                variant="bordered"
                 onClick={() => setShowChangePassword(true)}
               >
                 Change Password
@@ -162,7 +165,7 @@ export function SecuritySettings() {
                 </Button>
                 <Button 
                   type="button" 
-                  variant="outline"
+                  variant="bordered"
                   onClick={() => {
                     setShowChangePassword(false);
                     setPasswordData({
@@ -188,7 +191,7 @@ export function SecuritySettings() {
             </div>
             <Switch
               checked={is2FAEnabled}
-              onCheckedChange={handle2FAToggle}
+              onChange={handle2FAToggle}
             />
           </div>
           <p className={styles.sectionDescription}>
@@ -197,7 +200,7 @@ export function SecuritySettings() {
           </p>
           {is2FAEnabled && (
             <div className={styles.twoFactorSetup}>
-              <Button variant="outline" className={styles.setupButton}>
+              <Button variant="bordered" className={styles.setupButton}>
                 Configure 2FA
               </Button>
               <p className={styles.setupInfo}>

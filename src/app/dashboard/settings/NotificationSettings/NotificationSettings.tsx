@@ -1,8 +1,10 @@
 // src/components/dashboard/settings/NotificationSettings/NotificationSettings.tsx
 import { useState } from 'react';
-import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
+// import { Switch } from '@/components/ui/switch';
+// import { Button } from '@/components/ui/button';
 import styles from './NotificationSettings.module.scss';
+import { Switch } from '@heroui/switch';
+import { Button } from '@/components/common/Button/Button';
 
 type NotificationSetting = {
   id: string;
@@ -121,14 +123,14 @@ export function NotificationSettings() {
                     <div className={styles.toggles}>
                       <Switch
                         checked={setting.email}
-                        onCheckedChange={(checked) => 
-                          handleToggle(setting.id, 'email', checked)
+                        onChange={(e) => 
+                          handleToggle(setting.id, 'email', e.target.checked)
                         }
                       />
                       <Switch
                         checked={setting.push}
-                        onCheckedChange={(checked) => 
-                          handleToggle(setting.id, 'push', checked)
+                        onChange={(e) => 
+                          handleToggle(setting.id, 'push', e.target.checked)
                         }
                       />
                     </div>

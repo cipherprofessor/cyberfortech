@@ -1,26 +1,42 @@
 // src/middleware.ts
-import { clerkMiddleware } from "@clerk/nextjs";
+import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export default clerkMiddleware({
-  // Public routes that don't require authentication
-  publicRoutes: [
-    "/",
-    "/sign-in(.*)",
-    "/sign-up(.*)",
-    "/about",
-    "/contact",
-    "/courses",
-    "/api/courses(.*)",
-    "/api/contact",
-  ],
+export default clerkMiddleware(async (auth, req) => {
+  // Check if the user is not authenticated on a protected route
+  const { userId } = await auth();
 
-  // Routes that can be accessed while signed in or not
-  ignoredRoutes: [
-    "/api/webhook/clerk",
-    "/api/webhook/stripe",
-  ],
+  if (!userId && !isPublicRoute(req)) {
+    return NextResponse.redirect(new URL('/sign-in', req.url));
+  }
 });
 
+// Helper function to check public routes
+function isPublicRoute(req: Request) {
+  const path = new URL(req.url).pathname;
+  const publicRoutes = [
+    "/",
+    "/sign-in",
+    "/sign-up",
+    "/about",
+    "/contact", 
+    "/courses",
+    "/api/courses",
+    "/api/contact",
+  ];
+
+  return publicRoutes.some(route => 
+    path === route || 
+    path.startsWith(route + "/") || 
+    (route.includes("(.*)" ) && path.startsWith(route.replace("(.*)", "")))
+  );
+}
+
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
 };

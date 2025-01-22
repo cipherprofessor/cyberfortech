@@ -1,10 +1,14 @@
 // src/app/forum/page.tsx
-import { ForumCategories } from '@/components/forum/ForumCategories';
-import { TopicsList } from '@/components/forum/TopicsList';
-import { ForumStats } from '@/components/forum/ForumStats';
-import { Button } from '@/components/ui/button';
+// import { ForumCategories } from '@/components/forum/ForumCategories';
+// import { TopicsList } from '@/components/forum/TopicsList';
+// import { ForumStats } from '@/components/forum/ForumStats';
+// import { Button } from '@/components/ui/button';
 import { PlusCircle, Search } from 'lucide-react';
 import styles from './forum.module.scss';
+import { ForumCategories } from '@/components/ForumCategories/ForumCategories';
+import { Button } from '@heroui/react';
+import { ForumStats } from '@/components/ForumCategories/ForumStats/ForumStats';
+import { TopicsList } from '@/components/Topic/TopicsList/TopicsList';
 
 export default function ForumPage() {
   const forumStats = {
