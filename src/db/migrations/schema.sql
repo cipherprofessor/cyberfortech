@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT UNIQUE NOT NULL,
   name TEXT,
   avatar_url TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  password TEXT NOT NULL,
+  role TEXT CHECK(role IN ('student', 'instructor', 'admin')) NOT NULL DEFAULT 'student'
 );
 
 -- Create courses table
@@ -55,6 +57,7 @@ CREATE TABLE IF NOT EXISTS enrollments (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
   course_id TEXT NOT NULL,
+  enrolled_at TEXT NOT NULL,
   status TEXT NOT NULL,
   progress DECIMAL(5, 2) DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
