@@ -1,9 +1,10 @@
 "use client"
 import { useEffect, useState } from 'react';
 import styles from './CourseList.module.scss';
-import LoadingSpinner from '@/components/ui/HeroUI/Spinner/Spinner';
 import { CourseCard } from '../CourseCard/CourseCard';
-import { Pagination } from '@heroui/react';
+// import { Pagination } from '@heroui/react';
+import { CourseCardPlaceholder } from '../CourseCard/CourseCardPlaceholder';
+import { Button, Pagination } from '@heroui/react';
 
 type Course = {
   id: string;
@@ -21,7 +22,7 @@ export function CourseList() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const coursesPerPage = 9;
+  const coursesPerPage = 10;
 
   useEffect(() => {
     // Fetch courses from API
@@ -40,10 +41,6 @@ export function CourseList() {
     fetchCourses();
   }, []);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
@@ -51,16 +48,30 @@ export function CourseList() {
   return (
     <div className={styles.courseListContainer}>
       <div className={styles.courseGrid}>
-        {currentCourses.map((course) => (
-          <CourseCard key={course.id} course={course} />
-        ))}
+        {loading
+          ? Array.from({ length: coursesPerPage }).map((_, index) => (
+              <CourseCardPlaceholder key={index} />
+            ))
+          : currentCourses.map((course) => (
+              <CourseCard key={course.id} course={course} />
+            ))}
       </div>
       
-      <Pagination
-        page={currentPage}
-        total={Math.ceil(courses.length / coursesPerPage)}
-        onChange={setCurrentPage}
-      />
+      {!loading && (
+        <>
+       
+        <Pagination
+          page={currentPage}
+          total={Math.ceil(courses.length / coursesPerPage)}
+          onChange={setCurrentPage}
+        />
+         </>
+        
+        // <>
+        // {/* <Pagination showControls initialPage={1} total={10} /> */}
+        // <Button color="primary">Button</Button>;
+        // </>
+      )}
     </div>
   );
 }

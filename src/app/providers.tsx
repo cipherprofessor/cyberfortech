@@ -1,12 +1,14 @@
-"use client" 
-// app/providers.tsx
+'use client'
 
-import {HeroUIProvider} from '@heroui/react'
+import { HeroUIProvider } from '@heroui/react'
+import { ThemeProvider } from 'next-themes' // Recommended for theme support
 
 export function Providers({children}: { children: React.ReactNode }) {
   return (
-    <HeroUIProvider>
-      {children}
-    </HeroUIProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <HeroUIProvider>
+        {children}
+      </HeroUIProvider>
+    </ThemeProvider>
   )
 }

@@ -18,11 +18,13 @@ type CourseCardProps = {
 };
 
 export function CourseCard({ course }: CourseCardProps) {
+  const defaultImageUrl = '/cyberimagecoursecover.jpg';
+
   return (
     <Link href={`/courses/${course.id}`} className={styles.courseCard}>
       <div className={styles.imageContainer}>
         <Image
-          src={course.imageUrl}
+          src={course.imageUrl || defaultImageUrl}
           alt={course.title}
           fill
           className={styles.image}
@@ -37,14 +39,14 @@ export function CourseCard({ course }: CourseCardProps) {
         <div className={styles.details}>
           <span className={styles.duration}>{course.duration}</span>
           <span className={styles.students}>
-            {course.studentsEnrolled.toLocaleString()} students
+            {course.studentsEnrolled ? course.studentsEnrolled.toLocaleString() : '0'} students
           </span>
         </div>
         
         <div className={styles.footer}>
           <div className={styles.rating}>
             <Star className={styles.starIcon} />
-            <span>{course.rating.toFixed(1)}</span>
+            <span>{course.rating !== undefined ? course.rating.toFixed(1) : '0.0'}</span>
           </div>
           
           <div className={styles.price}>
