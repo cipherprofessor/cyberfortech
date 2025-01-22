@@ -19,8 +19,15 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${inter.className} antialiased`}>
+      <html 
+        lang="en" 
+        suppressHydrationWarning
+        className="light"
+      >
+        <body 
+          className={`${inter.className} antialiased`}
+          suppressHydrationWarning
+        >
           <Providers>
             <Navbar />
             <main>{children}</main>
