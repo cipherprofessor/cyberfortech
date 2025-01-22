@@ -131,7 +131,7 @@ export function AboutCompany() {
           >
             <div className={styles.imageWrapper}>
               <Image
-                src="/about-company.jpg"
+                src="/cybersecurity.webp"
                 alt="CyberForTech Training"
                 width={600}
                 height={800}
