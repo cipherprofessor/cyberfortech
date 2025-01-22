@@ -3,6 +3,8 @@
 // import { UpcomingSchedule } from '@/components/dashboard/UpcomingSchedule';
 // import { RecentActivity } from '@/components/dashboard/RecentActivity';
 // import { DashboardChart } from '@/components/dashboard/DashboardChart';
+"use client"
+import { Dropdown } from '@heroui/react';
 import { CourseProgress } from './CourseProgress/CourseProgress';
 import styles from './dashboard-overview.module.scss';
 import { DashboardChart } from './DashboardChart/DashboardChart';
@@ -70,6 +72,7 @@ export default async function DashboardPage() {
   ];
 
   return (
+    
     <div className={styles.dashboardOverview}>
       <h1 className={styles.title}>Dashboard Overview</h1>
       
@@ -87,5 +90,6 @@ export default async function DashboardPage() {
         </div>
       </div>
     </div>
+    
   );
 }

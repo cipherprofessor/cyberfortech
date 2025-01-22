@@ -1,3 +1,4 @@
+"use client"
 // src/components/dashboard/settings/BillingSettings/BillingSettings.tsx
 import { useState } from 'react';
 import { 

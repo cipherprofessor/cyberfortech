@@ -1,3 +1,4 @@
+"use client"
 import { Users, BookOpen, Trophy, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import styles from './StatsSection.module.scss';

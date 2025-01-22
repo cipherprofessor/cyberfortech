@@ -1,3 +1,4 @@
+"use client"
 import Image from 'next/image';
 import { Linkedin, Twitter } from 'lucide-react';
 import styles from './TeamMember.module.scss';

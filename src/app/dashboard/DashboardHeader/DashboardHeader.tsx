@@ -1,15 +1,14 @@
+"use client"
 import { useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { Bell, Menu } from 'lucide-react';
-// import { 
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuTrigger,
-// } from '@/components/ui/dropdown-menu';
 import styles from './DashboardHeader.module.scss';
-import { DropdownMenu } from '@heroui/react';
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { 
+  DropdownMenu, 
+  DropdownMenuTrigger, 
+  DropdownMenuContent, 
+  DropdownMenuItem 
+} from '@/components/ui/dropdown-menu';
 
 export function DashboardHeader() {
   const [notificationCount] = useState(3); // Replace with real notification count

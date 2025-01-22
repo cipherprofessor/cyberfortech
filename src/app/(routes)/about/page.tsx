@@ -1,7 +1,5 @@
+"use client"
 import Image from 'next/image';
-// import { TeamMember } from '@/components/about/TeamMember';
-// import { Timeline } from '@/components/about/Timeline';
-// import { StatsSection } from '@/components/about/StatsSection';
 import styles from './about.module.scss';
 import { StatsSection } from './StatsSection/StatsSection';
 import { TeamMember } from './TeamMember/TeamMember';

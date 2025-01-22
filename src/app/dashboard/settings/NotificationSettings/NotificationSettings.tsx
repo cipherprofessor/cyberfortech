@@ -1,3 +1,4 @@
+"use client"
 // src/components/dashboard/settings/NotificationSettings/NotificationSettings.tsx
 import { useState } from 'react';
 // import { Switch } from '@/components/ui/switch';

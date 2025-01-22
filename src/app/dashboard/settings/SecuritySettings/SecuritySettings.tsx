@@ -1,4 +1,4 @@
-// src/components/dashboard/settings/SecuritySettings/SecuritySettings.tsx
+"use client"
 import { useState } from 'react';
 import { KeyRound, Smartphone, Shield, Activity } from 'lucide-react';
 // import { Button } from '@/components/ui/button';
