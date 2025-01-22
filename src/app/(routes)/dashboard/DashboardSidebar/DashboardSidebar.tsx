@@ -29,11 +29,11 @@ export function DashboardSidebar() {
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.logo}>
+      {/* <div className={styles.logo}>
         <Link href="/">
           CyberForTech
         </Link>
-      </div>
+      </div> */}
 
       <nav className={styles.nav}>
         {menuItems.map((item) => {

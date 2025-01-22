@@ -52,6 +52,12 @@ export default function Navbar() {
           <Link href="/forum" className={styles.navLink}>
             Forum
           </Link>
+          <Link href="/about" className={styles.navLink}>
+            About
+          </Link>
+          <Link href="/contact" className={styles.navLink}>
+            Contact Us
+          </Link>
         </div>
 
         <div className={styles.navActions}>

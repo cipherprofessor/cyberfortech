@@ -1,3 +1,4 @@
+"use client"
 import { FileText, Download, File } from 'lucide-react';
 import styles from './CourseResources.module.scss';
 

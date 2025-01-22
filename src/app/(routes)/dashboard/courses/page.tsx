@@ -4,13 +4,13 @@
 // import { CourseDiscussion } from '@/components/dashboard/course/CourseDiscussion';
 // import { CourseProgress } from '@/components/dashboard/course/CourseProgress';
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
+"use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Shadcn/tabs';
-import { CourseProgress } from '../../CourseProgress/CourseProgress';
-import { CourseCurriculum } from '../CourseCurriculum/CourseCurriculum';
-import { CourseDiscussion } from '../CourseDiscussion/CourseDiscussion';
-import { CourseResources } from '../CourseResources/CourseResources';
-import { VideoPlayer } from '../VideoPlayer/VideoPlayer';
+import { CourseProgress } from '../CourseProgress/CourseProgress';
+import { CourseCurriculum } from './CourseCurriculum/CourseCurriculum';
+import { CourseDiscussion } from './CourseDiscussion/CourseDiscussion';
+import { CourseResources } from './CourseResources/CourseResources';
+import { VideoPlayer } from './VideoPlayer/VideoPlayer';
 import styles from './course-details.module.scss';
 // import { TabsContent, TabsList, TabsTrigger } from '@/components/ui/Shadcn/tabs';
 
