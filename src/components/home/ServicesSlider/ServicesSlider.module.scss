@@ -1,0 +1,234 @@
+// src/components/home/ServicesSlider/ServicesSlider.module.scss
+.sliderSection {
+    padding: 6rem 0;
+    background: white;
+    overflow: hidden;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding: 0 2rem;
+  
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+  
+    p {
+      font-size: 1.125rem;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+  
+  .sliderContainer {
+    position: relative;
+    width: 100%;
+    padding: 2rem 0;
+  }
+  
+  .slider {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .track {
+    display: flex;
+    gap: 2rem;
+    width: fit-content;
+    
+    &:hover {
+      animation-play-state: paused;
+    }
+  }
+  
+  .serviceCard {
+    min-width: 300px;
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  
+      .iconWrapper {
+        background: rgba(0, 123, 255, 0.15);
+        transform: scale(1.1);
+      }
+    }
+  }
+  
+  .iconWrapper {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #007bff;
+  }
+  
+  .serviceCard h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 0.75rem;
+  }
+  
+  .serviceCard p {
+    font-size: 0.875rem;
+    color: #666;
+    line-height: 1.5;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+  
+  .gradientLeft,
+  .gradientRight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 150px;
+    z-index: 2;
+  }
+  
+  .gradientLeft {
+    left: 0;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0)
+    );
+  }
+  
+  .gradientRight {
+    right: 0;
+    background: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0)
+    );
+  }
+  
+  .cta {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  
+  .button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    background: #007bff;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+  
+    &:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+    }
+  }
+  
+  @media (max-width: 1024px) {
+    .sliderSection {
+      padding: 4rem 0;
+    }
+  
+    .header {
+      h2 {
+        font-size: 2rem;
+      }
+  
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .header {
+      padding: 0 1rem;
+    }
+  
+    .serviceCard {
+      min-width: 260px;
+      padding: 1.5rem;
+    }
+  
+    .gradientLeft,
+    .gradientRight {
+      width: 100px;
+    }
+  }
+  
+  // Dark mode support
+  @media (prefers-color-scheme: dark) {
+    .sliderSection {
+      background: #1a1a1a;
+    }
+  
+    .header {
+      h2 {
+        color: white;
+      }
+  
+      p {
+        color: #999;
+      }
+    }
+  
+    .serviceCard {
+      background: #222;
+  
+      h3 {
+        color: white;
+      }
+  
+      p {
+        color: #999;
+      }
+    }
+  
+    .gradientLeft {
+      background: linear-gradient(
+        to right,
+        rgba(26, 26, 26, 1),
+        rgba(26, 26, 26, 0)
+      );
+    }
+  
+    .gradientRight {
+      background: linear-gradient(
+        to left,
+        rgba(26, 26, 26, 1),
+        rgba(26, 26, 26, 0)
+      );
+    }
+  }

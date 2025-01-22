@@ -1,0 +1,368 @@
+// src/components/home/ContactSection/ContactSection.module.scss
+.contactSection {
+    padding: 6rem 0;
+    background: linear-gradient(
+      to right,
+      #f8f9fa,
+      #f1f3f5
+    );
+  }
+  
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  
+  .contactInfo {
+    .header {
+      margin-bottom: 3rem;
+  
+      h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+      }
+  
+      p {
+        font-size: 1.125rem;
+        color: #666;
+      }
+    }
+  }
+  
+  .infoCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .infoCard {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  
+      .icon {
+        transform: scale(1.1);
+        color: #0056b3;
+      }
+    }
+  
+    .icon {
+      width: 2rem;
+      height: 2rem;
+      color: #007bff;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+  
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 0.75rem;
+    }
+  
+    p {
+      font-size: 0.875rem;
+      color: #666;
+      line-height: 1.5;
+    }
+  }
+  
+  .faqSection {
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 1.5rem;
+    }
+  }
+  
+  .faqList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .faqItem {
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  
+    &:hover {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .faqButton {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: #f8f9fa;
+    }
+  
+    .chevron {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: #666;
+      transition: transform 0.3s ease;
+  
+      &.rotate {
+        transform: rotate(180deg);
+      }
+    }
+  }
+  
+  .faqAnswer {
+    padding: 0 1.25rem 1.25rem;
+    overflow: hidden;
+    background: #f8f9fa;
+  
+    p {
+      color: #666;
+      line-height: 1.6;
+      font-size: 0.875rem;
+    }
+  }
+  
+  .formContainer {
+    position: sticky;
+    top: 2rem;
+  }
+  
+  .contactForm {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .formGroup {
+    margin-bottom: 1.5rem;
+  
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #1a1a1a;
+      margin-bottom: 0.5rem;
+    }
+  
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.875rem;
+      border: 1px solid #eee;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      background: #f8f9fa;
+  
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        background: white;
+      }
+  
+      &::placeholder {
+        color: #999;
+      }
+    }
+  
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+  }
+  
+  .submitButton {
+    width: 100%;
+    padding: 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+  
+    &:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+    }
+  
+    &:active {
+      transform: translateY(0);
+    }
+  
+    .icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+  
+  // Media Queries
+  @media (max-width: 1024px) {
+    .contactSection {
+      padding: 4rem 0;
+    }
+  
+    .content {
+      gap: 2rem;
+    }
+  
+    .header h2 {
+      font-size: 2rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 1rem;
+    }
+  
+    .content {
+      grid-template-columns: 1fr;
+    }
+  
+    .formContainer {
+      position: static;
+    }
+  
+    .infoCards {
+      grid-template-columns: 1fr;
+    }
+  
+    .contactForm {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .header h2 {
+      font-size: 1.75rem;
+    }
+  
+    .infoCard {
+      padding: 1.25rem;
+    }
+  
+    .faqButton {
+      padding: 1rem;
+      font-size: 0.875rem;
+    }
+  }
+  
+  // Dark mode support
+  @media (prefers-color-scheme: dark) {
+    .contactSection {
+      background: linear-gradient(
+        to right,
+        #1a1a1a,
+        #111
+      );
+    }
+  
+    .header {
+      h2 {
+        color: white;
+      }
+  
+      p {
+        color: #999;
+      }
+    }
+  
+    .infoCard,
+    .faqItem,
+    .contactForm {
+      background: #222;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+  
+    .infoCard {
+      h3 {
+        color: white;
+      }
+  
+      p {
+        color: #999;
+      }
+    }
+  
+    .faqButton {
+      color: white;
+  
+      &:hover {
+        background: #2a2a2a;
+      }
+    }
+  
+    .faqAnswer {
+      background: #2a2a2a;
+  
+      p {
+        color: #999;
+      }
+    }
+  
+    .formGroup {
+      label {
+        color: white;
+      }
+  
+      input,
+      textarea {
+        background: #2a2a2a;
+        border-color: #333;
+        color: white;
+  
+        &:focus {
+          background: #333;
+        }
+  
+        &::placeholder {
+          color: #666;
+        }
+      }
+    }
+  }
