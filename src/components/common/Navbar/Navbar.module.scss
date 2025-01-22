@@ -1,141 +1,74 @@
+// src/components/common/Navbar/Navbar.module.scss
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    padding: 1rem 0;
-    transition: all 0.3s ease;
-    background: transparent;
-  
-    &.scrolled {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      padding: 0.8rem 0;
-    }
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+
+  // Dark mode styles
+  .dark & {
+    background-color: rgba(17, 24, 39, 0.9); // Dark background
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
-  
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+}
+
+.navContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--foreground);
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--primary);
   }
-  
-  .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  
-    &:hover {
-      color: #007bff;
-    }
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navLink {
+  color: var(--foreground);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--primary);
   }
-  
-  .menuItems {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-  
-    a {
-      color: #333;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-  
-      &:hover {
-        color: #007bff;
-      }
-    }
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .navContainer {
+    flex-direction: column;
+    padding: 1rem 0.5rem;
   }
-  
-  .signInButton,
-  .signUpButton {
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
+
+  .navLinks, .navActions {
+    margin-top: 0.5rem;
   }
-  
-  .signInButton {
-    color: #007bff;
-    border: 1px solid #007bff;
-  
-    &:hover {
-      background: rgba(0, 123, 255, 0.1);
-    }
-  }
-  
-  .signUpButton {
-    background: #007bff;
-    color: white !important;
-  
-    &:hover {
-      background: #0056b3;
-    }
-  }
-  
-  .mobileMenuButton {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-  }
-  
-  @media (max-width: 768px) {
-    .mobileMenuButton {
-      display: block;
-    }
-  
-    .menuItems {
-      position: fixed;
-      top: 72px;
-      left: 0;
-      right: 0;
-      background: white;
-      flex-direction: column;
-      padding: 1rem;
-      gap: 1rem;
-      transform: translateY(-100%);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-  
-      &.open {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-  }
-  
-  .hamburger {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: #333;
-    position: relative;
-  
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      width: 24px;
-      height: 2px;
-      background: #333;
-      transition: all 0.3s ease;
-    }
-  
-    &::before {
-      top: -6px;
-    }
-  
-    &::after {
-      bottom: -6px;
-    }
-  }
+}
