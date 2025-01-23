@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
       {
         hostname: 'img.clerk.com',
       },
+      {
+        hostname: 'pbs.twimg.com'
+      }
     ],
   },
 };

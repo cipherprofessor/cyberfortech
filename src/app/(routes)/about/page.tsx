@@ -4,6 +4,8 @@ import styles from './about.module.scss';
 import { StatsSection } from './StatsSection/StatsSection';
 import { TeamMember } from './TeamMember/TeamMember';
 import { Timeline } from './Timeline/Timeline';
+import { AcUITimeline } from '@/components/ui/AcUI/TimeLine/TimeLineDemo';
+import { AcUiBentoGrid } from '@/components/ui/AcUI/BentoGrid/BentoGrid';
 
 export default function AboutPage() {
   const team = [
@@ -64,7 +66,7 @@ export default function AboutPage() {
 
   return (
     <div className={styles.aboutContainer}>
-      <section className={styles.hero}>
+      {/* <section className={styles.hero}>
         <div className={styles.content}>
           <h1>About CyberForTech</h1>
           <p>
@@ -72,6 +74,9 @@ export default function AboutPage() {
             expert-led education and hands-on training.
           </p>
         </div>
+      </section> */}
+      <section className={styles.BentoGrid}>
+      <AcUiBentoGrid/>
       </section>
 
       <section className={styles.mission}>
@@ -114,8 +119,9 @@ export default function AboutPage() {
       <StatsSection />
 
       <section className={styles.journey}>
-        <h2>Our Journey</h2>
-        <Timeline events={timeline} />
+        {/* <h2>Our Journey</h2>
+        <Timeline events={timeline} /> */}
+        <AcUITimeline />
       </section>
 
       <section className={styles.team}>

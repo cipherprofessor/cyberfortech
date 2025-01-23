@@ -1,4 +1,12 @@
-import { AnimatedTestimonials } from "./animated-testimonials";
+// import { AnimatedTestimonials } from "./animated-testimonials";
+import dynamic from 'next/dynamic';
+
+// Dynamically import the AnimatedTestimonials component
+const AnimatedTestimonials = dynamic(
+  () => import('./animated-testimonials').then(mod => mod.AnimatedTestimonials),
+  { ssr: false } // Disable server-side rendering
+);
+
 
 
 export function AceternityUIAnimatedTestimonialsUse() {

@@ -14,6 +14,7 @@ import { ServicesSlider } from '@/components/home/ServicesSlider/ServicesSlider'
 import { TestimonialsSlider } from '@/components/home/TestimonialsSlider/TestimonialsSlider';
 import styles from './page.module.scss';
 import { AceternityUIAnimatedTestimonialsUse } from '@/components/ui/AcUI/AnimatedTestimonials/AnimatedTestimonialsUse';
+import { AcUIWorldMap } from '@/components/ui/AcUI/WorldMap/WorldMap';
 
 export default function HomePage() {
   return (
@@ -23,9 +24,10 @@ export default function HomePage() {
       <AboutCompany />
       <KeyMetrics />
       <ServicesSlider />
+      <AcUIWorldMap />
       <ContactSection />
-      {/* <AceternityUIAnimatedTestimonialsUse /> */}
-      {/* <TestimonialsSlider /> */}
+      <AceternityUIAnimatedTestimonialsUse /> 
+      {/* have to look for above error */}
     </main>
   );
 }
