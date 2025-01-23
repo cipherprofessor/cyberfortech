@@ -1,4 +1,5 @@
 // src/components/home/KeyMetrics/KeyMetrics.tsx
+"use client";
 import { useEffect, useRef } from 'react';
 import { motion, useInView, useAnimation } from 'framer-motion';
 import { 

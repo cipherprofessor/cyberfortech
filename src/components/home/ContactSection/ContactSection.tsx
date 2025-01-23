@@ -1,4 +1,5 @@
 // src/components/home/ContactSection/ContactSection.tsx
+"use client";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -8,9 +9,11 @@ import {
   ChevronDown,
   Send 
 } from 'lucide-react';
-import { toast } from 'sonner'; 
+ 
 import styles from './ContactSection.module.scss';
 import { ContactForm } from '@/app/(routes)/contact/ContactForm/ContactForm';
+import AccordianWithIcons from '@/components/ui/OriginUI/Accordainwithicon';
+import HeroUIAccordian from '@/components/ui/HeroUI/Accordian/Accordian';
 
 const faqs = [
   {
@@ -37,58 +40,59 @@ const faqs = [
 
 export function ContactSection() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
-  });
+  
+  // const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [formData, setFormData] = useState({
+  //   name: '',
+  //   email: '',
+  //   phone: '',
+  //   subject: '',
+  //   message: ''
+  // });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   // setIsSubmitting(true);
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
+  //   try {
+  //     const response = await fetch('/api/contact', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(formData)
+  //     });
 
-      const result = await response.json();
+  //     const result = await response.json();
 
-      if (response.ok) {
-        toast.success(result.message);
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: ''
-        });
-      } else {
-        toast.error(result.error || 'Failed to submit form');
-      }
-    } catch (error) {
-      toast.error('An unexpected error occurred');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  //     if (response.ok) {
+  //       toast.success(result.message);
+  //       // Reset form
+  //       setFormData({
+  //         name: '',
+  //         email: '',
+  //         phone: '',
+  //         subject: '',
+  //         message: ''
+  //       });
+  //     } else {
+  //       toast.error(result.error || 'Failed to submit form');
+  //     }
+  //   } catch (error) {
+  //     toast.error('An unexpected error occurred');
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  // };
 
   return (
     <section className={styles.contactSection}>
@@ -175,7 +179,9 @@ export function ContactSection() {
               </motion.h3>
 
               <div className={styles.faqList}>
-                {faqs.map((faq, index) => (
+                 {/* <AccordianWithIcons /> */}
+                 <HeroUIAccordian />
+                {/* {faqs.map((faq, index) => (
                   <motion.div
                     key={index}
                     className={styles.faqItem}
@@ -207,7 +213,7 @@ export function ContactSection() {
                       )}
                     </AnimatePresence>
                   </motion.div>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>

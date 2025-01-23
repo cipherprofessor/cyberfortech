@@ -13,6 +13,7 @@ import { ServiceCards } from '@/components/home/ServiceCards/ServiceCards';
 import { ServicesSlider } from '@/components/home/ServicesSlider/ServicesSlider';
 import { TestimonialsSlider } from '@/components/home/TestimonialsSlider/TestimonialsSlider';
 import styles from './page.module.scss';
+import { AceternityUIAnimatedTestimonialsUse } from '@/components/ui/AcUI/AnimatedTestimonials/AnimatedTestimonialsUse';
 
 export default function HomePage() {
   return (
@@ -23,7 +24,8 @@ export default function HomePage() {
       <KeyMetrics />
       <ServicesSlider />
       <ContactSection />
-      <TestimonialsSlider />
+      {/* <AceternityUIAnimatedTestimonialsUse /> */}
+      {/* <TestimonialsSlider /> */}
     </main>
   );
 }
