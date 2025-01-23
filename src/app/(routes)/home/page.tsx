@@ -15,6 +15,7 @@ import { TestimonialsSlider } from '@/components/home/TestimonialsSlider/Testimo
 import styles from './page.module.scss';
 import { AceternityUIAnimatedTestimonialsUse } from '@/components/ui/AcUI/AnimatedTestimonials/AnimatedTestimonialsUse';
 import { AcUIWorldMap } from '@/components/ui/AcUI/WorldMap/WorldMap';
+import { BentoGridtextImages } from '@/components/ui/AcUI/BentoGridTxtImg/BentoGridTxtImg';
 
 export default function HomePage() {
   return (
@@ -24,7 +25,8 @@ export default function HomePage() {
       <AboutCompany />
       <KeyMetrics />
       <ServicesSlider />
-      <AcUIWorldMap />
+      <BentoGridtextImages />
+      {/* <AcUIWorldMap /> */}
       <ContactSection />
       <AceternityUIAnimatedTestimonialsUse /> 
       {/* have to look for above error */}

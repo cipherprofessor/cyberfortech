@@ -75,9 +75,7 @@ export default function AboutPage() {
           </p>
         </div>
       </section> */}
-      <section className={styles.BentoGrid}>
-      <AcUiBentoGrid/>
-      </section>
+      
 
       <section className={styles.mission}>
         <div className={styles.grid}>
@@ -117,6 +115,10 @@ export default function AboutPage() {
       </section>
 
       <StatsSection />
+
+      <section className={styles.BentoGrid}>
+      <AcUiBentoGrid/>
+      </section>
 
       <section className={styles.journey}>
         {/* <h2>Our Journey</h2>

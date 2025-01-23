@@ -1,0 +1,25 @@
+.sidebar {
+    @apply h-full bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800;
+    min-width: 250px;
+    transition: width 0.3s ease;
+   
+    &.collapsed {
+      min-width: 64px;
+    }
+   }
+   
+   .content {
+    @apply p-4 flex flex-col h-full;
+   }
+   
+   .logo {
+    @apply mb-8 flex items-center;
+    
+    img {
+      @apply h-8 w-auto;
+    }
+   }
+   
+   .nav {
+    @apply flex-1 overflow-y-auto;
+   }
