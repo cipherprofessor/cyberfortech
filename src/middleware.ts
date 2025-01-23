@@ -16,8 +16,7 @@ export default clerkMiddleware(async (auth, req) => {
  const client = await clerkClient();
  const user = await client.users.getUser(userId);
  const userRole = user.publicMetadata.role as string;
-//  console.log("userRole", userRole);
-//  console.log("user",user)
+
 
  if (isSuperAdminRoute(path) && userRole !== 'superadmin') {
    return NextResponse.redirect(new URL('/', req.url));
