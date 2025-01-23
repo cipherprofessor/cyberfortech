@@ -8,16 +8,35 @@ import { Timeline } from './Timeline/Timeline';
 export default function AboutPage() {
   const team = [
     {
-      name: "John Doe",
-      role: "Founder & Lead Instructor",
-      image: "/team/john-doe.jpg",
-      bio: "15+ years of experience in cybersecurity",
+      name: "Ayan Ali Dar",
+      role: "Founder & CEO ",
+      image: "/team/ayan.png",
+      bio: "7+ years of experience in Marketing and Business Development",
+      socialLinks: {
+        linkedin: "https://www.linkedin.com/in/cyberfortech/",
+        twitter: "https://twitter.com/johndoe",
+      },
+    },
+    {
+      name: "Mohsin Manzoor Bhat",
+      role: "Instructor - AWS And Full Stack Developer",
+      image: "/team/mohsin.jpg",
+      bio: "3 Years of Experience in Cloud And Full Stack Development",
+      socialLinks: {
+        linkedin: "https://www.linkedin.com/in/bhatmohsin1913/",
+        twitter: "https://twitter.com/johndoe",
+      },
+    },
+    {
+      name: "Priyanka",
+      role: "CFO",
+      image: "/testm/testm2.avif",
+      bio: "5+ years of experience in finance and accounting",
       socialLinks: {
         linkedin: "https://linkedin.com/in/johndoe",
         twitter: "https://twitter.com/johndoe",
       },
     },
-    // Add more team members...
   ];
 
   const timeline = [
@@ -59,7 +78,7 @@ export default function AboutPage() {
         <div className={styles.grid}>
           <div className={styles.imageContainer}>
             <Image
-              src="/about/mission.jpg"
+              src="/cyber1.png"
               alt="Our Mission"
               fill
               className={styles.image}

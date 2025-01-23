@@ -10,48 +10,48 @@ const testimonials = [
     id: 1,
     name: 'Sarah Johnson',
     role: 'Security Analyst at TechCorp',
-    avatar: '/testimonials/sarah.jpg',
+    avatar: '/testm/testimonial1.jpg',
     content: 'The cybersecurity courses provided by CyberForTech were instrumental in advancing my career. The hands-on labs and real-world scenarios helped me develop practical skills that I use daily.',
     rating: 5,
     company: {
       name: 'TechCorp',
-      logo: '/companies/techcorp.svg'
+      logo: '/testm/testimonial1.jpg'
     }
   },
   {
     id: 2,
     name: 'Michael Chen',
     role: 'Network Security Engineer',
-    avatar: '/testimonials/michael.jpg',
+    avatar: '/testm/testm1.avif',
     content: 'I particularly appreciated the depth of knowledge shared in the advanced penetration testing course. The instructors are clearly experts in their field and provide valuable insights beyond just the theoretical concepts.',
     rating: 5,
     company: {
       name: 'SecureNet',
-      logo: '/companies/securenet.svg'
+      logo: '/testm/testm1.avif'
     }
   },
   {
     id: 3,
     name: 'Emily Rodriguez',
     role: 'Information Security Manager',
-    avatar: '/testimonials/emily.jpg',
+    avatar: '/testm/testm2.avif',
     content: 'After completing multiple certifications through CyberForTech, I was able to secure a senior position in cybersecurity. The curriculum is comprehensive and up-to-date with current industry trends.',
     rating: 5,
     company: {
       name: 'CyberGuard',
-      logo: '/companies/cyberguard.svg'
+      logo: '/testm/testm2.avif'
     }
   },
   {
     id: 4,
     name: 'David Wilson',
     role: 'Cloud Security Architect',
-    avatar: '/testimonials/david.jpg',
+    avatar: '/testm/testm3.webp',
     content: 'The cloud security certification program exceeded my expectations. It provided deep insights into securing cloud infrastructure and helped me transition into cloud security architecture.',
     rating: 5,
     company: {
       name: 'CloudSafe',
-      logo: '/companies/cloudsafe.svg'
+      logo: '/testm/testm3.webp'
     }
   }
 ];
