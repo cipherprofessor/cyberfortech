@@ -2,16 +2,18 @@
 'use client'
 
 import Link from 'next/link';
-import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from '@heroui/react';
 import { Moon, Sun, Monitor } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
 import styles from './Navbar.module.scss';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { isAuthenticated, isSuperAdmin, isAdmin, isStudent } = useAuth();
 
   // Ensure component is mounted to avoid hydration issues
   useEffect(() => {
@@ -43,12 +45,34 @@ export default function Navbar() {
         </Link>
 
         <div className={styles.navLinks}>
+        <Link href="/" className={styles.navLink}>
+            Home
+          </Link>
           <Link href="/courses" className={styles.navLink}>
             Courses
           </Link>
-          <Link href="/dashboard" className={styles.navLink}>
+
+          {isAdmin && (
+        <>
+          <Link href="/dashboard/admin/courses">Manage Courses</Link>
+          <Link href="/dashboard/admin/resources">Resources</Link>
+        </>
+          )}
+
+          {/* Super admin links */}
+      {isSuperAdmin && (
+        <Link href="/dashboard/superadmin">Admin Management</Link>
+      )}
+
+      {/* Student links */}
+      {isStudent && (
+        <>
+        <Link href="/dashboard" className={styles.navLink}>
             Dashboard
           </Link>
+          <Link href="/dashboard/my-courses">My Courses</Link>
+        </>
+      )}
           <Link href="/forum" className={styles.navLink}>
             Forum
           </Link>
@@ -84,6 +108,11 @@ export default function Navbar() {
                 Sign In
               </Button>
             </SignInButton>
+            <SignUpButton>
+              <Button variant="solid" className="mr-2">
+                Sign Up
+              </Button>
+              </SignUpButton>
           </SignedOut>
 
           <SignedIn>

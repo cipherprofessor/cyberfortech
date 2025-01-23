@@ -1,42 +1,45 @@
 // src/middleware.ts
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkClient, clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-export default clerkMiddleware(async (auth, req) => {
-  // Check if the user is not authenticated on a protected route
-  const { userId } = await auth();
+const publicRoutes = ["/", "/sign-in", "/sign-up", "/about", "/contact", "/courses", "/api/courses", "/api/contact"];
+const adminRoutes = ["/admin", "/dashboard/admin", "/api/admin"];
+const superAdminRoutes = ["/superadmin", "/dashboard/superadmin", "/api/superadmin"];
 
-  if (!userId && !isPublicRoute(req)) {
-    return NextResponse.redirect(new URL('/sign-in', req.url));
-  }
+export default clerkMiddleware(async (auth, req) => {
+ const { userId } = await auth();
+ const path = new URL(req.url).pathname;
+
+ if (!userId && isPublicRoute(path)) return;
+ if (!userId) return NextResponse.redirect(new URL('/sign-in', req.url));
+
+ const client = await clerkClient();
+ const user = await client.users.getUser(userId);
+ const userRole = user.publicMetadata.role as string;
+//  console.log("userRole", userRole);
+//  console.log("user",user)
+
+ if (isSuperAdminRoute(path) && userRole !== 'superadmin') {
+   return NextResponse.redirect(new URL('/', req.url));
+ }
+
+ if (isAdminRoute(path) && !['superadmin', 'admin'].includes(userRole)) {
+   return NextResponse.redirect(new URL('/', req.url));
+ }
 });
 
-// Helper function to check public routes
-function isPublicRoute(req: Request) {
-  const path = new URL(req.url).pathname;
-  const publicRoutes = [
-    "/",
-    "/sign-in",
-    "/sign-up",
-    "/about",
-    "/contact", 
-    "/courses",
-    "/api/courses",
-    "/api/contact",
-  ];
+function isPublicRoute(path: string) {
+ return publicRoutes.some(route => path === route || path.startsWith(route + "/"));
+}
 
-  return publicRoutes.some(route => 
-    path === route || 
-    path.startsWith(route + "/") || 
-    (route.includes("(.*)" ) && path.startsWith(route.replace("(.*)", "")))
-  );
+function isAdminRoute(path: string) {
+ return adminRoutes.some(route => path.startsWith(route));
+}
+
+function isSuperAdminRoute(path: string) {
+ return superAdminRoutes.some(route => path.startsWith(route));
 }
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
+ matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 };
