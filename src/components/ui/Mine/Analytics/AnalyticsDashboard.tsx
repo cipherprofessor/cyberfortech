@@ -1,3 +1,10 @@
+import { CourseEnrollmentChart } from "./CourseEnrollmentChart";
+import { GeographicDistribution } from "./GeographicDistribution";
+import { RevenueChart } from "./RevenueChart";
+import { StudentProgressChart } from "./StudentProgressChart";
+import { TopCoursesTable } from "./TopCoursesTable";
+import { UserGrowthChart } from "./UserGrowthChart";
+
 export function AnalyticsDashboard() {
     return (
       <div className="space-y-6 p-6">

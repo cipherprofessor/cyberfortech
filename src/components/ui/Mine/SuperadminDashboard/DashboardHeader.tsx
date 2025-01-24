@@ -1,3 +1,6 @@
+import { useAuth } from "@/hooks/useAuth";
+import { UserButton } from "@clerk/nextjs";
+
 export function DashboardHeader() {
     const { user } = useAuth();
     

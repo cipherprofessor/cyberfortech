@@ -1,4 +1,7 @@
-import { MapContainer, TileLayer, Circle } from 'react-leaflet';
+// src/components/ui/Mine/Analytics/GeographicDistribution.tsx
+import { Tooltip } from '@heroui/react';
+import { MapContainer, TileLayer, CircleMarker } from 'react-leaflet';
+import { LatLngExpression } from 'leaflet';
 
 export function GeographicDistribution() {
  const locations = [
@@ -11,22 +14,24 @@ export function GeographicDistribution() {
      <h2 className="text-lg font-semibold mb-4">Student Distribution</h2>
      <div className="h-[400px] relative">
        <MapContainer
-         center={[20, 0]}
+         center={[20, 0] as LatLngExpression}
          zoom={2}
          className="h-full w-full rounded-lg"
        >
          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
          {locations.map((location, i) => (
-           <Circle
+           <CircleMarker
              key={i}
-             center={[location.lat, location.lng]}
-             radius={location.students * 100}
-             fillColor="#3b82f6"
-             fillOpacity={0.5}
-             stroke={false}
+             center={[location.lat, location.lng] as LatLngExpression}
+             radius={Math.sqrt(location.students) / 2}
+             pathOptions={{
+               fillColor: "#3b82f6",
+               fillOpacity: 0.5,
+               stroke: false
+             }}
            >
              <Tooltip>{location.label}: {location.students} students</Tooltip>
-           </Circle>
+           </CircleMarker>
          ))}
        </MapContainer>
      </div>

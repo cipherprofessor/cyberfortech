@@ -1,3 +1,5 @@
+import { DashboardHeader } from "./DashboardHeader";
+import { DashboardWidgets } from "./DashboardWidgets";
 import { SuperAdminSidebar } from "./SuperAdminSidebar";
 
 export function SuperAdminDashboard() {

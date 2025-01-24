@@ -12,7 +12,7 @@ import { DashboardStats } from './DashboardStats/DashboardStats';
 import { RecentActivity } from './RecentActivity/RecentActivity';
 import { UpcomingSchedule } from './UpcomingSchedule/UpcomingSchedule';
 
-export default async function DashboardPage() {
+export default async function StudentDashboard() {
   // In a real app, fetch this data from your API
   const stats = {
     coursesEnrolled: 5,
