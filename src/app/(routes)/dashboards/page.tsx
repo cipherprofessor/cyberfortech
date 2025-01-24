@@ -7,6 +7,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { redirect } from 'next/navigation';
 import StudentDashboard from './student-dashboard/page';
 import AdminDashboard from './admin-dashboard/page';
+import { SuperAdminSidebarNew } from '@/components/ui/Mine/SuperadminDashboard/SuperAdminSidebar';
+
 
 export default function DashboardPage() {
   const { isAuthenticated, isSuperAdmin, isAdmin, isStudent, isLoaded } = useAuth();
@@ -30,7 +32,7 @@ export default function DashboardPage() {
   }
 
   if (isSuperAdmin) {
-    return <SuperAdminDashboard />;
+    return <SuperAdminSidebarNew />;
   }
 
   if (isAdmin) {

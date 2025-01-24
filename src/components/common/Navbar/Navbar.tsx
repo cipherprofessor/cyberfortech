@@ -54,15 +54,16 @@ export default function Navbar() {
 
           {isAdmin && (
         <>
+           <Link href="/dashboards">Dashboard</Link>
           <Link href="/dashboard/admin/courses">Manage Courses</Link>
           <Link href="/dashboard/admin/resources">Resources</Link>
         </>
           )}
 
           {/* Super admin links */}
-      {isSuperAdmin && (
-        <Link href="/dashboard/superadmin">Admin Management</Link>
-      )}
+        {isSuperAdmin && (
+        <Link href="/dashboards">Dashboard</Link>
+       )}
 
       {/* Student links */}
       {isStudent && (
