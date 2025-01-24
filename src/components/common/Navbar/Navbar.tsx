@@ -54,7 +54,7 @@ export default function Navbar() {
 
           {isAdmin && (
         <>
-           <Link href="/dashboards">Dashboard</Link>
+           <Link href="/dashboard">Dashboard</Link>
           <Link href="/dashboard/admin/courses">Manage Courses</Link>
           <Link href="/dashboard/admin/resources">Resources</Link>
         </>
@@ -62,7 +62,7 @@ export default function Navbar() {
 
           {/* Super admin links */}
         {isSuperAdmin && (
-        <Link href="/dashboards">Dashboard</Link>
+        <Link href="/dashboard">Dashboard</Link>
        )}
 
       {/* Student links */}

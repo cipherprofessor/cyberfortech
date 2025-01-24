@@ -37,7 +37,7 @@ const menuItems = [
     href: "/dashboard/analytics",
     subItems: [
       { label: "Overview", href: "/dashboard/analytics" },
-      { label: "User Growth", href: "/dashboard/analytics/users" },
+      { label: "User Growth", href: "/dashboard/analytics/usergrowth" },
       { label: "Revenue", href: "/dashboard/analytics/revenue" },
     ]
   },
@@ -171,7 +171,16 @@ function SidebarItem({ item, open, isActive }: { item: MenuItem; open: boolean; 
   );
 }
 
-export function SuperAdminSidebarNew() {
+interface SuperAdminSidebarNewProps {
+
+  onOpenChange: (open: boolean) => void;
+
+}
+
+
+
+export function SuperAdminSidebarNew({ onOpenChange }: SuperAdminSidebarNewProps) {
+
   const [open, setOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -253,13 +262,13 @@ export function SuperAdminSidebarNew() {
         </div>
       </motion.div>
 
-      <div 
+      {/* <div 
         ref={mainContentRef}
         className="flex-1 ml-20 overflow-auto"
       >
         
         Mohsin Manzoor bhat
-      </div>
+      </div> */}
     </div>
   );
 }

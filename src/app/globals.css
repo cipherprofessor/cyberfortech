@@ -31,3 +31,7 @@ body {
     background-color: rgb(82, 82, 91);
   }
 }
+
+.dashboard-content {
+  isolation: isolate;
+}

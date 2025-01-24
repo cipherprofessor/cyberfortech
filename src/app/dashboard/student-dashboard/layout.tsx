@@ -4,7 +4,7 @@ import styles from './dashboard.module.scss';
 import { DashboardHeader } from './DashboardHeader/DashboardHeader';
 import { DashboardSidebar } from './DashboardSidebar/DashboardSidebar';
 
-export default function DashboardLayout({
+export default function DashboardLayoutStudent({
   children,
 }: {
   children: React.ReactNode;
