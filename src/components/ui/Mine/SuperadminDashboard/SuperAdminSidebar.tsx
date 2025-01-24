@@ -1,67 +1,3 @@
-
-// const menuItems = [
-//   {
-//     label: "Analytics",
-//     icon: <IconDashboard className="h-5 w-5" />,
-//     href: "/dashboard/analytics",
-//     subItems: [
-//       { label: "Overview", href: "/dashboard/analytics" },
-//       { label: "User Growth", href: "/dashboard/analytics/users" },
-//       { label: "Revenue", href: "/dashboard/analytics/revenue" },
-//     ]
-//   },
-//   {
-//     label: "User Management",
-//     icon: <IconUsers className="h-5 w-5" />,
-//     href: "/dashboard/users",
-//     subItems: [
-//       { label: "All Users", href: "/dashboard/users/all" },
-//       { label: "Admins", href: "/dashboard/users/admins" },
-//       { label: "Students", href: "/dashboard/users/students" },
-//     ]
-//   },
-//   {
-//     label: "Courses",
-//     icon: <IconBook className="h-5 w-5" />,
-//     href: "/dashboard/courses",
-//     subItems: [
-//       { label: "All Courses", href: "/dashboard/courses/all" },
-//       { label: "Categories", href: "/dashboard/courses/categories" },
-//       { label: "Reviews", href: "/dashboard/courses/reviews" },
-//     ]
-//   },
-//   {
-//     label: "Communications",
-//     icon: <IconMail className="h-5 w-5" />,
-//     href: "/dashboard/communications",
-//     subItems: [
-//       { label: "Messages", href: "/dashboard/communications/messages" },
-//       { label: "Announcements", href: "/dashboard/communications/announcements" },
-//     ]
-//   },
-//   {
-//     label: "Finance",
-//     icon: <IconReportMoney className="h-5 w-5" />,
-//     href: "/dashboard/finance",
-//     subItems: [
-//       { label: "Overview", href: "/dashboard/finance" },
-//       { label: "Transactions", href: "/dashboard/finance/transactions" },
-//     ]
-//   },
-//   {
-//     label: "Settings",
-//     icon: <IconSettings className="h-5 w-5" />,
-//     href: "/dashboard/settings",
-//   },
-//   {
-//     label: "Logout",
-//     icon: <IconLogout className="h-5 w-5" />,
-//     href: "/logout",
-//   }
-// ];
-
-
-
 "use client";
 import React, { useState, useEffect, useRef, JSX } from "react";
 import {
@@ -106,7 +42,7 @@ const menuItems = [
     ]
   },
   {
-    label: "Users",
+    label: "UMS",
     icon: <IconUsers className="h-5 w-5" />,
     href: "/dashboard/users",
     subItems: [
@@ -321,7 +257,8 @@ export function SuperAdminSidebarNew() {
         ref={mainContentRef}
         className="flex-1 ml-20 overflow-auto"
       >
-        {/* Your main content goes here */}
+        
+        Mohsin Manzoor bhat
       </div>
     </div>
   );
