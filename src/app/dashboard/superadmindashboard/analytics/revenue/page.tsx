@@ -1,17 +1,13 @@
-// Template for other dashboard components
-export default function Revenue() {
-    return (
-      <div className="h-full w-full space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">{/* Component Title */}</h1>
-        </div>
-        
-        <div className="bg-white dark:bg-neutral-800 rounded-lg shadow">
-          <div className="p-6">
-            {/* Component Content */}
-            Revenueeeee
-          </div>
-        </div>
-      </div>
-    );
-  }
+// src/app/dashboard/analytics/revenue/page.tsx
+'use client';
+
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { RevenueOverview } from '@/components/ui/Mine/SuperadminDashboard/RevenueOverview';
+
+export default function RevenuePage() {
+  return (
+    <ProtectedRoute allowedRoles={['superadmin']}>
+      <RevenueOverview />
+    </ProtectedRoute>
+  );
+}
