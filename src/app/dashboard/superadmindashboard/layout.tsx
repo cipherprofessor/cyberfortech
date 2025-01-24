@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <>
-      <AnalyticsDashboard />
+      {/* <AnalyticsDashboard /> */}
       {children}
     </>
   );

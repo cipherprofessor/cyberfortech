@@ -16,7 +16,7 @@ export function AnalyticsDashboard() {
         <div className="grid grid-cols-3 gap-6">
           <TopCoursesTable />
           <StudentProgressChart /> 
-          <GeographicDistribution />
+          {/* <GeographicDistribution /> */}
         </div>
       </div>
     );

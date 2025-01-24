@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Logo, } from "../../AcUI/SideBar/SidebarUse";
 import { UrlObject } from "url";
+import { usePathname } from "next/navigation";
 
 interface SubItem {
   label: string;
@@ -36,53 +37,53 @@ const menuItems = [
     icon: <IconDashboard className="h-5 w-5" />,
     href: "/dashboard/analytics",
     subItems: [
-      { label: "Overview", href: "/dashboard/analytics" },
-      { label: "User Growth", href: "/dashboard/analytics/usergrowth" },
-      { label: "Revenue", href: "/dashboard/analytics/revenue" },
+      { label: "Overview", href: "/dashboard/superadmindashboard/analytics" },
+      { label: "User Growth", href: "/dashboard/superadmindashboard/analytics/usergrowth" },
+      { label: "Revenue", href: "/dashboard/superadmindashboard/analytics/revenue" },
     ]
   },
   {
     label: "UMS",
     icon: <IconUsers className="h-5 w-5" />,
-    href: "/dashboard/users",
+    href: "/dashboard/superadmindashboard/users",
     subItems: [
-      { label: "All Users", href: "/dashboard/users/all" },
-      { label: "Admins", href: "/dashboard/users/admins" },
-      { label: "Students", href: "/dashboard/users/students" },
+      { label: "All Users", href: "/dashboard/superadmindashboard/users/all" },
+      { label: "Admins", href: "/dashboard/superadmindashboard/users/admins" },
+      { label: "Students", href: "/dashboard/superadmindashboard/users/students" },
     ]
   },
   {
     label: "Courses",
     icon: <IconBook className="h-5 w-5" />,
-    href: "/dashboard/courses",
+    href: "/dashboard/superadmindashboard/courses",
     subItems: [
-      { label: "All Courses", href: "/dashboard/courses/all" },
-      { label: "Categories", href: "/dashboard/courses/categories" },
-      { label: "Reviews", href: "/dashboard/courses/reviews" },
+      { label: "All Courses", href: "/dashboard/superadmindashboard/courses/all" },
+      { label: "Categories", href: "/dashboard/superadmindashboard/courses/categories" },
+      { label: "Reviews", href: "/dashboard/superadmindashboard/courses/reviews" },
     ]
   },
   {
     label: "Communications",
     icon: <IconMail className="h-5 w-5" />,
-    href: "/dashboard/communications",
+    href: "/dashboard/superadmindashboard/communications",
     subItems: [
-      { label: "Messages", href: "/dashboard/communications/messages" },
-      { label: "Announcements", href: "/dashboard/communications/announcements" },
+      { label: "Messages", href: "/dashboard/superadmindashboard/communications/messages" },
+      { label: "Announcements", href: "/dashboard/superadmindashboard/communications/announcements" },
     ]
   },
   {
     label: "Finance",
     icon: <IconReportMoney className="h-5 w-5" />,
-    href: "/dashboard/finance",
+    href: "/dashboard/superadmindashboard/finance",
     subItems: [
-      { label: "Overview", href: "/dashboard/finance" },
-      { label: "Transactions", href: "/dashboard/finance/transactions" },
+      { label: "Overview", href: "/dashboard/superadmindashboard/finance" },
+      { label: "Transactions", href: "/dashboard/superadmindashboard/finance/transactions" },
     ]
   },
   {
     label: "Settings",
     icon: <IconSettings className="h-5 w-5" />,
-    href: "/dashboard/settings",
+    href: "/dashboard/superadmindashboard/settings",
   },
   {
     label: "Logout",
@@ -179,29 +180,29 @@ interface SuperAdminSidebarNewProps {
 
 
 
-export function SuperAdminSidebarNew({ onOpenChange }: SuperAdminSidebarNewProps) {
-
-  const [open, setOpen] = useState(false);
+export function SuperAdminSidebarNew({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const mainContentRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
-  useEffect(() => {
-    const handleMouseEnter = () => setOpen(true);
-    const handleMouseLeave = () => setOpen(false);
+  const open = true;
 
-    const sidebar = sidebarRef.current;
-    if (sidebar) {
-      sidebar.addEventListener('mouseenter', handleMouseEnter);
-      sidebar.addEventListener('mouseleave', handleMouseLeave);
-    }
+  // useEffect(() => {
+  //   const handleMouseEnter = () => setOpen(true);
+  //   const handleMouseLeave = () => setOpen(false);
 
-    return () => {
-      if (sidebar) {
-        sidebar.removeEventListener('mouseenter', handleMouseEnter);
-        sidebar.removeEventListener('mouseleave', handleMouseLeave);
-      }
-    };
-  }, []);
+  //   const sidebar = sidebarRef.current;
+  //   if (sidebar) {
+  //     sidebar.addEventListener('mouseenter', handleMouseEnter);
+  //     sidebar.addEventListener('mouseleave', handleMouseLeave);
+  //   }
+
+  //   return () => {
+  //     if (sidebar) {
+  //       sidebar.removeEventListener('mouseenter', handleMouseEnter);
+  //       sidebar.removeEventListener('mouseleave', handleMouseLeave);
+  //     }
+  //   };
+  // }, []);
 
   return (
     <div className="flex h-screen">
@@ -211,15 +212,16 @@ export function SuperAdminSidebarNew({ onOpenChange }: SuperAdminSidebarNewProps
           "fixed h-screen bg-gray-100 dark:bg-neutral-800",
           "flex flex-col shadow-lg overflow-hidden",
           "border-r border-gray-200 dark:border-neutral-700",
+          "w-64"
         )}
-        animate={{
-          width: open ? "16rem" : "5rem",
-        }}
-        transition={{
-          duration: 0.3,
-          type: "spring",
-          damping: 20
-        }}
+        // animate={{
+        //   width: open ? "16rem" : "5rem",
+        // }}
+        // transition={{
+        //   duration: 0.3,
+        //   type: "spring",
+        //   damping: 20
+        // }}
       >
         <div className="flex flex-col h-full">
           {/* <motion.div
@@ -250,13 +252,13 @@ export function SuperAdminSidebarNew({ onOpenChange }: SuperAdminSidebarNewProps
           </div>
 
           <div className="p-4 border-t border-gray-200 dark:border-neutral-700">
-            {menuItems.slice(-2).map((item, idx) => (
-              <SidebarItem 
-                key={idx} 
-                item={item} 
-                open={open}
-                isActive={false} 
-              />
+          {menuItems.slice(-2).map((item, idx) => (
+            <SidebarItem 
+              key={idx} 
+              item={item} 
+              open={open}
+              isActive={pathname === item.href} 
+            />
             ))}
           </div>
         </div>

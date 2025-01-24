@@ -4,7 +4,7 @@ import React from 'react'
 const SuperAdminDashboardPage = () => {
   return (
     <div>
-        <SuperAdminDashboard/>
+        {/* <SuperAdminDashboard/> */}
     </div>
   )
 }
