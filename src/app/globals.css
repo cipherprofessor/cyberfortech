@@ -18,3 +18,16 @@ body {
       rgba(0, 20, 40, 0.95)
     ); */
 }
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+    background-color: rgb(209, 213, 219);
+    border-radius: 6px;
+  }
+  .dark .scrollbar-thumb-neutral-600::-webkit-scrollbar-thumb {
+    background-color: rgb(82, 82, 91);
+  }
+}

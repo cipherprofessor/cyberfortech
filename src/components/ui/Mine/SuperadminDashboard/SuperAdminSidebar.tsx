@@ -1,21 +1,3 @@
-// "use client";
-// import React, { useState } from "react";
-// import {
-//   IconDashboard,
-//   IconUsers,
-//   IconBook,
-//   IconMail,
-//   IconReportMoney,
-//   IconSettings,
-//   IconLogout,
-//   IconChevronDown,
-// } from "@tabler/icons-react";
-// import Link from "next/link";
-// import { motion } from "framer-motion";
-// import Image from "next/image";
-// import { cn } from "@/lib/utils";
-// import { Logo, LogoIcon } from "../../AcUI/SideBar/SidebarUse";
-// import { UrlObject } from "url";
 
 // const menuItems = [
 //   {
@@ -78,78 +60,10 @@
 //   }
 // ];
 
-// function SidebarItem({ item, open, isActive }: { item: any; open: boolean; isActive: boolean }) {
-//   const [expanded, setExpanded] = useState(false);
-
-//   return (
-//     <div>
-//       <div
-//         onClick={() => item.subItems && setExpanded(!expanded)}
-//         className={cn(
-//           "flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer",
-//           "hover:bg-gray-200 dark:hover:bg-neutral-700",
-//           isActive && "bg-gray-200 dark:bg-neutral-700"
-//         )}
-//       >
-//         {item.icon}
-//         {open && (
-//           <>
-//             <span className="flex-1">{item.label}</span>
-//             {item.subItems && (
-//               <IconChevronDown 
-//                 className={`h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`}
-//               />
-//             )}
-//           </>
-//         )}
-//       </div>
-
-//       {open && expanded && item.subItems && (
-//         <div className="ml-4 mt-1 space-y-1">
-//           {item.subItems.map((subItem: { href: string | UrlObject; label: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; }, idx: React.Key | null | undefined) => (
-//             <Link 
-//               key={idx} 
-//               href={subItem.href}
-//               className="block px-3 py-2 text-sm rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-700"
-//             >
-//               {subItem.label}
-//             </Link>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// export function SuperAdminSidebarNew() {
-//   const [open, setOpen] = useState(true);
-
-//   return (
-//     <div className={cn(
-//       "flex h-screen bg-gray-100 dark:bg-neutral-800",
-//       open ? "w-64" : "w-20",
-//       "transition-all duration-300"
-//     )}>
-//       <div className="flex flex-col flex-1 p-4">
-//         {open ? <Logo /> : <LogoIcon />}
-//         <div className="mt-8 flex flex-col gap-2">
-//           {menuItems.map((item, idx) => (
-//             <SidebarItem 
-//               key={idx} 
-//               item={item} 
-//               open={open}
-//               isActive={false} 
-//             />
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
 
 "use client";
-import React, { JSX, useState } from "react";
+import React, { useState, useEffect, useRef, JSX } from "react";
 import {
   IconDashboard,
   IconUsers,
@@ -165,7 +79,7 @@ import {
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Logo, LogoIcon } from "../../AcUI/SideBar/SidebarUse";
+import { Logo, } from "../../AcUI/SideBar/SidebarUse";
 import { UrlObject } from "url";
 
 interface SubItem {
@@ -182,70 +96,72 @@ interface MenuItem {
 
 const menuItems = [
   {
-         label: "Analytics",
-         icon: <IconDashboard className="h-5 w-5" />,
-         href: "/dashboard/analytics",
-         subItems: [
-           { label: "Overview", href: "/dashboard/analytics" },
-           { label: "User Growth", href: "/dashboard/analytics/users" },
-           { label: "Revenue", href: "/dashboard/analytics/revenue" },
-         ]
-       },
-       {
-         label: "User Management",
-         icon: <IconUsers className="h-5 w-5" />,
-         href: "/dashboard/users",
-         subItems: [
-           { label: "All Users", href: "/dashboard/users/all" },
-           { label: "Admins", href: "/dashboard/users/admins" },
-           { label: "Students", href: "/dashboard/users/students" },
-         ]
-       },
-       {
-         label: "Courses",
-         icon: <IconBook className="h-5 w-5" />,
-         href: "/dashboard/courses",
-         subItems: [
-           { label: "All Courses", href: "/dashboard/courses/all" },
-           { label: "Categories", href: "/dashboard/courses/categories" },
-           { label: "Reviews", href: "/dashboard/courses/reviews" },
-         ]
-       },
-       {
-         label: "Communications",
-         icon: <IconMail className="h-5 w-5" />,
-         href: "/dashboard/communications",
-         subItems: [
-           { label: "Messages", href: "/dashboard/communications/messages" },
-           { label: "Announcements", href: "/dashboard/communications/announcements" },
-         ]
-       },
-       {
-         label: "Finance",
-         icon: <IconReportMoney className="h-5 w-5" />,
-         href: "/dashboard/finance",
-         subItems: [
-           { label: "Overview", href: "/dashboard/finance" },
-           { label: "Transactions", href: "/dashboard/finance/transactions" },
-         ]
-       },
-       {
-         label: "Settings",
-         icon: <IconSettings className="h-5 w-5" />,
-         href: "/dashboard/settings",
-       },
-       {
-         label: "Logout",
-         icon: <IconLogout className="h-5 w-5" />,
-         href: "/logout",
-       }
-     ];
+    label: "Analytics",
+    icon: <IconDashboard className="h-5 w-5" />,
+    href: "/dashboard/analytics",
+    subItems: [
+      { label: "Overview", href: "/dashboard/analytics" },
+      { label: "User Growth", href: "/dashboard/analytics/users" },
+      { label: "Revenue", href: "/dashboard/analytics/revenue" },
+    ]
+  },
+  {
+    label: "Users",
+    icon: <IconUsers className="h-5 w-5" />,
+    href: "/dashboard/users",
+    subItems: [
+      { label: "All Users", href: "/dashboard/users/all" },
+      { label: "Admins", href: "/dashboard/users/admins" },
+      { label: "Students", href: "/dashboard/users/students" },
+    ]
+  },
+  {
+    label: "Courses",
+    icon: <IconBook className="h-5 w-5" />,
+    href: "/dashboard/courses",
+    subItems: [
+      { label: "All Courses", href: "/dashboard/courses/all" },
+      { label: "Categories", href: "/dashboard/courses/categories" },
+      { label: "Reviews", href: "/dashboard/courses/reviews" },
+    ]
+  },
+  {
+    label: "Communications",
+    icon: <IconMail className="h-5 w-5" />,
+    href: "/dashboard/communications",
+    subItems: [
+      { label: "Messages", href: "/dashboard/communications/messages" },
+      { label: "Announcements", href: "/dashboard/communications/announcements" },
+    ]
+  },
+  {
+    label: "Finance",
+    icon: <IconReportMoney className="h-5 w-5" />,
+    href: "/dashboard/finance",
+    subItems: [
+      { label: "Overview", href: "/dashboard/finance" },
+      { label: "Transactions", href: "/dashboard/finance/transactions" },
+    ]
+  },
+  {
+    label: "Settings",
+    icon: <IconSettings className="h-5 w-5" />,
+    href: "/dashboard/settings",
+  },
+  {
+    label: "Logout",
+    icon: <IconLogout className="h-5 w-5" />,
+    href: "/logout",
+  }
+];
 
 function SidebarItem({ item, open, isActive }: { item: MenuItem; open: boolean; isActive: boolean }) {
   const [expanded, setExpanded] = useState(false);
+  const itemRef = useRef<HTMLDivElement>(null);
 
   return (
     <motion.div
+      ref={itemRef}
       initial={false}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -257,12 +173,13 @@ function SidebarItem({ item, open, isActive }: { item: MenuItem; open: boolean; 
           "hover:bg-gray-200 dark:hover:bg-neutral-700 transition-colors duration-200",
           isActive && "bg-gray-200 dark:bg-neutral-700"
         )}
-        whileHover={{ x: 4 }}
+        whileHover={{ x: 4, backgroundColor: "rgb(229, 231, 235)" }}
+        whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.2 }}
       >
         <motion.div
           initial={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.1, rotate: 5 }}
         >
           {item.icon}
         </motion.div>
@@ -319,31 +236,39 @@ function SidebarItem({ item, open, isActive }: { item: MenuItem; open: boolean; 
 }
 
 export function SuperAdminSidebarNew() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMouseEnter = () => setOpen(true);
+    const handleMouseLeave = () => setOpen(false);
+
+    const sidebar = sidebarRef.current;
+    if (sidebar) {
+      sidebar.addEventListener('mouseenter', handleMouseEnter);
+      sidebar.addEventListener('mouseleave', handleMouseLeave);
+    }
+
+    return () => {
+      if (sidebar) {
+        sidebar.removeEventListener('mouseenter', handleMouseEnter);
+        sidebar.removeEventListener('mouseleave', handleMouseLeave);
+      }
+    };
+  }, []);
 
   return (
-    <>
-      {/* Mobile Menu Button */}
-      <div className="md:hidden fixed top-4 right-4 z-50">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setOpen(!open)}
-          className="p-2 rounded-lg bg-gray-200 dark:bg-neutral-700"
-        >
-          {open ? <IconX /> : <IconMenu2 />}
-        </motion.button>
-      </div>
-
+    <div className="flex h-screen">
       <motion.div 
+        ref={sidebarRef}
         className={cn(
-          "fixed md:relative h-screen bg-gray-100 dark:bg-neutral-800",
-          "flex flex-col shadow-lg",
-          open ? "w-64" : "w-20",
+          "fixed h-screen bg-gray-100 dark:bg-neutral-800",
+          "flex flex-col shadow-lg overflow-hidden",
+          "border-r border-gray-200 dark:border-neutral-700",
         )}
         animate={{
           width: open ? "16rem" : "5rem",
-          x: open ? 0 : -40,
         }}
         transition={{
           duration: 0.3,
@@ -351,22 +276,36 @@ export function SuperAdminSidebarNew() {
           damping: 20
         }}
       >
-        <div className="flex flex-col flex-1 p-4">
-          <motion.div
+        <div className="flex flex-col h-full">
+          {/* <motion.div
+            className="p-4"
             initial={false}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
           >
-            {open ? <Logo /> : <LogoIcon />}
-          </motion.div>
+            {open ? <Logo /> : <></>}
+          </motion.div> */}
 
-          <motion.div 
-            className="mt-8 flex flex-col gap-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            {menuItems.map((item, idx) => (
+          <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-neutral-600">
+            <motion.div 
+              className="p-4 flex flex-col gap-9"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              {menuItems.slice(0, -2).map((item, idx) => (
+                <SidebarItem 
+                  key={idx} 
+                  item={item} 
+                  open={open}
+                  isActive={false} 
+                />
+              ))}
+            </motion.div>
+          </div>
+
+          <div className="p-4 border-t border-gray-200 dark:border-neutral-700">
+            {menuItems.slice(-2).map((item, idx) => (
               <SidebarItem 
                 key={idx} 
                 item={item} 
@@ -374,12 +313,16 @@ export function SuperAdminSidebarNew() {
                 isActive={false} 
               />
             ))}
-          </motion.div>
+          </div>
         </div>
       </motion.div>
-    </>
+
+      <div 
+        ref={mainContentRef}
+        className="flex-1 ml-20 overflow-auto"
+      >
+        {/* Your main content goes here */}
+      </div>
+    </div>
   );
 }
-
-
-
