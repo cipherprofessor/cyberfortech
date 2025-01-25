@@ -4,7 +4,7 @@ import { useUser } from "@clerk/nextjs";
 
 export function useAuth() {
   const { user, isLoaded } = useUser();
-  const role = user?.publicMetadata?.role as string;
+  const role = user?.publicMetadata?.example as string;
 
   return {
     user,
@@ -12,7 +12,7 @@ export function useAuth() {
     isAuthenticated: !!user,
     isSuperAdmin: role === 'superadmin',
     isAdmin: ['superadmin', 'admin'].includes(role),
-    isStudent: role === 'student',
+    isStudent: role === 'data',
     role
   };
 }

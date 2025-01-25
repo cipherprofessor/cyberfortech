@@ -1,10 +1,21 @@
 'use client';
 import { EnhancedAnalyticsDashboardChart } from '@/components/charts/composite/AnalyticsDashboardChart';
 import React from 'react';
+import type { ChartSeries, ChartDataPoint } from '@/components/charts/composite/AnalyticsDashboardChart';
+
+// Define the data type to match ChartDataPoint
+interface AnalyticsDataPoint extends ChartDataPoint {
+  date: string;
+  revenue: number;
+  users: number;
+  growth: number;
+  courses: number;
+  completionRate: number;
+}
 
 const Overview = () => {
-  // Sample data - Replace with your actual data
-  const data = [
+  // Sample data with the correct type
+  const data: AnalyticsDataPoint[] = [
     {
       date: '2024-01-01',
       revenue: 4500,
@@ -44,26 +55,27 @@ const Overview = () => {
       growth: 21,
       courses: 210,
       completionRate: 77
-    },
-    // Add more data points as needed
+    }
   ];
 
-  // Chart series configuration
-  const series = [
+  // Chart series configuration with proper typing
+  const series: ChartSeries[] = [
     {
       type: 'area',
       dataKey: 'revenue',
       name: 'Revenue',
       color: '#3B82F6',
       gradient: true,
-      yAxisId: '1'
+      yAxisId: '1',
+      curveType: 'monotone'
     },
     {
       type: 'line',
       dataKey: 'growth',
       name: 'Growth %',
       color: '#10B981',
-      yAxisId: '2'
+      yAxisId: '2',
+      curveType: 'monotone'
     },
     {
       type: 'bar',
@@ -77,7 +89,8 @@ const Overview = () => {
       dataKey: 'completionRate',
       name: 'Completion Rate %',
       color: '#8B5CF6',
-      yAxisId: '2'
+      yAxisId: '2',
+      curveType: 'monotone'
     }
   ];
 
@@ -122,8 +135,10 @@ const Overview = () => {
     { label: 'All', value: 'all', range: 0 }
   ];
 
-  const handleDataFiltered = (filteredData: any[]) => {
-    console.log('Filtered data:', filteredData);
+  // Properly typed handler for filtered data
+  const handleDataFiltered = (filteredData: ChartDataPoint[]) => {
+    const typedData = filteredData as AnalyticsDataPoint[];
+    console.log('Filtered data:', typedData);
     // Handle filtered data if needed
   };
 

@@ -37,7 +37,7 @@ const menuItems = [
     icon: <IconDashboard className="h-5 w-5" />,
     href: "/dashboard/analytics",
     subItems: [
-      { label: "Overview", href: "/dashboard/superadmindashboard/analytics" },
+      { label: "Overview", href: "/dashboard/superadmindashboard/analytics/overview" },
       { label: "User Growth", href: "/dashboard/superadmindashboard/analytics/usergrowth" },
       { label: "Revenue", href: "/dashboard/superadmindashboard/analytics/revenue" },
     ]

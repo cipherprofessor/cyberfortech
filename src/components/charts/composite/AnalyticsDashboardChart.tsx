@@ -26,6 +26,7 @@ interface ChartDataPoint {
   [key: string]: any;
 }
 
+// Update the ChartSeries interface
 interface ChartSeries {
   type: 'line' | 'area' | 'bar' | 'scatter';
   dataKey: string;
@@ -35,6 +36,7 @@ interface ChartSeries {
   yAxisId?: string;
   stackId?: string;
   hide?: boolean;
+  curveType?: 'basis' | 'linear' | 'natural' | 'monotone' | 'step';
 }
 
 interface ReferenceValue {
@@ -187,9 +189,8 @@ export const EnhancedAnalyticsDashboardChart: React.FC<EnhancedAnalyticsDashboar
     const isActive = activeSeriesKeys.includes(item.dataKey);
     const opacity = (hoveredSeries === null || hoveredSeries === item.dataKey) && isActive ? 1 : 0.3;
 
+    // Separate key from common props
     const commonProps = {
-      key: item.dataKey,
-      type: "monotone",
       dataKey: item.dataKey,
       name: item.name,
       stroke: item.color || currentTheme.colors[0],
@@ -199,12 +200,14 @@ export const EnhancedAnalyticsDashboardChart: React.FC<EnhancedAnalyticsDashboar
       opacity,
       yAxisId: item.yAxisId || '1',
       hide: !isActive,
+      type: item.curveType || 'monotone' as const,
     };
 
     switch (item.type) {
       case 'line':
         return (
           <Line
+            key={item.dataKey}
             {...commonProps}
             strokeWidth={2}
             dot={{ r: 3, fill: item.color || currentTheme.colors[0] }}
@@ -214,6 +217,7 @@ export const EnhancedAnalyticsDashboardChart: React.FC<EnhancedAnalyticsDashboar
       case 'area':
         return (
           <Area
+            key={item.dataKey}
             {...commonProps}
             strokeWidth={2}
             fillOpacity={0.3}
@@ -222,6 +226,7 @@ export const EnhancedAnalyticsDashboardChart: React.FC<EnhancedAnalyticsDashboar
       case 'bar':
         return (
           <Bar
+            key={item.dataKey}
             {...commonProps}
             radius={[4, 4, 0, 0]}
             barSize={20}
@@ -231,6 +236,7 @@ export const EnhancedAnalyticsDashboardChart: React.FC<EnhancedAnalyticsDashboar
       case 'scatter':
         return (
           <Scatter
+            key={item.dataKey}
             {...commonProps}
             fill={item.color || currentTheme.colors[0]}
           />
