@@ -55,8 +55,8 @@ export default function Navbar() {
           {isAdmin && (
         <>
            <Link href="/dashboard">Dashboard</Link>
-          <Link href="/dashboard/admin/courses">Manage Courses</Link>
-          <Link href="/dashboard/admin/resources">Resources</Link>
+          {/* <Link href="/dashboard/admin/courses">Manage Courses</Link>
+          <Link href="/dashboard/admin/resources">Resources</Link> */}
         </>
           )}
 

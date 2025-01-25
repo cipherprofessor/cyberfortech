@@ -11,7 +11,7 @@ export function useAuth() {
     isLoaded,
     isAuthenticated: !!user,
     isSuperAdmin: role === 'superadmin',
-    isAdmin: ['superadmin', 'admin'].includes(role),
+    isAdmin: ['admin'].includes(role),
     isStudent: role === 'data',
     role
   };
