@@ -47,9 +47,9 @@ const menuItems = [
     icon: <IconUsers className="h-5 w-5" />,
     href: "/dashboard/superadmindashboard/users",
     subItems: [
-      { label: "All Users", href: "/dashboard/superadmindashboard/users/all" },
-      { label: "Admins", href: "/dashboard/superadmindashboard/users/admins" },
-      { label: "Students", href: "/dashboard/superadmindashboard/users/students" },
+      { label: "All Users", href: "/dashboard/superadmindashboard/ums/allusers" },
+      { label: "Admins", href: "/dashboard/superadmindashboard/ums/manageadmins" },
+      { label: "Students", href: "/dashboard/superadmindashboard/ums/managestudents" },
     ]
   },
   {
@@ -57,8 +57,8 @@ const menuItems = [
     icon: <IconBook className="h-5 w-5" />,
     href: "/dashboard/superadmindashboard/courses",
     subItems: [
-      { label: "All Courses", href: "/dashboard/superadmindashboard/courses/all" },
-      { label: "Categories", href: "/dashboard/superadmindashboard/courses/categories" },
+      { label: "All Courses", href: "/dashboard/superadmindashboard/courses/allcourses" },
+      // { label: "Categories", href: "/dashboard/superadmindashboard/courses/categories" },
       { label: "Reviews", href: "/dashboard/superadmindashboard/courses/reviews" },
     ]
   },
