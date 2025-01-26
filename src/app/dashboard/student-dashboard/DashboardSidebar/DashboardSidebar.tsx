@@ -16,12 +16,12 @@ import styles from './DashboardSidebar.module.scss';
 const menuItems = [
   { icon: Layout, label: 'Overview', href: '/dashboard/student-dashboard' },
   { icon: Book, label: 'My Courses', href: '/dashboard/student-dashboard/courses' },
-  { icon: Calendar, label: 'Schedule', href: '/dashboard/student-dashboard/schedule' },
-  { icon: Award, label: 'Certificates', href: '/dashboard/student-dashboard/certificates' },
-  { icon: BarChart2, label: 'Progress', href: '/dashboard/student-dashboard/progress' },
-  { icon: MessageSquare, label: 'Discussion', href: '/dashboard/student-dashboard/discussion' },
-  { icon: CreditCard, label: 'Billing', href: '/dashboard/student-dashboard/billing' },
-  { icon: Settings, label: 'Settings', href: '/dashboard/student-dashboard/settings' },
+  { icon: Calendar, label: 'Schedule', href: '/dashboard/student-dashboard/routes/schedule' },
+  { icon: Award, label: 'Certificates', href: '/dashboard/student-dashboard/routes/certificates' },
+  { icon: BarChart2, label: 'Progress', href: '/dashboard/student-dashboard/routes/progress' },
+  { icon: MessageSquare, label: 'Discussion', href: '/dashboard/student-dashboard/routes/discussion' },
+  { icon: CreditCard, label: 'Billing', href: '/dashboard/student-dashboard/routes/billing' },
+  { icon: Settings, label: 'Settings', href: '/dashboard/student-dashboard/routes/settings' },
 ];
 
 export function DashboardSidebar() {
