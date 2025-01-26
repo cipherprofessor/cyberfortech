@@ -7,7 +7,9 @@ import { DashboardLayout } from '@/components/ui/Mine/SuperadminDashboard/Dashbo
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedRoute>
-      <DashboardLayout>{children}</DashboardLayout>
+      
+        {children}
+       
     </ProtectedRoute>
   );
 }

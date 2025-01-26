@@ -210,7 +210,7 @@ export function SuperAdminSidebarNew({ onOpenChange }: { onOpenChange?: (open: b
   // }, []);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       <motion.div 
         ref={sidebarRef}
         className={cn(

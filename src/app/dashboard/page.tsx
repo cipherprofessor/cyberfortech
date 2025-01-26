@@ -18,9 +18,9 @@ export default function DashboardPage() {
   if (isSuperAdmin) {
     redirect('/dashboard/superadmindashboard/analytics');
   } else if (isAdmin) {
-    redirect('/dashboard/admin');
+    redirect('/dashboard/admin-dashboard');
   } else if (isStudent) {
-    redirect('/dashboard/student');
+    redirect('/dashboard/student-dashboard');
   }
 
   redirect('/');
