@@ -5,17 +5,25 @@ import { CourseCard } from '../CourseCard/CourseCard';
 // import { Pagination } from '@heroui/react';
 import { CourseCardPlaceholder } from '../CourseCard/CourseCardPlaceholder';
 import { Button, Pagination } from '@heroui/react';
+// CourseList.tsx
 
 type Course = {
   id: string;
   title: string;
   description: string;
-  imageUrl: string;
+  image_url: string;
   duration: string;
   level: string;
   price: number;
-  rating: number;
-  studentsEnrolled: number;
+  average_rating: number;
+  total_students: number;
+  instructor_name: string;
+  category: string;
+  instructor_avatar?: string;
+  total_reviews?: number;
+  created_at?: string;
+  updated_at?: string;
+  instructor_id?: string;
 };
 
 export function CourseList() {
@@ -25,7 +33,6 @@ export function CourseList() {
   const coursesPerPage = 10;
 
   useEffect(() => {
-    // Fetch courses from API
     const fetchCourses = async () => {
       try {
         const response = await fetch('/api/courses');
@@ -58,14 +65,11 @@ export function CourseList() {
       </div>
       
       {!loading && (
-        <>
-       
         <Pagination
           page={currentPage}
           total={Math.ceil(courses.length / coursesPerPage)}
           onChange={setCurrentPage}
         />
-         </>
       )}
     </div>
   );

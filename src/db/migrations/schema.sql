@@ -26,8 +26,10 @@ CREATE TABLE IF NOT EXISTS courses (
   category TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  average_rating DECIMAL(3, 2) DEFAULT 0, -- New column added
   FOREIGN KEY (instructor_id) REFERENCES users(id)
 );
+
 
 -- Create course sections table
 CREATE TABLE IF NOT EXISTS course_sections (

@@ -14,6 +14,18 @@ const nextConfig: NextConfig = {
       },
       {
         hostname: 'pbs.twimg.com'
+      },
+      {
+        hostname: 'daxg39y63pxwu.cloudfront.net'
+      },
+      {
+        hostname: 'imagekit.io'
+      },
+      {
+        hostname: 'loremflickr.com'
+      },
+      {
+        hostname: 'ik.imagekit.io'
       }
     ],
   },
