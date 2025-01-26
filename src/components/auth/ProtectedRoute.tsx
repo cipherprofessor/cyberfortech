@@ -3,6 +3,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
+import { SidebarLoadingSkeleton } from "../formloadingskelton";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -13,7 +14,9 @@ export function ProtectedRoute({ children, allowedRoles = [] }: ProtectedRoutePr
   const { isAuthenticated, isLoaded, role } = useAuth();
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <div>
+      <SidebarLoadingSkeleton />
+    </div>;
   }
 
   if (!isAuthenticated) {

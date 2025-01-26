@@ -6,9 +6,9 @@ import { redirect } from 'next/navigation';
 export default function DashboardPage() {
   const { isAuthenticated, isSuperAdmin, isAdmin, isStudent, isLoaded } = useAuth();
   
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
+  // if (!isLoaded) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (!isAuthenticated) {
     redirect('/');
