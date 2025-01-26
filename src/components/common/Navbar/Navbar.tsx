@@ -68,7 +68,7 @@ export default function Navbar() {
       {/* Student links */}
       {isStudent && (
         <>
-        <Link href="/dashboard" className={styles.navLink}>
+        <Link href="/dashboard/student-dashboard" className={styles.navLink}>
             Dashboard
           </Link>
           <Link href="/dashboard/my-courses">My Courses</Link>

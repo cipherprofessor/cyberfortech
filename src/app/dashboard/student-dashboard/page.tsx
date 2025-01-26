@@ -15,10 +15,10 @@ import { UpcomingSchedule } from './UpcomingSchedule/UpcomingSchedule';
 export default async function StudentDashboard() {
   // In a real app, fetch this data from your API
   const stats = {
-    coursesEnrolled: 5,
-    coursesCompleted: 3,
+    coursesEnrolled: 53,
+    coursesCompleted: 35,
     averageScore: 85,
-    totalHours: 47,
+    totalHours: 437,
   };
 
   const courseProgress = [
