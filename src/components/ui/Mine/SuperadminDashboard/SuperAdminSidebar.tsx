@@ -76,8 +76,13 @@ const menuItems = [
     icon: <IconReportMoney className="h-5 w-5" />,
     href: "/dashboard/superadmindashboard/finance",
     subItems: [
-      { label: "Overview", href: "/dashboard/superadmindashboard/finance" },
-      { label: "Transactions", href: "/dashboard/superadmindashboard/finance/transactions" },
+      { label: "Overview", href: "/dashboard/superadmindashboard/analytics/finance" },
+      { label: "Transactions", href: "/dashboard/superadmindashboard/analytics/finance/transaction" },
+      { label: "Invoices", href: "/dashboard/superadmindashboard/analytics/finance/invoices" },
+      { label: "Reconcillation", href: "/dashboard/superadmindashboard/analytics/finance/reconcillation" },
+      { label: "Report", href: "/dashboard/superadmindashboard/analytics/finance/reports" },
+      { label: "Settings", href: "/dashboard/superadmindashboard/analytics/finance/settings" },
+      { label: "Tax", href: "/dashboard/superadmindashboard/analytics/tax" },
     ]
   },
   {

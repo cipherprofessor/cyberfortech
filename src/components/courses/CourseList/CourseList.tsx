@@ -66,11 +66,6 @@ export function CourseList() {
           onChange={setCurrentPage}
         />
          </>
-        
-        // <>
-        // {/* <Pagination showControls initialPage={1} total={10} /> */}
-        // <Button color="primary">Button</Button>;
-        // </>
       )}
     </div>
   );
