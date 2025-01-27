@@ -2,6 +2,7 @@
 "use client";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {Accordion, AccordionItem, Avatar} from "@heroui/react";
 import { 
   Mail, 
   Phone, 
@@ -38,8 +39,14 @@ const faqs = [
   }
 ];
 
+const defaultContent =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+
 export function ContactSection() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const Accordian1Content ="We offer a wide range of cybersecurity courses including Network Security, Penetration Testing, Cloud Security, and more. Our courses are designed for both beginners and advanced professionals.";
+ const Accordian2Content = "Course duration varies depending on the program. Most courses range from 8-12 weeks, with flexible learning options to fit your schedule.";
+ const Accordian3Content = "Yes, we provide comprehensive job assistance including resume building, interview preparation, and connections with our industry partners.";
   
   // const [isSubmitting, setIsSubmitting] = useState(false);
   // const [formData, setFormData] = useState({
@@ -180,40 +187,64 @@ export function ContactSection() {
 
               <div className={styles.faqList}>
                  {/* <AccordianWithIcons /> */}
-                 <HeroUIAccordian />
-                {/* {faqs.map((faq, index) => (
-                  <motion.div
-                    key={index}
-                    className={styles.faqItem}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <button
-                      className={styles.faqButton}
-                      onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                    >
-                      <span>{faq.question}</span>
-                      <ChevronDown 
-                        className={`${styles.chevron} ${openFaq === index ? styles.rotate : ''}`}
-                      />
-                    </button>
-                    <AnimatePresence>
-                      {openFaq === index && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className={styles.faqAnswer}
-                        >
-                          <p>{faq.answer}</p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))} */}
+                 {/* <HeroUIAccordian /> */}
+
+                 <Accordion selectionMode="multiple">
+      <AccordionItem
+        key="1"
+        aria-label="Chung Miller"
+        startContent={
+          <Avatar
+            isBordered
+            color="primary"
+            radius="lg"
+            src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+          />
+        }
+        subtitle="4 unread messages"
+        title="Chung Miller"
+      >
+        {defaultContent}
+      </AccordionItem>
+      <AccordionItem
+        key="2"
+        aria-label="Janelle Lenard"
+        startContent={
+          <Avatar
+            isBordered
+            color="success"
+            radius="lg"
+            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+          />
+        }
+        subtitle="3 incompleted steps"
+        title="Janelle Lenard"
+      >
+        {defaultContent}
+      </AccordionItem>
+      <AccordionItem
+        key="3"
+        aria-label="Zoey Lang"
+        startContent={
+          <Avatar
+            isBordered
+            color="warning"
+            radius="lg"
+            src="https://i.pravatar.cc/150?u=a04258114e29026702d"
+          />
+        }
+        subtitle={
+          <p className="flex">
+            2 issues to<span className="text-primary ml-1">fix now</span>
+          </p>
+        }
+        title="Zoey Lang"
+      >
+        {defaultContent}
+      </AccordionItem>
+    </Accordion>
+
+                
               </div>
             </div>
           </div>

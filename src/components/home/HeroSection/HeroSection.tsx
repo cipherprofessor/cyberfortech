@@ -12,19 +12,19 @@ import styles from "./HeroSection.module.scss";
 const words = [
   {
     text: "Transform",
-    className: "text-white dark:text-blue-500",
+    className: "text-black dark:text-blue-500",
   },
   {
     text: "Your",
-    className: "text-white dark:text-blue-500",
+    className: "text-black dark:text-blue-500",
   },
   {
     text: "Career",
-    className: "text-white dark:text-blue-500",
+    className: "text-black dark:text-blue-500",
   },
   {
     text: "with",
-    className: "text-white dark:text-blue-500",
+    className: "text-black dark:text-blue-500",
   },
   {
     text: "CyberForTech",
