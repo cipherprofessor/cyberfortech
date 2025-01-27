@@ -7,6 +7,8 @@ import { TypewriterEffect } from "@/components/ui/AcUI/TypeWritterEffect/typewri
 // import { BackgroundBeams } from "@/components/ui/AcUI/BackgroundBeams/background-beams";
 // import { SparklesCore } from "@/components/ui/AcUI/Sparkles/sparkles";
 import styles from "./HeroSection.module.scss";
+import { BackgroundBeams } from "@/components/ui/AcUI/BackgroundBeams/background-beams";
+import { SparklesCore } from "@/components/common/sparkles/sparkles";
 // import { SparklesCore } from "@/components/common/sparkles/sparkles";
 
 const words = [
@@ -28,26 +30,14 @@ const words = [
   },
   {
     text: "CyberForTech",
-    className: "text-blue-400 dark:text-blue-500",
+    className: "text-blue-400 dark:text-blue-500 mt-4",
   },
 ];
 
 export function HeroSection() {
   return (
     <section className={styles.heroSection}>
-      {/* <BackgroundBeams /> */}
-      {/* <div className="w-full absolute inset-0 h-screen">
-        <SparklesCore
-          id="tsparticlesfullpage"
-          background="transparent"
-          minSize={0.6}
-          maxSize={1.4}
-          particleDensity={100}
-          className="w-full h-full"
-          particleColor="#FFFFFF"
-        />
-      </div> */}
-      
+      <BackgroundBeams />    
       <div className={styles.content}>
         <div className={styles.gridContainer}>
           <motion.div
@@ -92,26 +82,74 @@ export function HeroSection() {
             >
               <div className={styles.badge}>
                 <Image
-                  src="/usacaw.png"
+                  src="/logocompanies/aws.svg"
                   alt="ISACA Certified"
                   width={80}
                   height={40}
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
               <div className={styles.badge}>
                 <Image
-                  src="/comptia1.jpg"
+                  src="/logocompanies/ceh.png"
                   alt="CompTIA Partner"
                   width={80}
                   height={40}
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
               <div className={styles.badge}>
                 <Image
-                  src="/CISSP2.png"
+                  src="/logocompanies/cisco-ar21.svg"
                   alt="CISSP Certified"
                   width={80}
                   height={40}
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              <div className={styles.badge}>
+                <Image
+                  src="/logocompanies/gcp.svg"
+                  alt="CISSP Certified"
+                  width={80}
+                  height={40}
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              <div className={styles.badge}>
+                <Image
+                  src="/logocompanies/hashicorp.svg"
+                  alt="CISSP Certified"
+                  width={80}
+                  height={40}
+                  style={{ objectFit: 'contain' }}
+                />
+                </div>
+                <div className={styles.badge}>
+                <Image
+                  src="/logocompanies/nextjs-ar21.svg"
+                  alt="CISSP Certified"
+                  width={80}
+                  height={40}
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              <div className={styles.badge}>
+                <Image
+                  src="/logocompanies/nginx-ar21.svg"
+                  alt="CISSP Certified"
+                  width={80}
+                  height={40}
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              <div className={styles.badge}>
+                <Image
+                  src="/logocompanies/reactjs-ar21.svg"
+                  alt="CISSP Certified"
+                  width={80}
+                  height={40}
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
             </motion.div>
