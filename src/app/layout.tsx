@@ -25,12 +25,12 @@ export default function RootLayout({
         className="light"
       >
         <body 
-          className={`${inter.className} antialiased`}
+          // className={`${inter.className} antialiased`}
           suppressHydrationWarning
         >
           <Providers>
             <Navbar />
-            <main>{children}</main>
+            <main className="mt-16">{children}</main>
             {/* <Footer /> */}
           </Providers>
         </body>

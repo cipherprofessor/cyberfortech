@@ -1,26 +1,40 @@
 // src/components/common/Navbar/Navbar.tsx
 'use client'
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from '@heroui/react';
-import { Moon, Sun, Monitor } from 'lucide-react';
+import { Moon, Sun, Monitor, Menu, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Navbar.module.scss';
 import { useAuth } from '@/hooks/useAuth';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const { isAuthenticated, isSuperAdmin, isAdmin, isStudent } = useAuth();
+  const pathname = usePathname();
 
-  // Ensure component is mounted to avoid hydration issues
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Cycle through themes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  const isActivePath = (path: string) => {
+    if (path === '/') {
+      return pathname === path;
+    }
+    return pathname.startsWith(path);
+  };
+
   const cycleTheme = () => {
     switch (theme) {
       case 'light':
@@ -40,58 +54,115 @@ export default function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navContainer}>
-        <Link href="/" className={styles.logo}>
-          CyberForTech
+        {/* Logo and Brand */}
+        <Link href="/" className={styles.logoContainer}>
+          <Image
+            src="/logo/cyberlogo2.png"
+            alt="CyberForTech Logo"
+            width={40}
+            height={40}
+            className={styles.logo}
+            priority
+          />
+          <span className={styles.logoText}>CyberForTech</span>
         </Link>
 
-        <div className={styles.navLinks}>
-        <Link href="/" className={styles.navLink}>
+        {/* Desktop Navigation Links */}
+        <div className={styles.desktopNav}>
+          <Link 
+            href="/" 
+            className={`${styles.navLink} ${isActivePath('/') ? styles.active : ''}`}
+          >
             Home
           </Link>
-          <Link href="/courses" className={styles.navLink}>
+          <Link 
+            href="/courses" 
+            className={`${styles.navLink} ${isActivePath('/courses') ? styles.active : ''}`}
+          >
             Courses
           </Link>
 
+          {/* Admin links */}
           {isAdmin && (
-        <>
-           <Link href="/dashboard">Dashboard</Link>
-          {/* <Link href="/dashboard/admin/courses">Manage Courses</Link>
-          <Link href="/dashboard/admin/resources">Resources</Link> */}
-        </>
+            <>
+              <Link 
+                href="/dashboard" 
+                className={`${styles.navLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
+              >
+                Dashboard
+              </Link>
+            </>
           )}
 
           {/* Super admin links */}
-        {isSuperAdmin && (
-        <Link href="/dashboard">Dashboard</Link>
-       )}
+          {isSuperAdmin && (
+            <Link 
+              href="/dashboard" 
+              className={`${styles.navLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
+            >
+              Dashboard
+            </Link>
+          )}
 
-      {/* Student links */}
-      {isStudent && (
-        <>
-        <Link href="/dashboard/student-dashboard" className={styles.navLink}>
-            Dashboard
-          </Link>
-          <Link href="/dashboard/my-courses">My Courses</Link>
-        </>
-      )}
-          <Link href="/forum" className={styles.navLink}>
+          {/* Student links */}
+          {isStudent && (
+            <>
+              <Link 
+                href="/dashboard/student-dashboard" 
+                className={`${styles.navLink} ${isActivePath('/dashboard/student-dashboard') ? styles.active : ''}`}
+              >
+                Dashboard
+              </Link>
+              <Link 
+                href="/dashboard/my-courses" 
+                className={`${styles.navLink} ${isActivePath('/dashboard/my-courses') ? styles.active : ''}`}
+              >
+                My Courses
+              </Link>
+            </>
+          )}
+
+          <Link 
+            href="/forum" 
+            className={`${styles.navLink} ${isActivePath('/forum') ? styles.active : ''}`}
+          >
             Forum
           </Link>
-          <Link href="/about" className={styles.navLink}>
+          <Link 
+            href="/about" 
+            className={`${styles.navLink} ${isActivePath('/about') ? styles.active : ''}`}
+          >
             About
           </Link>
-          <Link href="/contact" className={styles.navLink}>
+          <Link 
+            href="/contact" 
+            className={`${styles.navLink} ${isActivePath('/contact') ? styles.active : ''}`}
+          >
             Contact Us
           </Link>
         </div>
 
+        {/* Mobile Menu Button */}
+        <button
+          className={styles.mobileMenuButton}
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
+        >
+          <motion.div
+            animate={{ rotate: isOpen ? 90 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </motion.div>
+        </button>
+
+        {/* Right Side Actions */}
         <div className={styles.navActions}>
-          {/* Theme Toggle Button */}
           <Button 
             variant="ghost" 
             size="md" 
             onPress={cycleTheme}
-            className="mr-3 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className={styles.themeToggle}
           >
             {theme === 'light' ? (
               <Sun className="h-5 w-5" />
@@ -105,22 +176,146 @@ export default function Navbar() {
 
           <SignedOut>
             <SignInButton>
-              <Button variant="ghost" className="mr-2">
+              <Button variant="ghost" className={styles.signInButton}>
                 Sign In
               </Button>
             </SignInButton>
             <SignUpButton>
-              <Button variant="solid" className="mr-2">
+              <Button variant="solid" className={styles.signUpButton}>
                 Sign Up
               </Button>
-              </SignUpButton>
+            </SignUpButton>
           </SignedOut>
 
           <SignedIn>
-            <UserButton afterSignOutUrl="/" />
+            <UserButton 
+              afterSignOutUrl="/"
+              appearance={{
+                elements: {
+                  avatarBox: styles.userButton
+                }
+              }}
+            />
           </SignedIn>
         </div>
       </div>
+
+      {/* Mobile Navigation */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className={styles.mobileNav}
+          >
+            <Link 
+              href="/" 
+              className={`${styles.mobileNavLink} ${isActivePath('/') ? styles.active : ''}`}
+            >
+              Home
+            </Link>
+            <Link 
+              href="/courses" 
+              className={`${styles.mobileNavLink} ${isActivePath('/courses') ? styles.active : ''}`}
+            >
+              Courses
+            </Link>
+
+            {/* Admin links */}
+            {isAdmin && (
+              <>
+                <Link 
+                  href="/dashboard" 
+                  className={`${styles.mobileNavLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
+                >
+                  Dashboard
+                </Link>
+              </>
+            )}
+
+            {/* Super admin links */}
+            {isSuperAdmin && (
+              <Link 
+                href="/dashboard" 
+                className={`${styles.mobileNavLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
+              >
+                Dashboard
+              </Link>
+            )}
+
+            {/* Student links */}
+            {isStudent && (
+              <>
+                <Link 
+                  href="/dashboard/student-dashboard" 
+                  className={`${styles.mobileNavLink} ${isActivePath('/dashboard/student-dashboard') ? styles.active : ''}`}
+                >
+                  Dashboard
+                </Link>
+                <Link 
+                  href="/dashboard/my-courses" 
+                  className={`${styles.mobileNavLink} ${isActivePath('/dashboard/my-courses') ? styles.active : ''}`}
+                >
+                  My Courses
+                </Link>
+              </>
+            )}
+
+            <Link 
+              href="/forum" 
+              className={`${styles.mobileNavLink} ${isActivePath('/forum') ? styles.active : ''}`}
+            >
+              Forum
+            </Link>
+            <Link 
+              href="/about" 
+              className={`${styles.mobileNavLink} ${isActivePath('/about') ? styles.active : ''}`}
+            >
+              About
+            </Link>
+            <Link 
+              href="/contact" 
+              className={`${styles.mobileNavLink} ${isActivePath('/contact') ? styles.active : ''}`}
+            >
+              Contact Us
+            </Link>
+
+            <div className={styles.mobileThemeToggle}>
+              <Button 
+                variant="ghost" 
+                size="md" 
+                onPress={cycleTheme}
+                className="w-full justify-start px-4 py-2"
+              >
+                {theme === 'light' ? (
+                  <><Sun className="h-5 w-5 mr-2" /> Light Mode</>
+                ) : theme === 'dark' ? (
+                  <><Moon className="h-5 w-5 mr-2" /> Dark Mode</>
+                ) : (
+                  <><Monitor className="h-5 w-5 mr-2" /> System Mode</>
+                )}
+              </Button>
+            </div>
+
+            <div className={styles.mobileAuthButtons}>
+              <SignedOut>
+                <SignInButton>
+                  <Button variant="ghost" className="w-full mb-2">
+                    Sign In
+                  </Button>
+                </SignInButton>
+                <SignUpButton>
+                  <Button variant="solid" className="w-full">
+                    Sign Up
+                  </Button>
+                </SignUpButton>
+              </SignedOut>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

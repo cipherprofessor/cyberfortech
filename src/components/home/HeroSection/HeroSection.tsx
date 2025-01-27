@@ -125,7 +125,7 @@ export function HeroSection() {
           >
             <div className={styles.imageWrapper}>
               <Image
-                src="/cyberlogo.png"
+                src="/logo/cyberlogopng.png"
                 alt="Cybersecurity Training"
                 width={600}
                 height={600}
