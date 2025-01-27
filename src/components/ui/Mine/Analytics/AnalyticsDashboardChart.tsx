@@ -1,3 +1,4 @@
+"use client";
 // src/components/charts/composite/AnalyticsDashboardChart.tsx
 import React, { useState, useEffect } from 'react';
 import {

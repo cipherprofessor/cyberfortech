@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Tabs, Tab, Card, CardBody } from "@heroui/react";
 

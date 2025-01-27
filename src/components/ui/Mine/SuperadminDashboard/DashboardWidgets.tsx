@@ -1,3 +1,4 @@
+"use client";
 import { Users, BookOpen, DollarSign, UserPlus } from "lucide-react";
 import { StatsCard } from "./StatsCard";
 

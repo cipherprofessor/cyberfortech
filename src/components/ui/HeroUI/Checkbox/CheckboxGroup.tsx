@@ -1,3 +1,4 @@
+"use client";
 import {CheckboxGroup, Checkbox} from "@heroui/react";
 
 export default function App() {

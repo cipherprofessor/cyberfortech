@@ -1,3 +1,4 @@
+"use client";
 import {Select, SelectItem, Avatar} from "@heroui/react";
 
 export const users = [

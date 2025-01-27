@@ -1,3 +1,4 @@
+"use client";
 import {Accordion, AccordionItem, Avatar} from "@heroui/react";
 
 export default function HeroUIAccordian() {

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {Checkbox, Link, User, Chip, cn} from "@heroui/react";
 

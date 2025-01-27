@@ -1,3 +1,4 @@
+"use client";
 import {useCheckbox, Chip, VisuallyHidden, tv} from "@heroui/react";
 import { JSX, SVGProps } from "react";
 

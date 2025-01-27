@@ -1,3 +1,4 @@
+"use client";
 export function CourseEnrollmentChart() {
     const data = [
       { course: 'Network Security', count: 245 },

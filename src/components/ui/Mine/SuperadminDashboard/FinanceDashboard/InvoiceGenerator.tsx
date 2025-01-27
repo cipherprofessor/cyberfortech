@@ -1,3 +1,4 @@
+"use client";
 // src/components/ui/Mine/FinanceDashboard/InvoiceGenerator.tsx
 import React, { useState } from 'react';
 import {

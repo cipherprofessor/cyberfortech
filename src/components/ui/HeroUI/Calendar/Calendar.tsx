@@ -1,3 +1,4 @@
+"use client";
 import {Calendar} from "@heroui/react";
 import {today, getLocalTimeZone} from "@internationalized/date";
 

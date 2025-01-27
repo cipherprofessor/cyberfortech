@@ -1,3 +1,4 @@
+"use client";
 // import { AnimatedTestimonials } from "./animated-testimonials";
 import dynamic from 'next/dynamic';
 

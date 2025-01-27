@@ -1,3 +1,4 @@
+"use client";
 import {Checkbox} from "@heroui/react";
 
 export default function CheckboxColours() {

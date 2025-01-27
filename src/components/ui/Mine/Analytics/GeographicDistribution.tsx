@@ -1,3 +1,4 @@
+"use client";
 // src/components/ui/Mine/Analytics/GeographicDistribution.tsx
 import { Tooltip } from '@heroui/react';
 import { MapContainer, TileLayer, CircleMarker } from 'react-leaflet';

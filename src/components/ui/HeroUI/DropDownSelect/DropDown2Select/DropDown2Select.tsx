@@ -1,3 +1,4 @@
+"use client";
 import {Select, SelectItem} from "@heroui/react";
 
 export const animals = [

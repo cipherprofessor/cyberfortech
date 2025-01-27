@@ -1,3 +1,4 @@
+"use client";
 import {Breadcrumbs, BreadcrumbItem} from "@heroui/react";
 
 export default function BreadCrumbsUnderline() {

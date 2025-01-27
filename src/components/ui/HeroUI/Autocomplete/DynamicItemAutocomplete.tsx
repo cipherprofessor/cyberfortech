@@ -1,3 +1,4 @@
+"use client";
 import {Autocomplete, AutocompleteItem} from "@heroui/react";
 
 export const animals = [

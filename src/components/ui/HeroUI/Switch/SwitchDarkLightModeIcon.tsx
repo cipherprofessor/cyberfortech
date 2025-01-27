@@ -1,3 +1,4 @@
+"use client";
 import {Switch} from "@heroui/react";
 import { JSX, SVGProps } from "react";
 

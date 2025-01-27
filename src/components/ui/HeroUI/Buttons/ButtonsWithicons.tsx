@@ -1,3 +1,4 @@
+"use client";
 import {Button} from "@heroui/react";
 
 export const UserIcon = ({fill = "currentColor", size, height, width, ...props}: {fill?: string, size?: number, height?: number, width?: number, [key: string]: any}) => {

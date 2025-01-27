@@ -1,3 +1,4 @@
+"use client";
 import { CourseEnrollmentChart } from "./CourseEnrollmentChart";
 import { GeographicDistribution } from "./GeographicDistribution";
 import { RevenueChart } from "./RevenueChart";

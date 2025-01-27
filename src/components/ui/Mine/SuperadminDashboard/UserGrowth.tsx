@@ -1,3 +1,4 @@
+"use client";
 // Template for other dashboard components
 export function UserGrowth() {
     return (

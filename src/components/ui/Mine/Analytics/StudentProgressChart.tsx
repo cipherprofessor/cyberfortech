@@ -1,3 +1,4 @@
+"use client";
 export function StudentProgressChart() {
     const data = [
       { name: 'Completed', value: 540, color: '#22c55e' },

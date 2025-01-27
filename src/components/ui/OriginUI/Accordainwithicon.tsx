@@ -1,3 +1,4 @@
+"use client";
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { Bell, LifeBuoy, Link2, Plus, ShieldCheck } from "lucide-react";

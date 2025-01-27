@@ -1,3 +1,4 @@
+"use client";
 import { DashboardHeader } from "./DashboardHeader";
 import { DashboardWidgets } from "./DashboardWidgets";
 import {  SuperAdminSidebarNew } from "./SuperAdminSidebar";

@@ -1,3 +1,4 @@
+"use client";
 import {Badge, Avatar} from "@heroui/react";
 
 interface IconProps {
