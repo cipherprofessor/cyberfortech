@@ -1,10 +1,10 @@
 // src/app/api/student/invoices/route.ts
-import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
+import { NextResponse, NextRequest } from 'next/server';
+import { getAuth } from '@clerk/nextjs/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { userId } = auth();
+    const { userId } = getAuth(request);
     
     if (!userId) {
       return NextResponse.json(
