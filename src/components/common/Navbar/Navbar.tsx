@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Navbar.module.scss';
 import { useAuth } from '@/hooks/useAuth';
 import Image from 'next/image';
+import SwitchDarkLightModeIcon from '@/components/ui/HeroUI/Switch/SwitchDarkLightModeIcon';
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -158,21 +159,13 @@ export default function Navbar() {
 
         {/* Right Side Actions */}
         <div className={styles.navActions}>
-          <Button 
-            variant="ghost" 
-            size="md" 
-            onPress={cycleTheme}
-            className={styles.themeToggle}
-          >
-            {theme === 'light' ? (
-              <Sun className="h-5 w-5" />
-            ) : theme === 'dark' ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Monitor className="h-5 w-5" />
-            )}
-            <span className="sr-only">Toggle theme</span>
-          </Button>
+        <SwitchDarkLightModeIcon 
+  className={styles.themeToggle}
+  defaultSelected={theme === 'dark'}
+  onChange={(isSelected) => {
+    setTheme(isSelected ? 'dark' : 'light')
+  }}
+/>
 
           <SignedOut>
             <SignInButton>
