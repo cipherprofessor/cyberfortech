@@ -116,9 +116,9 @@ export function AboutCompany() {
               className={styles.actions}
               variants={itemVariants}
             >
-              <Button size="lg">
+              {/* <Button size="lg">
                 Learn More About Us
-              </Button>
+              </Button> */}
             </motion.div>
           </motion.div>
 

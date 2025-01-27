@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Send } from 'lucide-react';
 import axios from 'axios';
 import styles from './ContactForm.module.scss';
+import { Alert } from '@heroui/react';
 
 type FormData = {
   name: string;
@@ -119,7 +120,14 @@ export function ContactForm() {
 
       {submitStatus === 'success' && (
         <div className={styles.successMessage}>
-          Thank you for your message! We'll get back to you soon.
+           <Alert
+          color="success"
+          description="Thank you for your message! We'll get back to you soon."
+          // isVisible={isVisible}
+          title="Message Sent"
+          variant="faded"
+          // onClose={() => setIsVisible(false)}
+        />
         </div>
       )}
 

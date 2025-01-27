@@ -47,13 +47,6 @@ const metrics = [
     suffix: '+',
     label: 'Expert Trainers',
     description: 'Industry professionals'
-  },
-  {
-    icon: Building,
-    value: 20,
-    suffix: '+',
-    label: 'Global Locations',
-    description: 'Training centers worldwide'
   }
 ];
 

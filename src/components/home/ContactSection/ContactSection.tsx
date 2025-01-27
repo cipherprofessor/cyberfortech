@@ -15,6 +15,12 @@ import { Accordion, AccordionItem, Avatar } from "@heroui/react";
 import { ContactForm } from '@/app/(routes)/contact/ContactForm/ContactForm';
 import styles from './ContactSection.module.scss';
 
+
+const Accordian1Content ="We offer a wide range of cybersecurity courses including Network Security, Penetration Testing, Cloud Security, and more. Our courses are designed for both beginners and advanced professionals.";
+ const Accordian2Content = "Course duration varies depending on the program. Most courses range from 8-12 weeks, with flexible learning options to fit your schedule.";
+ const Accordian3Content = "Yes, we provide comprehensive job assistance including resume building, interview preparation, and connections with our industry partners.";
+
+
 export function ContactSection() {
   const contactInfo = [
     {
@@ -76,28 +82,6 @@ export function ContactSection() {
     }
   ];
 
-  const faqs = [
-    {
-      question: "What courses do you offer?",
-      answer: "We offer comprehensive cybersecurity courses including Network Security, Penetration Testing, Cloud Security, and more. Our curriculum is designed for both beginners and advanced professionals."
-    },
-    {
-      question: "How long are the courses?",
-      answer: "Course duration varies by program. Most courses range from 8-12 weeks, with flexible learning options to fit your schedule. We also offer intensive bootcamps and self-paced options."
-    },
-    {
-      question: "Do you provide job assistance?",
-      answer: "Yes, we provide comprehensive job assistance including resume building, interview preparation, and connections with our industry partners. Our career services team works one-on-one with students."
-    },
-    {
-      question: "Are the courses certified?",
-      answer: "Yes, all our courses are industry-certified. We partner with leading organizations to ensure our certifications are globally recognized and valued by employers."
-    },
-    {
-      question: "What are the payment options?",
-      answer: "We offer flexible payment options including installments, scholarships, and EMI options. Contact our finance team for detailed information about payment plans."
-    }
-  ];
 
   return (
     <section className={styles.contactSection}>
@@ -161,20 +145,60 @@ export function ContactSection() {
 
             <div className={styles.faqSection}>
               <h3>Frequently Asked Questions</h3>
-              <div className={styles.faqGrid}>
-                {faqs.map((faq, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={styles.faqCard}
-                  >
-                    <h4>{faq.question}</h4>
-                    <p>{faq.answer}</p>
-                  </motion.div>
-                ))}
-              </div>
+              <Accordion selectionMode="multiple">
+      <AccordionItem
+        key="1"
+        aria-label="Chung Miller"
+        startContent={
+          <Avatar
+            isBordered
+            color="primary"
+            radius="lg"
+            src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+          />
+        }
+        // subtitle="4 unread messages"
+        title="What courses do you offer?"
+      >
+        {Accordian1Content}
+      </AccordionItem>
+      <AccordionItem
+        key="2"
+        aria-label="Janelle Lenard"
+        startContent={
+          <Avatar
+            isBordered
+            color="success"
+            radius="lg"
+            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+          />
+        }
+        // subtitle="3 incompleted steps"
+        title="How long are the courses?"
+      >
+        {Accordian2Content}
+      </AccordionItem>
+      <AccordionItem
+        key="3"
+        aria-label="Zoey Lang"
+        startContent={
+          <Avatar
+            isBordered
+            color="warning"
+            radius="lg"
+            src="https://i.pravatar.cc/150?u=a04258114e29026702d"
+          />
+        }
+        // subtitle={
+        //   <p className="flex">
+        //     2 issues to<span className="text-primary ml-1">fix now</span>
+        //   </p>
+        // }
+        title="Do you provide job assistance?"
+      >
+        {Accordian3Content}
+      </AccordionItem>
+    </Accordion>
             </div>
           </div>
 
