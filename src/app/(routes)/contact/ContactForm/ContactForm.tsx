@@ -119,7 +119,8 @@ export function ContactForm() {
       </div>
 
       {submitStatus === 'success' && (
-        <div className={styles.successMessage}>
+        
+          <div className='flex flex-col gap-4'>
            <Alert
           color="success"
           description="Thank you for your message! We'll get back to you soon."
@@ -129,6 +130,7 @@ export function ContactForm() {
           // onClose={() => setIsVisible(false)}
         />
         </div>
+       
       )}
 
       {submitStatus === 'error' && (

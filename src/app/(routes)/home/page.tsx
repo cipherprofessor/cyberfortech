@@ -16,12 +16,14 @@ import styles from './page.module.scss';
 import { AceternityUIAnimatedTestimonialsUse } from '@/components/ui/AcUI/AnimatedTestimonials/AnimatedTestimonialsUse';
 import { AcUIWorldMap } from '@/components/ui/AcUI/WorldMap/WorldMap';
 import { BentoGridtextImages } from '@/components/ui/AcUI/BentoGridTxtImg/BentoGridTxtImg';
+import { BackgroundBeams } from '@/components/ui/AcUI/BackgroundBeams/background-beams';
 
 export default function HomePage() {
   return (
     <main className={styles.main}>
       <HeroSection />
       <ServiceCards />
+      
       <AboutCompany />
       <KeyMetrics />
       <ServicesSlider />

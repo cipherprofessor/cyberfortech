@@ -11,6 +11,7 @@ import {
 
 import styles from './ServiceCards.module.scss';
 import { HoverEffect } from '@/components/ui/card-hover-effect';
+import { BackgroundBeams } from '@/components/ui/AcUI/BackgroundBeams/background-beams';
 
 const services = [
   {
@@ -53,6 +54,7 @@ const services = [
 
 export function ServiceCards() {
   return (
+    
     <section className={styles.servicesSection}>
       <div className={styles.container}>
         <div className={styles.header}>
