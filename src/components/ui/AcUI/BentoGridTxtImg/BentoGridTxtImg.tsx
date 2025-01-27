@@ -18,29 +18,29 @@ export function BentoGridtextImages() {
       <BentoCard
         eyebrow="Insight"
         title="Get perfect clarity"
-        description="Radiant uses social engineering to build a detailed financial picture of your leads. Know their budget, compensation package, social security number, and more."
+        description="Get a clear vision of cyber secturity , aws , front end and back end development. You will get to learn from the best in the industry."
         graphic={
           // eslint-disable-next-line tailwindcss/no-contradicting-classname
-          <div className="h-80 bg-[url(https://res.cloudinary.com/eldoraui/image/upload/v1734021365/profile_ldoiwc.png)] bg-[size:1000px_560px] bg-[left_-109px_top_-112px] bg-no-repeat" />
+          <div className="h-80 bg-[url(https://www.tuv.com/content-media-files/germany/bs-industrial-service/landingpages/functional-safety-training-cyber-security/key-visuals/functional-safety-training-cyber-security-kv.jpg)] bg-[size:1000px_560px] bg-[left_-109px_top_-112px] bg-no-repeat" />
         }
         fade={["bottom"]}
         className="max-lg:rounded-t-4xl lg:rounded-tl-4xl lg:col-span-3"
       />
       <BentoCard
         eyebrow="Analysis"
-        title="Undercut your competitors"
-        description="With our advanced data mining, you’ll know which companies your leads are talking to and exactly how much they’re being charged."
+        title="Get ahead of others in the industry"
+        description="By joining our cources you will get to know about latest trends in the industry and get ahead of others. We will provide you with the best resources."
         graphic={
           // eslint-disable-next-line tailwindcss/no-contradicting-classname
-          <div className="absolute inset-0 bg-[url(https://res.cloudinary.com/eldoraui/image/upload/v1734021357/competitors_ouucah.png)] bg-[size:1100px_650px] bg-[left_-38px_top_-73px] bg-no-repeat" />
+          <div className="absolute inset-0 bg-[url(https://smartdev.com/wp-content/uploads/2024/01/0.-Smart-Solutions-Brighter-Futures-AWS-Reshaping-the-Educational-Landscape.png)] bg-[size:1100px_650px] bg-[left_-38px_top_-73px] bg-no-repeat" />
         }
         fade={["bottom"]}
         className="lg:rounded-tr-4xl lg:col-span-3"
       />
       <BentoCard
         eyebrow="Speed"
-        title="Built for power users"
-        description="It’s never been faster to cold email your entire contact list using our streamlined keyboard shortcuts."
+        title="Get all round technical knowledge"
+        description="Get to know about all the technical aspects of the industry and get a hands on experience on the latest technologies."
         graphic={
           <div className="flex size-full pl-10 pt-10">
             <Keyboard highlighted={["LeftCommand", "C", "S"]} />
@@ -50,15 +50,15 @@ export function BentoGridtextImages() {
       />
       <BentoCard
         eyebrow="Source"
-        title="Get the furthest reach"
-        description="Bypass those inconvenient privacy laws to source leads from the most unexpected places."
+        title="Get to know how the big tech systems work"
+        description="You will gain insights on how the big tech companies work and how they manage their systems."
         graphic={<LogoCluster />}
         className="lg:col-span-2"
       />
       <BentoCard
         eyebrow="Limitless"
-        title="Sell globally"
-        description="Radiant helps you sell in locations currently under international embargo."
+        title="We have global reach"
+        description="We have students from all over the world and we provide the best resources to all of them."
         graphic={<ACUIMap />}
         className="max-lg:rounded-b-4xl lg:rounded-br-4xl lg:col-span-2"
       />
