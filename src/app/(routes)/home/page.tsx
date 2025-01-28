@@ -8,6 +8,7 @@ import { ServicesSlider } from '@/components/home/ServicesSlider/ServicesSlider'
 import { AceternityUIAnimatedTestimonialsUse } from '@/components/ui/AcUI/AnimatedTestimonials/AnimatedTestimonialsUse';
 import { BentoGridtextImages } from '@/components/ui/AcUI/BentoGridTxtImg/BentoGridTxtImg';
 import styles from './page.module.scss';
+import { TestimonialsSlider } from '@/components/home/TestimonialsSlider/TestimonialsSlider';
 
 
 export default function HomePage() {
@@ -23,6 +24,7 @@ export default function HomePage() {
    
       <ContactSection />
       <AceternityUIAnimatedTestimonialsUse /> 
+      <TestimonialsSlider />
       
     </main>
   );
