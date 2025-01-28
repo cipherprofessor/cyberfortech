@@ -1,4 +1,5 @@
 "use client";
+import { motion } from 'framer-motion';
 // import { AnimatedTestimonials } from "./animated-testimonials";
 import dynamic from 'next/dynamic';
 
@@ -14,39 +15,54 @@ export function AceternityUIAnimatedTestimonialsUse() {
   const testimonials = [
     {
       quote:
-        "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
+        "I particularly appreciated the depth of knowledge shared in the advanced penetration testing course. The instructors are clearly experts in their field and provide valuable insights beyond just the theoretical concepts.",
       name: "Sarah Chen",
-      designation: "Product Manager at TechFlow",
-      src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      designation: "Network Security Engineer",
+      src: "/testm/testimonial1.jpg",
     },
     {
       quote:
-        "Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.",
+        "After completing multiple certifications through CyberForTech, I was able to secure a senior position in cybersecurity. The curriculum is comprehensive and up-to-date with current industry trends.",
       name: "Michael Rodriguez",
-      designation: "CTO at InnovateSphere",
-      src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      designation: "Information Security Manager",
+      src: "/testm/testm1.avif",
     },
     {
       quote:
-        "This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.",
+        "The cloud security certification program exceeded my expectations. It provided deep insights into securing cloud infrastructure and helped me transition into cloud security architecture.",
       name: "Emily Watson",
-      designation: "Operations Director at CloudScale",
-      src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      designation: "Cloud Security Architect",
+      src: "/testm/testm2.avif",
     },
     {
       quote:
         "Outstanding support and robust features. It's rare to find a product that delivers on all its promises.",
       name: "James Kim",
       designation: "Engineering Lead at DataPro",
-      src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      src: "/testm/testm3.webp",
     },
     {
       quote:
         "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
       name: "Lisa Thompson",
       designation: "VP of Technology at FutureNet",
-      src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      src: "/testm/testm4.jpg",
     },
   ];
-  return <AnimatedTestimonials testimonials={testimonials} />;
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <motion.div 
+        className="text-center max-w-2xl mx-auto mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        <h2 className="text-3xl font-bold mb-4">What Our Students Say</h2>
+        <p className="text-gray-600">
+          Hear from our successful graduates about their learning experience
+        </p>
+      </motion.div>
+      <AnimatedTestimonials testimonials={testimonials} />
+    </div>
+  );
 }
