@@ -1,3 +1,4 @@
+"use client";
 import { SuperAdminDashboard } from '@/components/ui/Mine/SuperadminDashboard'
 import React from 'react'
 

@@ -1,3 +1,4 @@
+"use client";
 // src/app/dashboard/admin/layout.tsx
 import { useAuth } from '@/hooks/useAuth';
 import { redirect } from 'next/navigation';
