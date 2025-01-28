@@ -3,7 +3,6 @@ import Image from 'next/image';
 import styles from './about.module.scss';
 import { StatsSection } from './StatsSection/StatsSection';
 import { TeamMember } from './TeamMember/TeamMember';
-import { Timeline } from './Timeline/Timeline';
 import { AcUITimeline } from '@/components/ui/AcUI/TimeLine/TimeLineDemo';
 import { AcUiBentoGrid } from '@/components/ui/AcUI/BentoGrid/BentoGrid';
 
@@ -41,28 +40,28 @@ export default function AboutPage() {
     },
   ];
 
-  const timeline = [
-    {
-      year: "2020",
-      title: "Founded CyberForTech",
-      description: "Started with a vision to make cybersecurity education accessible to everyone.",
-    },
-    {
-      year: "2021",
-      title: "Launched Pro Courses",
-      description: "Introduced advanced certification programs for professionals.",
-    },
-    {
-      year: "2022",
-      title: "Global Expansion",
-      description: "Reached students from over 50 countries worldwide.",
-    },
-    {
-      year: "2023",
-      title: "Industry Partnerships",
-      description: "Collaborated with leading tech companies for job placements.",
-    },
-  ];
+  // const timeline = [
+  //   {
+  //     year: "2020",
+  //     title: "Founded CyberForTech",
+  //     description: "Started with a vision to make cybersecurity education accessible to everyone.",
+  //   },
+  //   {
+  //     year: "2021",
+  //     title: "Launched Pro Courses",
+  //     description: "Introduced advanced certification programs for professionals.",
+  //   },
+  //   {
+  //     year: "2022",
+  //     title: "Global Expansion",
+  //     description: "Reached students from over 50 countries worldwide.",
+  //   },
+  //   {
+  //     year: "2023",
+  //     title: "Industry Partnerships",
+  //     description: "Collaborated with leading tech companies for job placements.",
+  //   },
+  // ];
 
   return (
     <div className={styles.aboutContainer}>
