@@ -1,5 +1,8 @@
+// src/app/(routes)/forum/page.tsx
 "use client"
 import { PlusCircle, Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import styles from './forum.module.scss';
 import { ForumCategories } from '@/components/ForumCategories/ForumCategories';
 import { Button } from '@heroui/react';
@@ -7,78 +10,44 @@ import { ForumStats } from '@/components/ForumCategories/ForumStats/ForumStats';
 import { TopicsList } from '@/components/Topic/TopicsList/TopicsList';
 
 export default function ForumPage() {
-  const forumStats = {
-    totalTopics: 1250,
-    totalPosts: 5680,
-    activeUsers: 320,
-    latestMember: 'johndoe',
-  };
+  const [categories, setCategories] = useState([]);
+  const [forumStats, setForumStats] = useState({
+    totalTopics: 0,
+    totalPosts: 0,
+    activeUsers: 0,
+    latestMember: '',
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const categories = [
-    {
-      id: 1,
-      name: 'Network Security',
-      description: 'Discuss network security concepts and best practices',
-      totalTopics: 156,
-      totalPosts: 892,
-      icon: '🔒',
-      subCategories: [
-        { id: 11, name: 'Firewall Configuration' },
-        { id: 12, name: 'VPN Setup' },
-        { id: 13, name: 'Network Monitoring' },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Web Application Security',
-      description: 'Topics related to securing web applications',
-      totalTopics: 243,
-      totalPosts: 1205,
-      icon: '🌐',
-      subCategories: [
-        { id: 21, name: 'XSS Prevention' },
-        { id: 22, name: 'SQL Injection' },
-        { id: 23, name: 'CSRF Protection' },
-      ],
-    },
-    {
-      id: 3,
-      name: 'Malware Analysis',
-      description: 'Analyze and discuss various types of malware',
-      totalTopics: 178,
-      totalPosts: 876,
-      icon: '🦠',
-      subCategories: [
-        { id: 31, name: 'Reverse Engineering' },
-        { id: 32, name: 'Sandbox Analysis' },
-        { id: 33, name: 'Threat Detection' },
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchForumData = async () => {
+      try {
+        const [categoriesRes, statsRes] = await Promise.all([
+          axios.get('/api/forum/categories'),
+          axios.get('/api/forum/stats')
+        ]);
 
-  const recentTopics = [
-    {
-      id: 1,
-      title: 'Best practices for implementing zero trust architecture',
-      category: 'Network Security',
-      author: {
-        name: 'Alice Johnson',
-        avatar: '/avatars/alice.jpg',
-        reputation: 1250,
-        badge: 'Expert',
-      },
-      replies: 23,
-      views: 156,
-      lastReply: {
-        author: 'Bob Smith',
-        timestamp: '2024-01-21T15:30:00Z',
-      },
-      isPinned: true,
-      isLocked: false,
-      timestamp: '2024-01-20T10:00:00Z',
-    },
-    // Add more topics...
-  ];
+        setCategories(categoriesRes.data);
+        setForumStats(statsRes.data);
+      } catch (err) {
+        setError('Failed to load forum data');
+        console.error('Error fetching forum data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchForumData();
+  }, []);
+
+  if (loading) {
+    return <div className={styles.loading}>Loading forum data...</div>;
+  }
+
+  if (error) {
+    return <div className={styles.error}>{error}</div>;
+  }
 
   return (
     <div className={styles.forumContainer}>
@@ -107,7 +76,7 @@ export default function ForumPage() {
       <div className={styles.forumContent}>
         <div className={styles.mainSection}>
           <ForumCategories categories={categories} />
-          <TopicsList topics={recentTopics} />
+          <TopicsList topics={[]} /> {/* You'll need to implement the topics API as well */}
         </div>
 
         <aside className={styles.sideSection}>

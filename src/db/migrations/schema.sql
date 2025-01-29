@@ -90,3 +90,70 @@ CREATE TABLE IF NOT EXISTS contact_us (
   status TEXT DEFAULT 'new',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+--- Create Forum categories table
+
+-- Forum Categories Table
+CREATE TABLE IF NOT EXISTS forum_categories (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    icon TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Forum Sub-Categories Table
+CREATE TABLE IF NOT EXISTS forum_subcategories (
+    id INTEGER PRIMARY KEY,
+    category_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES forum_categories(id) ON DELETE CASCADE
+);
+
+-- Forum Topics Table
+CREATE TABLE IF NOT EXISTS forum_topics (
+    id INTEGER PRIMARY KEY,
+    category_id INTEGER NOT NULL,
+    subcategory_id INTEGER,
+    author_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    views INTEGER DEFAULT 0,
+    is_pinned BOOLEAN DEFAULT FALSE,
+    is_locked BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES forum_categories(id) ON DELETE CASCADE,
+    FOREIGN KEY (subcategory_id) REFERENCES forum_subcategories(id) ON DELETE SET NULL
+);
+
+-- Forum Posts (Replies) Table
+CREATE TABLE IF NOT EXISTS forum_posts (
+    id INTEGER PRIMARY KEY,
+    topic_id INTEGER NOT NULL,
+    author_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (topic_id) REFERENCES forum_topics(id) ON DELETE CASCADE
+);
+
+-- Forum User Stats Table
+CREATE TABLE IF NOT EXISTS forum_user_stats (
+    user_id TEXT PRIMARY KEY,
+    reputation INTEGER DEFAULT 0,
+    posts_count INTEGER DEFAULT 0,
+    topics_count INTEGER DEFAULT 0,
+    badge TEXT DEFAULT 'New Member',
+    last_active_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for better performance
+CREATE INDEX IF NOT EXISTS idx_forum_topics_category ON forum_topics(category_id);
+CREATE INDEX IF NOT EXISTS idx_forum_topics_subcategory ON forum_topics(subcategory_id);
+CREATE INDEX IF NOT EXISTS idx_forum_posts_topic ON forum_posts(topic_id);
+CREATE INDEX IF NOT EXISTS idx_forum_user_stats_reputation ON forum_user_stats(reputation);
