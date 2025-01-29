@@ -1,12 +1,85 @@
 .courseListContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filterSection {
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+  }
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  border-radius: 1rem;
+  
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    
+    :global(.dark) & {
+      color: #ffffff;
+    }
+    :global(:not(.dark)) & {
+      color: #1a1a1a;
+    }
   }
   
-  .courseGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+  p {
+    font-size: 0.875rem;
+    
+    :global(.dark) & {
+      color: #9ca3af;
+    }
+    :global(:not(.dark)) & {
+      color: #6b7280;
+    }
   }
-  
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid;
+
+  :global(.dark) & {
+    border-color: #2d3748;
+  }
+  :global(:not(.dark)) & {
+    border-color: #e2e8f0;
+  }
+}

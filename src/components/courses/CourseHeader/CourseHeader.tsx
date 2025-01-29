@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Star, Clock, BarChart, Globe, Award } from 'lucide-react';
 import styles from './CourseHeader.module.scss';
+import BreadCrumbsUnderline from '@/components/ui/HeroUI/BreadCumbs/BreadCrumbsUnderline';
 
 type CourseHeaderProps = {
   course: {
@@ -23,7 +24,7 @@ export function CourseHeader({ course }: CourseHeaderProps) {
   return (
     <div className={styles.header}>
       <div className={styles.breadcrumbs}>
-        Courses / Cybersecurity / {course.title}
+        <BreadCrumbsUnderline />
       </div>
       
       <h1 className={styles.title}>{course.title}</h1>
