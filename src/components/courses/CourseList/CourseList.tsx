@@ -61,6 +61,9 @@ export function CourseList() {
   const handleFilterChange = useCallback((filters: FilterState) => {
     let filtered = [...courses];
 
+    console.log('Before category filter:', filtered.length); // Debug log
+    console.log('Selected categories:', filters.selectedCategories); // Debug log
+
     // Filter by price range
     filtered = filtered.filter(course => 
       course.price >= filters.priceRange[0] && 
@@ -75,12 +78,12 @@ export function CourseList() {
     }
 
     // Filter by category
-    if (filters.selectedLevels.length > 0) {
-      filtered = filtered.filter(course => 
-        filters.selectedLevels.includes(course.level)
-      );
+    if (filters.selectedCategories && filters.selectedCategories.length > 0) {
+      filtered = filtered.filter(course => {
+        console.log('Course category:', course.category); // Debug log
+        return filters.selectedCategories.includes(course.category.trim());
+      });
     }
-
     // Filter by duration
     if (filters.durationRange !== 'all') {
       filtered = filtered.filter(course => {
