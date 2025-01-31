@@ -8,6 +8,7 @@ import { ForumCategories } from '@/components/ForumCategories/ForumCategories';
 import { Button } from '@heroui/react';
 import { ForumStats } from '@/components/ForumCategories/ForumStats/ForumStats';
 import { TopicsList } from '@/components/Topic/TopicsList/TopicsList';
+import { NewTopicForm } from '@/components/Topic/NewTopicForm/NewTopicForm';
 
 export default function ForumPage() {
   const [categories, setCategories] = useState([]);
@@ -19,6 +20,7 @@ export default function ForumPage() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isNewTopicOpen, setIsNewTopicOpen] = useState(false);
 
   useEffect(() => {
     const fetchForumData = async () => {
@@ -66,10 +68,18 @@ export default function ForumPage() {
               className={styles.searchInput}
             />
           </div>
-          <Button className={styles.newTopicButton}>
-            <PlusCircle className={styles.buttonIcon} />
-            New Topic
-          </Button>
+          <Button
+  variant="solid"
+  onPress={() => setIsNewTopicOpen(true)}
+>
+  <PlusCircle className="w-5 h-5" />
+  New Topic
+</Button>
+
+<NewTopicForm 
+  isOpen={isNewTopicOpen} 
+  onClose={() => setIsNewTopicOpen(false)} 
+/>
         </div>
       </div>
 
@@ -80,7 +90,7 @@ export default function ForumPage() {
         </div>
 
         <aside className={styles.sideSection}>
-          <ForumStats stats={forumStats} />
+          <ForumStats/>
         </aside>
       </div>
     </div>

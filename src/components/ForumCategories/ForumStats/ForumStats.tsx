@@ -1,5 +1,9 @@
 // src/components/ForumStats/ForumStats.tsx
+"use client";
+
+import { useEffect, useState } from 'react';
 import { Users, MessageSquare, TrendingUp, UserPlus } from 'lucide-react';
+import axios from 'axios';
 
 interface ForumStatsData {
   totalTopics: number;
@@ -8,11 +12,60 @@ interface ForumStatsData {
   latestMember: string;
 }
 
-interface ForumStatsProps {
-  stats: ForumStatsData;
-}
+export const ForumStats = () => {
+  const [stats, setStats] = useState<ForumStatsData>({
+    totalTopics: 0,
+    totalPosts: 0,
+    activeUsers: 0,
+    latestMember: 'Loading...'
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
-export const ForumStats: React.FC<ForumStatsProps> = ({ stats }) => {
+  const fetchStats = async () => {
+    try {
+      const response = await axios.get('/api/forum/stats');
+      setStats(response.data);
+      setError('');
+    } catch (err) {
+      console.error('Error fetching forum stats:', err);
+      setError('Failed to load forum statistics');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+
+    // Refresh stats every minute
+    const interval = setInterval(fetchStats, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Update user activity when component mounts
+  useEffect(() => {
+    const updateActivity = async () => {
+      try {
+        await axios.post('/api/forum/stats');
+      } catch (err) {
+        console.error('Error updating activity:', err);
+      }
+    };
+
+    updateActivity();
+  }, []);
+
+  if (error) {
+    return (
+      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+        <div className="p-4 text-red-500 text-center">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white shadow-sm rounded-lg overflow-hidden">
       <div className="bg-gray-100 px-4 py-3 font-semibold text-gray-700 border-b">
@@ -26,7 +79,7 @@ export const ForumStats: React.FC<ForumStatsProps> = ({ stats }) => {
             <span className="text-gray-700">Total Topics</span>
           </div>
           <span className="font-semibold text-gray-800">
-            {stats.totalTopics.toLocaleString()}
+            {loading ? '...' : stats.totalTopics.toLocaleString()}
           </span>
         </div>
         
@@ -36,7 +89,7 @@ export const ForumStats: React.FC<ForumStatsProps> = ({ stats }) => {
             <span className="text-gray-700">Total Posts</span>
           </div>
           <span className="font-semibold text-gray-800">
-            {stats.totalPosts.toLocaleString()}
+            {loading ? '...' : stats.totalPosts.toLocaleString()}
           </span>
         </div>
         
@@ -46,7 +99,7 @@ export const ForumStats: React.FC<ForumStatsProps> = ({ stats }) => {
             <span className="text-gray-700">Active Users</span>
           </div>
           <span className="font-semibold text-gray-800">
-            {stats.activeUsers.toLocaleString()}
+            {loading ? '...' : stats.activeUsers.toLocaleString()}
           </span>
         </div>
         
@@ -56,7 +109,7 @@ export const ForumStats: React.FC<ForumStatsProps> = ({ stats }) => {
             <span className="text-gray-700">Latest Member</span>
           </div>
           <span className="font-semibold text-gray-800">
-            {stats.latestMember}
+            {loading ? '...' : stats.latestMember}
           </span>
         </div>
       </div>

@@ -12,9 +12,9 @@ type Category = {
   id: number;
   name: string;
   description: string;
-  totalTopics: number;
-  totalPosts: number;
-  icon: string;
+  totalTopics?: number;
+  totalPosts?: number;
+  icon?: string;
   subCategories: SubCategory[];
 };
 
@@ -33,7 +33,7 @@ export function ForumCategories({ categories }: ForumCategoriesProps) {
         {categories.map((category) => (
           <div key={category.id} className={styles.category}>
             <div className={styles.mainContent}>
-              <div className={styles.icon}>{category.icon}</div>
+              {category.icon && <div className={styles.icon}>{category.icon}</div>}
               
               <div className={styles.info}>
                 <Link 
@@ -45,7 +45,7 @@ export function ForumCategories({ categories }: ForumCategoriesProps) {
                 </Link>
                 <p className={styles.description}>{category.description}</p>
                 
-                {category.subCategories.length > 0 && (
+                {category.subCategories?.length > 0 && (
                   <div className={styles.subCategories}>
                     {category.subCategories.map((sub) => (
                       <Link
@@ -65,7 +65,7 @@ export function ForumCategories({ categories }: ForumCategoriesProps) {
                   <MessageSquare className={styles.statIcon} />
                   <div className={styles.statInfo}>
                     <span className={styles.statValue}>
-                      {category.totalTopics.toLocaleString()}
+                      {(category.totalTopics || 0).toLocaleString()}
                     </span>
                     <span className={styles.statLabel}>Topics</span>
                   </div>
@@ -74,7 +74,7 @@ export function ForumCategories({ categories }: ForumCategoriesProps) {
                   <Users className={styles.statIcon} />
                   <div className={styles.statInfo}>
                     <span className={styles.statValue}>
-                      {category.totalPosts.toLocaleString()}
+                      {(category.totalPosts || 0).toLocaleString()}
                     </span>
                     <span className={styles.statLabel}>Posts</span>
                   </div>
