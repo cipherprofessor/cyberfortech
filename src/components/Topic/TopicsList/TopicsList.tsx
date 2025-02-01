@@ -36,7 +36,7 @@ export const TopicsList: React.FC<TopicsListProps> = ({ topics }) => {
   return (
     <div className="bg-white shadow-sm rounded-lg overflow-hidden">
       <div className="bg-gray-100 px-4 py-3 font-semibold text-gray-700 border-b">
-        Recent Topics
+        Recent Topics Mohsin
       </div>
       {topics.map(topic => (
         <div 
