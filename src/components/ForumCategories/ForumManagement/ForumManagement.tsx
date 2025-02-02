@@ -1,10 +1,10 @@
 'use client';
-// src/components/Forum/ForumManagement/ForumManagement.tsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import axios from 'axios';
 import { Plus, Edit, Trash2, ChevronDown, ChevronUp, Loader, ChevronLeft, ChevronRight, User, MessageSquare } from 'lucide-react';
 import styles from './ForumManagement.module.scss';
+import ForumRecentTopicTable from '@/components/ui/Mine/CustomTables/ForumRecentTopicTable';
 
 interface SubCategory {
   id: number;
@@ -19,34 +19,35 @@ interface Category {
   subCategories: SubCategory[];
 }
 
-interface Topic {
-    id: number;
-    title: string;
-    content: string;
-    views: number;
-    is_pinned: boolean;
-    is_locked: boolean;
-    createdAt: string;
-    updatedAt: string;
-    authorId: string;
-    authorName?: string;
-    authorAvatarUrl?: string;
-    categoryId: number;
-    category_name: string;
-    subcategoryId?: number;
-    subcategory_name?: string;
-    replies_count?: number;
-  }
-  
-  interface TopicsResponse {
-    topics: Topic[];
-    pagination: {
-      total: number;
-      page: number;
-      limit: number;
-      pages: number;
-    };
-  }
+export interface TopicData {
+  id: number;
+  title: string;
+  content: string;
+  category_name: string;
+  authorId: string;
+  authorName?: string;
+  createdAt: string;
+  is_pinned: boolean;
+  is_locked: boolean;
+  replies_count: number;
+  views: number;
+  categoryId: number;
+  subcategory_id?: number;
+  subcategory_name?: string;
+  updatedAt: string;
+}
+
+export interface TopicsResponse {
+  topics: TopicData[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
+
+
 
   export function ForumManagement() {
     const { userId } = useAuth();
@@ -59,7 +60,7 @@ interface Topic {
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoadingTopics, setIsLoadingTopics] = useState(false);
     const [topicsData, setTopicsData] = useState<TopicsResponse>({
-      topics: [],
+      topics: [] as TopicData[],
       pagination: {
         total: 0,
         page: 1,
@@ -68,28 +69,26 @@ interface Topic {
       }
     });
 
-    useEffect(() => {
-        console.log('useEffect triggered, currentPage:', currentPage);
-        const loadData = async () => {
-          try {
-            setLoading(true);
-            setError('');
-            console.log('Starting data fetch...');
-            
-            await fetchCategories();
-            await fetchTopics(currentPage);
-            
-            console.log('Data fetch complete');
-          } catch (err) {
-            console.error('Error in loadData:', err);
-            setError('Failed to load data');
-          } finally {
-            setLoading(false);
-          }
-        };
-      
-        loadData();
-      }, [currentPage]);
+     // Fetch initial data
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        await Promise.all([
+          fetchCategories(),
+          fetchTopics(currentPage)
+        ]);
+      } catch (err) {
+        console.error('Error in loadData:', err);
+        setError('Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [currentPage]);
 
   const fetchCategories = async () => {
     try {
@@ -106,19 +105,11 @@ interface Topic {
 
   const fetchTopics = async (page = 1) => {
     try {
-      console.log('fetchTopics called with page:', page);
       setIsLoadingTopics(true);
-      
-      const url = `/api/forum/topics?page=${page}&limit=10`;
-      console.log('Making request to:', url);
-      
-      const response = await axios.get(url);
-      console.log('Got response:', response.data);
-      
+      const response = await axios.get<TopicsResponse>(`/api/forum/topics?page=${page}&limit=10`);
       setTopicsData(response.data);
-      setCurrentPage(page);
     } catch (err) {
-      console.error('Error fetching topics:', err);
+      console.error('Error in fetchTopics:', err);
       setError('Failed to load topics');
     } finally {
       setIsLoadingTopics(false);
@@ -166,7 +157,6 @@ interface Topic {
   };
 
   const handlePageChange = (page: number) => {
-    if (page < 1 || page > topicsData.pagination.pages) return;
     setCurrentPage(page);
   };
 
@@ -300,104 +290,19 @@ interface Topic {
       </section>
 
  {/* Enhanced Topics Section */}
- <section className={styles.section}>
+{/* Topics Section */}
+<section className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2>Recent Topics</h2>
         </div>
 
-        {isLoadingTopics ? (
-          <div className={styles.loading}><Loader className={styles.spinner} /> Loading topics...</div>
-        ) : (
-          <>
-            <div className={styles.tableContainer}>
-              <table className={styles.topicsTable}>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Author</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topicsData.topics.map(topic => (
-                    <tr key={topic.id} className={styles.topicRow}>
-                      <td className={styles.topicTitleCell}>
-                        <div className={styles.topicTitle}>
-                          <MessageSquare size={16} className={styles.topicIcon} />
-                          <span>{topic.title}</span>
-                        </div>
-                      </td>
-                      <td>{topic.category_name}</td>
-                      <td>
-                        <div className={styles.authorInfo}>
-                          <User size={16} className={styles.authorIcon} />
-                          <span>{topic.authorId}</span>
-                        </div>
-                      </td>
-                      <td>
-                        {new Date(topic.createdAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
-                        })}
-                      </td>
-                      <td>
-                        <div className={styles.actions}>
-                          <button
-                            onClick={() => handleDeleteTopic(topic.id)}
-                            className={styles.deleteButton}
-                            title="Delete topic"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination Controls */}
-            {topicsData.pagination.pages > 1 && (
-              <div className={styles.paginationContainer}>
-                <div className={styles.paginationInfo}>
-                  Showing {((currentPage - 1) * topicsData.pagination.limit) + 1} to {Math.min(currentPage * topicsData.pagination.limit, topicsData.pagination.total)} of {topicsData.pagination.total} topics
-                </div>
-                <div className={styles.paginationControls}>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className={styles.pageButton}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  
-                  {getPageNumbers().map((page, index) => (
-                    <button
-                      key={index}
-                      onClick={() => typeof page === 'number' ? handlePageChange(page) : null}
-                      className={`${styles.pageButton} ${currentPage === page ? styles.activePage : ''} ${typeof page !== 'number' ? styles.ellipsis : ''}`}
-                      disabled={typeof page !== 'number'}
-                    >
-                      {page}
-                    </button>
-                  ))}
-
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === topicsData.pagination.pages}
-                    className={styles.pageButton}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-              </div>
-            )}
-          </>
-        )}
+        <ForumRecentTopicTable
+          topics={topicsData.topics}
+          onDelete={handleDeleteTopic}
+          loading={isLoadingTopics}
+          pagination={topicsData.pagination}
+          onPageChange={handlePageChange}
+        />
       </section>
     </div>
   );

@@ -69,7 +69,7 @@ export default function ForumPage() {
         </div>
       )}
 
-      <div className={styles.forumHeader}>
+      {/* <div className={styles.forumHeader}>
         <div className={styles.titleSection}>
           <h1>Community Forum</h1>
           <p>Join discussions about cybersecurity and technology</p>
@@ -94,25 +94,25 @@ export default function ForumPage() {
             </Button>
           )}
         </div>
-      </div>
+      </div> */}
 
-      {isNewTopicOpen && (
+      {/* {isNewTopicOpen && (
         <NewTopicForm 
           isOpen={isNewTopicOpen} 
           onClose={() => setIsNewTopicOpen(false)} 
         />
-      )}
+      )} */}
 
-      <div className={styles.forumContent}>
+      {/* <div className={styles.forumContent}>
         <div className={styles.mainSection}>
           <ForumCategories categories={categories} />
-          {/* <TopicsList/> */}
+         
         </div>
 
         <aside className={styles.sideSection}>
           <ForumStats/>
         </aside>
-      </div>
+      </div> */}
     </div>
   );
 }
