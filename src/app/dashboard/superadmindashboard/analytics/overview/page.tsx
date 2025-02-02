@@ -138,7 +138,7 @@ const Overview = () => {
   // Properly typed handler for filtered data
   const handleDataFiltered = (filteredData: ChartDataPoint[]) => {
     const typedData = filteredData as AnalyticsDataPoint[];
-    console.log('Filtered data:', typedData);
+    // console.log('Filtered data:', typedData);
     // Handle filtered data if needed
   };
 

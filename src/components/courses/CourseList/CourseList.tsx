@@ -61,8 +61,8 @@ export function CourseList() {
   const handleFilterChange = useCallback((filters: FilterState) => {
     let filtered = [...courses];
 
-    console.log('Before category filter:', filtered.length); // Debug log
-    console.log('Selected categories:', filters.selectedCategories); // Debug log
+    // console.log('Before category filter:', filtered.length); // Debug log
+    // console.log('Selected categories:', filters.selectedCategories); // Debug log
 
     // Filter by price range
     filtered = filtered.filter(course => 
@@ -80,7 +80,7 @@ export function CourseList() {
     // Filter by category
     if (filters.selectedCategories && filters.selectedCategories.length > 0) {
       filtered = filtered.filter(course => {
-        console.log('Course category:', course.category); // Debug log
+        // console.log('Course category:', course.category); // Debug log
         return filters.selectedCategories.includes(course.category.trim());
       });
     }

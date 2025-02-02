@@ -124,17 +124,17 @@ const UsersDashboard = () => {
   // Action handlers
   const handleDeleteUsers = useCallback(() => {
     // Implement delete logic
-    console.log("Deleting users:", selectedUsers);
+    // console.log("Deleting users:", selectedUsers);
   }, [selectedUsers]);
 
   const handleBanUsers = useCallback(() => {
     // Implement ban logic
-    console.log("Banning users:", selectedUsers);
+    // console.log("Banning users:", selectedUsers);
   }, [selectedUsers]);
 
   const handleEmailUsers = useCallback(() => {
     // Implement email logic
-    console.log("Emailing users:", selectedUsers);
+    // console.log("Emailing users:", selectedUsers);
   }, [selectedUsers]);
 
   return (

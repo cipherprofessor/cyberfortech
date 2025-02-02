@@ -82,7 +82,7 @@ export function NotificationSettings() {
 
   const handleSave = () => {
     // Save notification settings to backend
-    console.log('Saving settings:', settings);
+    // console.log('Saving settings:', settings);
   };
 
   const categories = {

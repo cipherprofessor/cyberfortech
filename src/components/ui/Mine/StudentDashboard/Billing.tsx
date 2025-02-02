@@ -62,7 +62,7 @@ export const Billing = () => {
 
   const handleUpdatePaymentMethod = async () => {
     // Implement Stripe or your payment processor's update logic
-    console.log('Update payment method');
+    // console.log('Update payment method');
   };
 
   const getStatusColor = (status: string) => {

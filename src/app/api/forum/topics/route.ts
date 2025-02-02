@@ -1,6 +1,6 @@
-const debug = (...args: any[]) => {
-    console.log('[Topics API]', ...args);
-  };
+// const debug = (...args: any[]) => {
+//     console.log('[Topics API]', ...args);
+//   };
 
 import { createClient } from '@libsql/client';
 import { NextResponse, NextRequest } from 'next/server';
@@ -143,21 +143,21 @@ export async function POST(req: NextRequest) {
 
 
 export async function GET(req: Request) {
-    console.log('Topics API - GET request received'); 
-    debug('GET request received');
+    // console.log('Topics API - GET request received'); 
+    // debug('GET request received');
     try {
       const { searchParams } = new URL(req.url);
-      debug('URL:', req.url);
-      debug('Search params:', Object.fromEntries(searchParams));
+      // debug('URL:', req.url);
+      // debug('Search params:', Object.fromEntries(searchParams));
   
       const page = parseInt(searchParams.get('page') || '1');
       const limit = parseInt(searchParams.get('limit') || '10');
       const categoryId = searchParams.get('categoryId');
       
-      debug('Parsed params:', { page, limit, categoryId });
+      // debug('Parsed params:', { page, limit, categoryId });
       
       const offset = (page - 1) * limit;
-      debug('Calculated offset:', offset);
+      // debug('Calculated offset:', offset);
   
       // Build the base query
       let baseQuery = `
@@ -175,7 +175,7 @@ export async function GET(req: Request) {
         queryParams.push(categoryId);
       }
   
-      debug('Executing count query...');
+      // debug('Executing count query...');
       // Get total count
       const countResult = await client.execute({
         sql: `SELECT COUNT(*) as total ${baseQuery}`,
@@ -184,9 +184,9 @@ export async function GET(req: Request) {
   
       const total = Number(countResult.rows[0].total);
       const totalPages = Math.ceil(total / limit);
-      debug('Count result:', { total, totalPages });
+      // debug('Count result:', { total, totalPages });
   
-      debug('Executing topics query...');
+      // debug('Executing topics query...');
       // Get paginated topics
       const topics = await client.execute({
         sql: `
@@ -214,7 +214,7 @@ export async function GET(req: Request) {
         args: [...queryParams, limit, offset]
       });
   
-      debug('Topics query result:', topics.rows);
+      // debug('Topics query result:', topics.rows);
   
       const result = {
         topics: topics.rows,
@@ -226,11 +226,11 @@ export async function GET(req: Request) {
         }
       };
   
-      debug('Sending response:', result);
+      // debug('Sending response:', result);
       return NextResponse.json(result);
   
     } catch (error) {
-      debug('Error in GET handler:', error);
+      // debug('Error in GET handler:', error);
       console.error('Error fetching topics:', error);
       return NextResponse.json(
         { error: 'Failed to fetch topics' },

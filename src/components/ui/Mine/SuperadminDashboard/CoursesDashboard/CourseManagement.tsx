@@ -727,7 +727,7 @@ const CourseManagement = () => {
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onSubmit={(data) => {
-            console.log('Creating course:', data);
+            // console.log('Creating course:', data);
             // Implement course creation logic
           }}
         />
