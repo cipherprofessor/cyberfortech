@@ -1,6 +1,5 @@
-// src/components/ui/Mine/CustomTables/ForumRecentTopicTable.tsx
 'use client';
-
+// src/components/ui/Mine/CustomTables/ForumRecentTopicTable.tsx
 import React from "react";
 import { Key } from "@react-types/shared";
 import {
@@ -24,7 +23,7 @@ import {
 import { useUser } from '@clerk/nextjs';
 import { MessageSquare, ChevronDown } from 'lucide-react';
 import { SearchIcon, VerticalDotsIcon } from "./TableIcons";
-
+import { isAdmin } from '@/utils';
 
 // Column definitions
 export const columns = [
@@ -37,15 +36,23 @@ export const columns = [
   { name: "ACTIONS", uid: "actions" },
 ];
 
-
 const statusColorMap: Record<string, "warning" | "danger" | "success"> = {
-    pinned: "warning",
-    locked: "danger",
-    active: "success",
-  };
+  pinned: "warning",
+  locked: "danger",
+  active: "success",
+};
 
 const INITIAL_VISIBLE_COLUMNS = ["title", "category_name", "author", "replies_count", "createdAt", "status", "actions"];
 
+type DropdownItemColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
+
+interface MenuItem {
+  key: string;
+  label: string;
+  className?: string;
+  color?: DropdownItemColor;
+  onClick?: () => void;
+}
 interface TopicData {
   id: number;
   title: string;
@@ -72,18 +79,17 @@ interface ForumRecentTopicTableProps {
   onPageChange: (page: number) => void;
 }
 
-export default function ForumRecentTopicTable({ 
-  topics, 
-  onDelete, 
+export default function ForumRecentTopicTable({
+  topics,
+  onDelete,
   loading = false,
   pagination,
-  onPageChange 
+  onPageChange
 }: ForumRecentTopicTableProps) {
   const { user } = useUser();
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<"all" | Set<Key>>(new Set<Key>());
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "createdAt",
     direction: "descending",
@@ -96,6 +102,9 @@ export default function ForumRecentTopicTable({
     }
     return user?.username || user?.id || 'Unknown User';
   };
+
+  // Add role check
+  const userIsAdmin = isAdmin(user?.publicMetadata?.role as string);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -119,17 +128,17 @@ export default function ForumRecentTopicTable({
       const columnKey = sortDescriptor.column as keyof TopicData;
       let first = a[columnKey];
       let second = b[columnKey];
-  
+
       // Handle potentially undefined values
       if (first === undefined) first = '';
       if (second === undefined) second = '';
-  
+
       // Convert to strings for comparison
       const firstStr = String(first);
       const secondStr = String(second);
-  
+
       const cmp = firstStr < secondStr ? -1 : firstStr > secondStr ? 1 : 0;
-  
+
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, filteredItems]);
@@ -140,14 +149,14 @@ export default function ForumRecentTopicTable({
         return (
           <div className="flex items-center gap-2">
             <MessageSquare size={16} className="text-default-400" />
-            <span className="font-medium">{topic.title}</span>
+            <span>{topic.title}</span>
           </div>
         );
       case "category_name":
         return <span>{topic.category_name}</span>;
       case "author":
-        return topic.authorId === user?.id ? 
-          getClerkAuthUserFullNameOrUserName() : 
+        return topic.authorId === user?.id ?
+          getClerkAuthUserFullNameOrUserName() :
           (topic.authorName || 'Unknown User');
       case "replies_count":
         return <span>{topic.replies_count || 0}</span>;
@@ -160,18 +169,40 @@ export default function ForumRecentTopicTable({
       case "status":
         const status = topic.is_pinned ? 'pinned' : topic.is_locked ? 'locked' : 'active';
         return (
-          <Chip 
-            className="capitalize" 
-            color={statusColorMap[status] || "default"} 
-            size="sm" 
+          <Chip
+            className="capitalize"
+            color={statusColorMap[status] || "default"}
+            size="sm"
             variant="flat"
           >
             {status}
           </Chip>
         );
-      case "actions":
+        case "actions": {
+            const menuItems: MenuItem[] = [
+              { 
+                key: 'view', 
+                label: 'View' 
+              } as MenuItem,
+              ...(userIsAdmin || topic.authorId === user?.id
+                ? [
+                    { 
+                      key: 'edit', 
+                      label: 'Edit' 
+                    } as MenuItem,
+                    {
+                      key: 'delete',
+                      label: 'Delete',
+                      className: 'text-danger',
+                      color: 'danger' as DropdownItemColor,
+                      onClick: () => onDelete(topic.id)
+                    } as MenuItem
+                  ]
+                : [])
+            ];
+
         return (
-          <div className="relative flex justify-end items-center gap-2">
+            <div className="relative flex justify-end items-center gap-2">
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
@@ -179,24 +210,25 @@ export default function ForumRecentTopicTable({
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem key="view">View</DropdownItem>
-                <DropdownItem key="edit">Edit</DropdownItem>
-                <DropdownItem 
-                  key="delete" 
-                  className="text-danger" 
-                  color="danger"
-                  onClick={() => onDelete(topic.id)}
-                >
-                  Delete
-                </DropdownItem>
+                {menuItems.map(item => (
+                  <DropdownItem
+                    key={item.key}
+                    className={item.className}
+                    color={item.color}
+                    onClick={item.onClick}
+                  >
+                    {item.label}
+                  </DropdownItem>
+                ))}
               </DropdownMenu>
             </Dropdown>
           </div>
         );
+      }
       default:
-        return topic[columnKey as keyof TopicData];
+        return null;
     }
-  }, [user, getClerkAuthUserFullNameOrUserName, onDelete]);
+  }, [user, userIsAdmin, getClerkAuthUserFullNameOrUserName, onDelete]);
 
   const onSearchChange = React.useCallback((value: string) => {
     if (value) {
@@ -228,8 +260,8 @@ export default function ForumRecentTopicTable({
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button 
-                  endContent={<ChevronDown className="text-small" />} 
+                <Button
+                  endContent={<ChevronDown className="text-small" />}
                   variant="flat"
                 >
                   Columns
@@ -258,7 +290,7 @@ export default function ForumRecentTopicTable({
         </div>
       </div>
     );
-  }, [filterValue, visibleColumns, pagination.total, onSearchChange]);
+  }, [filterValue, visibleColumns, pagination.total, onSearchChange, onClear]);
 
   const bottomContent = React.useMemo(() => {
     return (
@@ -303,8 +335,8 @@ export default function ForumRecentTopicTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody 
-        emptyContent={"No topics found"} 
+      <TableBody
+        emptyContent={"No topics found"}
         items={sortedItems}
         isLoading={loading}
       >

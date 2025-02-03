@@ -145,14 +145,16 @@ export interface TopicsResponse {
     if (!confirm('Are you sure you want to delete this topic?')) return;
 
     try {
-      await axios.delete(`/api/forum/topics?id=${topicId}`);
+      const response = await axios.delete(`/api/forum/topics?id=${topicId}`);
+      console.log('Delete response:', response.data);
+      
       setTopicsData(prev => ({
         ...prev,
         topics: prev.topics.filter(topic => topic.id !== topicId)
       }));
-    } catch (err) {
-      setError('Failed to delete topic');
-      console.error(err);
+    } catch (err: any) {
+      console.error('Delete error:', err.response?.data || err.message);
+      setError(err.response?.data?.error || 'Failed to delete topic');
     }
   };
 

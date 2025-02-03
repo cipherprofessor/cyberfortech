@@ -4,7 +4,7 @@
 
 import { createClient } from '@libsql/client';
 import { NextResponse, NextRequest } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
+import { clerkClient, getAuth } from '@clerk/nextjs/server';
 
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL!,
@@ -240,67 +240,81 @@ export async function GET(req: Request) {
   }
   
   // Add DELETE handler for topic deletion
-  export async function DELETE(req: NextRequest) {
-    try {
-      const { userId } = getAuth(req);
-      if (!userId) {
-        return NextResponse.json(
-          { error: 'Unauthorized' },
-          { status: 401 }
-        );
-      }
-  
-      const { searchParams } = new URL(req.url);
-      const topicId = searchParams.get('id');
-  
-      if (!topicId) {
-        return NextResponse.json(
-          { error: 'Topic ID is required' },
-          { status: 400 }
-        );
-      }
-  
-      // Verify user has permission (author or admin)
-      const userCheck = await client.execute({
-        sql: `
-          SELECT t.author_id, u.role 
-          FROM forum_topics t
-          JOIN users u ON u.id = ?
-          WHERE t.id = ?
-        `,
-        args: [userId, topicId]
-      });
-  
-      const userInfo = userCheck.rows[0];
-      if (!userInfo || (userInfo.author_id !== userId && userInfo.role !== 'admin')) {
-        return NextResponse.json(
-          { error: 'Not authorized to delete this topic' },
-          { status: 403 }
-        );
-      }
+  // In your topics route.ts file
 
-      
-  
-      // Soft delete the topic
-      await client.execute({
-        sql: `
-          UPDATE forum_topics 
-          SET is_deleted = TRUE, 
-              deleted_at = CURRENT_TIMESTAMP 
-          WHERE id = ?
-        `,
-        args: [topicId]
-      });
-  
-      return NextResponse.json({ message: 'Topic deleted successfully' });
-  
-    } catch (error) {
-      console.error('Error deleting topic:', error);
+export async function DELETE(req: NextRequest) {
+  try {
+    // Get authenticated user
+    const { userId } = getAuth(req);
+    if (!userId) {
       return NextResponse.json(
-        { error: 'Failed to delete topic' },
-        { status: 500 }
+        { error: 'Unauthorized' },
+        { status: 401 }
       );
     }
+
+    const { searchParams } = new URL(req.url);
+    const topicId = searchParams.get('id');
+
+    if (!topicId) {
+      return NextResponse.json(
+        { error: 'Topic ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // First get the topic details
+    const topicResult = await client.execute({
+      sql: 'SELECT author_id FROM forum_topics WHERE id = ?',
+      args: [topicId]
+    });
+
+    if (!topicResult.rows.length) {
+      return NextResponse.json(
+        { error: 'Topic not found' },
+        { status: 404 }
+      );
+    }
+
+    const topic = topicResult.rows[0];
+
+    // Get user role from Clerk metadata
+    const clerk = await clerkClient();
+    const user = await clerk.users.getUser(userId);
+    const isAdmin = user.publicMetadata?.role === 'admin' || 
+                   user.publicMetadata?.role === 'superadmin';
+
+    // Check if user is either admin or the topic author
+    if (!isAdmin && topic.author_id !== userId) {
+      return NextResponse.json(
+        { error: 'Not authorized to delete this topic' },
+        { status: 403 }
+      );
+    }
+
+    // Soft delete the topic
+    await client.execute({
+      sql: `
+        UPDATE forum_topics 
+        SET is_deleted = TRUE, 
+            deleted_at = CURRENT_TIMESTAMP 
+        WHERE id = ?
+      `,
+      args: [topicId]
+    });
+
+    return NextResponse.json({ 
+      message: 'Topic deleted successfully',
+      topicId: topicId
+    });
+
+  } catch (error) {
+    console.error('Error deleting topic:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete topic' },
+      { status: 500 }
+    );
   }
+}
 
   
