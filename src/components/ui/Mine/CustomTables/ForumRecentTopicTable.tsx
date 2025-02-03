@@ -251,14 +251,14 @@ export default function ForumRecentTopicTable({
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by title..."
+            placeholder="Search By Topic..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Dropdown>
+            {/* <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
                   endContent={<ChevronDown className="text-small" />}
@@ -280,12 +280,12 @@ export default function ForumRecentTopicTable({
                   </DropdownItem>
                 ))}
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {pagination.total} topics
+            Total {pagination.total} Topics
           </span>
         </div>
       </div>
