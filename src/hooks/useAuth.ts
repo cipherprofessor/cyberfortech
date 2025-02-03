@@ -13,14 +13,6 @@ export function useAuth() {
                user?.publicMetadata?.role as Role || 
                (user?.publicMetadata?.data === "example" ? ROLES.STUDENT : ROLES.STUDENT);
 
-  // // Debug logging
-  // console.log('Auth Debug:', {
-  //   rawMetadata: user?.publicMetadata,
-  //   isEmpty: !user?.publicMetadata,
-  //   processedRole: role,
-  //   isStudent: role === ROLES.STUDENT || user?.publicMetadata?.data === "example"
-  // });
-
   return {
     user,
     isLoaded,

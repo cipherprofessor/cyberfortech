@@ -1,5 +1,5 @@
 // src/components/common/Navbar/Navbar.tsx
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -18,8 +18,13 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const { isAuthenticated, isSuperAdmin, isAdmin, isStudent } = useAuth();
+  const { isAuthenticated, isSuperAdmin, isAdmin, isStudent, role } = useAuth();
   const pathname = usePathname();
+
+  // For debugging
+  useEffect(() => {
+    console.log('Auth Status:', { isAuthenticated, isSuperAdmin, isAdmin, isStudent, role });
+  }, [isAuthenticated, isSuperAdmin, isAdmin, isStudent, role]);
 
   useEffect(() => {
     setMounted(true);
@@ -48,6 +53,70 @@ export default function Navbar() {
         setTheme('light');
         break;
     }
+  };
+
+  const renderRoleBasedLinks = () => {
+    if (isSuperAdmin || isAdmin) {
+      return (
+        <Link 
+          href="/dashboard" 
+          className={`${styles.navLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
+        >
+          Dashboard
+        </Link>
+      );
+    }
+    if (isStudent) {
+      return (
+        <>
+          <Link 
+            href="/dashboard/student-dashboard" 
+            className={`${styles.navLink} ${isActivePath('/dashboard/student-dashboard') ? styles.active : ''}`}
+          >
+            Dashboard
+          </Link>
+          <Link 
+            href="/dashboard/my-courses" 
+            className={`${styles.navLink} ${isActivePath('/dashboard/my-courses') ? styles.active : ''}`}
+          >
+            My Courses
+          </Link>
+        </>
+      );
+    }
+    return null;
+  };
+
+  const renderMobileRoleBasedLinks = () => {
+    if (isSuperAdmin || isAdmin) {
+      return (
+        <Link 
+          href="/dashboard" 
+          className={`${styles.mobileNavLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
+        >
+          Dashboard
+        </Link>
+      );
+    }
+    if (isStudent) {
+      return (
+        <>
+          <Link 
+            href="/dashboard/student-dashboard" 
+            className={`${styles.mobileNavLink} ${isActivePath('/dashboard/student-dashboard') ? styles.active : ''}`}
+          >
+            Dashboard
+          </Link>
+          <Link 
+            href="/dashboard/my-courses" 
+            className={`${styles.mobileNavLink} ${isActivePath('/dashboard/my-courses') ? styles.active : ''}`}
+          >
+            My Courses
+          </Link>
+        </>
+      );
+    }
+    return null;
   };
 
   if (!mounted) return null;
@@ -83,45 +152,7 @@ export default function Navbar() {
             Courses
           </Link>
 
-          {/* Admin links */}
-          {isAdmin && (
-            <>
-              <Link 
-                href="/dashboard" 
-                className={`${styles.navLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
-              >
-                Dashboard
-              </Link>
-            </>
-          )}
-
-          {/* Super admin links */}
-          {isSuperAdmin && (
-            <Link 
-              href="/dashboard" 
-              className={`${styles.navLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
-            >
-              Dashboard
-            </Link>
-          )}
-
-          {/* Student links */}
-          {isStudent && (
-            <>
-              <Link 
-                href="/dashboard/student-dashboard" 
-                className={`${styles.navLink} ${isActivePath('/dashboard/student-dashboard') ? styles.active : ''}`}
-              >
-                Dashboard
-              </Link>
-              <Link 
-                href="/dashboard/my-courses" 
-                className={`${styles.navLink} ${isActivePath('/dashboard/my-courses') ? styles.active : ''}`}
-              >
-                My Courses
-              </Link>
-            </>
-          )}
+          {renderRoleBasedLinks()}
 
           <Link 
             href="/forum" 
@@ -159,13 +190,13 @@ export default function Navbar() {
 
         {/* Right Side Actions */}
         <div className={styles.navActions}>
-        <SwitchDarkLightModeIcon 
-  className={styles.themeToggle}
-  defaultSelected={theme === 'dark'}
-  onChange={(isSelected) => {
-    setTheme(isSelected ? 'dark' : 'light')
-  }}
-/>
+          <SwitchDarkLightModeIcon 
+            className={styles.themeToggle}
+            defaultSelected={theme === 'dark'}
+            onChange={(isSelected) => {
+              setTheme(isSelected ? 'dark' : 'light')
+            }}
+          />
 
           <SignedOut>
             <SignInButton>
@@ -216,45 +247,7 @@ export default function Navbar() {
               Courses
             </Link>
 
-            {/* Admin links */}
-            {isAdmin && (
-              <>
-                <Link 
-                  href="/dashboard" 
-                  className={`${styles.mobileNavLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
-                >
-                  Dashboard
-                </Link>
-              </>
-            )}
-
-            {/* Super admin links */}
-            {isSuperAdmin && (
-              <Link 
-                href="/dashboard" 
-                className={`${styles.mobileNavLink} ${isActivePath('/dashboard') ? styles.active : ''}`}
-              >
-                Dashboard
-              </Link>
-            )}
-
-            {/* Student links */}
-            {isStudent && (
-              <>
-                <Link 
-                  href="/dashboard/student-dashboard" 
-                  className={`${styles.mobileNavLink} ${isActivePath('/dashboard/student-dashboard') ? styles.active : ''}`}
-                >
-                  Dashboard
-                </Link>
-                <Link 
-                  href="/dashboard/my-courses" 
-                  className={`${styles.mobileNavLink} ${isActivePath('/dashboard/my-courses') ? styles.active : ''}`}
-                >
-                  My Courses
-                </Link>
-              </>
-            )}
+            {renderMobileRoleBasedLinks()}
 
             <Link 
               href="/forum" 
