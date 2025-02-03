@@ -1,10 +1,12 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@clerk/nextjs';
+// import { useAuth } from '@clerk/nextjs';
 import axios from 'axios';
 import { Plus, Edit, Trash2, ChevronDown, ChevronUp, Loader, ChevronLeft, ChevronRight, User, MessageSquare } from 'lucide-react';
 import styles from './ForumManagement.module.scss';
 import ForumRecentTopicTable from '@/components/ui/Mine/CustomTables/ForumRecentTopicTable';
+import { useAuth } from '@/hooks/useAuth';
+
 
 interface SubCategory {
   id: number;
@@ -50,7 +52,7 @@ export interface TopicsResponse {
 
 
   export function ForumManagement() {
-    const { userId } = useAuth();
+    // const { userId } = useAuth();
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -59,6 +61,7 @@ export interface TopicsResponse {
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoadingTopics, setIsLoadingTopics] = useState(false);
+    const { isAdmin, isStudent } = useAuth(); // Use useAuth instead of direct Clerk hooks
     const [topicsData, setTopicsData] = useState<TopicsResponse>({
       topics: [] as TopicData[],
       pagination: {
@@ -185,6 +188,10 @@ export interface TopicsResponse {
 
   if (loading) {
     return <div className={styles.loading}><Loader className={styles.spinner} /> Aajjaaa</div>;
+  }
+
+  if (!isAdmin && !isStudent) {
+    return <div className={styles.loading}>Access denied</div>;
   }
 
   return (

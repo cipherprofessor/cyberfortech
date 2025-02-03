@@ -1,5 +1,4 @@
 // src/constants/auth.ts
-
 export const ROLES = {
     SUPERADMIN: 'superadmin',
     ADMIN: 'admin',
@@ -7,8 +6,7 @@ export const ROLES = {
     INSTRUCTOR: 'instructor'
   } as const;
   
-  export const PERMISSIONS = {
-    DELETE_TOPIC: 'delete_topic',
-    CREATE_CATEGORY: 'create_category',
-    MANAGE_USERS: 'manage_users'
+  // Also add a mapping for legacy metadata
+  export const METADATA_MAPPING = {
+    example: ROLES.STUDENT
   } as const;
