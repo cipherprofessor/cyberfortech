@@ -1,5 +1,4 @@
 "use client";
-// src/components/Topic/NewTopicForm/NewTopicForm.tsx
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
@@ -10,18 +9,23 @@ import styles from './NewTopicForm.module.scss';
 interface Category {
   id: number;
   name: string;
-  subCategories: {
+  subCategories: Array<{
     id: number;
     name: string;
-  }[];
+  }>;
 }
 
-interface NewTopicFormProps {
+export interface NewTopicFormProps {
   isOpen: boolean;
   onClose: () => void;
+  categories: Category[];
 }
 
-export function NewTopicForm({ isOpen, onClose }: NewTopicFormProps) {
+export function NewTopicForm({ 
+  isOpen, 
+  onClose, 
+  categories: initialCategories 
+}: NewTopicFormProps) {
   const router = useRouter();
   const { userId } = useAuth();
 
@@ -32,29 +36,9 @@ export function NewTopicForm({ isOpen, onClose }: NewTopicFormProps) {
     subcategoryId: '',
   });
 
-  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get('/api/forum/categories');
-        setCategories(response.data);
-      } catch (err) {
-        setError('Failed to load categories. Please try again.');
-        console.error('Error fetching categories:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (isOpen) {
-      fetchCategories();
-    }
-  }, [isOpen]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -114,7 +98,7 @@ export function NewTopicForm({ isOpen, onClose }: NewTopicFormProps) {
 
   if (!isOpen) return null;
 
-  const selectedCategory = categories.find(
+  const selectedCategory = initialCategories.find(
     cat => cat.id.toString() === formData.categoryId
   );
 
@@ -161,12 +145,12 @@ export function NewTopicForm({ isOpen, onClose }: NewTopicFormProps) {
               name="categoryId"
               value={formData.categoryId}
               onChange={handleInputChange}
-              disabled={loading || isSubmitting}
+              disabled={isSubmitting}
               className={styles.select}
               required
             >
               <option value="">Select a category</option>
-              {categories.map(category => (
+              {initialCategories.map(category => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>

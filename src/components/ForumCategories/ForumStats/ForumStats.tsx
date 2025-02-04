@@ -12,20 +12,28 @@ interface ForumStatsData {
   latestMember: string;
 }
 
-export const ForumStats = () => {
-  const [stats, setStats] = useState<ForumStatsData>({
-    totalTopics: 0,
-    totalPosts: 0,
-    activeUsers: 0,
-    latestMember: 'Loading...'
-  });
+interface ForumStatsProps {
+  stats: {
+    totalTopics: number;
+    totalPosts: number;
+    activeUsers: number;
+    latestMember: string;
+  }
+}
+export function ForumStats({ stats }: ForumStatsProps) {
+  // const [stats, setStats] = useState<ForumStatsData>({
+  //   totalTopics: 0,
+  //   totalPosts: 0,
+  //   activeUsers: 0,
+  //   latestMember: 'Loading...'
+  // });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
   const fetchStats = async () => {
     try {
       const response = await axios.get('/api/forum/stats');
-      setStats(response.data);
+      // setStats(response.data);
       setError('');
     } catch (err) {
       console.error('Error fetching forum stats:', err);

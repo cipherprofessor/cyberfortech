@@ -24,6 +24,7 @@ import { useUser } from '@clerk/nextjs';
 import { MessageSquare, ChevronDown } from 'lucide-react';
 import { SearchIcon, VerticalDotsIcon } from "./TableIcons";
 import { isAdmin } from '@/utils';
+import { TopicData } from '@/types/forum';
 
 // Column definitions
 export const columns = [
@@ -53,18 +54,7 @@ interface MenuItem {
   color?: DropdownItemColor;
   onClick?: () => void;
 }
-interface TopicData {
-  id: number;
-  title: string;
-  content: string;
-  category_name: string;
-  authorId: string;
-  authorName?: string;
-  createdAt: string;
-  is_pinned: boolean;
-  is_locked: boolean;
-  replies_count: number;
-}
+
 
 interface ForumRecentTopicTableProps {
   topics: TopicData[];
@@ -258,29 +248,6 @@ export default function ForumRecentTopicTable({
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            {/* <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDown className="text-small" />}
-                  variant="flat"
-                >
-                  Columns
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                closeOnSelect={false}
-                selectedKeys={visibleColumns}
-                selectionMode="multiple"
-                onSelectionChange={keys => setVisibleColumns(new Set(keys as unknown as string[]))}
-              >
-                {columns.map((column) => (
-                  <DropdownItem key={column.uid} className="capitalize">
-                    {column.name}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown> */}
           </div>
         </div>
         <div className="flex justify-between items-center">
