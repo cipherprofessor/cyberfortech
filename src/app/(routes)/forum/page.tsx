@@ -9,7 +9,6 @@ import { ForumStats } from '@/components/ForumCategories/ForumStats/ForumStats';
 import { NewTopicForm } from '@/components/ForumCategories/NewTopicForm/NewTopicForm';
 import ForumRecentTopicTable from '@/components/ui/Mine/CustomTables/ForumRecentTopicTable';
 import { Category, ForumStatsData, TopicsResponse } from '@/types/forum';
-import { useAuth } from '@/hooks/useAuth';
 import styles from './forum.module.scss';
 
 export default function ForumPage() {
@@ -28,32 +27,59 @@ export default function ForumPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState('');
 
+  // Separate useEffects for each API call
   useEffect(() => {
-    const fetchForumData = async () => {
+    const fetchCategories = async () => {
       try {
-        const [categoriesRes, statsRes, topicsRes] = await Promise.all([
-          axios.get('/api/forum/categories'),
-          axios.get('/api/forum/stats'),
-          axios.get(`/api/forum/topics?page=${currentPage}&limit=10`)
-        ]);
-
-        setCategories(categoriesRes.data);
-        setStats(statsRes.data);
-        setTopicsData(topicsRes.data);
+        const response = await axios.get('/api/forum/categories');
+        setCategories(response.data);
       } catch (err) {
-        console.error('Error fetching forum data:', err);
-        setError('Failed to load forum data');
+        console.error('Error fetching categories:', err);
+        setError('Failed to load categories');
       } finally {
-        setLoading({
-          categories: false,
-          stats: false,
-          topics: false
-        });
+        setLoading(prev => ({ ...prev, categories: false }));
       }
     };
 
-    fetchForumData();
-  }, [currentPage]);
+    fetchCategories();
+  }, []); // Only run once on mount
+
+  // Fetch stats after categories are loaded
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!loading.categories && categories.length > 0) {
+        try {
+          const response = await axios.get('/api/forum/stats');
+          setStats(response.data);
+        } catch (err) {
+          console.error('Error fetching stats:', err);
+        } finally {
+          setLoading(prev => ({ ...prev, stats: false }));
+        }
+      }
+    };
+
+    fetchStats();
+  }, [loading.categories, categories]);
+
+  // Fetch topics after stats are loaded
+  useEffect(() => {
+    const fetchTopics = async () => {
+      if (!loading.stats && stats) {
+        try {
+          setLoading(prev => ({ ...prev, topics: true }));
+          const response = await axios.get(`/api/forum/topics?page=${currentPage}&limit=10`);
+          setTopicsData(response.data);
+        } catch (err) {
+          console.error('Error fetching topics:', err);
+        } finally {
+          setLoading(prev => ({ ...prev, topics: false }));
+        }
+      }
+    };
+
+    fetchTopics();
+  }, [currentPage, loading.stats, stats]);
 
   const handleDeleteTopic = async (topicId: number) => {
     try {
@@ -66,7 +92,6 @@ export default function ForumPage() {
       console.error('Error deleting topic:', err);
     }
   };
-
   return (
     <div className={styles.pageContainer}>
       {/* Header Section */}
