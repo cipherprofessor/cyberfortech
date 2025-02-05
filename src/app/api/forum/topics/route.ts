@@ -142,102 +142,66 @@ export async function POST(req: NextRequest) {
 }
 
 
+// src/app/api/forum/topics/route.ts
 export async function GET(req: Request) {
-    // console.log('Topics API - GET request received'); 
-    // debug('GET request received');
-    try {
-      const { searchParams } = new URL(req.url);
-      // debug('URL:', req.url);
-      // debug('Search params:', Object.fromEntries(searchParams));
-  
-      const page = parseInt(searchParams.get('page') || '1');
-      const limit = parseInt(searchParams.get('limit') || '10');
-      const categoryId = searchParams.get('categoryId');
-      
-      // debug('Parsed params:', { page, limit, categoryId });
-      
-      const offset = (page - 1) * limit;
-      // debug('Calculated offset:', offset);
-  
-      // Build the base query
-      let baseQuery = `
+  try {
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const offset = (page - 1) * limit;
+
+    // Get total count first
+    const countResult = await client.execute(`
+      SELECT COUNT(*) as total 
+      FROM forum_topics 
+      WHERE is_deleted = FALSE
+    `);
+
+    // Then get the topics
+    const topics = await client.execute({
+      sql: `
+        SELECT 
+          t.id,
+          t.title,
+          t.content,
+          t.views,
+          t.is_pinned,
+          t.is_locked,
+          t.created_at,
+          t.updated_at,
+          t.author_id,
+          t.category_id,
+          c.name as category_name,
+          sc.id as subcategory_id,
+          sc.name as subcategory_name,
+          (SELECT COUNT(*) FROM forum_posts WHERE topic_id = t.id) as reply_count
         FROM forum_topics t
         LEFT JOIN forum_categories c ON t.category_id = c.id
         LEFT JOIN forum_subcategories sc ON t.subcategory_id = sc.id
-        LEFT JOIN users u ON t.author_id = u.id
         WHERE t.is_deleted = FALSE
-      `;
-  
-      // Add category filter if provided
-      const queryParams: any[] = [];
-      if (categoryId) {
-        baseQuery += ` AND t.category_id = ?`;
-        queryParams.push(categoryId);
+        ORDER BY t.is_pinned DESC, t.created_at DESC
+        LIMIT ? OFFSET ?
+      `,
+      args: [limit, offset]
+    });
+
+    return NextResponse.json({
+      topics: topics.rows,
+      pagination: {
+        total: Number(countResult.rows[0].total),
+        page,
+        limit,
+        pages: Math.ceil(Number(countResult.rows[0].total) / limit)
       }
-  
-      // debug('Executing count query...');
-      // Get total count
-      const countResult = await client.execute({
-        sql: `SELECT COUNT(*) as total ${baseQuery}`,
-        args: queryParams
-      });
-  
-      const total = Number(countResult.rows[0].total);
-      const totalPages = Math.ceil(total / limit);
-      // debug('Count result:', { total, totalPages });
-  
-      // debug('Executing topics query...');
-      // Get paginated topics
-      const topics = await client.execute({
-        sql: `
-          SELECT 
-            t.id,
-            t.title,
-            t.content,
-            t.views,
-            t.is_pinned,
-            t.is_locked,
-            t.created_at as createdAt,
-            t.updated_at as updatedAt,
-            t.author_id as authorId,
-            u.name as authorName,
-            u.avatar_url as authorAvatarUrl,
-            c.id as categoryId,
-            c.name as category_name,
-            sc.id as subcategoryId,
-            sc.name as subcategory_name,
-            (SELECT COUNT(*) FROM forum_posts p WHERE p.topic_id = t.id) as replies_count
-          ${baseQuery}
-          ORDER BY t.is_pinned DESC, t.created_at DESC
-          LIMIT ? OFFSET ?
-        `,
-        args: [...queryParams, limit, offset]
-      });
-  
-      // debug('Topics query result:', topics.rows);
-  
-      const result = {
-        topics: topics.rows,
-        pagination: {
-          total,
-          page,
-          limit,
-          pages: totalPages
-        }
-      };
-  
-      // debug('Sending response:', result);
-      return NextResponse.json(result);
-  
-    } catch (error) {
-      // debug('Error in GET handler:', error);
-      console.error('Error fetching topics:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch topics' },
-        { status: 500 }
-      );
-    }
+    });
+  } catch (error) {
+    console.error('Error fetching topics:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch topics' },
+      { status: 500 }
+    );
   }
+}
   
   // Add DELETE handler for topic deletion
   // In your topics route.ts file

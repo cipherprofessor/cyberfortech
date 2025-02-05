@@ -4,16 +4,100 @@ PRAGMA foreign_keys = ON;
 ------------------------------------------
 -- Core System Tables
 ------------------------------------------
--- Create users table
+
+-- Drop existing table if needed
+DROP TABLE IF EXISTS users;
+
+-- Create enhanced users table with Clerk integration
 CREATE TABLE IF NOT EXISTS users (
-    id TEXT PRIMARY KEY,
-    email TEXT UNIQUE NOT NULL,
-    name TEXT,
-    avatar_url TEXT,
+    -- Core Clerk Fields
+    id TEXT PRIMARY KEY,                    -- Clerk User ID
+    email TEXT UNIQUE NOT NULL,             -- Primary Email
+    username TEXT UNIQUE,                   -- Username (if used)
+    first_name TEXT,                        -- First Name
+    last_name TEXT,                         -- Last Name
+    full_name TEXT,                         -- Combined Name
+    avatar_url TEXT,                        -- Profile Image URL
+    
+    -- Role and Status
+    role TEXT CHECK(role IN ('student', 'instructor', 'admin', 'superadmin')) NOT NULL DEFAULT 'student',
+    is_active BOOLEAN DEFAULT TRUE,
+    email_verified BOOLEAN DEFAULT FALSE,
+    
+    -- Profile Fields
+    bio TEXT,                              -- User Biography
+    location TEXT,                         -- User Location
+    website TEXT,                          -- Personal Website
+    social_links JSON,                     -- Social Media Links
+    
+    -- Preferences
+    preferences JSON,                      -- User Preferences (theme, notifications, etc.)
+    
+    -- System Fields
+    last_login_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    password TEXT NOT NULL,
-    role TEXT CHECK(role IN ('student', 'instructor', 'admin')) NOT NULL DEFAULT 'student'
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    deleted_at DATETIME,                   -- For soft deletes
+    is_deleted BOOLEAN DEFAULT FALSE,
+    
+    -- Additional Metadata
+    clerk_metadata JSON,                   -- Store additional Clerk metadata
+    custom_metadata JSON                   -- For any additional custom data
 );
+
+-- Indexes for better performance
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_is_active ON users(is_active);
+CREATE INDEX idx_users_created_at ON users(created_at);
+
+-- Trigger to update updated_at timestamp
+CREATE TRIGGER IF NOT EXISTS update_users_timestamp 
+AFTER UPDATE ON users
+FOR EACH ROW
+BEGIN
+    UPDATE users 
+    SET updated_at = CURRENT_TIMESTAMP
+    WHERE id = OLD.id;
+END;
+
+-- Create a view for active users
+CREATE VIEW IF NOT EXISTS active_users AS
+SELECT 
+    id,
+    email,
+    full_name,
+    role,
+    avatar_url,
+    created_at
+FROM users
+WHERE is_active = TRUE 
+AND is_deleted = FALSE;
+
+-- Create a user stats table
+CREATE TABLE IF NOT EXISTS user_stats (
+    user_id TEXT PRIMARY KEY,
+    login_count INTEGER DEFAULT 0,
+    last_active_at DATETIME,
+    posts_count INTEGER DEFAULT 0,
+    topics_count INTEGER DEFAULT 0,
+    reputation_points INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Trigger to create user stats when new user is created
+CREATE TRIGGER IF NOT EXISTS create_user_stats
+AFTER INSERT ON users
+FOR EACH ROW
+BEGIN
+    INSERT INTO user_stats (user_id)
+    VALUES (NEW.id);
+END;
+
+
+
 
 ------------------------------------------
 -- Course Management Tables
