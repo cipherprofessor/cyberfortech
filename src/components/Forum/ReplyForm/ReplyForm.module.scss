@@ -1,0 +1,135 @@
+// src/components/Forum/ReplyForm/ReplyForm.module.scss
+
+.replyForm {
+    margin-top: 24px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  
+    .dark & {
+      background-color: #1f2937;
+      border: 1px solid #374151;
+    }
+  }
+  
+  .replyInput {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 14px;
+    transition: all 0.2s;
+  
+    .dark & {
+      background-color: #374151;
+      border-color: #4b5563;
+      color: #f9fafb;
+    }
+  
+    &:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+  
+      .dark & {
+        border-color: #818cf8;
+        box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.1);
+      }
+    }
+  
+    &.expanded {
+      min-height: 120px;
+    }
+  
+    &:disabled {
+      background-color: #f3f4f6;
+      cursor: not-allowed;
+  
+      .dark & {
+        background-color: #1f2937;
+      }
+    }
+  }
+  
+  .formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  
+  .cancelButton {
+    padding: 8px 16px;
+    border-radius: 6px;
+    color: #6b7280;
+    background-color: #f3f4f6;
+    transition: all 0.2s;
+  
+    .dark & {
+      color: #9ca3af;
+      background-color: #374151;
+    }
+  
+    &:hover:not(:disabled) {
+      background-color: #e5e7eb;
+  
+      .dark & {
+        background-color: #4b5563;
+      }
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .submitButton {
+    padding: 8px 20px;
+    border-radius: 6px;
+    background-color: #4f46e5;
+    color: #ffffff;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  
+    &:hover:not(:disabled) {
+      background-color: #4338ca;
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .authPrompt {
+    text-align: center;
+    padding: 24px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    color: #6b7280;
+    font-size: 14px;
+  
+    .dark & {
+      background-color: #1f2937;
+      color: #9ca3af;
+    }
+  }
+  
+  .spinner {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }

@@ -30,6 +30,8 @@ interface Topic {
 
 interface TopicsListProps {
   topics: Topic[];
+  categoryId: string;
+  
 }
 
 export const TopicsList: React.FC<TopicsListProps> = ({ topics }) => {

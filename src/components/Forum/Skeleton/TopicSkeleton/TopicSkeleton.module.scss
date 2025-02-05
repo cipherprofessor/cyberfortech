@@ -1,0 +1,134 @@
+// src/components/Forum/Skeletons/TopicSkeleton.module.scss
+.skeleton {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+  
+    .dark & {
+      background-color: #1f2937;
+    }
+  }
+  
+  .header {
+    margin-bottom: 24px;
+  }
+  
+  .titleSkeleton {
+    height: 32px;
+    background-color: #f3f4f6;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    animation: shimmer 1.5s infinite;
+  
+    .dark & {
+      background-color: #374151;
+    }
+  }
+  
+  .metaSkeleton {
+    height: 20px;
+    width: 60%;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    animation: shimmer 1.5s infinite;
+  
+    .dark & {
+      background-color: #374151;
+    }
+  }
+  
+  .contentWrapper {
+    display: flex;
+    gap: 24px;
+  }
+  
+  .authorSidebar {
+    width: 200px;
+  }
+  
+  .avatarSkeleton {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f3f4f6;
+    margin: 0 auto 12px;
+    animation: shimmer 1.5s infinite;
+  
+    .dark & {
+      background-color: #374151;
+    }
+  }
+  
+  .authorNameSkeleton {
+    height: 20px;
+    width: 80%;
+    margin: 0 auto 8px;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    animation: shimmer 1.5s infinite;
+  
+    .dark & {
+      background-color: #374151;
+    }
+  }
+  
+  .authorRoleSkeleton {
+    height: 16px;
+    width: 60%;
+    margin: 0 auto;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    animation: shimmer 1.5s infinite;
+  
+    .dark & {
+      background-color: #374151;
+    }
+  }
+  
+  .mainContent {
+    flex: 1;
+  }
+  
+  .contentSkeleton {
+    margin-bottom: 20px;
+  }
+  
+  .line {
+    height: 16px;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    animation: shimmer 1.5s infinite;
+  
+    .dark & {
+      background-color: #374151;
+    }
+  
+    &:nth-child(2) { width: 95%; }
+    &:nth-child(3) { width: 85%; }
+    &:nth-child(4) { width: 90%; }
+  }
+  
+  .actionsSkeleton {
+    height: 36px;
+    width: 200px;
+    background-color: #f3f4f6;
+    border-radius: 6px;
+    animation: shimmer 1.5s infinite;
+  
+    .dark & {
+      background-color: #374151;
+    }
+  }
+  
+  @keyframes shimmer {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }

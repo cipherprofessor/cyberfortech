@@ -1,6 +1,5 @@
-// src/app/(routes)/forum/page.tsx
 'use client';
-
+// src/app/(routes)/forum/page.tsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PlusCircle } from 'lucide-react';
@@ -9,13 +8,10 @@ import { ForumCategories } from '@/components/ForumCategories/ForumCategories';
 import { ForumStats } from '@/components/ForumCategories/ForumStats/ForumStats';
 import { NewTopicForm } from '@/components/ForumCategories/NewTopicForm/NewTopicForm';
 import ForumRecentTopicTable from '@/components/ui/Mine/CustomTables/ForumRecentTopicTable';
-import { TrendingReactions } from '@/components/Forum/TrendingReactions/TrendingReactions';
-import { useAuth } from '@/hooks/useAuth';
 import { Category, ForumStatsData, TopicsResponse } from '@/types/forum';
 import styles from './forum.module.scss';
 
 export default function ForumPage() {
-  const { isAuthenticated } = useAuth();
   const [isTopicFormOpen, setIsTopicFormOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [stats, setStats] = useState<ForumStatsData | null>(null);
@@ -31,6 +27,7 @@ export default function ForumPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState('');
 
+  // Separate useEffects for each API call
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -38,50 +35,51 @@ export default function ForumPage() {
         setCategories(response.data);
       } catch (err) {
         console.error('Error fetching categories:', err);
+        setError('Failed to load categories');
       } finally {
         setLoading(prev => ({ ...prev, categories: false }));
       }
     };
 
     fetchCategories();
-  }, []);
+  }, []); // Only run once on mount
 
+  // Fetch stats after categories are loaded
   useEffect(() => {
     const fetchStats = async () => {
-      try {
-        const response = await axios.get('/api/forum/stats');
-        setStats(response.data);
-      } catch (err) {
-        console.error('Error fetching stats:', err);
-      } finally {
-        setLoading(prev => ({ ...prev, stats: false }));
+      if (!loading.categories && categories.length > 0) {
+        try {
+          const response = await axios.get('/api/forum/stats');
+          setStats(response.data);
+        } catch (err) {
+          console.error('Error fetching stats:', err);
+        } finally {
+          setLoading(prev => ({ ...prev, stats: false }));
+        }
       }
     };
 
-    if (!loading.categories) {
-      fetchStats();
-    }
-  }, [loading.categories]);
+    fetchStats();
+  }, [loading.categories, categories]);
 
+  // Fetch topics after stats are loaded
   useEffect(() => {
     const fetchTopics = async () => {
-      try {
-        setLoading(prev => ({ ...prev, topics: true }));
-        const response = await axios.get(
-          `/api/forum/topics?page=${currentPage}&limit=10`
-        );
-        setTopicsData(response.data);
-      } catch (err) {
-        console.error('Error fetching topics:', err);
-      } finally {
-        setLoading(prev => ({ ...prev, topics: false }));
+      if (!loading.stats && stats) {
+        try {
+          setLoading(prev => ({ ...prev, topics: true }));
+          const response = await axios.get(`/api/forum/topics?page=${currentPage}&limit=10`);
+          setTopicsData(response.data);
+        } catch (err) {
+          console.error('Error fetching topics:', err);
+        } finally {
+          setLoading(prev => ({ ...prev, topics: false }));
+        }
       }
     };
 
-    if (!loading.stats) {
-      fetchTopics();
-    }
-  }, [currentPage, loading.stats]);
+    fetchTopics();
+  }, [currentPage, loading.stats, stats]);
 
   const handleDeleteTopic = async (topicId: number) => {
     try {
@@ -94,7 +92,6 @@ export default function ForumPage() {
       console.error('Error deleting topic:', err);
     }
   };
-
   return (
     <div className={styles.pageContainer}>
       {/* Header Section */}
@@ -103,27 +100,56 @@ export default function ForumPage() {
           <h1>Community Forum</h1>
           <p>Join the discussion with our community members</p>
         </div>
-        {isAuthenticated && (
-          <Button 
-            onClick={() => setIsTopicFormOpen(true)}
-            className={styles.newTopicButton}
-          >
-            <PlusCircle size={16} />
-            Create New Topic
-          </Button>
-        )}
+        <Button 
+          onClick={() => setIsTopicFormOpen(true)}
+          className={styles.newTopicButton}
+        >
+          <PlusCircle size={16} />
+          Create New Topic
+        </Button>
       </div>
 
-      <div className={styles.mainContent}>
-        {/* Left Column - Categories */}
+      {/* Mid Section - Categories and Stats */}
+      <div className={styles.midSection}>
+        {/* Left side - Categories */}
         <div className={styles.categoriesSection}>
-          <ForumCategories 
-            categories={categories}
-          />
+          {loading.categories ? (
+            <div className={styles.categoriesSkeleton}>
+              <div className={styles.skeletonHeader}></div>
+              <div className={styles.skeletonItem}></div>
+              <div className={styles.skeletonItem}></div>
+              <div className={styles.skeletonItem}></div>
+            </div>
+          ) : (
+            <ForumCategories categories={categories} />
+          )}
         </div>
 
-        {/* Center Column - Topics */}
-        <div className={styles.topicsSection}>
+        {/* Right side - Stats */}
+        <div className={styles.statsSection}>
+          {loading.stats ? (
+            <div className={styles.statsSkeleton}>
+              <div className={styles.skeletonHeader}></div>
+              <div className={styles.skeletonStat}></div>
+              <div className={styles.skeletonStat}></div>
+              <div className={styles.skeletonStat}></div>
+            </div>
+          ) : (
+            stats && <ForumStats stats={stats} />
+          )}
+        </div>
+      </div>
+
+      {/* Topics Table Section */}
+      <div className={styles.topicsSection}>
+        {loading.topics ? (
+          <div className={styles.tableSkeleton}>
+            <div className={styles.skeletonHeader}></div>
+            <div className={styles.skeletonRow}></div>
+            <div className={styles.skeletonRow}></div>
+            <div className={styles.skeletonRow}></div>
+          </div>
+        ) : (
           <ForumRecentTopicTable
             topics={topicsData.topics}
             onDelete={handleDeleteTopic}
@@ -131,17 +157,7 @@ export default function ForumPage() {
             pagination={topicsData.pagination}
             onPageChange={setCurrentPage}
           />
-        </div>
-
-        {/* Right Column - Stats & Trending */}
-        <div className={styles.sideSection}>
-          <div className={styles.statsCard}>
-            {stats && <ForumStats stats={stats} />}
-          </div>
-          <div className={styles.trendingCard}>
-            <TrendingReactions />
-          </div>
-        </div>
+        )}
       </div>
 
       {/* New Topic Form Modal */}

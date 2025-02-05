@@ -1,0 +1,67 @@
+  // src/components/Forum/SubCategoriesList/SubCategoriesList.module.scss
+  .subCategoriesList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  
+  .subCategoryCard {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 120px;
+  
+    .dark & {
+      background-color: #1f2937;
+      border-color: #374151;
+    }
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  
+      .dark & {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      }
+    }
+  
+    .content {
+      h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 8px;
+  
+        .dark & {
+          color: #f9fafb;
+        }
+      }
+  
+      p {
+        font-size: 14px;
+        color: #6b7280;
+  
+        .dark & {
+          color: #9ca3af;
+        }
+      }
+    }
+  
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: #6b7280;
+      font-size: 14px;
+  
+      .dark & {
+        color: #9ca3af;
+      }
+    }
+  }

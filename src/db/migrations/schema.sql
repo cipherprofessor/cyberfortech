@@ -146,16 +146,19 @@ CREATE TABLE IF NOT EXISTS forum_topics (
     FOREIGN KEY (author_id) REFERENCES users(id)
 );
 
--- Forum Posts (Replies) Table
+-- Forum Posts (Replies) Table with nested reply support
 CREATE TABLE IF NOT EXISTS forum_posts (
     id INTEGER PRIMARY KEY,
     topic_id INTEGER NOT NULL,
     author_id TEXT NOT NULL,
+    parent_id INTEGER,
+    depth INTEGER DEFAULT 0,
     content TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (topic_id) REFERENCES forum_topics(id) ON DELETE CASCADE,
-    FOREIGN KEY (author_id) REFERENCES users(id)
+    FOREIGN KEY (author_id) REFERENCES users(id),
+    FOREIGN KEY (parent_id) REFERENCES forum_posts(id) ON DELETE CASCADE
 );
 
 -- Forum User Stats Table
@@ -215,6 +218,71 @@ SELECT
     (SELECT user_id FROM forum_user_activity 
      ORDER BY last_active_at DESC LIMIT 1) as latest_member;
 
+
+-- Add to your schema.sql file
+-- Forum Attachments Table
+CREATE TABLE IF NOT EXISTS forum_attachments (
+    id INTEGER PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    file_name TEXT NOT NULL,
+    original_name TEXT NOT NULL,
+    file_type TEXT NOT NULL,
+    file_size INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_at DATETIME,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Topic Attachments Junction Table
+CREATE TABLE IF NOT EXISTS forum_topic_attachments (
+    topic_id INTEGER NOT NULL,
+    attachment_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (topic_id, attachment_id),
+    FOREIGN KEY (topic_id) REFERENCES forum_topics(id) ON DELETE CASCADE,
+    FOREIGN KEY (attachment_id) REFERENCES forum_attachments(id) ON DELETE CASCADE
+);
+
+-- Reply Attachments Junction Table
+CREATE TABLE IF NOT EXISTS forum_reply_attachments (
+    reply_id INTEGER NOT NULL,
+    attachment_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (reply_id, attachment_id),
+    FOREIGN KEY (reply_id) REFERENCES forum_posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (attachment_id) REFERENCES forum_attachments(id) ON DELETE CASCADE
+);
+
+
+
+-- Forum Reply Reactions Table
+CREATE TABLE IF NOT EXISTS forum_post_reactions (
+    id INTEGER PRIMARY KEY,
+    post_id INTEGER NOT NULL,
+    user_id TEXT NOT NULL,
+    reaction_type TEXT NOT NULL CHECK(reaction_type IN ('like', 'helpful', 'insightful', 'funny')),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES forum_posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    UNIQUE(post_id, user_id, reaction_type)
+);
+
+
+-- analytics schema
+CREATE TABLE IF NOT EXISTS forum_reaction_analytics (
+    id INTEGER PRIMARY KEY,
+    post_id INTEGER NOT NULL,
+    reaction_type TEXT NOT NULL,
+    reaction_count INTEGER NOT NULL,
+    trending_score FLOAT,
+    time_period TEXT NOT NULL, -- 'hourly', 'daily', 'weekly'
+    timestamp DATETIME NOT NULL,
+    FOREIGN KEY (post_id) REFERENCES forum_posts(id) ON DELETE CASCADE
+);
+
+
+
 ------------------------------------------
 -- Indexes
 ------------------------------------------
@@ -223,3 +291,10 @@ CREATE INDEX IF NOT EXISTS idx_forum_topics_subcategory ON forum_topics(subcateg
 CREATE INDEX IF NOT EXISTS idx_forum_posts_topic ON forum_posts(topic_id);
 CREATE INDEX IF NOT EXISTS idx_forum_user_stats_reputation ON forum_user_stats(reputation);
 CREATE INDEX IF NOT EXISTS idx_user_activity_last_active ON forum_user_activity(last_active_at);
+CREATE INDEX IF NOT EXISTS idx_attachments_user ON forum_attachments(user_id);
+CREATE INDEX IF NOT EXISTS idx_topic_attachments ON forum_topic_attachments(topic_id);
+CREATE INDEX IF NOT EXISTS idx_reply_attachments ON forum_reply_attachments(reply_id);
+CREATE INDEX IF NOT EXISTS idx_forum_posts_parent ON forum_posts(parent_id);
+CREATE INDEX IF NOT EXISTS idx_post_reactions ON forum_post_reactions(post_id, user_id);
+CREATE INDEX IF NOT EXISTS idx_reaction_analytics_time 
+ON forum_reaction_analytics(time_period, timestamp);
