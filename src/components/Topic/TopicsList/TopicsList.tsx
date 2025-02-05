@@ -2,43 +2,35 @@
 import Image from 'next/image';
 import { Pin, Lock, MessageCircle, Eye } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { Topic } from '@/types/forum';
 
-interface Author {
-  name: string;
-  avatar: string;
-  reputation: number;
-  badge: string;
-}
-
-interface LastReply {
-  author: string;
-  timestamp: string;
-}
-
-interface Topic {
-  id: number;
-  title: string;
-  category: string;
-  author: Author;
-  replies: number;
-  views: number;
-  lastReply: LastReply;
-  isPinned?: boolean;
-  isLocked?: boolean;
-  timestamp: string;
-}
+// src/components/TopicsList/TopicsList.tsx
+// Add this helper function at the top of the file
+const formatTimestamp = (timestamp: string) => {
+  try {
+    const date = new Date(timestamp);
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'Invalid date';
+    }
+    return formatDistanceToNow(date, { addSuffix: true });
+  } catch (error) {
+    return 'Invalid date';
+  }
+};
 
 interface TopicsListProps {
   topics: Topic[];
   categoryId: string;
-  
+  loading?: boolean;
 }
 
-export const TopicsList: React.FC<TopicsListProps> = ({ topics }) => {
+
+export function TopicsList({ topics, categoryId, loading = false }: TopicsListProps) {
   return (
     <div className="bg-white shadow-sm rounded-lg overflow-hidden">
       <div className="bg-gray-100 px-4 py-3 font-semibold text-gray-700 border-b">
-        Recent Topics Mohsin
+        Recent Topics 
       </div>
       {topics.map(topic => (
         <div 
@@ -48,8 +40,8 @@ export const TopicsList: React.FC<TopicsListProps> = ({ topics }) => {
           <div className="flex-shrink-0 mr-4">
             <div className="relative">
               <Image 
-                src={topic.author.avatar} 
-                alt={topic.author.name}
+                src={topic.author.avatar || '/public/team/mohsin.png'} 
+                alt={topic.author.name || 'User'}
                 width={40} 
                 height={40} 
                 className="rounded-full"
@@ -85,7 +77,7 @@ export const TopicsList: React.FC<TopicsListProps> = ({ topics }) => {
             <div className="text-xs text-gray-500 mt-1">
               Started by {topic.author.name} 
               {' • '}
-              {formatDistanceToNow(new Date(topic.timestamp), { addSuffix: true })}
+              {formatTimestamp(topic.timestamp)}
             </div>
           </div>
           
@@ -103,7 +95,7 @@ export const TopicsList: React.FC<TopicsListProps> = ({ topics }) => {
             <div className="text-xs text-gray-500">
               Last reply by {topic.lastReply.author}
               {' • '}
-              {formatDistanceToNow(new Date(topic.lastReply.timestamp), { addSuffix: true })}
+              {formatTimestamp(topic.lastReply.timestamp)}
             </div>
           </div>
         </div>

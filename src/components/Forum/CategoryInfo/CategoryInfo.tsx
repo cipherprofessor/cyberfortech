@@ -6,7 +6,7 @@ interface CategoryInfoProps {
       id: number;
       name: string;
       description: string;
-      icon: string;
+      icon?: string; // Make icon optional to match the Category interface
       rules?: string[];
       moderators?: string[];
     };

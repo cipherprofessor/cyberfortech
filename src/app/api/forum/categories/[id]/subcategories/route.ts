@@ -7,25 +7,22 @@ const client = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN!,
 });
 
-// src/app/api/forum/categories/[id]/subcategories/route.ts
-// src/app/api/forum/categories/[id]/subcategories/route.ts
 interface Params {
   params: {
     id: string;
   };
 }
 
-export async function GET(request: Request, { params }: Params) {
-  const id = Number(params?.id);
-
-  if (!id) {
-    return NextResponse.json(
-      { error: 'Invalid category ID' },
-      { status: 400 }
-    );
-  }
-
+// src/app/api/forum/categories/[id]/subcategories/route.ts
+// src/app/api/forum/categories/[id]/subcategories/route.ts
+export async function GET(
+  request: Request,
+  context: { params: { id: string } }
+) {
   try {
+    const params = await context.params;
+    const categoryId = params.id;
+
     const subcategoriesResult = await client.execute({
       sql: `
         SELECT 
@@ -46,18 +43,16 @@ export async function GET(request: Request, { params }: Params) {
             AND t.is_deleted = FALSE
           ) as post_count
         FROM forum_subcategories s
-        WHERE s.category_id = ? AND s.is_deleted = FALSE
+        WHERE s.category_id = ? 
+        AND s.is_deleted = FALSE
         ORDER BY s.created_at DESC
       `,
-      args: [id]
+      args: [categoryId]
     });
 
     return NextResponse.json(subcategoriesResult.rows);
   } catch (error) {
     console.error('Error fetching subcategories:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch subcategories' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch subcategories' }, { status: 500 });
   }
 }

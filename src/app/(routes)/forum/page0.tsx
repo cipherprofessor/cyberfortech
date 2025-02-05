@@ -1,5 +1,5 @@
 'use client';
-// src/app/(routes)/forum/page.tsx
+// src/app/(routes)/forum/page0.tsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PlusCircle } from 'lucide-react';

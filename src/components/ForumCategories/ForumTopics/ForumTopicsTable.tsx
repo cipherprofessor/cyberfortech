@@ -1,70 +1,69 @@
+// src/components/ForumCategories/ForumTopics/ForumTopicsTable.tsx
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './ForumTopicsTable.module.scss';
 import ForumRecentTopicTable from '@/components/ui/Mine/CustomTables/ForumRecentTopicTable';
 import { useAuth } from '@/hooks/useAuth';
+import { Category, TopicData, ApiTopic, TopicsResponse } from '@/types/forum';
 
+// interface ApiResponse {
+//   topics: ApiTopic[];
+//   pagination: {
+//     total: number;
+//     page: number;
+//     limit: number;
+//     pages: number;
+//   };
+// }
 
-interface SubCategory {
-  id: number;
-  name: string;
-}
+interface ApiResponse {
+    topics: ApiTopic[];
+    pagination: TopicsResponse['pagination'];
+  }
+  
 
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-  icon?: string;
-  subCategories: SubCategory[];
-}
+export function ForumTopicTable() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingTopics, setIsLoadingTopics] = useState(false);
+  const { isAdmin, isStudent } = useAuth();
+  
+  // Use TopicData for the transformed data
+  const [topicsData, setTopicsData] = useState<{
+    topics: TopicData[];
+    pagination: TopicsResponse['pagination'];
+  }>({
+    topics: [],
+    pagination: {
+      total: 0,
+      page: 1,
+      limit: 10,
+      pages: 0
+    }
+  });
 
-export interface TopicData {
-  id: number;
-  title: string;
-  content: string;
-  category_name: string;
-  authorId: string;
-  authorName?: string;
-  createdAt: string;
-  is_pinned: boolean;
-  is_locked: boolean;
-  replies_count: number;
-  views: number;
-  categoryId: number;
-  subcategory_id?: number;
-  subcategory_name?: string;
-  updatedAt: string;
-}
-
-export interface TopicsResponse {
-  topics: TopicData[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    pages: number;
-  };
-}
-
-
-
-  export function ForumTopicTable() {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isLoadingTopics, setIsLoadingTopics] = useState(false);
-    const { isAdmin, isStudent } = useAuth(); // Use useAuth instead of direct Clerk hooks
-    const [topicsData, setTopicsData] = useState<TopicsResponse>({
-      topics: [] as TopicData[],
-      pagination: {
-        total: 0,
-        page: 1,
-        limit: 10,
-        pages: 0
-      }
-    });
+  // Transform API response to match TopicData interface
+  const transformApiToTopicData = (apiTopic: ApiTopic): TopicData => ({
+    id: apiTopic.id,
+    title: apiTopic.title,
+    content: apiTopic.content || '',
+    category_name: apiTopic.category_name,
+    authorId: apiTopic.author_id,
+    authorName: apiTopic.author_name,
+    createdAt: apiTopic.created_at,
+    is_pinned: apiTopic.is_pinned,
+    is_locked: apiTopic.is_locked,
+    replies_count: apiTopic.reply_count,
+    views: apiTopic.views,
+    categoryId: apiTopic.category_id,
+    subcategory_id: apiTopic.subcategory_id,
+    subcategory_name: apiTopic.subcategory_name,
+    updatedAt: apiTopic.updated_at || apiTopic.created_at
+  });
 
   useEffect(() => {
     const loadData = async () => {
@@ -102,8 +101,17 @@ export interface TopicsResponse {
   const fetchTopics = async (page = 1) => {
     try {
       setIsLoadingTopics(true);
-      const response = await axios.get<TopicsResponse>(`/api/forum/topics?page=${page}&limit=10`);
-      setTopicsData(response.data);
+      const response = await axios.get<ApiResponse>(
+        `/api/forum/topics?page=${page}&limit=10`
+      );
+      
+      // Transform the API response to match TopicData interface
+      const transformedTopics = response.data.topics.map(transformApiToTopicData);
+      
+      setTopicsData({
+        topics: transformedTopics,
+        pagination: response.data.pagination
+      });
     } catch (err) {
       console.error('Error in fetchTopics:', err);
       setError('Failed to load topics');
@@ -116,9 +124,7 @@ export interface TopicsResponse {
     if (!confirm('Are you sure you want to delete this topic?')) return;
 
     try {
-      const response = await axios.delete(`/api/forum/topics?id=${topicId}`);
-      console.log('Delete response:', response.data);
-      
+      await axios.delete(`/api/forum/topics?id=${topicId}`);
       setTopicsData(prev => ({
         ...prev,
         topics: prev.topics.filter(topic => topic.id !== topicId)
@@ -139,15 +145,8 @@ export interface TopicsResponse {
 
   return (
     <div className={styles.container}>
-      {/* <h1 className={styles.title}>Forum Management</h1> */}
-      
       {error && <div className={styles.error}>{error}</div>}
-
-<section className={styles.section}>
-        {/* <div className={styles.sectionHeader}>
-          <h2>Recent Topics</h2>
-        </div> */}
-
+      <section className={styles.section}>
         <ForumRecentTopicTable
           topics={topicsData.topics}
           onDelete={handleDeleteTopic}

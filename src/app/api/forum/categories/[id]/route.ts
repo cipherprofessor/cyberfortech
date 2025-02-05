@@ -7,23 +7,14 @@ const client = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN!,
 });
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET(request: Request, { params }: Params) {
-  const id = Number(params?.id);
-
-  if (!id) {
-    return NextResponse.json(
-      { error: 'Invalid category ID' },
-      { status: 400 }
-    );
-  }
-
+export async function GET(
+  request: Request,
+  context: { params: { id: string } }
+) {
   try {
+    const params = await context.params;
+    const categoryId = params.id;
+
     const [categoryResult, latestTopicsResult] = await Promise.all([
       client.execute({
         sql: `
@@ -39,12 +30,12 @@ export async function GET(request: Request, { params }: Params) {
           FROM forum_categories c
           LEFT JOIN forum_topics t ON c.id = t.category_id AND t.is_deleted = FALSE
           LEFT JOIN forum_posts p ON t.id = p.topic_id
-          WHERE c.id = ? AND c.is_deleted = FALSE
+          WHERE c.id = ?
           GROUP BY c.id
         `,
-        args: [id]
+        args: [categoryId]
       }),
-      
+
       client.execute({
         sql: `
           SELECT 
@@ -52,26 +43,19 @@ export async function GET(request: Request, { params }: Params) {
             t.title,
             t.created_at,
             u.name as author_name,
-            (
-              SELECT COUNT(*) 
-              FROM forum_posts 
-              WHERE topic_id = t.id
-            ) as reply_count
+            (SELECT COUNT(*) FROM forum_posts WHERE topic_id = t.id) as reply_count
           FROM forum_topics t
           JOIN users u ON t.author_id = u.id
           WHERE t.category_id = ? AND t.is_deleted = FALSE
           ORDER BY t.created_at DESC
           LIMIT 5
         `,
-        args: [id]
+        args: [categoryId]
       })
     ]);
 
     if (!categoryResult.rows.length) {
-      return NextResponse.json(
-        { error: 'Category not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -81,9 +65,6 @@ export async function GET(request: Request, { params }: Params) {
 
   } catch (error) {
     console.error('Error fetching category:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch category' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch category' }, { status: 500 });
   }
 }

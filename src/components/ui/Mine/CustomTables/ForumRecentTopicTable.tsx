@@ -1,5 +1,6 @@
-'use client';
 // src/components/ui/Mine/CustomTables/ForumRecentTopicTable.tsx
+'use client';
+
 import React from "react";
 import { Key } from "@react-types/shared";
 import {
@@ -30,7 +31,7 @@ import { TopicData } from '@/types/forum';
 export const columns = [
   { name: "TOPIC", uid: "title", sortable: true },
   { name: "CATEGORY", uid: "category_name", sortable: true },
-  { name: "AUTHOR", uid: "author", sortable: true },
+  { name: "AUTHOR", uid: "authorName", sortable: true },
   { name: "REPLIES", uid: "replies_count", sortable: true },
   { name: "CREATED", uid: "createdAt", sortable: true },
   { name: "STATUS", uid: "status", sortable: true },
@@ -43,7 +44,7 @@ const statusColorMap: Record<string, "warning" | "danger" | "success"> = {
   active: "success",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["title", "category_name", "author", "replies_count", "createdAt", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["title", "category_name", "authorName", "replies_count", "createdAt", "status", "actions"];
 
 type DropdownItemColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
@@ -54,7 +55,6 @@ interface MenuItem {
   color?: DropdownItemColor;
   onClick?: () => void;
 }
-
 
 interface ForumRecentTopicTableProps {
   topics: TopicData[];
@@ -144,7 +144,7 @@ export default function ForumRecentTopicTable({
         );
       case "category_name":
         return <span>{topic.category_name}</span>;
-      case "author":
+      case "authorName":
         return topic.authorId === user?.id ?
           getClerkAuthUserFullNameOrUserName() :
           (topic.authorName || 'Unknown User');
@@ -168,31 +168,25 @@ export default function ForumRecentTopicTable({
             {status}
           </Chip>
         );
-        case "actions": {
-            const menuItems: MenuItem[] = [
-              { 
-                key: 'view', 
-                label: 'View' 
-              } as MenuItem,
-              ...(userIsAdmin || topic.authorId === user?.id
-                ? [
-                    { 
-                      key: 'edit', 
-                      label: 'Edit' 
-                    } as MenuItem,
-                    {
-                      key: 'delete',
-                      label: 'Delete',
-                      className: 'text-danger',
-                      color: 'danger' as DropdownItemColor,
-                      onClick: () => onDelete(topic.id)
-                    } as MenuItem
-                  ]
-                : [])
-            ];
+      case "actions": {
+        const menuItems: MenuItem[] = [
+          { key: 'view', label: 'View' } as MenuItem,
+          ...(userIsAdmin || topic.authorId === user?.id
+            ? [
+                { key: 'edit', label: 'Edit' } as MenuItem,
+                {
+                  key: 'delete',
+                  label: 'Delete',
+                  className: 'text-danger',
+                  color: 'danger' as DropdownItemColor,
+                  onClick: () => onDelete(topic.id)
+                } as MenuItem
+              ]
+            : [])
+        ];
 
         return (
-            <div className="relative flex justify-end items-center gap-2">
+          <div className="relative flex justify-end items-center gap-2">
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
@@ -241,18 +235,41 @@ export default function ForumRecentTopicTable({
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search By Topic..."
+            placeholder="Search by title..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button
+                  endContent={<ChevronDown className="text-small" />}
+                  variant="flat"
+                >
+                  Columns
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                closeOnSelect={false}
+                selectedKeys={visibleColumns}
+                selectionMode="multiple"
+                onSelectionChange={keys => setVisibleColumns(new Set(keys as unknown as string[]))}
+              >
+                {columns.map((column) => (
+                  <DropdownItem key={column.uid} className="capitalize">
+                    {column.name}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {pagination.total} Topics
+            Total {pagination.total} topics
           </span>
         </div>
       </div>

@@ -8,64 +8,87 @@ import {
   Loader, 
   MessageSquare, 
   Users, 
-  TrendingUp,
-  Calendar 
+  Calendar,
+  PlusCircle 
 } from 'lucide-react';
 import { Button } from '@/components/common/Button/Button';
-
 import { useAuth } from '@/hooks/useAuth';
 import styles from './category.module.scss';
 import { CategoryInfo } from '@/components/Forum/CategoryInfo/CategoryInfo';
 import { SubCategoriesList } from '@/components/Forum/SubCategoriesList/SubCategoriesList';
 import { TopicsList } from '@/components/Topic/TopicsList/TopicsList';
-
-interface CategoryStats {
-  totalTopics: number;
-  todaysPosts: number;
-  activeUsers: number;
-  lastPost: {
-    title: string;
-    author: string;
-    date: string;
-  };
-}
-
-interface CategoryData {
-  id: number;
-  name: string;
-  description: string;
-  icon: string;
-  rules?: string[];
-  moderators?: string[];
-}
-
-interface SubCategory {
-  id: number;
-  name: string;
-  description: string;
-  topicCount: number;
-}
+import { NewTopicForm } from '@/components/ForumCategories/NewTopicForm/NewTopicForm';
+import { 
+  Topic, 
+  Category, 
+  CategoryStats, 
+  SubCategory, 
+  ApiTopic 
+} from '@/types/forum';
 
 export default function CategoryPage() {
   const params = useParams();
   const { isAuthenticated } = useAuth();
   const categoryId = params.id as string;
 
-  const [category, setCategory] = useState<CategoryData | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
   const [stats, setStats] = useState<CategoryStats | null>(null);
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [isNewTopicOpen, setIsNewTopicOpen] = useState(false);
   const [loading, setLoading] = useState({
     category: true,
     stats: true,
-    subCategories: true
+    subCategories: true,
+    topics: true
   });
   const [error, setError] = useState('');
+
+ // src/app/(routes)/forum/categories/[id]/page.tsx
+const transformTopics = (apiTopics: ApiTopic[]): Topic[] => {
+    return apiTopics.map(topic => ({
+      id: topic.id,
+      title: topic.title,
+      content: topic.content,
+      category: topic.category_name,
+      categoryId: topic.category_id,
+      author: {
+        id: topic.author_id,
+        name: topic.author_name,
+        avatar: topic.author_avatar,
+        reputation: topic.author_reputation,
+        badge: topic.author_badge
+      },
+      timestamp: topic.created_at,
+      replies: topic.reply_count,
+      views: topic.views,
+      lastReply: {
+        author: topic.last_reply_author || 'No replies yet',
+        timestamp: topic.last_reply_date || topic.created_at
+      },
+      isPinned: topic.is_pinned,
+      isLocked: topic.is_locked
+    }));
+  };
+
+  const transformSubCategories = (apiSubCategories: any[]): SubCategory[] => {
+    return apiSubCategories.map(sub => ({
+      id: sub.id,
+      name: sub.name,
+      description: sub.description || '',
+      topicCount: sub.topic_count
+    }));
+  };
 
   useEffect(() => {
     const fetchCategoryData = async () => {
       try {
         const response = await axios.get(`/api/forum/categories/${categoryId}`);
-        setCategory(response.data);
+        const categoryData = {
+          ...response.data,
+          subCategories: [] // Initialize empty array
+        };
+        setCategory(categoryData);
       } catch (err) {
         console.error('Error fetching category:', err);
         setError('Failed to load category');
@@ -81,20 +104,28 @@ export default function CategoryPage() {
     if (!loading.category && category) {
       const fetchCategoryDetails = async () => {
         try {
-          const [statsRes, subCatRes] = await Promise.all([
+          const [statsRes, subCatRes, topicsRes] = await Promise.all([
             axios.get(`/api/forum/categories/${categoryId}/stats`),
-            axios.get(`/api/forum/categories/${categoryId}/subcategories`)
+            axios.get(`/api/forum/categories/${categoryId}/subcategories`),
+            axios.get(`/api/forum/topics?categoryId=${categoryId}`)
           ]);
 
           setStats(statsRes.data);
-          setSubCategories(subCatRes.data);
+          const transformedSubCategories = transformSubCategories(subCatRes.data);
+          setSubCategories(transformedSubCategories);
+          setCategory(prev => prev ? {
+            ...prev,
+            subCategories: transformedSubCategories
+          } : null);
+          setTopics(transformTopics(topicsRes.data.topics));
         } catch (err) {
           console.error('Error fetching category details:', err);
         } finally {
           setLoading(prev => ({
             ...prev,
             stats: false,
-            subCategories: false
+            subCategories: false,
+            topics: false
           }));
         }
       };
@@ -122,27 +153,26 @@ export default function CategoryPage() {
 
   return (
     <div className={styles.categoryContainer}>
-      {/* Category Header */}
       <div className={styles.categoryHeader}>
         <CategoryInfo category={category} />
         
         {isAuthenticated && (
           <Button 
             className={styles.newTopicButton}
-            onClick={() => {/* Handle new topic */}}
+            onClick={() => setIsNewTopicOpen(true)}
           >
+            <PlusCircle size={16} />
             New Topic in {category.name}
           </Button>
         )}
       </div>
 
-      {/* Category Stats */}
       {!loading.stats && stats && (
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
             <MessageSquare className={styles.statIcon} />
             <div className={styles.statInfo}>
-              <span className={styles.statValue}>{stats.totalTopics}</span>
+              <span className={styles.statValue}>{stats.total_topics}</span>
               <span className={styles.statLabel}>Total Topics</span>
             </div>
           </div>
@@ -150,7 +180,7 @@ export default function CategoryPage() {
           <div className={styles.statCard}>
             <Calendar className={styles.statIcon} />
             <div className={styles.statInfo}>
-              <span className={styles.statValue}>{stats.todaysPosts}</span>
+              <span className={styles.statValue}>{stats.posts_today}</span>
               <span className={styles.statLabel}>Today's Posts</span>
             </div>
           </div>
@@ -158,14 +188,13 @@ export default function CategoryPage() {
           <div className={styles.statCard}>
             <Users className={styles.statIcon} />
             <div className={styles.statInfo}>
-              <span className={styles.statValue}>{stats.activeUsers}</span>
+              <span className={styles.statValue}>{stats.active_posters}</span>
               <span className={styles.statLabel}>Active Users</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* Sub-Categories */}
       {!loading.subCategories && subCategories.length > 0 && (
         <div className={styles.subCategoriesSection}>
           <h2>Sub-Categories</h2>
@@ -173,11 +202,20 @@ export default function CategoryPage() {
         </div>
       )}
 
-      {/* Topics List */}
       <div className={styles.topicsSection}>
         <h2>Topics in {category.name}</h2>
-        <TopicsList categoryId={categoryId} topics={[]} />
+        <TopicsList 
+          topics={topics}
+          categoryId={categoryId}
+          loading={loading.topics}
+        />
       </div>
+
+      <NewTopicForm 
+        isOpen={isNewTopicOpen}
+        onClose={() => setIsNewTopicOpen(false)}
+        categories={[category]}
+      />
     </div>
   );
 }

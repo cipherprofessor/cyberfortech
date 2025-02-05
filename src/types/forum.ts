@@ -1,41 +1,75 @@
 // src/types/forum.ts
-export interface ForumStatsData {
-    totalTopics: number;
-    totalPosts: number;
-    activeUsers: number;
-    latestMember: string;
-  }
-  
-  export interface ForumStatsProps {
-    stats: ForumStatsData;
-  }
-  
-  export interface Category {
-    id: number;
+export interface Author {
+    id: string;
     name: string;
-    description: string;
-    icon?: string;
-    subCategories: { id: number; name: string }[];
+    avatar?: string;
+    reputation?: number;
+    badge?: string;
+  }
+  
+  
+  export interface LastReply {
+    author: string;
+    timestamp: string;
+  }
+  
+  
+// The base Topic interface used by TopicsList
+export interface Topic {
+    id: number;
+    title: string;
+    content?: string;
+    category: string;
+    categoryId: number;
+    author: Author;
+    timestamp: string;
+    replies: number;
+    views: number;
+    lastReply: LastReply;
+    isPinned: boolean;
+    isLocked: boolean;
   }
 
-
-  // src/types/forum.ts
-export interface TopicData {
+  export interface TopicData {
     id: number;
     title: string;
     content: string;
     category_name: string;
+    categoryId: number;
     authorId: string;
-    authorName?: string;
+    authorName: string;
     createdAt: string;
+    updatedAt: string;
     is_pinned: boolean;
     is_locked: boolean;
     replies_count: number;
     views: number;
-    categoryId: number;
     subcategory_id?: number;
     subcategory_name?: string;
-    updatedAt: string;
+  }
+  
+  // API response interface
+export interface ApiTopic {
+    id: number;
+    title: string;
+    content?: string;
+    author_id: string;
+    author_name: string;
+    author_avatar?: string;
+    author_reputation?: number;
+    author_badge?: string;
+    category_id: number;
+    category_name: string;
+    subcategory_id?: number;
+    subcategory_name?: string;
+    created_at: string;
+    updated_at?: string;
+    reply_count: number;
+    views: number;
+    is_pinned: boolean;
+    is_locked: boolean;
+    last_reply_author?: string;
+    last_reply_date?: string;
   }
   
   export interface TopicsResponse {
@@ -48,13 +82,33 @@ export interface TopicData {
     };
   }
   
-  // Add other forum-related interfaces
+  export interface CategoryStats {
+    total_topics: number;
+    topics_today: number;
+    total_posts: number;
+    posts_today: number;
+    active_posters: number;
+  }
+  
+  export interface SubCategory {
+    id: number;
+    name: string;
+    description: string;
+    topicCount: number;
+  }
+  
   export interface Category {
     id: number;
     name: string;
     description: string;
     icon?: string;
-    subCategories: { id: number; name: string }[];
+    total_topics: number;
+    total_posts: number;
+    created_at: string;
+    updated_at: string;
+    subCategories: SubCategory[];
+    rules?: string[];
+    moderators?: string[];
   }
   
   export interface ForumStatsData {
@@ -63,3 +117,8 @@ export interface TopicData {
     activeUsers: number;
     latestMember: string;
   }
+
+
+
+
+  
