@@ -9,8 +9,9 @@ import {
   Users, 
   Hash,
   TrendingUp,
-  Star,
-  MessageCircle
+  ChevronLeft,
+  ChevronRight as ChevronRightIcon,
+  LayoutGrid
 } from 'lucide-react';
 import { Category } from '@/types/forum';
 import styles from './ForumCategories.module.scss';
@@ -18,54 +19,40 @@ import styles from './ForumCategories.module.scss';
 interface ForumCategoriesProps {
   categories: Category[];
   className?: string;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  totalPages: number;
+  allCategories: Category[];
 }
 
 const categoryVariants = {
-  hidden: { opacity: 0, x: -20 },
+  hidden: { opacity: 0, y: -5 },
   visible: { 
     opacity: 1, 
-    x: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 100,
-      damping: 15
-    }
+    y: 0,
+    transition: { duration: 0.1 }
   },
   exit: { 
-    opacity: 0, 
-    x: 20,
-    transition: {
-      duration: 0.2
-    }
+    opacity: 0,
+    transition: { duration: 0.1 }
   }
 };
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const iconVariants = {
-  initial: { scale: 1 },
-  hover: { 
-    scale: 1.1,
-    transition: {
-      duration: 0.2,
-      yoyo: Infinity
-    }
-  }
-};
-
-export function ForumCategories({ categories, className }: ForumCategoriesProps) {
-  // Sort categories by total topics
-  const sortedCategories = [...categories].sort((a, b) => 
+export function ForumCategories({ 
+  categories, 
+  className,
+  currentPage,
+  onPageChange,
+  totalPages,
+  allCategories
+}: ForumCategoriesProps) {
+  // Sort all categories by total_topics
+  const sortedAllCategories = [...allCategories].sort((a, b) => 
     (b.total_topics || 0) - (a.total_topics || 0)
   );
+
+  // Find the category with the most topics
+  const topCategory = sortedAllCategories[0];
 
   const renderCategoryIcon = (category: Category) => {
     if (!category.icon) {
@@ -90,111 +77,105 @@ export function ForumCategories({ categories, className }: ForumCategoriesProps)
     );
   };
 
-  const getActivityLevel = (topicCount: number = 0) => {
-    if (topicCount >= 100) return 'high';
-    if (topicCount >= 50) return 'medium';
-    return 'low';
-  };
-
   return (
-    <motion.div 
-      className={`${styles.categoriesContainer} ${className || ''}`}
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <AnimatePresence mode="wait">
-        {sortedCategories.map((category, index) => (
-          <motion.div
-            key={category.id}
-            className={`${styles.categoryCard} ${styles[getActivityLevel(category.total_topics)]}`}
-            variants={categoryVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            whileHover={{ scale: 1.02, y: -2 }}
-            layout
+    <div className={styles.categoriesWrapper}>
+      <div className={styles.header}>
+        <h2>
+          <LayoutGrid size={18} />
+          Categories
+        </h2>
+        <div className={styles.paginationControls}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={styles.pageButton}
           >
-            <Link href={`/forum/categories/${category.id}`} className={styles.categoryLink}>
-              <motion.div 
-                className={styles.categoryHeader}
-                layoutId={`category-${category.id}`}
-              >
-                <motion.div 
-                  className={styles.categoryIcon}
-                  variants={iconVariants}
-                  initial="initial"
-                  whileHover="hover"
-                >
-                  {renderCategoryIcon(category)}
-                  {index === 0 && (
-                    <div className={styles.topCategory}>
-                      <TrendingUp size={12} />
-                      <span>Most Active</span>
-                    </div>
-                  )}
-                </motion.div>
+            <ChevronLeft size={16} />
+          </motion.button>
+          <span className={styles.pageInfo}>
+            {currentPage} / {totalPages}
+          </span>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={styles.pageButton}
+          >
+            <ChevronRightIcon size={16} />
+          </motion.button>
+        </div>
+      </div>
 
-                <div className={styles.categoryInfo}>
-                  <motion.h3 
-                    whileHover={{ x: 5 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                    className={styles.categoryTitle}
-                  >
-                    {category.name}
-                    <ChevronRight size={16} className={styles.chevron} />
-                  </motion.h3>
-                  <p className={styles.categoryDescription}>{category.description}</p>
+      <AnimatePresence mode="wait">
+        <motion.div 
+          className={`${styles.categoriesContainer} ${className || ''}`}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
+          {categories.map((category) => (
+            <motion.div
+              key={category.id}
+              className={`${styles.categoryCard} ${styles[
+                category.total_topics >= 100 ? 'high' : 
+                category.total_topics >= 50 ? 'medium' : 'low'
+              ]}`}
+              variants={categoryVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <Link href={`/forum/categories/${category.id}`} className={styles.categoryLink}>
+                <div className={styles.categoryHeader}>
+                  <div className={styles.categoryIcon}>
+                    {renderCategoryIcon(category)}
+                  </div>
 
-                  {category.subCategories?.length > 0 && (
-                    <motion.div 
-                      className={styles.subCategories}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      {category.subCategories.slice(0, 3).map((sub) => (
-                        <Link
-                          key={sub.id}
-                          href={`/forum/categories/${category.id}/${sub.id}`}
-                          className={styles.subCategory}
-                        >
-                          <MessageCircle size={12} />
-                          {sub.name}
-                        </Link>
-                      ))}
-                      {category.subCategories.length > 3 && (
-                        <span className={styles.moreSubCategories}>
-                          +{category.subCategories.length - 3} more
+                  <div className={styles.categoryInfo}>
+                    <h3 className={styles.categoryTitle}>
+                      {category.name}
+                      <ChevronRight size={16} className={styles.chevron} />
+                    </h3>
+                    <p className={styles.categoryDescription}>{category.description}</p>
+                  </div>
+
+                  <div className={styles.categoryStats}>
+                    {category.id === topCategory.id && (
+                      <div className={styles.trending}>
+                        <TrendingUp size={12} />
+                        <span>Trending</span>
+                      </div>
+                    )}
+                    <div className={`${styles.statItem} ${styles.topicStat}`}>
+                      <MessageSquare />
+                      <div className={styles.statContent}>
+                        <span className={styles.statValue}>
+                          {category.total_topics?.toLocaleString() || 0}
                         </span>
-                      )}
-                    </motion.div>
-                  )}
+                        <span className={styles.statLabel}>Topics</span>
+                      </div>
+                    </div>
+                    <div className={`${styles.statItem} ${styles.postStat}`}>
+                      <Users />
+                      <div className={styles.statContent}>
+                        <span className={styles.statValue}>
+                          {category.total_posts?.toLocaleString() || 0}
+                        </span>
+                        <span className={styles.statLabel}>Posts</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
-                <div className={styles.categoryStats}>
-                  <motion.div 
-                    className={`${styles.statItem} ${styles.topicStat}`}
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    <MessageSquare size={14} />
-                    <span>{category.total_topics?.toLocaleString() || 0}</span>
-                    <span className={styles.statLabel}>Topics</span>
-                  </motion.div>
-                  <motion.div 
-                    className={`${styles.statItem} ${styles.postStat}`}
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    <Users size={14} />
-                    <span>{category.total_posts?.toLocaleString() || 0}</span>
-                    <span className={styles.statLabel}>Posts</span>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </Link>
-          </motion.div>
-        ))}
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
+
+export default ForumCategories;

@@ -51,13 +51,15 @@ export default function ForumPage() {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState('');
-
-  // Calculate category pagination
-  const totalCategoryPages = Math.ceil((categories?.length || 0) / CATEGORIES_PER_PAGE);
+  const CATEGORIES_PER_PAGE = 3;
+  const totalPages = Math.ceil((categories?.length || 0) / CATEGORIES_PER_PAGE);
   const paginatedCategories = categories.slice(
     (categoryPage - 1) * CATEGORIES_PER_PAGE,
     categoryPage * CATEGORIES_PER_PAGE
   );
+
+  // Calculate category pagination
+  const totalCategoryPages = Math.ceil((categories?.length || 0) / CATEGORIES_PER_PAGE);
 
   const transformApiToTopicData = (apiTopic: ApiTopic): TopicData => ({
     id: apiTopic.id,
@@ -231,32 +233,6 @@ export default function ForumPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <div className={styles.cardHeader}>
-              <h2>
-                <LayoutGrid size={20} />
-                Categories
-              </h2>
-              <div className={styles.paginationControls}>
-                <div className={styles.pageButtons}>
-                  <button
-                    onClick={() => setCategoryPage(p => Math.max(1, p - 1))}
-                    disabled={categoryPage === 1}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <span className={styles.pageInfo}>
-                    {categoryPage} / {totalCategoryPages}
-                  </span>
-                  <button
-                    onClick={() => setCategoryPage(p => Math.min(totalCategoryPages, p + 1))}
-                    disabled={categoryPage === totalCategoryPages}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
             <AnimatePresence mode="wait">
               {loading.categories ? (
                 <div className={styles.categorySkeleton}>
@@ -265,9 +241,13 @@ export default function ForumPage() {
                 </div>
               ) : (
                 <ForumCategories 
-                  categories={paginatedCategories}
-                  className={styles.categoriesGrid}
-                />
+                categories={paginatedCategories}
+                className={styles.categoriesGrid}
+                currentPage={categoryPage}
+                onPageChange={setCategoryPage}
+                totalPages={totalPages}
+                allCategories={categories} // Pass all categories
+              />
               )}
             </AnimatePresence>
           </motion.div>
