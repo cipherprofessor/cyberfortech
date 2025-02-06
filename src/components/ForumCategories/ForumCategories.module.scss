@@ -1,163 +1,224 @@
 // src/components/Forum/ForumCategories/ForumCategories.module.scss
 
 .categoriesContainer {
-  @apply w-full;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .categoryCard {
-  @apply border-b border-gray-100 dark:border-gray-700 last:border-b-0;
-  @apply relative overflow-hidden;
-  @apply transition-all duration-200;
-  @apply hover:bg-gray-50/50 dark:hover:bg-gray-800/50;
-  @apply cursor-pointer;
-
+  position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
   &:hover {
-    .chevron {
-      @apply opacity-100 translate-x-0;
-    }
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgba(99, 102, 241, 0.2);
   }
+
+  &.high {
+    border-left: 4px solid #22c55e;
+  }
+
+  &.medium {
+    border-left: 4px solid #eab308;
+  }
+
+  &.low {
+    border-left: 4px solid #64748b;
+  }
+}
+
+.categoryLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .categoryHeader {
-  @apply flex items-start gap-4 p-4;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.25rem;
 }
 
 .categoryIcon {
-  @apply flex-shrink-0 w-10 h-10 rounded-lg;
-  @apply flex items-center justify-center;
-  @apply bg-gradient-to-br from-indigo-50 to-blue-50;
-  @apply dark:from-indigo-900/20 dark:to-blue-900/20;
-  @apply overflow-hidden;
-  @apply transition-all duration-200;
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(59, 130, 246, 0.1));
+
+  .defaultIcon {
+    color: #6366f1;
+  }
 
   .iconImage {
-    @apply w-6 h-6 object-contain;
-    @apply opacity-80 hover:opacity-100;
-    @apply transition-opacity duration-200;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
   }
 
   .iconSvg {
-    @apply w-6 h-6;
-    @apply text-indigo-600 dark:text-indigo-400;
-
-    svg {
-      @apply w-full h-full;
-    }
+    width: 28px;
+    height: 28px;
+    color: #6366f1;
   }
+}
+
+.topCategory {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #6366f1;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
 }
 
 .categoryInfo {
-  @apply flex-grow min-w-0;
-
-  h3 {
-    @apply flex items-center gap-1;
-    @apply text-base font-medium text-gray-900 dark:text-gray-100;
-    @apply transition-colors duration-200;
-    @apply hover:text-indigo-600 dark:hover:text-indigo-400;
-    @apply mb-1;
-
-    .chevron {
-      @apply w-4 h-4 opacity-0 -translate-x-2;
-      @apply transition-all duration-200;
-    }
-  }
-
-  p {
-    @apply text-sm text-gray-500 dark:text-gray-400;
-    @apply line-clamp-1;
-    @apply mb-2;
-  }
+  flex-grow: 1;
+  min-width: 0;
 }
 
-.subCategories {
-  @apply flex flex-wrap gap-2;
-}
+.categoryTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
 
-.subCategory {
-  @apply inline-flex items-center;
-  @apply px-2 py-1 text-xs rounded-full;
-  @apply bg-gray-100 dark:bg-gray-800;
-  @apply text-gray-600 dark:text-gray-300;
-  @apply hover:bg-indigo-100 hover:text-indigo-600;
-  @apply dark:hover:bg-indigo-900/50 dark:hover:text-indigo-300;
-  @apply transition-all duration-200;
-
-  &:hover {
-    @apply transform scale-105;
-  }
-}
-
-.moreSubCategories {
-  @apply text-xs text-gray-400 dark:text-gray-500;
-  @apply px-2 py-1;
-}
-
-.categoryStats {
-  @apply flex-shrink-0 flex items-center gap-4;
-}
-
-.statItem {
-  @apply flex items-center gap-1.5;
-  @apply text-sm text-gray-500 dark:text-gray-400;
-  @apply min-w-[60px];
-
-  svg {
-    @apply text-gray-400 dark:text-gray-500;
-  }
-
-  span {
-    @apply font-medium;
-  }
-}
-
-// Animations
-@keyframes slideIn {
-  from {
+  .chevron {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-8px);
+    transition: all 0.3s ease;
+    color: #6366f1;
   }
-  to {
+
+  &:hover .chevron {
     opacity: 1;
     transform: translateX(0);
   }
 }
 
-// Hover effects
-.categoryCard {
-  &::after {
-    content: '';
-    @apply absolute inset-0;
-    @apply bg-gradient-to-r from-indigo-500/0 to-indigo-500/0;
-    @apply opacity-0 transition-opacity duration-200;
-  }
+.categoryDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
 
-  &:hover::after {
-    @apply opacity-5;
+.subCategories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.subCategory {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(99, 102, 241, 0.2);
+    transform: translateY(-1px);
   }
 }
 
-// Responsive adjustments
-@media (max-width: 768px) {
-  .categoryHeader {
-    @apply flex-col gap-2;
+.moreSubCategories {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  padding: 4px 8px;
+}
+
+.categoryStats {
+  display: flex;
+  gap: 1rem;
+  padding-left: 1rem;
+  margin-left: 1rem;
+  border-left: 1px solid #f0f0f0;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+
+  &.topicStat {
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+  }
+
+  &.postStat {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+}
+
+// Dark mode
+:global(.dark) {
+  .categoryCard {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .categoryTitle {
+    color: #f3f4f6;
+  }
+
+  .categoryDescription {
+    color: #9ca3af;
   }
 
   .categoryStats {
-    @apply w-full justify-start;
-    @apply border-t border-gray-100 dark:border-gray-700;
-    @apply pt-2 mt-2;
+    border-color: #374151;
   }
 }
 
-// Dark mode optimizations
-.dark {
-  .categoryCard {
-    &:hover {
-      @apply bg-gray-800/50;
-    }
+// Responsive
+@media (max-width: 768px) {
+  .categoryHeader {
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  .categoryIcon {
-    @apply from-gray-800 to-gray-900;
+  .categoryStats {
+    width: 100%;
+    padding-left: 0;
+    margin-left: 0;
+    border-left: none;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 1rem;
+    margin-top: 1rem;
   }
 }

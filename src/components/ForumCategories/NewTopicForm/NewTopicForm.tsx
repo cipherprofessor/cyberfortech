@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import axios from 'axios';
@@ -15,16 +16,18 @@ interface Category {
   }>;
 }
 
-export interface NewTopicFormProps {
+interface NewTopicFormProps {
   isOpen: boolean;
   onClose: () => void;
   categories: Category[];
+  onTopicCreated?: () => Promise<void>;
 }
 
 export function NewTopicForm({ 
   isOpen, 
   onClose, 
-  categories: initialCategories 
+  categories: initialCategories,
+  onTopicCreated 
 }: NewTopicFormProps) {
   const router = useRouter();
   const { userId } = useAuth();
@@ -36,7 +39,6 @@ export function NewTopicForm({
     subcategoryId: '',
   });
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -74,12 +76,20 @@ export function NewTopicForm({
         authorId: userId
       });
 
+      // Call onTopicCreated callback if provided
+      if (onTopicCreated) {
+        await onTopicCreated();
+      }
+
+      // Reset form and close
+      handleClose();
+      
+      // Navigate to the new topic
       router.push(`/forum/topics/${response.data.id}`);
       router.refresh();
-      handleClose();
     } catch (err) {
-      setError('Failed to create topic. Please try again.');
       console.error('Error creating topic:', err);
+      setError('Failed to create topic. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -210,7 +220,7 @@ export function NewTopicForm({
             >
               {isSubmitting ? (
                 <>
-                  <Loader className={styles.spinner} size={16} />
+                  <Loader className={`${styles.spinner} animate-spin`} size={16} />
                   Creating...
                 </>
               ) : (

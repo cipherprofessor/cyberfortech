@@ -78,23 +78,37 @@ export default function ForumPage() {
   });
 
   // Fetch Categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        console.log('Fetching categories...');
-        const response = await axios.get('/api/forum/categories');
-        console.log('Categories response:', response.data);
-        setCategories(response.data);
-      } catch (err) {
-        console.error('Error fetching categories:', err);
-        setError('Failed to load categories');
-      } finally {
-        setLoading(prev => ({ ...prev, categories: false }));
-      }
-    };
+   // Function to fetch categories
+   const fetchCategories = async () => {
+    try {
+      console.log('Fetching categories...');
+      const response = await axios.get('/api/forum/categories');
+      console.log('Categories response:', response.data);
+      setCategories(response.data);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      setError('Failed to load categories');
+    } finally {
+      setLoading(prev => ({ ...prev, categories: false }));
+    }
+  };
 
+  // Initial fetch
+  useEffect(() => {
     fetchCategories();
   }, []);
+
+  // Handler for new topic creation
+  const handleTopicCreated = async () => {
+    // Refresh categories to get updated counts
+    await fetchCategories();
+    
+    // Refresh topics list
+    // await fetchTopics();
+    
+    // Close the modal
+    setIsTopicFormOpen(false);
+  };
 
   // Fetch Stats
   useEffect(() => {
@@ -320,6 +334,7 @@ export default function ForumPage() {
         isOpen={isTopicFormOpen}
         onClose={() => setIsTopicFormOpen(false)}
         categories={categories}
+        onTopicCreated={handleTopicCreated} // Add this prop
       />
     </motion.div>
   );
