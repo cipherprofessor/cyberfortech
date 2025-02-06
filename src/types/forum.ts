@@ -118,6 +118,21 @@ export interface ApiTopic {
     latestMember: string;
   }
 
+  export type ReactionType = 'like' | 'heart' | 'insightful' | 'funny';
+
+export interface Reaction {
+  type: ReactionType;
+  count: number;
+  hasReacted: boolean;
+}
+
+export interface TopicReaction extends Reaction {
+  id: number;
+  topicId: number;
+  userId: string;
+  createdAt: string;
+}
+
 
 
 

@@ -5,12 +5,15 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { TopicContent } from '@/components/Forum/TopicContent/TopicContent';
-import { TopicReplies } from '@/components/Forum/TopicReplies/TopicReplies';
+import { NestedReplies } from '@/components/Forum/NestedReplies/NestedReplies';
+import { ReactionButtonAnimated } from '@/components/Forum/ReactionButton/ReactionButtonAnimated';
+import { AttachmentViewer } from '@/components/Forum/AttachmentViewer/AttachmentViewer';
+import { ReactionAnalytics } from '@/components/Forum/ReactionAnalytics/ReactionAnalytics';
 import { RichReplyForm } from '@/components/Forum/ReplyForm/RichReplyForm';
 import { useAuth } from '@/hooks/useAuth';
-import styles from './page.module.scss';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import { TopicSkeleton } from '@/components/Forum/Skeleton/TopicSkeleton/TopicSkeleton';
+import styles from './page.module.scss';
 
 interface Reply {
   id: number;
@@ -22,6 +25,17 @@ interface Reply {
   likes: number;
   hasLiked: boolean;
   isAnswer: boolean;
+  depth: number;
+  children?: Reply[];
+}
+
+interface Attachment {
+  id: number;
+  fileName: string;
+  originalName: string;
+  fileType: string;
+  fileSize: number;
+  url: string;
 }
 
 interface Topic {
@@ -43,8 +57,13 @@ interface Topic {
   updatedAt?: string;
   likes: number;
   hasLiked: boolean;
+  attachments: Attachment[];
+  reactions: Array<{
+    type: 'like' | 'heart' | 'insightful' | 'funny';
+    count: number;
+    hasReacted: boolean;
+  }>;
   isLocked: boolean;
-  replies: Reply[];
 }
 
 export default function TopicPage() {
@@ -56,6 +75,7 @@ export default function TopicPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   useEffect(() => {
     fetchTopic();
@@ -79,30 +99,108 @@ export default function TopicPage() {
     if (!topic) return;
     try {
       const response = await axios.post(`/api/forum/topics/${topic.id}/like`);
-      setTopic(prev => prev ? {
-        ...prev,
-        likes: response.data.likes,
-        hasLiked: response.data.hasLiked
-      } : null);
+      setTopic(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          likes: response.data.likes,
+          hasLiked: response.data.hasLiked
+        };
+      });
     } catch (err) {
       console.error('Error liking topic:', err);
     }
   };
 
-  const handleSubmitReply = async (content: string) => {
+
+  const handleReaction = async (type: 'like' | 'heart' | 'insightful' | 'funny') => {
+    if (!topic) return;
+    try {
+      const response = await axios.post(`/api/forum/topics/${topic.id}/react`, { type });
+      setTopic(prev => prev ? {
+        ...prev,
+        reactions: response.data.reactions
+      } : null);
+    } catch (err) {
+      console.error('Error reacting to topic:', err);
+    }
+  };
+
+  const handleAddReply = async (content: string, parentId?: number) => {
     if (!topic) return;
     
     setIsSubmittingReply(true);
     try {
       const response = await axios.post(`/api/forum/topics/${topic.id}/replies`, {
         content,
+        parentId,
         authorId: user?.id
       });
-      setReplies(prev => [...prev, response.data]);
+      
+      if (parentId) {
+        // Update nested replies
+        const updateReplies = (replies: Reply[]): Reply[] => {
+          return replies.map(reply => {
+            if (reply.id === parentId) {
+              return {
+                ...reply,
+                children: [...(reply.children || []), response.data]
+              };
+            }
+            if (reply.children) {
+              return {
+                ...reply,
+                children: updateReplies(reply.children)
+              };
+            }
+            return reply;
+          });
+        };
+        
+        setReplies(prev => updateReplies(prev));
+      } else {
+        setReplies(prev => [...prev, response.data]);
+      }
     } catch (err) {
       console.error('Error submitting reply:', err);
     } finally {
       setIsSubmittingReply(false);
+    }
+  };
+
+  const handleLikeReply = async (replyId: number) => {
+    try {
+      const response = await axios.post(`/api/forum/replies/${replyId}/like`);
+      const updateReplyLikes = (replies: Reply[]): Reply[] => {
+        return replies.map(reply => {
+          if (reply.id === replyId) {
+            return {
+              ...reply,
+              likes: response.data.likes,
+              hasLiked: response.data.hasLiked
+            };
+          }
+          if (reply.children) {
+            return {
+              ...reply,
+              children: updateReplyLikes(reply.children)
+            };
+          }
+          return reply;
+        });
+      };
+      setReplies(updateReplyLikes);
+    } catch (err) {
+      console.error('Error liking reply:', err);
+    }
+  };
+
+  const handleReportReply = async (replyId: number) => {
+    try {
+      await axios.post(`/api/forum/replies/${replyId}/report`);
+      // Show success notification
+    } catch (err) {
+      console.error('Error reporting reply:', err);
     }
   };
 
@@ -120,16 +218,19 @@ export default function TopicPage() {
 
   return (
     <div className={styles.topicPage}>
+      <div className={styles.topicHeader}>
+        <h1>{topic.title}</h1>
+        <div className={styles.topicMeta}>
+          <span>Posted in {topic.categoryName}</span>
+          <span>•</span>
+          <span>{new Date(topic.createdAt).toLocaleDateString()}</span>
+        </div>
+      </div>
+
+      <div className={styles.topicContent}>
       <TopicContent 
         content={topic.content}
-        author={{
-          id: topic.author.id,
-          name: topic.author.name,
-          avatar: topic.author.avatar,
-          role: topic.author.role,
-          joinedDate: topic.author.joinedDate,
-          postCount: topic.author.postCount
-        }}
+        author={topic.author}
         metadata={{
           createdAt: topic.createdAt,
           lastEdited: topic.updatedAt,
@@ -139,6 +240,55 @@ export default function TopicPage() {
         onLike={handleLike}
       />
 
+        {/* Attachments Section */}
+        {topic.attachments && topic.attachments.length > 0 && (
+          <div className={styles.attachmentsSection}>
+            <AttachmentViewer 
+              attachments={topic.attachments}
+              isEditing={topic.authorId === user?.id}
+              onRemove={async (attachmentId) => {
+                try {
+                  await axios.delete(`/api/forum/attachments/${attachmentId}`);
+                  setTopic(prev => prev ? {
+                    ...prev,
+                    attachments: prev.attachments.filter(a => a.id !== attachmentId)
+                  } : null);
+                } catch (err) {
+                  console.error('Error removing attachment:', err);
+                }
+              }}
+            />
+          </div>
+        )}
+
+        {/* Reactions Section */}
+        <div className={styles.reactionsSection}>
+          <ReactionButtonAnimated
+            postId={topic.id}
+            initialReactions={topic.reactions}
+            onReact={handleReaction}
+          />
+          
+          <button
+            className={styles.analyticsToggle}
+            onClick={() => setShowAnalytics(!showAnalytics)}
+          >
+            {showAnalytics ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            {showAnalytics ? 'Hide Analytics' : 'Show Analytics'}
+          </button>
+        </div>
+
+        {/* Analytics Section */}
+        {showAnalytics && (
+          <div className={styles.analyticsSection}>
+            <ReactionAnalytics 
+              postId={topic.id}
+              period="daily"
+            />
+          </div>
+        )}
+      </div>
+
       {/* Replies Section */}
       <div className={styles.repliesSection}>
         <h2>
@@ -146,40 +296,22 @@ export default function TopicPage() {
           Replies ({replies.length})
         </h2>
         
-        <TopicReplies 
+        <NestedReplies 
           replies={replies}
-          topicAuthorId={topic.authorId}
-          onLikeReply={async (replyId) => {
-            try {
-              const response = await axios.post(`/api/forum/replies/${replyId}/like`);
-              setReplies(prev => prev.map(reply => 
-                reply.id === replyId 
-                  ? { ...reply, ...response.data }
-                  : reply
-              ));
-            } catch (err) {
-              console.error('Error liking reply:', err);
-            }
-          }}
-          onMarkAnswer={async (replyId) => {
-            try {
-              const response = await axios.post(`/api/forum/replies/${replyId}/mark-answer`);
-              setReplies(prev => prev.map(reply => 
-                reply.id === replyId 
-                  ? { ...reply, isAnswer: true }
-                  : { ...reply, isAnswer: false }
-              ));
-            } catch (err) {
-              console.error('Error marking answer:', err);
-            }
-          }}
+          onAddReply={handleAddReply}
+          onLikeReply={handleLikeReply}
+          onReportReply={handleReportReply}
+          maxDepth={3}
         />
 
         {!topic.isLocked && (
-          <RichReplyForm 
-            onSubmit={handleSubmitReply}
-            isSubmitting={isSubmittingReply}
-          />
+          <div className={styles.replyFormSection}>
+            <RichReplyForm 
+              onSubmit={(content) => handleAddReply(content)}
+              isSubmitting={isSubmittingReply}
+              placeholder="Add your reply..."
+            />
+          </div>
         )}
       </div>
     </div>

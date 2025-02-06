@@ -1,78 +1,53 @@
-'use client';
+// src/components/ForumCategories/ForumManagement/ForumManagement.tsx
+"use client";
 import React, { useState, useEffect } from 'react';
-// import { useAuth } from '@clerk/nextjs';
 import axios from 'axios';
-import { Plus, Edit, Trash2, ChevronDown, ChevronUp, Loader, ChevronLeft, ChevronRight, User, MessageSquare } from 'lucide-react';
+import { Plus, Edit, Trash2, ChevronDown, ChevronUp, Loader } from 'lucide-react';
 import styles from './ForumManagement.module.scss';
+import { CategoryForm } from '../CategoryForm/CategoryForm';
 import ForumRecentTopicTable from '@/components/ui/Mine/CustomTables/ForumRecentTopicTable';
 import { useAuth } from '@/hooks/useAuth';
-
+import { TopicData, TopicsResponse } from '@/types/forum';
 
 interface SubCategory {
-  id: number;
+  id: string;
   name: string;
 }
 
 interface Category {
-  id: number;
+  id: string;
   name: string;
   description: string;
   icon?: string;
+  color?: string;
+  display_order: number;
+  is_active: boolean;
+  total_topics: number;
+  total_posts: number;
+  last_post_at?: string;
   subCategories: SubCategory[];
 }
 
-export interface TopicData {
-  id: number;
-  title: string;
-  content: string;
-  category_name: string;
-  authorId: string;
-  authorName?: string;
-  createdAt: string;
-  is_pinned: boolean;
-  is_locked: boolean;
-  replies_count: number;
-  views: number;
-  categoryId: number;
-  subcategory_id?: number;
-  subcategory_name?: string;
-  updatedAt: string;
-}
+export function ForumManagement() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingTopics, setIsLoadingTopics] = useState(false);
+  const { isAdmin, isStudent } = useAuth();
+  const [topicsData, setTopicsData] = useState<TopicsResponse>({
+    topics: [] as TopicData[],
+    pagination: {
+      total: 0,
+      page: 1,
+      limit: 10,
+      pages: 0
+    }
+  });
 
-export interface TopicsResponse {
-  topics: TopicData[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    pages: number;
-  };
-}
-
-
-
-  export function ForumManagement() {
-    // const { userId } = useAuth();
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [expandedCategory, setExpandedCategory] = useState<number | null>(null);
-    const [newCategory, setNewCategory] = useState({ name: '', description: '', icon: '' });
-    const [isAddingCategory, setIsAddingCategory] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isLoadingTopics, setIsLoadingTopics] = useState(false);
-    const { isAdmin, isStudent } = useAuth(); // Use useAuth instead of direct Clerk hooks
-    const [topicsData, setTopicsData] = useState<TopicsResponse>({
-      topics: [] as TopicData[],
-      pagination: {
-        total: 0,
-        page: 1,
-        limit: 10,
-        pages: 0
-      }
-    });
-
-     // Fetch initial data
+  // Fetch initial data
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -119,20 +94,18 @@ export interface TopicsResponse {
     }
   };
 
-  const handleAddCategory = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddCategory = async (formData: any) => {
     try {
-      const response = await axios.post('/api/forum/categories', newCategory);
+      const response = await axios.post('/api/forum/categories', formData);
       setCategories([...categories, { ...response.data, subCategories: [] }]);
-      setNewCategory({ name: '', description: '', icon: '' });
       setIsAddingCategory(false);
-    } catch (err) {
-      setError('Failed to create category');
-      console.error(err);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.error || 'Failed to create category';
+      throw new Error(errorMessage);
     }
   };
 
-  const handleDeleteCategory = async (categoryId: number) => {
+  const handleDeleteCategory = async (categoryId: string) => {
     if (!confirm('Are you sure you want to delete this category?')) return;
 
     try {
@@ -148,9 +121,7 @@ export interface TopicsResponse {
     if (!confirm('Are you sure you want to delete this topic?')) return;
 
     try {
-      const response = await axios.delete(`/api/forum/topics?id=${topicId}`);
-      console.log('Delete response:', response.data);
-      
+      await axios.delete(`/api/forum/topics?id=${topicId}`);
       setTopicsData(prev => ({
         ...prev,
         topics: prev.topics.filter(topic => topic.id !== topicId)
@@ -165,29 +136,8 @@ export interface TopicsResponse {
     setCurrentPage(page);
   };
 
-  // Generate page numbers for pagination
-  const getPageNumbers = () => {
-    const pages = [];
-    const currentPageNum = topicsData.pagination.page;
-    const totalPages = topicsData.pagination.pages;
-
-    // Always show first page
-    pages.push(1);
-
-    // Add ellipsis and surrounding pages
-    for (let i = Math.max(2, currentPageNum - 1); i <= Math.min(totalPages - 1, currentPageNum + 1); i++) {
-      if (i === 2 && currentPageNum > 3) pages.push('...');
-      pages.push(i);
-      if (i === currentPageNum + 1 && currentPageNum < totalPages - 2) pages.push('...');
-    }
-
-    // Always show last page
-    if (totalPages > 1) pages.push(totalPages);
-    return pages;
-  };
-
   if (loading) {
-    return <div className={styles.loading}><Loader className={styles.spinner} /> Aajjaaa</div>;
+    return <div className={styles.loading}><Loader className={styles.spinner} /> Loading...</div>;
   }
 
   if (!isAdmin && !isStudent) {
@@ -213,40 +163,10 @@ export interface TopicsResponse {
         </div>
 
         {isAddingCategory && (
-          <form onSubmit={handleAddCategory} className={styles.addForm}>
-            <input
-              type="text"
-              placeholder="Category Name"
-              value={newCategory.name}
-              onChange={e => setNewCategory({...newCategory, name: e.target.value})}
-              className={styles.input}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Description"
-              value={newCategory.description}
-              onChange={e => setNewCategory({...newCategory, description: e.target.value})}
-              className={styles.input}
-            />
-            <input
-              type="text"
-              placeholder="Icon (optional)"
-              value={newCategory.icon || ''}
-              onChange={e => setNewCategory({...newCategory, icon: e.target.value})}
-              className={styles.input}
-            />
-            <div className={styles.formButtons}>
-              <button type="submit" className={styles.submitButton}>Create</button>
-              <button 
-                type="button" 
-                onClick={() => setIsAddingCategory(false)}
-                className={styles.cancelButton}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+          <CategoryForm
+            onSubmit={handleAddCategory}
+            onCancel={() => setIsAddingCategory(false)}
+          />
         )}
 
         <div className={styles.categoriesList}>
@@ -256,6 +176,11 @@ export interface TopicsResponse {
                 <div className={styles.categoryTitle}>
                   {category.icon && <span className={styles.icon}>{category.icon}</span>}
                   <h3>{category.name}</h3>
+                  {!category.is_active && <span className={styles.inactiveLabel}>Inactive</span>}
+                </div>
+                <div className={styles.categoryStats}>
+                  <span>{category.total_topics} topics</span>
+                  <span>{category.total_posts} posts</span>
                 </div>
                 <div className={styles.categoryActions}>
                   <button 
@@ -281,6 +206,20 @@ export interface TopicsResponse {
               {expandedCategory === category.id && (
                 <div className={styles.categoryDetails}>
                   <p className={styles.description}>{category.description}</p>
+                  <div className={styles.categoryMeta}>
+                    <div>
+                      <strong>Display Order:</strong> {category.display_order}
+                    </div>
+                    {category.color && (
+                      <div className={styles.colorPreview}>
+                        <strong>Color:</strong>
+                        <span 
+                          className={styles.colorBox}
+                          style={{ backgroundColor: category.color }}
+                        />
+                      </div>
+                    )}
+                  </div>
                   {category.subCategories.length > 0 && (
                     <div className={styles.subcategories}>
                       <h4>Subcategories</h4>
@@ -298,9 +237,8 @@ export interface TopicsResponse {
         </div>
       </section>
 
- {/* Enhanced Topics Section */}
-{/* Topics Section */}
-<section className={styles.section}>
+      {/* Topics Section */}
+      <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2>Recent Topics</h2>
         </div>

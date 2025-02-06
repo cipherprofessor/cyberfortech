@@ -231,3 +231,131 @@
       align-items: flex-start;
     }
   }
+
+  // src/app/(routes)/forum/topics/[id]/page.module.scss
+
+.topicPage {
+  @apply max-w-6xl mx-auto px-4 py-6 space-y-6;
+}
+
+.topicHeader {
+  @apply space-y-2;
+
+  h1 {
+    @apply text-2xl font-bold text-gray-900 dark:text-gray-100;
+  }
+}
+
+.topicMeta {
+  @apply flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400;
+}
+
+.topicContent {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 space-y-6;
+}
+
+.attachmentsSection {
+  @apply mt-6 pt-6 border-t border-gray-200 dark:border-gray-700;
+}
+
+.reactionsSection {
+  @apply flex items-center justify-between mt-6 pt-6 border-t border-gray-200 dark:border-gray-700;
+}
+
+.analyticsToggle {
+  @apply flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors;
+}
+
+.analyticsSection {
+  @apply mt-6 pt-6 border-t border-gray-200 dark:border-gray-700;
+}
+
+.repliesSection {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6;
+
+  h2 {
+    @apply flex items-center gap-2 text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6;
+  }
+}
+
+.replyFormSection {
+  @apply mt-8 pt-8 border-t border-gray-200 dark:border-gray-700;
+}
+
+.error {
+  @apply flex items-center justify-center min-h-[400px] text-red-500;
+}
+
+// Nested Reply Depths
+.replyWrapper {
+  @apply border-l-2 border-gray-200 dark:border-gray-700 pl-4 ml-4 my-4;
+
+  &.depth-0 {
+    @apply ml-0 border-l-0 pl-0;
+  }
+
+  &.depth-1 {
+    @apply border-l-blue-200 dark:border-blue-800;
+  }
+
+  &.depth-2 {
+    @apply border-l-purple-200 dark:border-purple-800;
+  }
+
+  &.depth-3 {
+    @apply border-l-pink-200 dark:border-pink-800;
+  }
+}
+
+// Loading Skeletons
+.skeletonLine {
+  @apply h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse;
+}
+
+.skeletonAvatar {
+  @apply w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse;
+}
+
+.responsiveContainer {
+  @apply w-full h-[300px] mt-4;
+}
+
+// Mobile Optimizations
+@media (max-width: 640px) {
+  .topicPage {
+    @apply px-2;
+  }
+
+  .topicContent {
+    @apply p-4;
+  }
+
+  .repliesSection {
+    @apply p-4;
+  }
+
+  .replyWrapper {
+    @apply pl-2 ml-2;
+  }
+
+  .responsiveContainer {
+    @apply h-[200px];
+  }
+}
+
+// Dark Mode Enhancements
+.dark {
+  .topicContent,
+  .repliesSection {
+    @apply bg-gray-800 text-gray-100;
+  }
+
+  .skeletonLine,
+  .skeletonAvatar {
+    @apply bg-gray-700;
+  }
+
+  .analyticsToggle {
+    @apply text-gray-300 hover:text-gray-100;
+  }
+}
