@@ -34,29 +34,6 @@
   }
 }
 
-.headerContent {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-
-  .titleSection {
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: white;
-      margin: 0 0 8px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    p {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.9);
-      margin: 0;
-    }
-  }
-}
 
 .newTopicButton {
   background: white;
@@ -154,3 +131,160 @@
     }
   }
 }
+
+
+// src/app/(routes)/forum/forum.module.scss
+
+.pageContainer {
+  width: 90%;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.topSection {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  min-height: 180px; // Fixed height for consistency
+}
+
+.headerSection {
+  flex: 1;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+  position: relative;
+  overflow: hidden;
+  min-height: 180px; // Match topSection height
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+                linear-gradient(135deg, rgba(79, 70, 229, 0.9), rgba(99, 102, 241, 0.9));
+    background-size: 60px 60px, 100% 100%;
+    z-index: 0;
+  }
+}
+
+.headerContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .titleSection {
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      margin: 0 0 8px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
+    }
+  }
+}
+
+.statsCard {
+  width: 300px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  height: 180px; // Fixed height
+}
+
+// Loading states
+.skeletonBase {
+  animation: pulse 1.5s infinite;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+}
+
+.statsSkeleton {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .skeletonHeader {
+    @extend .skeletonBase;
+    height: 24px;
+    width: 60%;
+  }
+
+  .skeletonStats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+
+    .skeletonStat {
+      @extend .skeletonBase;
+      height: 48px;
+    }
+  }
+}
+
+.categorySkeleton {
+  padding: 20px;
+  height: 300px; // Fixed height for category section
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .skeletonHeader {
+    @extend .skeletonBase;
+    height: 32px;
+    width: 40%;
+  }
+
+  .skeletonItems {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .skeletonItem {
+      @extend .skeletonBase;
+      height: 80px;
+    }
+  }
+}
+
+.trendingSkeleton {
+  padding: 20px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .skeletonHeader {
+    @extend .skeletonBase;
+    height: 24px;
+    width: 70%;
+  }
+
+  .skeletonItems {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .skeletonItem {
+      @extend .skeletonBase;
+      height: 40px;
+    }
+  }
+}
+
