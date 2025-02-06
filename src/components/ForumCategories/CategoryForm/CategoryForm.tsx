@@ -1,5 +1,5 @@
 // src/components/ForumCategories/CategoryForm/CategoryForm.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   AlertCircle, 
   Loader2, 
@@ -21,12 +21,27 @@ interface CategoryFormData {
   is_active: boolean;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  icon?: string;
+  color?: string;
+  display_order: number;
+  is_active: boolean;
+  total_topics: number;
+  total_posts: number;
+  last_post_at?: string;
+  subCategories: Array<{ id: string; name: string; }>;
+}
+
 interface CategoryFormProps {
+  initialData?: Category;
   onSubmit: (data: CategoryFormData) => Promise<void>;
   onCancel: () => void;
 }
 
-export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
+export function CategoryForm({ initialData, onSubmit, onCancel }: CategoryFormProps) {
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
     description: '',
@@ -39,6 +54,20 @@ export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Initialize form with initial data if provided
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.name,
+        description: initialData.description,
+        icon: initialData.icon || '',
+        color: initialData.color || '#6366F1',
+        display_order: initialData.display_order,
+        is_active: initialData.is_active
+      });
+    }
+  }, [initialData]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -47,7 +76,7 @@ export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
     try {
       await onSubmit(formData);
     } catch (err: any) {
-      setError(err.message || 'Failed to create category');
+      setError(err.message || 'Failed to save category');
     } finally {
       setLoading(false);
     }
@@ -64,7 +93,7 @@ export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
   return (
     <div className={styles.formWrapper}>
       <div className={styles.formHeader}>
-        <h2>Create New Category</h2>
+        <h2>{initialData ? 'Edit Category' : 'Create New Category'}</h2>
         <button 
           type="button" 
           onClick={onCancel}
@@ -224,11 +253,11 @@ export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
           >
             {loading ? (
               <>
-                <Loader2 className={styles.spinner} size={16} />
-                Creating...
+                <Loader2 className={styles.spinner} />
+                {initialData ? 'Updating...' : 'Creating...'}
               </>
             ) : (
-              'Create Category'
+              initialData ? 'Update Category' : 'Create Category'
             )}
           </button>
         </div>
