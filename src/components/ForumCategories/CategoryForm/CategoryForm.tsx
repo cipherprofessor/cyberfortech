@@ -200,9 +200,7 @@ export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
                     htmlFor="is_active" 
                     className={styles.toggleSwitch}
                   >
-                    <span className={styles.toggleLabel}>
-                      {formData.is_active ? 'Active' : 'Inactive'}
-                    </span>
+                    <span className={styles.toggleLabel} />
                   </label>
                 </div>
               </div>

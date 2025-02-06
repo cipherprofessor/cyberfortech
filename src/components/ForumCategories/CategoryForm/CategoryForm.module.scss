@@ -203,7 +203,8 @@
 }
 
 .toggleSwitch {
-  width: 3.5rem;
+  position: relative;
+  width: 5rem;
   height: 1.75rem;
   display: flex;
   align-items: center;
@@ -212,6 +213,35 @@
   background-color: #d1d5db;
   cursor: pointer;
   transition: background-color 0.2s;
+  
+  &::before {
+    content: "Inactive";
+    position: absolute;
+    right: 0.5rem;
+    color: #374151;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  &::after {
+    content: "Active";
+    position: absolute;
+    left: 0.5rem;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0;
+  }
+}
+
+.toggleInput:checked + .toggleSwitch {
+  &::before {
+    opacity: 0;
+  }
+  
+  &::after {
+    opacity: 1;
+  }
 }
 
 .toggleLabel {
