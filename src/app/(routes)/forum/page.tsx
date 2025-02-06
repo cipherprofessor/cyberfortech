@@ -6,11 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { 
   PlusCircle,
-  ChevronLeft,
-  ChevronRight,
-  LayoutGrid,
-  BarChart,
-  TrendingUp
 } from 'lucide-react';
 
 import { ForumCategories } from '@/components/ForumCategories/ForumCategories';
@@ -28,8 +23,6 @@ import {
 } from '@/types/forum';
 import styles from './forum.module.scss';
 import { Button } from '@heroui/button';
-
-const CATEGORIES_PER_PAGE = 3;
 
 export default function ForumPage() {
   const { isAuthenticated } = useAuth();
@@ -192,40 +185,41 @@ export default function ForumPage() {
 >
   {/* Forum Title and Create Topic Button */}
   <div className={styles.headerSection}>
-    <div className={styles.headerContent}>
-      <div className={styles.titleSection}>
-        <motion.h1
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-        >
-          Community Forum
-        </motion.h1>
-        <motion.p
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
-        >
-          Join the discussion with our community members
-        </motion.p>
-      </div>
-      {isAuthenticated && (
-        <motion.div
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.4 }}
-        >
-          <Button 
-            onPress={() => setIsTopicFormOpen(true)}
-            className={styles.newTopicButton}
-          >
-            <PlusCircle size={16} />
-            Create New Topic
-          </Button>
-        </motion.div>
-      )}
+  <div className={styles.headerBackgroundEffects} />
+  <div className={styles.headerContent}>
+    <div className={styles.titleSection}>
+      <motion.h1
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.4 }}
+      >
+        Community Forum
+      </motion.h1>
+      <motion.p
+        initial={{ y: -10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.4 }}
+      >
+        Join the discussion with our community members
+      </motion.p>
     </div>
+    {isAuthenticated && (
+      <motion.div
+        initial={{ x: 20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.4 }}
+      >
+        <Button 
+          onClick={() => setIsTopicFormOpen(true)}
+          className={styles.newTopicButton}
+        >
+          <PlusCircle size={16} />
+          Create New Topic
+        </Button>
+      </motion.div>
+    )}
   </div>
+</div>
 
   {/* Forum Stats with Skeleton */}
   <motion.div 
@@ -313,6 +307,18 @@ export default function ForumPage() {
   />
 </motion.div>
 
+<NewTopicForm 
+  isOpen={isTopicFormOpen}
+  onClose={() => {
+    setIsTopicFormOpen(false);
+    setError('');  // Clear any errors
+  }}
+  categories={categories}
+  onTopicCreated={handleTopicCreated}
+/>
+
 </motion.div>
+
+
   );
 }
