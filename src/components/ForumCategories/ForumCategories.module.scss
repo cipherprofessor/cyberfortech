@@ -1,299 +1,163 @@
-// src/components/forum/ForumCategories/ForumCategories.module.scss
+// src/components/Forum/ForumCategories/ForumCategories.module.scss
+
 .categoriesContainer {
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-  }
-  
-  .header {
-    padding: 1.5rem;
-    border-bottom: 1px solid #eee;
-  
-    h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1a1a1a;
+  @apply w-full;
+}
+
+.categoryCard {
+  @apply border-b border-gray-100 dark:border-gray-700 last:border-b-0;
+  @apply relative overflow-hidden;
+  @apply transition-all duration-200;
+  @apply hover:bg-gray-50/50 dark:hover:bg-gray-800/50;
+  @apply cursor-pointer;
+
+  &:hover {
+    .chevron {
+      @apply opacity-100 translate-x-0;
     }
   }
-  
-  .categories {
-    display: flex;
-    flex-direction: column;
+}
+
+.categoryHeader {
+  @apply flex items-start gap-4 p-4;
+}
+
+.categoryIcon {
+  @apply flex-shrink-0 w-10 h-10 rounded-lg;
+  @apply flex items-center justify-center;
+  @apply bg-gradient-to-br from-indigo-50 to-blue-50;
+  @apply dark:from-indigo-900/20 dark:to-blue-900/20;
+  @apply overflow-hidden;
+  @apply transition-all duration-200;
+
+  .iconImage {
+    @apply w-6 h-6 object-contain;
+    @apply opacity-80 hover:opacity-100;
+    @apply transition-opacity duration-200;
   }
-  
-  .category {
-    border-bottom: 1px solid #eee;
-    transition: background-color 0.2s ease;
-  
-    &:last-child {
-      border-bottom: none;
+
+  .iconSvg {
+    @apply w-6 h-6;
+    @apply text-indigo-600 dark:text-indigo-400;
+
+    svg {
+      @apply w-full h-full;
     }
-  
+  }
+}
+
+.categoryInfo {
+  @apply flex-grow min-w-0;
+
+  h3 {
+    @apply flex items-center gap-1;
+    @apply text-base font-medium text-gray-900 dark:text-gray-100;
+    @apply transition-colors duration-200;
+    @apply hover:text-indigo-600 dark:hover:text-indigo-400;
+    @apply mb-1;
+
+    .chevron {
+      @apply w-4 h-4 opacity-0 -translate-x-2;
+      @apply transition-all duration-200;
+    }
+  }
+
+  p {
+    @apply text-sm text-gray-500 dark:text-gray-400;
+    @apply line-clamp-1;
+    @apply mb-2;
+  }
+}
+
+.subCategories {
+  @apply flex flex-wrap gap-2;
+}
+
+.subCategory {
+  @apply inline-flex items-center;
+  @apply px-2 py-1 text-xs rounded-full;
+  @apply bg-gray-100 dark:bg-gray-800;
+  @apply text-gray-600 dark:text-gray-300;
+  @apply hover:bg-indigo-100 hover:text-indigo-600;
+  @apply dark:hover:bg-indigo-900/50 dark:hover:text-indigo-300;
+  @apply transition-all duration-200;
+
+  &:hover {
+    @apply transform scale-105;
+  }
+}
+
+.moreSubCategories {
+  @apply text-xs text-gray-400 dark:text-gray-500;
+  @apply px-2 py-1;
+}
+
+.categoryStats {
+  @apply flex-shrink-0 flex items-center gap-4;
+}
+
+.statItem {
+  @apply flex items-center gap-1.5;
+  @apply text-sm text-gray-500 dark:text-gray-400;
+  @apply min-w-[60px];
+
+  svg {
+    @apply text-gray-400 dark:text-gray-500;
+  }
+
+  span {
+    @apply font-medium;
+  }
+}
+
+// Animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Hover effects
+.categoryCard {
+  &::after {
+    content: '';
+    @apply absolute inset-0;
+    @apply bg-gradient-to-r from-indigo-500/0 to-indigo-500/0;
+    @apply opacity-0 transition-opacity duration-200;
+  }
+
+  &:hover::after {
+    @apply opacity-5;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .categoryHeader {
+    @apply flex-col gap-2;
+  }
+
+  .categoryStats {
+    @apply w-full justify-start;
+    @apply border-t border-gray-100 dark:border-gray-700;
+    @apply pt-2 mt-2;
+  }
+}
+
+// Dark mode optimizations
+.dark {
+  .categoryCard {
     &:hover {
-      background: #f8f9fa;
+      @apply bg-gray-800/50;
     }
   }
-  
-  .mainContent {
-    padding: 1.5rem;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1.5rem;
-    align-items: flex-start;
+
+  .categoryIcon {
+    @apply from-gray-800 to-gray-900;
   }
-  
-  .icon {
-    font-size: 2rem;
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f8f9fa;
-    border-radius: 0.75rem;
-    transition: transform 0.2s ease;
-  
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
-  
-  .info {
-    min-width: 0;
-  }
-  
-  .categoryName {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    text-decoration: none;
-    margin-bottom: 0.5rem;
-    transition: color 0.2s ease;
-  
-    &:hover {
-      color: #007bff;
-  
-      .chevron {
-        transform: translateX(2px);
-      }
-    }
-  }
-  
-  .chevron {
-    width: 1.25rem;
-    height: 1.25rem;
-    transition: transform 0.2s ease;
-  }
-  
-  .description {
-    color: #666;
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
-  
-  .subCategories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .subCategory {
-    font-size: 0.75rem;
-    color: #666;
-    text-decoration: none;
-    padding: 0.25rem 0.75rem;
-    background: #f1f3f5;
-    border-radius: 1rem;
-    transition: all 0.2s ease;
-  
-    &:hover {
-      background: #e9ecef;
-      color: #1a1a1a;
-      transform: translateY(-1px);
-    }
-  
-    &::before {
-      content: '#';
-      margin-right: 0.25rem;
-      opacity: 0.5;
-    }
-  }
-  
-  .stats {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-width: 120px;
-  }
-  
-  .statItem {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  
-  .statIcon {
-    width: 1.25rem;
-    height: 1.25rem;
-    color: #666;
-  }
-  
-  .statInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  
-  .statValue {
-    font-weight: 600;
-    color: #1a1a1a;
-  }
-  
-  .statLabel {
-    font-size: 0.75rem;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  // Mobile responsive styles
-  @media (max-width: 768px) {
-    .mainContent {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-  
-    .icon {
-      width: 2.5rem;
-      height: 2.5rem;
-      font-size: 1.5rem;
-    }
-  
-    .stats {
-      flex-direction: row;
-      justify-content: flex-start;
-      width: 100%;
-      padding-top: 1rem;
-      border-top: 1px solid #eee;
-    }
-  
-    .description {
-      margin-bottom: 0.75rem;
-    }
-  
-    .subCategories {
-      margin-bottom: 1rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .header {
-      padding: 1rem;
-    }
-  
-    .mainContent {
-      padding: 1rem;
-    }
-  
-    .categoryName {
-      font-size: 1rem;
-    }
-  
-    .description {
-      font-size: 0.813rem;
-    }
-  
-    .stats {
-      flex-direction: row;
-      justify-content: space-between;
-    }
-  
-    .statItem {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 0.25rem;
-    }
-  
-    .subCategories {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
-  }
-  
-  // Hover effects and animations
-  .category {
-    position: relative;
-    overflow: hidden;
-  
-    &::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 4px;
-      height: 100%;
-      background: #007bff;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-  
-    &:hover::after {
-      opacity: 1;
-    }
-  }
-  
-  // Dark mode support
-  @media (prefers-color-scheme: dark) {
-    .categoriesContainer {
-      background: #1a1a1a;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-  
-    .category {
-      border-color: #333;
-  
-      &:hover {
-        background: #222;
-      }
-    }
-  
-    .categoryName {
-      color: #fff;
-    }
-  
-    .description {
-      color: #999;
-    }
-  
-    .icon {
-      background: #222;
-    }
-  
-    .subCategory {
-      background: #222;
-      color: #999;
-  
-      &:hover {
-        background: #333;
-        color: #fff;
-      }
-    }
-  
-    .statValue {
-      color: #fff;
-    }
-  
-    .statLabel {
-      color: #999;
-    }
-  
-    .stats {
-      border-color: #333;
-    }
-  }
+}

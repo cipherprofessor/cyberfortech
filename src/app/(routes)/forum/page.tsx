@@ -2,9 +2,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { PlusCircle } from 'lucide-react';
-import { Button } from '@/components/common/Button/Button';
+import { 
+  PlusCircle,
+  ChevronLeft,
+  ChevronRight,
+  LayoutGrid,
+  BarChart,
+  TrendingUp
+} from 'lucide-react';
+
 import { ForumCategories } from '@/components/ForumCategories/ForumCategories';
 import { ForumStats } from '@/components/ForumCategories/ForumStats/ForumStats';
 import { NewTopicForm } from '@/components/ForumCategories/NewTopicForm/NewTopicForm';
@@ -19,23 +27,22 @@ import {
   TopicData 
 } from '@/types/forum';
 import styles from './forum.module.scss';
+import { Button } from '@heroui/button';
+
+const CATEGORIES_PER_PAGE = 3;
 
 export default function ForumPage() {
   const { isAuthenticated } = useAuth();
   const [isTopicFormOpen, setIsTopicFormOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryPage, setCategoryPage] = useState(1);
   const [stats, setStats] = useState<ForumStatsData | null>(null);
   const [topicsData, setTopicsData] = useState<{
     topics: TopicData[];
     pagination: TopicsResponse['pagination'];
   }>({
     topics: [],
-    pagination: {
-      total: 0,
-      page: 1,
-      limit: 10,
-      pages: 0
-    }
+    pagination: { total: 0, page: 1, limit: 10, pages: 0 }
   });
   const [loading, setLoading] = useState({
     categories: true,
@@ -44,6 +51,13 @@ export default function ForumPage() {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState('');
+
+  // Calculate category pagination
+  const totalCategoryPages = Math.ceil((categories?.length || 0) / CATEGORIES_PER_PAGE);
+  const paginatedCategories = categories.slice(
+    (categoryPage - 1) * CATEGORIES_PER_PAGE,
+    categoryPage * CATEGORIES_PER_PAGE
+  );
 
   const transformApiToTopicData = (apiTopic: ApiTopic): TopicData => ({
     id: apiTopic.id,
@@ -134,56 +148,123 @@ export default function ForumPage() {
       await axios.delete(`/api/forum/topics?id=${topicId}`);
       setTopicsData(prev => ({
         ...prev,
-        topics: prev.topics.filter(topic => topic.id !== topicId)
+        topics: prev.topics.filter(topic => topic.id !== topicId),
+        pagination: {
+          ...prev.pagination,
+          total: prev.pagination.total - 1
+        }
       }));
     } catch (err) {
       console.error('Error deleting topic:', err);
     }
   };
 
+  // Rest of the component remains the same...
   return (
-    <div className={styles.pageContainer}>
+    <motion.div 
+      className={styles.pageContainer}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Header Section */}
-      <div className={styles.headerSection}>
+      <motion.div 
+        className={styles.headerSection}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <div className={styles.headerContent}>
-          <h1>Community Forum</h1>
-          <p>Join the discussion with our community members</p>
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            Community Forum
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            Join the discussion with our community members
+          </motion.p>
         </div>
         {isAuthenticated && (
-          <Button 
-            onClick={() => setIsTopicFormOpen(true)}
-            className={styles.newTopicButton}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <PlusCircle size={16} />
-            Create New Topic
-          </Button>
+            <Button 
+              onClick={() => setIsTopicFormOpen(true)}
+              className={styles.newTopicButton}
+            >
+              <PlusCircle size={16} />
+              Create New Topic
+            </Button>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
-      {/* Main Content Grid */}
-      <div className={styles.mainContent}>
-        {/* Left Column - Categories */}
-        <div className={styles.categoriesSection}>
-          {loading.categories ? (
-            <div className={styles.categoriesSkeleton}>
-              <div className={styles.skeletonHeader}></div>
-              <div className={styles.skeletonItem}></div>
-              <div className={styles.skeletonItem}></div>
+      {/* Main Grid */}
+      <div className={styles.mainGrid}>
+        {/* Left Column - Categories and Topics */}
+        <div className={styles.categoriesColumn}>
+          <motion.div 
+            className={styles.card}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className={styles.cardHeader}>
+              <h2>
+                <LayoutGrid size={20} />
+                Categories
+              </h2>
+              <div className={styles.paginationControls}>
+                <div className={styles.pageButtons}>
+                  <button
+                    onClick={() => setCategoryPage(p => Math.max(1, p - 1))}
+                    disabled={categoryPage === 1}
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <span className={styles.pageInfo}>
+                    {categoryPage} / {totalCategoryPages}
+                  </span>
+                  <button
+                    onClick={() => setCategoryPage(p => Math.min(totalCategoryPages, p + 1))}
+                    disabled={categoryPage === totalCategoryPages}
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
             </div>
-          ) : (
-            <ForumCategories categories={categories} />
-          )}
-        </div>
 
-        {/* Center Column - Topics */}
-        <div className={styles.topicsSection}>
-          {loading.topics ? (
-            <div className={styles.tableSkeleton}>
-              <div className={styles.skeletonHeader}></div>
-              <div className={styles.skeletonRow}></div>
-              <div className={styles.skeletonRow}></div>
-            </div>
-          ) : (
+            <AnimatePresence mode="wait">
+              {loading.categories ? (
+                <div className={styles.categorySkeleton}>
+                  <div className={styles.skeletonHeader} />
+                  <div className={styles.skeletonBody} />
+                </div>
+              ) : (
+                <ForumCategories 
+                  categories={paginatedCategories}
+                  className={styles.categoriesGrid}
+                />
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Topics Section */}
+          <motion.div 
+            className={`${styles.card} ${styles.topicsSection}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <ForumRecentTopicTable
               topics={topicsData.topics}
               onDelete={handleDeleteTopic}
@@ -191,34 +272,55 @@ export default function ForumPage() {
               pagination={topicsData.pagination}
               onPageChange={setCurrentPage}
             />
-          )}
+          </motion.div>
         </div>
 
-        {/* Right Column - Stats & Trending */}
-        <div className={styles.sideSection}>
-          <div className={styles.statsCard}>
+        {/* Right Column - Stats and Trending */}
+        <div className={styles.statsColumn}>
+          <motion.div 
+            className={styles.card}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <div className={styles.cardHeader}>
+              <h2>
+                <BarChart size={20} />
+                Forum Statistics
+              </h2>
+            </div>
             {loading.stats ? (
-              <div className={styles.statsSkeleton}>
-                <div className={styles.skeletonHeader}></div>
-                <div className={styles.skeletonStat}></div>
-                <div className={styles.skeletonStat}></div>
+              <div className={styles.categorySkeleton}>
+                <div className={styles.skeletonHeader} />
+                <div className={styles.skeletonBody} />
               </div>
             ) : (
               stats && <ForumStats stats={stats} />
             )}
-          </div>
-          <div className={styles.trendingCard}>
+          </motion.div>
+
+          <motion.div 
+            className={styles.card}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <div className={styles.cardHeader}>
+              <h2>
+                <TrendingUp size={20} />
+                Trending Reactions
+              </h2>
+            </div>
             <TrendingReactions />
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* New Topic Form Modal */}
       <NewTopicForm 
         isOpen={isTopicFormOpen}
         onClose={() => setIsTopicFormOpen(false)}
         categories={categories}
       />
-    </div>
+    </motion.div>
   );
 }

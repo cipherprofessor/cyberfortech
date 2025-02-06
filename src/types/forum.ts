@@ -104,6 +104,8 @@ export interface ApiTopic {
     icon?: string;
     total_topics: number;
     total_posts: number;
+    totalTopics?: number;
+    totalPosts?: number;
     created_at: string;
     updated_at: string;
     subCategories: SubCategory[];
@@ -115,6 +117,7 @@ export interface ApiTopic {
     totalTopics: number;
     totalPosts: number;
     activeUsers: number;
+    totalUsers: number;
     latestMember: string;
   }
 
