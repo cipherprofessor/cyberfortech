@@ -1,17 +1,16 @@
 // src/app/api/forum/stats/route.ts
 import { createClient } from '@libsql/client';
-import { NextResponse, NextRequest } from 'next/server';
-import { auth, getAuth } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+import { getAuth, clerkClient } from '@clerk/nextjs/server';
 
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL!,
   authToken: process.env.TURSO_AUTH_TOKEN!,
 });
 
-// src/app/api/forum/stats/route.ts
 export async function GET(request: Request) {
   try {
-    // Get basic stats without user dependency
+    // Get basic stats
     const statsResult = await client.execute(`
       SELECT
         (SELECT COUNT(*) FROM forum_topics WHERE is_deleted = FALSE) as total_topics,
@@ -26,7 +25,7 @@ export async function GET(request: Request) {
       totalTopics: statsResult.rows[0].total_topics,
       totalPosts: statsResult.rows[0].total_posts,
       activeUsers: statsResult.rows[0].active_users,
-      latestMember: 'N/A' // We'll update this once we have users
+      latestMember: 'N/A'
     });
   } catch (error) {
     console.error('Error fetching forum stats:', error);
@@ -37,11 +36,9 @@ export async function GET(request: Request) {
   }
 }
 
-// Add a route to manually update user activity
-export async function POST() {
+export async function POST(request: Request) {
   try {
-    const { userId } = await auth();
-    
+    const { userId } = getAuth(request as any);
     if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -49,7 +46,47 @@ export async function POST() {
       );
     }
 
-    // Update user's last active timestamp
+    // First, check if user exists in the database
+    const userExists = await client.execute({
+      sql: 'SELECT id FROM users WHERE id = ?',
+      args: [userId]
+    });
+
+    if (!userExists.rows.length) {
+      // User doesn't exist, fetch from Clerk and create
+      const clerk = await clerkClient();
+      const clerkUser = await clerk.users.getUser(userId);
+      
+      // Insert user into database
+      await client.execute({
+        sql: `
+          INSERT INTO users (
+            id, 
+            email,
+            first_name,
+            last_name,
+            full_name,
+            avatar_url,
+            role,
+            email_verified,
+            created_at,
+            updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `,
+        args: [
+          userId,
+          clerkUser.emailAddresses[0]?.emailAddress || '',
+          clerkUser.firstName || '',
+          clerkUser.lastName || '',
+          `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim(),
+          clerkUser.imageUrl || '',
+          String(clerkUser.publicMetadata?.role || 'student'),
+          clerkUser.emailAddresses[0]?.emailAddress || ''
+        ]
+      });
+    }
+
+    // Now safely update user activity
     await client.execute({
       sql: `
         INSERT INTO forum_user_activity (user_id, last_active_at)
@@ -60,14 +97,11 @@ export async function POST() {
       args: [userId]
     });
 
-    return NextResponse.json({
-      message: 'Activity updated successfully'
-    });
-
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error updating user activity:', error);
     return NextResponse.json(
-      { error: 'Failed to update activity' },
+      { error: 'Failed to update user activity' },
       { status: 500 }
     );
   }

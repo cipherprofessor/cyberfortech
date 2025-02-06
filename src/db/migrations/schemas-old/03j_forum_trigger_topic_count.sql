@@ -1,0 +1,1 @@
+CREATE TRIGGER IF NOT EXISTS update_user_topic_count AFTER INSERT ON forum_topics BEGIN UPDATE forum_user_stats SET total_topics = total_topics + 1, last_updated_at = CURRENT_TIMESTAMP WHERE user_id = NEW.author_id; END;

@@ -1,5 +1,5 @@
 // src/db/migrations/scripts/migrate.ts
-import { Client, createClient } from '@libsql/client';
+import { Client, createClient, Row } from '@libsql/client';
 import * as dotenv from 'dotenv';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -10,20 +10,58 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
-interface ColumnInfo {
-  table: string;
-  column: string;
-  definition: string;
-}
+// Schema files in order of execution
+const SCHEMA_FILES = [
+  '001_initial_setup.sql',
+  '002_create_users.sql',
+  '003_create_instructors.sql',
+  '004_create_courses.sql',
+  '005_create_forum_base.sql',
+  '006_create_forum_content.sql',
+  '007_create_forum_features.sql',
+  '008_create_forum_analytics.sql',
+  '009_create_contacts.sql',
+  '010_create_triggers_utils.sql'
+];
 
 function cleanSQLStatement(sql: string): string {
-  // Remove comments and trim whitespace
   return sql
     .split('\n')
-    .map(line => line.split('--')[0]) // Remove comments
+    .map(line => {
+      const commentIndex = line.indexOf('--');
+      return commentIndex >= 0 ? line.substring(0, commentIndex) : line;
+    })
     .join('\n')
-    .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
+    .replace(/\/\*[\s\S]*?\*\//g, '')
     .trim();
+}
+
+// In your migrate.ts, update the splitSQLStatements function
+
+async function executeStatement(db: Client, statement: string, fileName: string) {
+  try {
+    if (!statement.trim()) return;
+
+    // Check if this is a trigger creation
+    const isTrigger = statement.toUpperCase().includes('CREATE TRIGGER');
+    
+    // For triggers, we want to execute the statement exactly as is
+    if (isTrigger) {
+      console.log(`📄 [${fileName}] Executing trigger creation...`);
+      await db.execute(statement + ';');  // Make sure it ends with semicolon
+    } else {
+      console.log(`📄 [${fileName}] Executing:`, statement.substring(0, 100) + '...');
+      await db.execute(statement);
+    }
+    
+    console.log('✅ Success');
+  } catch (error: any) {
+    if (error.message?.includes('already exists')) {
+      console.log('ℹ️ Skip: Object already exists');
+      return;
+    }
+    throw new Error(`Error in ${fileName}: ${error.message}`);
+  }
 }
 
 function splitSQLStatements(sql: string): string[] {
@@ -31,52 +69,108 @@ function splitSQLStatements(sql: string): string[] {
   const statements: string[] = [];
   let currentStatement = '';
   let inTrigger = false;
+  let inBegin = false;
+  let inString = false;
+  let stringChar = '';
 
-  const lines = cleanSQL.split('\n');
-
-  for (const line of lines) {
-    const trimmedLine = line.trim();
+  for (let i = 0; i < cleanSQL.length; i++) {
+    const char = cleanSQL[i];
     
-    if (!trimmedLine) continue;
-
-    if (trimmedLine.toUpperCase().includes('CREATE TRIGGER')) {
-      inTrigger = true;
+    // Handle string literals
+    if ((char === "'" || char === '"') && cleanSQL[i - 1] !== '\\') {
+      if (!inString) {
+        inString = true;
+        stringChar = char;
+      } else if (char === stringChar) {
+        inString = false;
+      }
     }
 
-    currentStatement += line + '\n';
-
-    if (inTrigger) {
-      if (trimmedLine === 'END;') {
+    // Only check for keywords if we're not in a string
+    if (!inString) {
+      // Check for CREATE TRIGGER
+      if (!inTrigger && cleanSQL.substring(i).toUpperCase().startsWith('CREATE TRIGGER')) {
+        inTrigger = true;
+      }
+      
+      // Check for BEGIN
+      if (inTrigger && !inBegin && cleanSQL.substring(i).toUpperCase().startsWith('BEGIN')) {
+        inBegin = true;
+      }
+      
+      // Check for END;
+      if (inTrigger && inBegin && cleanSQL.substring(i).toUpperCase().startsWith('END;')) {
+        currentStatement += 'END;';
         statements.push(currentStatement.trim());
         currentStatement = '';
         inTrigger = false;
-      }
-    } else if (trimmedLine.endsWith(';')) {
-      if (currentStatement.trim()) {
-        statements.push(currentStatement.trim());
-        currentStatement = '';
+        inBegin = false;
+        i += 3; // Skip past 'END;'
+        continue;
       }
     }
+
+    currentStatement += char;
+
+    // If we're not in a trigger and we hit a semicolon, end the statement
+    if (!inTrigger && !inString && char === ';') {
+      statements.push(currentStatement.trim());
+      currentStatement = '';
+    }
+  }
+
+  // Add any remaining statement
+  if (currentStatement.trim()) {
+    statements.push(currentStatement.trim());
   }
 
   return statements.filter(stmt => stmt.length > 0);
 }
 
-async function executeStatement(db: Client, statement: string) {
+async function getCurrentSchemaVersion(db: Client): Promise<number> {
   try {
-    if (!statement.trim()) return;
-
-    // Log first 100 characters of statement for debugging
-    console.log('Executing:', statement.substring(0, 100) + '...');
-
-    await db.execute(statement);
-    console.log('✅ Successfully executed statement');
-  } catch (error: any) {
-    if (error.message?.includes('already exists')) {
-      console.log('ℹ️ Skip: Table/Index/Trigger already exists');
-      return;
+    const result = await db.execute(`
+      SELECT version FROM schema_versions 
+      ORDER BY version DESC LIMIT 1
+    `);
+    if (result.rows.length > 0) {
+      const row = result.rows[0] as Record<string, unknown>;
+      return typeof row.version === 'number' ? row.version : 0;
     }
-    throw error;
+    return 0;
+  } catch {
+    return 0;
+  }
+}
+
+async function getAppliedMigrations(db: Client): Promise<Set<string>> {
+  try {
+    const result = await db.execute('SELECT name FROM schema_versions');
+    const migrations = result.rows
+      .map((row: Row) => {
+        const record = row as Record<string, unknown>;
+        return record.name;
+      })
+      .filter((name): name is string => typeof name === 'string');
+    return new Set(migrations);
+  } catch {
+    return new Set<string>();
+  }
+}
+
+async function executeSchemaFile(db: Client, fileName: string) {
+  console.log(`\n📦 Processing ${fileName}...`);
+  const filePath = path.join(__dirname, '../schemas', fileName);
+  
+  try {
+    const sql = await fs.promises.readFile(filePath, 'utf8');
+    const statements = splitSQLStatements(sql);
+    
+    for (const statement of statements) {
+      await executeStatement(db, statement, fileName);
+    }
+  } catch (error) {
+    throw new Error(`Failed to process ${fileName}: ${error}`);
   }
 }
 
@@ -91,24 +185,22 @@ async function main() {
   });
 
   try {
-    const migrationPath = path.join(__dirname, '../schema.sql');
-    const migrationSQL = await fs.promises.readFile(migrationPath, 'utf8');
+    console.log('🚀 Starting database migration...');
 
-    console.log('🚀 Starting migrations...');
+    // Get current schema version and applied migrations
+    const currentVersion = await getCurrentSchemaVersion(db);
+    const appliedMigrations = await getAppliedMigrations(db);
 
-    const statements = splitSQLStatements(migrationSQL);
-    
-    for (const statement of statements) {
-      try {
-        await executeStatement(db, statement);
-      } catch (error) {
-        console.error('❌ Error executing statement:', statement);
-        console.error('Error details:', error);
-        throw error;
+    // Execute schema files that haven't been applied yet
+    for (const file of SCHEMA_FILES) {
+      if (!appliedMigrations.has(file)) {
+        await executeSchemaFile(db, file);
+      } else {
+        console.log(`\n📦 Skipping ${file} (already applied)`);
       }
     }
 
-    console.log('\n✨ Migrations completed successfully!');
+    console.log('\n✨ Migration completed successfully!');
   } catch (error) {
     console.error('\n❌ Migration failed:', error);
     process.exit(1);

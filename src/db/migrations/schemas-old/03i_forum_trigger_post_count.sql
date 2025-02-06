@@ -1,0 +1,1 @@
+CREATE TRIGGER IF NOT EXISTS update_user_post_count AFTER INSERT ON forum_posts BEGIN UPDATE forum_user_stats SET total_posts = total_posts + 1, last_updated_at = CURRENT_TIMESTAMP WHERE user_id = NEW.author_id; END;

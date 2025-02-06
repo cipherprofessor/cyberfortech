@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     deleted_at DATETIME,                   -- For soft deletes
     is_deleted BOOLEAN DEFAULT FALSE,
+    UNIQUE(email) WHERE email IS NOT NULL AND email != ''
     
     -- Additional Metadata
     clerk_metadata JSON,                   -- Store additional Clerk metadata
@@ -96,6 +97,7 @@ BEGIN
     VALUES (NEW.id);
 END;
 
+CREATE UNIQUE INDEX idx_users_email ON users(email) WHERE email IS NOT NULL AND email != '';
 
 
 

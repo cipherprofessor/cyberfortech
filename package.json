@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "migrate": "node --loader ts-node/esm src/db/migrations/scripts/migrate.ts",
-    "seed": "node --loader ts-node/esm src/db/seeds/seed.ts"
+    "seed": "tsx src/db/seeds/index.ts",
+    "seed:courses": "tsx src/db/seeds/seed_courses.ts",
+    "db:reset": "npm run migrate && npm run seed"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.9.15",
