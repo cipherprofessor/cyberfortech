@@ -5,6 +5,7 @@ const ForumManagementPage = () => {
   return (
     <div>
         <ForumManagement/>
+        <></>
     </div>
   )
 }
