@@ -1,7 +1,4 @@
-// const debug = (...args: any[]) => {
-//     console.log('[Topics API]', ...args);
-//   };
-
+// src/app/api/forum/topics/route.ts
 import { createClient } from '@libsql/client';
 import { NextResponse, NextRequest } from 'next/server';
 import { clerkClient, getAuth } from '@clerk/nextjs/server';
@@ -11,7 +8,14 @@ const client = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN!,
 });
 
+function sanitizeText(text: string): string {
+  if (!text) return '';
+  return text.replace(/<[^>]*>/g, '').trim();
+}
+
 export async function POST(req: NextRequest) {
+  const tx = await client.transaction();
+
   try {
     // Check authentication
     const { userId } = getAuth(req);
@@ -42,8 +46,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Sanitize input
+    const sanitizedTitle = sanitizeText(title);
+    const sanitizedContent = sanitizeText(content);
+
     // Verify category exists
-    const categoryExists = await client.execute({
+    const categoryExists = await tx.execute({
       sql: 'SELECT id FROM forum_categories WHERE id = ? AND is_deleted = FALSE',
       args: [categoryId]
     });
@@ -54,7 +62,7 @@ export async function POST(req: NextRequest) {
 
     // Verify subcategory if provided
     if (subcategoryId) {
-      const subcategoryExists = await client.execute({
+      const subcategoryExists = await tx.execute({
         sql: 'SELECT id FROM forum_subcategories WHERE id = ? AND category_id = ? AND is_deleted = FALSE',
         args: [subcategoryId, categoryId]
       });
@@ -64,10 +72,15 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Generate topic ID
+    const topicId = crypto.randomUUID();
+    const now = new Date().toISOString();
+
     // Create the topic
-    const insertResult = await client.execute({
+    await tx.execute({
       sql: `
         INSERT INTO forum_topics (
+          id,
           category_id,
           subcategory_id,
           author_id,
@@ -78,43 +91,62 @@ export async function POST(req: NextRequest) {
           is_locked,
           is_deleted,
           created_at,
-          updated_at
-        ) VALUES (?, ?, ?, ?, ?, 0, 0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          updated_at,
+          last_post_at
+        ) VALUES (?, ?, ?, ?, ?, ?, 0, FALSE, FALSE, FALSE, ?, ?, ?)
       `,
-      args: [categoryId, subcategoryId || null, authorId, title, content]
+      args: [
+        topicId,
+        categoryId,
+        subcategoryId || null,
+        authorId,
+        sanitizedTitle,
+        sanitizedContent,
+        now,
+        now,
+        now
+      ]
     });
 
-    const topicId = Number(insertResult.lastInsertRowid);
-    if (!topicId) {
-      throw new Error('Failed to create topic');
-    }
-
-    // Update user stats
-    await client.execute({
+    // Update or create user stats
+    await tx.execute({
       sql: `
         INSERT INTO forum_user_stats (
           user_id,
-          topics_count,
-          posts_count,
-          last_active_at
-        ) VALUES (?, 1, 0, CURRENT_TIMESTAMP)
+          total_topics,
+          total_posts,
+          total_reactions_received,
+          total_solutions_provided,
+          reputation_points,
+          activity_streak,
+          last_active_at,
+          created_at,
+          updated_at
+        ) VALUES (?, 1, 0, 0, 0, 0, 0, ?, ?, ?)
         ON CONFLICT (user_id) DO UPDATE SET
-          topics_count = topics_count + 1,
-          last_active_at = CURRENT_TIMESTAMP
+          total_topics = total_topics + 1,
+          last_active_at = ?,
+          updated_at = ?
       `,
-      args: [authorId]
+      args: [authorId, now, now, now, now, now]
     });
 
-    // Get complete topic data
+    // Commit transaction
+    await tx.commit();
+
+    // Fetch the complete topic data
     const topicResult = await client.execute({
       sql: `
         SELECT 
           t.*,
           c.name as category_name,
-          sc.name as subcategory_name
+          sc.name as subcategory_name,
+          u.full_name as author_name,
+          u.avatar_url as author_avatar
         FROM forum_topics t
         LEFT JOIN forum_categories c ON t.category_id = c.id
         LEFT JOIN forum_subcategories sc ON t.subcategory_id = sc.id
+        LEFT JOIN users u ON t.author_id = u.id
         WHERE t.id = ?
       `,
       args: [topicId]
@@ -126,6 +158,9 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error) {
+    // Rollback transaction on error
+    await tx.rollback();
+    
     console.error('Error creating topic:', error);
     
     const errorMessage = error instanceof Error ? error.message : 'Failed to create topic';
@@ -141,7 +176,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-
+// ... rest of the GET and DELETE handlers remain the same
 // src/app/api/forum/topics/route.ts
 export async function GET(req: Request) {
   try {
