@@ -84,15 +84,30 @@ export async function POST(request: Request) {
           clerkUser.emailAddresses[0]?.emailAddress || ''
         ]
       });
+
+      // Create initial forum user stats
+      await client.execute({
+        sql: `
+          INSERT INTO forum_user_stats (
+            user_id,
+            total_posts,
+            total_topics,
+            reputation_points,
+            created_at,
+            updated_at
+          ) VALUES (?, 0, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `,
+        args: [userId]
+      });
     }
 
-    // Now safely update user activity
+    // Update user activity in forum_user_stats instead
     await client.execute({
       sql: `
-        INSERT INTO forum_user_activity (user_id, last_active_at)
-        VALUES (?, CURRENT_TIMESTAMP)
-        ON CONFLICT(user_id) DO UPDATE SET
-        last_active_at = CURRENT_TIMESTAMP
+        UPDATE forum_user_stats 
+        SET last_active_at = CURRENT_TIMESTAMP,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = ?
       `,
       args: [userId]
     });

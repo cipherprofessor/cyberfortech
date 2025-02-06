@@ -8,15 +8,6 @@ import ForumRecentTopicTable from '@/components/ui/Mine/CustomTables/ForumRecent
 import { useAuth } from '@/hooks/useAuth';
 import { Category, TopicData, ApiTopic, TopicsResponse } from '@/types/forum';
 
-// interface ApiResponse {
-//   topics: ApiTopic[];
-//   pagination: {
-//     total: number;
-//     page: number;
-//     limit: number;
-//     pages: number;
-//   };
-// }
 
 interface ApiResponse {
     topics: ApiTopic[];

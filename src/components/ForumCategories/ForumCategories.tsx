@@ -4,12 +4,12 @@ import { ChevronRight, MessageSquare, Users } from 'lucide-react';
 import styles from './ForumCategories.module.scss';
 
 type SubCategory = {
-  id: number;
+  id: string | number; // Updated to accept string or number
   name: string;
 };
 
 type Category = {
-  id: number;
+  id: string | number; // Updated to accept string or number
   name: string;
   description: string;
   totalTopics?: number;
@@ -30,8 +30,8 @@ export function ForumCategories({ categories }: ForumCategoriesProps) {
       </div>
 
       <div className={styles.categories}>
-        {categories.map((category) => (
-          <div key={category.id} className={styles.category}>
+        {categories?.map((category) => (
+          <div key={`category-${category.id}`} className={styles.category}>
             <div className={styles.mainContent}>
               {category.icon && <div className={styles.icon}>{category.icon}</div>}
               
@@ -45,11 +45,11 @@ export function ForumCategories({ categories }: ForumCategoriesProps) {
                 </Link>
                 <p className={styles.description}>{category.description}</p>
                 
-                {category.subCategories?.length > 0 && (
+                {category.subCategories && category.subCategories.length > 0 && (
                   <div className={styles.subCategories}>
                     {category.subCategories.map((sub) => (
                       <Link
-                        key={sub.id}
+                        key={`subcategory-${category.id}-${sub.id}`}
                         href={`/forum/categories/${category.id}/${sub.id}`}
                         className={styles.subCategory}
                       >
@@ -65,7 +65,7 @@ export function ForumCategories({ categories }: ForumCategoriesProps) {
                   <MessageSquare className={styles.statIcon} />
                   <div className={styles.statInfo}>
                     <span className={styles.statValue}>
-                      {(category.totalTopics || 0).toLocaleString()}
+                      {(category.totalTopics ?? 0).toLocaleString()}
                     </span>
                     <span className={styles.statLabel}>Topics</span>
                   </div>
@@ -74,7 +74,7 @@ export function ForumCategories({ categories }: ForumCategoriesProps) {
                   <Users className={styles.statIcon} />
                   <div className={styles.statInfo}>
                     <span className={styles.statValue}>
-                      {(category.totalPosts || 0).toLocaleString()}
+                      {(category.totalPosts ?? 0).toLocaleString()}
                     </span>
                     <span className={styles.statLabel}>Posts</span>
                   </div>
