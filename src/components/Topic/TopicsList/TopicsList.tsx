@@ -115,7 +115,7 @@ export function TopicsList({
       animate="visible"
     >
       <div className={styles.header}>
-        <h2>Recent Topics in {categoryName || 'Category'}</h2>
+        <h2>Recent Topics in {categoryName || 'This Category'}</h2>
       </div>
 
       {validTopics.map((topic) => (
@@ -157,11 +157,11 @@ export function TopicsList({
               >
                 {topic.title}
               </a>
-              {topic.category_name && (
+              {/* {topic.category_name && (
                 <span className={styles.categoryTag}>
                   {topic.category_name}
                 </span>
-              )}
+              )} */}
             </div>
             
             <div className={styles.authorInfo}>
@@ -170,8 +170,8 @@ export function TopicsList({
                 {topic.author_name}
               </span>
               {' • '}
-              <Clock size={12} className={styles.timeIcon} />
-              {formatTimestamp(topic.created_at)}
+              {/* <Clock size={12} className={styles.timeIcon} /> */}
+              {/* {formatTimestamp(topic.created_at)} */}
             </div>
           </div>
 
