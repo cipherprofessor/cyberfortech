@@ -16,19 +16,25 @@ export interface Author {
   
 // The base Topic interface used by TopicsList
 export interface Topic {
-    id: number;
-    title: string;
-    content?: string;
-    category_name?: string;
-    categoryId: number;
-    author: Author;
-    timestamp: string;
-    replies: number;
-    views: number;
-    lastReply: LastReply;
-    isPinned: boolean;
-    isLocked: boolean;
-  }
+  id: string;
+  title: string;
+  content: string;
+  author_id: string;
+  author_name: string;
+  author_image: string | null;
+  author_email: string;
+  category_id: string;
+  category_name: string;
+  subcategory_id?: string;
+  subcategory_name?: string;
+  is_pinned: boolean;
+  is_locked: boolean;
+  views: number;
+  reply_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
 
   export interface TopicData {
     id: number;
@@ -88,6 +94,8 @@ export interface ApiTopic {
     total_posts: number;
     posts_today: number;
     active_posters: number;
+    avg_response_time?: number;
+    engagement_rate? : number;
     
   }
   
@@ -136,6 +144,19 @@ export interface TopicReaction extends Reaction {
   userId: string;
   createdAt: string;
 }
+
+
+type CreateTopicRequest = {
+  title: string;
+  content: string;
+  categoryId: string;
+  subcategoryId?: string;
+  authorId: string;
+  author_name: string;    // New
+  author_email: string;   // New
+  author_image: string;   // New
+  icon?: string;         // New optional
+};
 
 
 

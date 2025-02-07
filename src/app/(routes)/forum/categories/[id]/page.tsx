@@ -1,3 +1,4 @@
+// src/app/(routes)/forum/categories/[id]/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,15 +12,17 @@ import {
   Calendar,
   PlusCircle,
   Hash,
-  LayoutGrid
+  LayoutGrid,
+  TrendingUp,
+  Clock,
+  Zap
 } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
 import styles from './category.module.scss';
-import { CategoryInfo } from '@/components/Forum/CategoryInfo/CategoryInfo';
-import { SubCategoriesList } from '@/components/Forum/SubCategoriesList/SubCategoriesList';
 import { TopicsList } from '@/components/Topic/TopicsList/TopicsList';
 import { NewTopicForm } from '@/components/ForumCategories/NewTopicForm/NewTopicForm';
+import { SubCategoriesList } from '@/components/Forum/SubCategoriesList/SubCategoriesList';
 import { 
   Topic, 
   Category, 
@@ -28,6 +31,32 @@ import {
   ApiTopic 
 } from '@/types/forum';
 import { Button } from '@heroui/button';
+
+const CategorySkeleton = () => (
+  <div className={styles.skeletonContainer}>
+    {/* Header Skeleton */}
+    <div className={styles.headerSkeleton}>
+      <div className={styles.iconSkeleton} />
+      <div className={styles.contentSkeleton}>
+        <div className={styles.titleSkeleton} />
+        <div className={styles.descriptionSkeleton} />
+      </div>
+    </div>
+    
+    {/* Stats Grid Skeleton */}
+    <div className={styles.statsGridSkeleton}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className={styles.statCardSkeleton}>
+          <div className={styles.statIconSkeleton} />
+          <div className={styles.statContentSkeleton}>
+            <div className={styles.statValueSkeleton} />
+            <div className={styles.statLabelSkeleton} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 export default function CategoryPage() {
   const params = useParams();
@@ -42,36 +71,7 @@ export default function CategoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Transform functions
-  const transformTopics = (apiTopics: ApiTopic[]): Topic[] => {
-    return apiTopics
-      .filter(topic => topic.category_id.toString() === categoryId)
-      .map(topic => ({
-        id: topic.id,
-        title: topic.title,
-        content: topic.content,
-        category: topic.category_name,
-        categoryId: topic.category_id,
-        author: {
-          id: topic.author_id,
-          name: topic.author_name,
-          avatar: topic.author_avatar,
-          reputation: topic.author_reputation,
-          badge: topic.author_badge
-        },
-        timestamp: topic.created_at,
-        replies: topic.reply_count,
-        views: topic.views,
-        lastReply: {
-          author: topic.last_reply_author || 'No replies yet',
-          timestamp: topic.last_reply_date || topic.created_at
-        },
-        isPinned: topic.is_pinned,
-        isLocked: topic.is_locked
-      }));
-  };
-
-  // Single useEffect for all data fetching
+  // Fetch all data
   useEffect(() => {
     const fetchCategoryData = async () => {
       try {
@@ -83,6 +83,9 @@ export default function CategoryPage() {
           axios.get(`/api/forum/topics?categoryId=${categoryId}`)
         ]);
 
+        console.log('Topics API Response:', topicsRes.data); // Debug log
+
+        // Transform subcategories
         const transformedSubCategories = subCatRes.data.map((sub: any) => ({
           id: sub.id,
           name: sub.name,
@@ -90,10 +93,33 @@ export default function CategoryPage() {
           topicCount: sub.topic_count
         }));
 
-        setCategory(categoryRes.data);
+        // Set the topics directly from the API response
+        const transformedTopics = topicsRes.data.topics.map((topic: any) => ({
+          id: topic.id,
+          title: topic.title,
+          content: topic.content,
+          author_id: topic.author_id,
+          author_name: topic.author_name,
+          author_image: topic.author_image,
+          author_email: topic.author_email,
+          category_id: topic.category_id,
+          category_name: topic.category_name,
+          subcategory_id: topic.subcategory_id,
+          subcategory_name: topic.subcategory_name,
+          is_pinned: Boolean(topic.is_pinned),
+          is_locked: Boolean(topic.is_locked),
+          views: Number(topic.views) || 0,
+          reply_count: Number(topic.reply_count) || 0,
+          created_at: topic.created_at,
+          updated_at: topic.updated_at
+        }));
+
+        setCategory(categoryRes.data.category);
         setStats(statsRes.data);
         setSubCategories(transformedSubCategories);
-        setTopics(transformTopics(topicsRes.data.topics));
+        setTopics(transformedTopics);
+
+        console.log('Transformed topics:', transformedTopics); // Debug log
       } catch (err) {
         console.error('Error fetching category data:', err);
         setError('Failed to load category data');
@@ -103,161 +129,137 @@ export default function CategoryPage() {
     };
 
     fetchCategoryData();
-  }, [categoryId]); // Only re-run when categoryId changes
-
-  if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className={styles.loadingContent}
-        >
-          <Loader className={styles.spinner} />
-          <span>Loading category...</span>
-        </motion.div>
-      </div>
-    );
-  }
-
-  if (error || !category) {
-    return (
-      <div className={styles.errorContainer}>
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          {error || 'Category not found'}
-        </motion.p>
-      </div>
-    );
-  }
+  }, [categoryId]);
 
   return (
-    <motion.div 
-      className={styles.categoryContainer}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      {/* Header with Category Info */}
-      <motion.div 
-        className={styles.categoryHeader}
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <div className={styles.headerContent}>
-          <div className={styles.categoryInfo}>
-            <div className={styles.categoryIcon}>
-              {category.icon || <Hash />}
-            </div>
-            <div>
-              <h1>{category.name}</h1>
-              <p>{category.description}</p>
-            </div>
-          </div>
-
-          {isAuthenticated && (
-            <Button 
-              onClick={() => setIsNewTopicOpen(true)}
-              className={styles.newTopicButton}
+    <div className={styles.categoryContainer}>
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <CategorySkeleton />
+        ) : (
+          <>
+             {/* Header Section */}
+             <motion.div 
+              className={styles.categoryHeader}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
             >
-              <PlusCircle size={16} />
-              New Topic
-            </Button>
-          )}
-        </div>
-      </motion.div>
+              <div className={styles.headerContent}>
+                <div className={styles.categoryInfo}>
+                  <div className={styles.categoryIcon}>
+                    {category?.icon || <Hash />}
+                  </div>
+                  <div>
+                    <h1>{category?.name}</h1>
+                    <p>{category?.description}</p>
+                  </div>
+                </div>
 
-      {/* Stats Cards */}
-      <motion.div 
-        className={styles.statsGrid}
-        initial={{ y: -10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div className={styles.statCard}>
-          <MessageSquare className={styles.statIcon} />
-          <div className={styles.statInfo}>
-            <span className={styles.statValue}>{stats?.total_topics || 0}</span>
-            <span className={styles.statLabel}>Total Topics</span>
-          </div>
-        </div>
-        
-        <div className={styles.statCard}>
-          <Calendar className={styles.statIcon} />
-          <div className={styles.statInfo}>
-            <span className={styles.statValue}>{stats?.topics_today || 0}</span>
-            <span className={styles.statLabel}>Today's Posts</span>
-          </div>
-        </div>
-        
-        <div className={styles.statCard}>
-          <Users className={styles.statIcon} />
-          <div className={styles.statInfo}>
-            <span className={styles.statValue}>{stats?.active_posters || 0}</span>
-            <span className={styles.statLabel}>Active Users</span>
-          </div>
-        </div>
+                {isAuthenticated && (
+                  <Button 
+                    onClick={() => setIsNewTopicOpen(true)}
+                    className={styles.newTopicButton}
+                  >
+                    <PlusCircle size={16} />
+                    Start New Topic
+                  </Button>
+                )}
+              </div>
+            </motion.div>
 
-        <div className={styles.statCard}>
-          <Users className={styles.statIcon} />
-          <div className={styles.statInfo}>
-            <span className={styles.statValue}>{stats?.active_posters || 0}</span>
-            <span className={styles.statLabel}>Active Users</span>
-          </div>
-        </div>
 
-        <div className={styles.statCard}>
-          <Users className={styles.statIcon} />
-          <div className={styles.statInfo}>
-            <span className={styles.statValue}>{stats?.active_posters || 0}</span>
-            <span className={styles.statLabel}>Active Users</span>
-          </div>
-        </div>
+            {/* Stats Grid */}
+            <motion.div 
+              className={styles.statsGrid}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <div className={styles.statCard}>
+                <MessageSquare className={styles.statIcon} />
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{stats?.total_topics || 0}</span>
+                  <span className={styles.statLabel}>Total Topics</span>
+                </div>
+              </div>
+              
+              <div className={styles.statCard}>
+                <Calendar className={styles.statIcon} />
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{stats?.posts_today || 0}</span>
+                  <span className={styles.statLabel}>Today's Posts</span>
+                </div>
+              </div>
+              
+              <div className={styles.statCard}>
+                <Users className={styles.statIcon} />
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{stats?.active_posters || 0}</span>
+                  <span className={styles.statLabel}>Active Users</span>
+                </div>
+              </div>
 
-      </motion.div>
+              <div className={styles.statCard}>
+                <Clock className={styles.statIcon} />
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{stats?.avg_response_time || '0m'}</span>
+                  <span className={styles.statLabel}>Avg. Response</span>
+                </div>
+              </div>
 
-      {/* Sub-Categories Section */}
-      {subCategories.length > 0 && (
-        <motion.div 
-          className={styles.subCategoriesSection}
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className={styles.sectionHeader}>
-            <LayoutGrid size={20} />
-            <h2>Sub-Categories</h2>
-          </div>
-          <SubCategoriesList subCategories={subCategories} />
-        </motion.div>
-      )}
+              <div className={styles.statCard}>
+                <Zap className={styles.statIcon} />
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{stats?.engagement_rate || '0%'}</span>
+                  <span className={styles.statLabel}>Engagement</span>
+                </div>
+              </div>
+            </motion.div>
 
-      {/* Topics List */}
-      <motion.div 
-        className={styles.topicsSection}
-        initial={{ y: -10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <div className={styles.sectionHeader}>
-          <MessageSquare size={20} />
-          <h2>Topics About</h2>
-        </div>
-        <TopicsList 
-          topics={topics}
-          categoryId={categoryId}
-          loading={loading}
-        />
-      </motion.div>
+            {/* Sub-Categories Section */}
+            {subCategories.length > 0 && (
+              <motion.div 
+                className={styles.subCategoriesSection}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className={styles.sectionHeader}>
+                  <LayoutGrid size={20} />
+                  <h2>Sub-Categories</h2>
+                </div>
+                <SubCategoriesList subCategories={subCategories} />
+              </motion.div>
+            )}
 
-      <NewTopicForm 
-        isOpen={isNewTopicOpen}
-        onClose={() => setIsNewTopicOpen(false)}
-        categories={[category]}
-      />
-    </motion.div>
+            {/* Topics Section */}
+            <motion.div 
+              className={styles.topicsSection}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              {error ? (
+                <div className={styles.error}>{error}</div>
+              ) : (
+                <TopicsList 
+                  topics={topics}
+                  categoryId={categoryId}
+                  categoryName={category?.name}
+                  loading={loading}
+                />
+              )}
+            </motion.div>
+
+            <NewTopicForm 
+              isOpen={isNewTopicOpen}
+              onClose={() => setIsNewTopicOpen(false)}
+              categories={category ? [category] : []}
+            />
+          </>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

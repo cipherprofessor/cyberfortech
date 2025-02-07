@@ -1,4 +1,3 @@
-// src/app/api/forum/topics/route.ts
 import { createClient } from '@libsql/client';
 import { NextResponse, NextRequest } from 'next/server';
 import { clerkClient, getAuth } from '@clerk/nextjs/server';
@@ -13,6 +12,120 @@ function sanitizeText(text: string): string {
   return text.replace(/<[^>]*>/g, '').trim();
 }
 
+function getFullNameFromUser(user: any): string {
+  const firstName = user.firstName ?? '';
+  const lastName = user.lastName ?? '';
+  
+  if (firstName && lastName) {
+    return `${firstName} ${lastName}`.trim();
+  }
+  
+  if (firstName) {
+    return firstName;
+  }
+  
+  if (user.username) {
+    return user.username;
+  }
+  
+  if (user.emailAddresses && user.emailAddresses.length > 0) {
+    return user.emailAddresses[0].emailAddress;
+  }
+  
+  return '';
+}
+
+function getPrimaryEmail(user: any): string {
+  if (!user?.emailAddresses || user.emailAddresses.length === 0) {
+    return '';
+  }
+  
+  const primaryEmail = user.emailAddresses.find((email: any) => 
+    email.id === user.primaryEmailAddressId
+  );
+  return primaryEmail?.emailAddress ?? user.emailAddresses[0].emailAddress ?? '';
+}
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const categoryId = searchParams.get('categoryId');
+    const offset = (page - 1) * limit;
+
+    // Base conditions for the WHERE clause
+    let whereConditions = ['t.is_deleted = FALSE'];
+    let whereArgs: any[] = [];
+
+    // Add category filter if provided
+    if (categoryId) {
+      whereConditions.push('t.category_id = ?');
+      whereArgs.push(categoryId);
+    }
+
+    // Build the WHERE clause
+    const whereClause = whereConditions.join(' AND ');
+
+    // Get total count first
+    const countResult = await client.execute({
+      sql: `
+        SELECT COUNT(*) as total 
+        FROM forum_topics t
+        WHERE ${whereClause}
+      `,
+      args: whereArgs
+    });
+
+    // Then get the topics with all author details
+    const topics = await client.execute({
+      sql: `
+        SELECT 
+          t.id,
+          t.title,
+          t.content,
+          t.views,
+          t.is_pinned,
+          t.is_locked,
+          t.created_at,
+          t.updated_at,
+          t.author_id,
+          t.author_name,
+          t.author_email,
+          t.author_image,
+          t.category_id,
+          c.name as category_name,
+          sc.id as subcategory_id,
+          sc.name as subcategory_name,
+          (SELECT COUNT(*) FROM forum_posts WHERE topic_id = t.id AND is_deleted = FALSE) as reply_count
+        FROM forum_topics t
+        LEFT JOIN forum_categories c ON t.category_id = c.id
+        LEFT JOIN forum_subcategories sc ON t.subcategory_id = sc.id
+        WHERE ${whereClause}
+        ORDER BY t.is_pinned DESC, t.created_at DESC
+        LIMIT ? OFFSET ?
+      `,
+      args: [...whereArgs, limit, offset]
+    });
+
+    return NextResponse.json({
+      topics: topics.rows,
+      pagination: {
+        total: Number(countResult.rows[0].total),
+        page,
+        limit,
+        pages: Math.ceil(Number(countResult.rows[0].total) / limit)
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching topics:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch topics' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: NextRequest) {
   const tx = await client.transaction();
 
@@ -25,6 +138,15 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
     }
+
+    // Get user details from Clerk
+    const clerk = await clerkClient();
+    const user = await clerk.users.getUser(userId);
+    
+    // Get user details
+    const authorName = getFullNameFromUser(user);
+    const authorEmail = getPrimaryEmail(user);
+    const authorImage = user.imageUrl ?? '';
 
     // Parse request body
     const body = await req.json();
@@ -76,7 +198,7 @@ export async function POST(req: NextRequest) {
     const topicId = crypto.randomUUID();
     const now = new Date().toISOString();
 
-    // Create the topic
+    // Create the topic with author details
     await tx.execute({
       sql: `
         INSERT INTO forum_topics (
@@ -84,6 +206,9 @@ export async function POST(req: NextRequest) {
           category_id,
           subcategory_id,
           author_id,
+          author_name,
+          author_email,
+          author_image,
           title,
           content,
           views,
@@ -93,13 +218,16 @@ export async function POST(req: NextRequest) {
           created_at,
           updated_at,
           last_post_at
-        ) VALUES (?, ?, ?, ?, ?, ?, 0, FALSE, FALSE, FALSE, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, FALSE, FALSE, FALSE, ?, ?, ?)
       `,
       args: [
         topicId,
         categoryId,
         subcategoryId || null,
         authorId,
+        authorName,
+        authorEmail,
+        authorImage,
         sanitizedTitle,
         sanitizedContent,
         now,
@@ -140,13 +268,10 @@ export async function POST(req: NextRequest) {
         SELECT 
           t.*,
           c.name as category_name,
-          sc.name as subcategory_name,
-          u.full_name as author_name,
-          u.avatar_url as author_avatar
+          sc.name as subcategory_name
         FROM forum_topics t
         LEFT JOIN forum_categories c ON t.category_id = c.id
         LEFT JOIN forum_subcategories sc ON t.subcategory_id = sc.id
-        LEFT JOIN users u ON t.author_id = u.id
         WHERE t.id = ?
       `,
       args: [topicId]
@@ -176,71 +301,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ... rest of the GET and DELETE handlers remain the same
-// src/app/api/forum/topics/route.ts
-export async function GET(req: Request) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const offset = (page - 1) * limit;
-
-    // Get total count first
-    const countResult = await client.execute(`
-      SELECT COUNT(*) as total 
-      FROM forum_topics 
-      WHERE is_deleted = FALSE
-    `);
-
-    // Then get the topics
-    const topics = await client.execute({
-      sql: `
-        SELECT 
-          t.id,
-          t.title,
-          t.content,
-          t.views,
-          t.is_pinned,
-          t.is_locked,
-          t.created_at,
-          t.updated_at,
-          t.author_id,
-          t.category_id,
-          c.name as category_name,
-          sc.id as subcategory_id,
-          sc.name as subcategory_name,
-          (SELECT COUNT(*) FROM forum_posts WHERE topic_id = t.id) as reply_count
-        FROM forum_topics t
-        LEFT JOIN forum_categories c ON t.category_id = c.id
-        LEFT JOIN forum_subcategories sc ON t.subcategory_id = sc.id
-        WHERE t.is_deleted = FALSE
-        ORDER BY t.is_pinned DESC, t.created_at DESC
-        LIMIT ? OFFSET ?
-      `,
-      args: [limit, offset]
-    });
-
-    return NextResponse.json({
-      topics: topics.rows,
-      pagination: {
-        total: Number(countResult.rows[0].total),
-        page,
-        limit,
-        pages: Math.ceil(Number(countResult.rows[0].total) / limit)
-      }
-    });
-  } catch (error) {
-    console.error('Error fetching topics:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch topics' },
-      { status: 500 }
-    );
-  }
-}
-  
-  // Add DELETE handler for topic deletion
-  // In your topics route.ts file
-
 export async function DELETE(req: NextRequest) {
   try {
     // Get authenticated user
@@ -264,7 +324,7 @@ export async function DELETE(req: NextRequest) {
 
     // First get the topic details
     const topicResult = await client.execute({
-      sql: 'SELECT author_id FROM forum_topics WHERE id = ?',
+      sql: 'SELECT author_id FROM forum_topics WHERE id = ? AND is_deleted = FALSE',
       args: [topicId]
     });
 
@@ -291,15 +351,20 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
+    // Get current timestamp
+    const now = new Date().toISOString();
+
     // Soft delete the topic
     await client.execute({
       sql: `
         UPDATE forum_topics 
-        SET is_deleted = TRUE, 
-            deleted_at = CURRENT_TIMESTAMP 
+        SET 
+          is_deleted = TRUE,
+          deleted_at = ?,
+          updated_at = ?
         WHERE id = ?
       `,
-      args: [topicId]
+      args: [now, now, topicId]
     });
 
     return NextResponse.json({ 
@@ -315,5 +380,3 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
-
-  

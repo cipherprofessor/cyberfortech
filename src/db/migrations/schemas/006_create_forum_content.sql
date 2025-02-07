@@ -8,6 +8,10 @@ CREATE TABLE IF NOT EXISTS forum_topics (
     category_id TEXT NOT NULL,
     subcategory_id TEXT,
     author_id TEXT NOT NULL,
+    author_name TEXT NOT NULL,      -- New column
+    author_email TEXT NOT NULL,     -- New column
+    author_image TEXT NOT NULL,     -- New column
+    icon TEXT,                      -- New column
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     views INTEGER DEFAULT 0,
@@ -64,6 +68,8 @@ CREATE INDEX IF NOT EXISTS idx_forum_posts_parent ON forum_posts(parent_id);
 CREATE INDEX IF NOT EXISTS idx_forum_posts_author ON forum_posts(author_id);
 CREATE INDEX IF NOT EXISTS idx_forum_posts_created ON forum_posts(created_at);
 CREATE INDEX IF NOT EXISTS idx_forum_topic_tags_tag ON forum_topic_tags(tag);
+CREATE INDEX IF NOT EXISTS idx_forum_topics_author_name ON forum_topics(author_name);
+CREATE INDEX IF NOT EXISTS idx_forum_topics_author_email ON forum_topics(author_email);
 
 -- Create triggers for updated_at timestamps
 CREATE TRIGGER IF NOT EXISTS trig_forum_topics_updated_at 

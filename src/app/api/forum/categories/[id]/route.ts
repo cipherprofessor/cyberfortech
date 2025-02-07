@@ -122,37 +122,111 @@ export async function PUT(
 }
 
 // GET single category
+// export async function GET(
+//   request: Request,
+//   { params }: { params: { id: string } }
+// ) {
+//   try {
+//     const { id } = params;
+
+//     const { rows: [category] } = await client.execute({
+//       sql: `
+//         SELECT 
+//           c.*,
+//           s.total_topics,
+//           s.total_posts,
+//           s.last_post_at,
+//           COALESCE(json_group_array(
+//             CASE 
+//               WHEN sub.id IS NOT NULL 
+//               THEN json_object(
+//                 'id', sub.id,
+//                 'name', sub.name
+//               )
+//               ELSE NULL 
+//             END
+//           ), '[]') as subCategories
+//         FROM forum_categories c
+//         LEFT JOIN forum_category_stats s ON c.id = s.category_id
+//         LEFT JOIN forum_subcategories sub ON c.id = sub.category_id AND sub.is_deleted = FALSE
+//         WHERE c.id = ? AND c.is_deleted = FALSE
+//         GROUP BY c.id
+//       `,
+//       args: [id]
+//     });
+
+//     if (!category) {
+//       return NextResponse.json(
+//         { error: 'Category not found' },
+//         { status: 404 }
+//       );
+//     }
+
+//     // Process subcategories
+//     let subCategories = [];
+//     try {
+//       const parsedSubs = category.subCategories ? JSON.parse(category.subCategories.toString()) : [];
+//       subCategories = parsedSubs
+//         .filter(Boolean)
+//         .map((sub: any) => ({
+//           id: String(sub.id),
+//           name: String(sub.name)
+//         }));
+//     } catch (error) {
+//       console.error('Error parsing subcategories:', error);
+//     }
+
+//     return NextResponse.json({
+//       id: category.id,
+//       name: category.name,
+//       description: category.description,
+//       icon: category.icon,
+//       color: category.color,
+//       display_order: Number(category.display_order),
+//       is_active: Boolean(category.is_active),
+//       total_topics: Number(category.total_topics),
+//       total_posts: Number(category.total_posts),
+//       last_post_at: category.last_post_at,
+//       created_at: category.created_at,
+//       updated_at: category.updated_at,
+//       subCategories
+//     });
+
+//   } catch (error) {
+//     console.error('Error fetching category:', error);
+//     return NextResponse.json(
+//       { error: 'Failed to fetch category' },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// src/app/api/forum/categories/[id]/route.ts
+
+
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    // Ensure params.id exists
+    if (!params?.id) {
+      return NextResponse.json(
+        { error: 'Category ID is required' },
+        { status: 400 }
+      );
+    }
 
+    const categoryId = params.id;
+
+    // Get category details
     const { rows: [category] } = await client.execute({
       sql: `
-        SELECT 
-          c.*,
-          s.total_topics,
-          s.total_posts,
-          s.last_post_at,
-          COALESCE(json_group_array(
-            CASE 
-              WHEN sub.id IS NOT NULL 
-              THEN json_object(
-                'id', sub.id,
-                'name', sub.name
-              )
-              ELSE NULL 
-            END
-          ), '[]') as subCategories
-        FROM forum_categories c
-        LEFT JOIN forum_category_stats s ON c.id = s.category_id
-        LEFT JOIN forum_subcategories sub ON c.id = sub.category_id AND sub.is_deleted = FALSE
-        WHERE c.id = ? AND c.is_deleted = FALSE
-        GROUP BY c.id
+        SELECT id, name, description, is_deleted
+        FROM forum_categories
+        WHERE id = ? AND is_deleted = FALSE
       `,
-      args: [id]
+      args: [categoryId]
     });
 
     if (!category) {
@@ -162,34 +236,49 @@ export async function GET(
       );
     }
 
-    // Process subcategories
-    let subCategories = [];
-    try {
-      const parsedSubs = category.subCategories ? JSON.parse(category.subCategories.toString()) : [];
-      subCategories = parsedSubs
-        .filter(Boolean)
-        .map((sub: any) => ({
-          id: String(sub.id),
-          name: String(sub.name)
-        }));
-    } catch (error) {
-      console.error('Error parsing subcategories:', error);
-    }
+
+    // Get topics for this category with author details
+    const { rows: topics } = await client.execute({
+      sql: `
+        SELECT 
+          t.id,
+          t.title,
+          t.content,
+          t.views,
+          t.is_pinned,
+          t.is_locked,
+          t.created_at,
+          t.updated_at,
+          t.author_id,
+          t.author_name,
+          t.author_email,
+          t.author_image,
+          t.category_id,
+          t.subcategory_id,
+          c.name as category_name,
+          sc.name as subcategory_name,
+          (SELECT COUNT(*) FROM forum_posts WHERE topic_id = t.id AND is_deleted = FALSE) as reply_count
+        FROM forum_topics t
+        LEFT JOIN forum_categories c ON t.category_id = c.id
+        LEFT JOIN forum_subcategories sc ON t.subcategory_id = sc.id
+        WHERE t.category_id = ? 
+        AND t.is_deleted = FALSE
+        ORDER BY t.is_pinned DESC, t.created_at DESC
+      `,
+      args: [categoryId]
+    });
 
     return NextResponse.json({
-      id: category.id,
-      name: category.name,
-      description: category.description,
-      icon: category.icon,
-      color: category.color,
-      display_order: Number(category.display_order),
-      is_active: Boolean(category.is_active),
-      total_topics: Number(category.total_topics),
-      total_posts: Number(category.total_posts),
-      last_post_at: category.last_post_at,
-      created_at: category.created_at,
-      updated_at: category.updated_at,
-      subCategories
+      category,
+      topics: topics.map(topic => ({
+        ...topic,
+        created_at: topic.created_at || new Date().toISOString(),
+        updated_at: topic.updated_at || new Date().toISOString(),
+        author_name: topic.author_name || 'Anonymous',
+        author_image: topic.author_image || null,
+        reply_count: Number(topic.reply_count) || 0,
+        views: Number(topic.views) || 0
+      }))
     });
 
   } catch (error) {
