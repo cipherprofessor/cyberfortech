@@ -3,13 +3,11 @@ import Image from 'next/image';
 import { Pin, Lock, MessageCircle, Eye } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Topic } from '@/types/forum';
+import styles from './TopicsList.module.scss';
 
-// src/components/TopicsList/TopicsList.tsx
-// Add this helper function at the top of the file
 const formatTimestamp = (timestamp: string) => {
   try {
     const date = new Date(timestamp);
-    // Check if date is valid
     if (isNaN(date.getTime())) {
       return 'Invalid date';
     }
@@ -22,78 +20,102 @@ const formatTimestamp = (timestamp: string) => {
 interface TopicsListProps {
   topics: Topic[];
   categoryId: string;
+  categoryName?: string;
   loading?: boolean;
 }
 
+export function TopicsList({ 
+  topics, 
+  categoryId, 
+  categoryName,
+  loading = false 
+}: TopicsListProps) {
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          Loading Topics...
+        </div>
+        {[1, 2, 3].map((i) => (
+          <div key={i} className={styles.skeletonTopic}>
+            <div className={styles.skeletonAvatar} />
+            <div className={styles.skeletonContent}>
+              <div className={styles.skeletonTitle} />
+              <div className={styles.skeletonMeta} />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
-export function TopicsList({ topics, categoryId, loading = false }: TopicsListProps) {
   return (
-    <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-      <div className="bg-gray-100 px-4 py-3 font-semibold text-gray-700 border-b">
-        Recent Topics 
+    <div className={styles.container}>
+      <div className={styles.header}>
+        Topics {categoryName && `in ${categoryName}`}
       </div>
       {topics.map(topic => (
         <div 
           key={topic.id} 
-          className="flex items-center px-4 py-3 border-b hover:bg-gray-50 transition-colors"
+          className={styles.topicItem}
         >
-          <div className="flex-shrink-0 mr-4">
-            <div className="relative">
+          <div className={styles.avatarSection}>
+            <div className={styles.avatarWrapper}>
               <Image 
-                src={topic.author.avatar || '/public/team/mohsin.png'} 
+                src={topic.author.avatar || '/default-avatar.png'} 
                 alt={topic.author.name || 'User'}
                 width={40} 
                 height={40} 
-                className="rounded-full"
+                className={styles.avatar}
               />
               {topic.isPinned && (
                 <Pin 
-                  className="absolute -top-1 -right-1 text-yellow-500" 
+                  className={`${styles.badge} ${styles.pinBadge}`}
                   size={16} 
                 />
               )}
               {topic.isLocked && (
                 <Lock 
-                  className="absolute -bottom-1 -right-1 text-red-500" 
+                  className={`${styles.badge} ${styles.lockBadge}`}
                   size={16} 
                 />
               )}
             </div>
           </div>
           
-          <div className="flex-grow">
-            <div className="flex items-center space-x-2">
+          <div className={styles.contentSection}>
+            <div className={styles.topicHeader}>
               <a 
                 href={`/forum/topic/${topic.id}`} 
-                className="font-semibold text-gray-800 hover:text-blue-600 transition-colors"
+                className={styles.topicTitle}
               >
                 {topic.title}
               </a>
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                {topic.category}
+              <span className={styles.categoryTag}>
+                {topic.category_name}
               </span>
             </div>
             
-            <div className="text-xs text-gray-500 mt-1">
+            <div className={styles.authorInfo}>
               Started by {topic.author.name} 
               {' • '}
               {formatTimestamp(topic.timestamp)}
             </div>
           </div>
           
-          <div className="flex items-center space-x-4 text-gray-500">
-            <div className="flex items-center space-x-1">
+          <div className={styles.statsSection}>
+            <div className={styles.statItem}>
               <MessageCircle size={16} />
-              <span className="text-sm">{topic.replies}</span>
+              <span>{topic.replies}</span>
             </div>
             
-            <div className="flex items-center space-x-1">
+            <div className={styles.statItem}>
               <Eye size={16} />
-              <span className="text-sm">{topic.views}</span>
+              <span>{topic.views}</span>
             </div>
             
-            <div className="text-xs text-gray-500">
-              Last reply by {topic.lastReply.author}
+            <div className={styles.lastReply}>
+              Last reply by <span>{topic.lastReply.author}</span>
               {' • '}
               {formatTimestamp(topic.lastReply.timestamp)}
             </div>
@@ -102,4 +124,4 @@ export function TopicsList({ topics, categoryId, loading = false }: TopicsListPr
       ))}
     </div>
   );
-};
+}

@@ -181,14 +181,14 @@ export default function CategoryPage() {
           <MessageSquare className={styles.statIcon} />
           <div className={styles.statInfo}>
             <span className={styles.statValue}>{stats?.total_topics || 0}</span>
-            <span className={styles.statLabel}>Topics</span>
+            <span className={styles.statLabel}>Total Topics</span>
           </div>
         </div>
         
         <div className={styles.statCard}>
           <Calendar className={styles.statIcon} />
           <div className={styles.statInfo}>
-            <span className={styles.statValue}>{stats?.posts_today || 0}</span>
+            <span className={styles.statValue}>{stats?.topics_today || 0}</span>
             <span className={styles.statLabel}>Today's Posts</span>
           </div>
         </div>
@@ -200,6 +200,23 @@ export default function CategoryPage() {
             <span className={styles.statLabel}>Active Users</span>
           </div>
         </div>
+
+        <div className={styles.statCard}>
+          <Users className={styles.statIcon} />
+          <div className={styles.statInfo}>
+            <span className={styles.statValue}>{stats?.active_posters || 0}</span>
+            <span className={styles.statLabel}>Active Users</span>
+          </div>
+        </div>
+
+        <div className={styles.statCard}>
+          <Users className={styles.statIcon} />
+          <div className={styles.statInfo}>
+            <span className={styles.statValue}>{stats?.active_posters || 0}</span>
+            <span className={styles.statLabel}>Active Users</span>
+          </div>
+        </div>
+
       </motion.div>
 
       {/* Sub-Categories Section */}

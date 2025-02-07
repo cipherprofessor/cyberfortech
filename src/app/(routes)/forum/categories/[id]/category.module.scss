@@ -120,6 +120,7 @@
   font-weight: 600 !important;
   display: flex !important;
   align-items: center !important;
+  margin-top: 8px; 
   gap: 8px !important;
   transition: all 0.2s ease !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
@@ -134,7 +135,7 @@
 // Stats Grid
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -142,10 +143,10 @@
 .statCard {
   background: white;
   border-radius: 12px;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 25px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
 
@@ -165,8 +166,9 @@
 
   .statInfo {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
   }
 
   .statValue {
