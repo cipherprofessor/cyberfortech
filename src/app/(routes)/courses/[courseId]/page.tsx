@@ -17,7 +17,7 @@ export default async function CourseDetailPage({
     title: "Advanced Penetration Testing",
     description: "Master the art of ethical hacking and penetration testing with hands-on labs and real-world scenarios. Learn to identify and exploit vulnerabilities in networks, web applications, and systems.",
     instructor: {
-      name: "John Doe",
+      name: "Arsalan Rayees",
       title: "Senior Security Engineer",
       avatar: "/instructor-avatar.jpg",
       bio: "15+ years of experience in cybersecurity",

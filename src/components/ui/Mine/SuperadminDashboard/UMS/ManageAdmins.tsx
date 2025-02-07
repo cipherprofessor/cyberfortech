@@ -266,7 +266,7 @@ const ManageAdmins: React.FC = () => {
   const admins: Admin[] = [
     {
       id: '1',
-      name: 'John Doe',
+      name: 'Arsalan Rayees',
       email: 'john@example.com',
       role: 'super_admin',
       permissions: ['manage_users', 'manage_courses'],

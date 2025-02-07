@@ -81,7 +81,7 @@ export default function CheckBoxGroupCard() {
         <CustomCheckbox
           statusColor="warning"
           user={{
-            name: "John Doe",
+            name: "Arsalan Rayees",
             avatar: "https://i.pravatar.cc/300?u=a042581f4e29026707d",
             username: "johndoe",
             url: "#",

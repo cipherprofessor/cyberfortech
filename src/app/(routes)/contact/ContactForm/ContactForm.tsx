@@ -1,27 +1,20 @@
 "use client"
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { 
-  Send, 
-  User, 
-  Mail, 
-  MessageSquare, 
-  FileText, 
-  Loader2, 
-  MessageCircle,
-  Phone 
-} from 'lucide-react';
+import { Send, User, Mail, MessageSquare, FileText, Loader2, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
 import styles from './ContactForm.module.scss';
 import { Alert } from '@heroui/react';
+// Remove other imports related to phone styles
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import phoneStyles from './ContactForm.PhoneInput.module.scss';
+
 
 type FormData = {
   name: string;
   email: string;
-  phone?: string;
   subject: string;
   message: string;
 };
@@ -30,7 +23,7 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [phone, setPhone] = useState("91"); // Default to India
+  const [phoneNumber, setPhoneNumber] = useState<string | undefined>(""); // for phone input
 
   const {
     register,
@@ -46,11 +39,11 @@ export function ContactForm() {
     try {
       await axios.post('/api/contact', {
         ...data,
-        phone: phone || undefined
+        phoneNumber // Include phone number in submission
       });
       setSubmitStatus('success');
       reset();
-      setPhone("91"); // Reset phone to default
+      setPhoneNumber(""); // Reset phone number
     } catch (error) {
       setSubmitStatus('error');
     } finally {
@@ -83,7 +76,6 @@ export function ContactForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Name Field */}
         <motion.div 
           className={styles.formGroup}
           initial={{ opacity: 0, x: -20 }}
@@ -98,7 +90,7 @@ export function ContactForm() {
             <input
               id="name"
               type="text"
-              placeholder="John Doe"
+              placeholder="Arsalan Rayees"
               {...register('name', { 
                 minLength: {
                   value: 2,
@@ -124,7 +116,6 @@ export function ContactForm() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Email Field */}
         <motion.div 
           className={styles.formGroup}
           initial={{ opacity: 0, x: -20 }}
@@ -139,7 +130,7 @@ export function ContactForm() {
             <input
               id="email"
               type="email"
-              placeholder="example@email.com"
+              placeholder="arsalancr7@footballer.com"
               {...register('email', {
                 required: 'Email is required',
                 pattern: {
@@ -166,58 +157,35 @@ export function ContactForm() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Phone Field */}
-        <motion.div 
-          className={styles.formGroup}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.25 }}
-        >
-          <label htmlFor="phone">
-            <Phone size={18} className={styles.icon} />
-            Phone Number (Optional)
-          </label>
-          <div className={`${styles.inputWrapper} ${focusedField === 'phone' ? styles.focused : ''}`}>
-          <PhoneInput
-  country={'in'}
-  value={phone}
-  onChange={(phone) => setPhone(phone)}
-  inputProps={{
-    id: 'phone',
-    onFocus: () => handleFocus('phone'),
-    onBlur: handleBlur,
-    maxLength: 20,
-    placeholder: 'Enter phone number'
-  }}
-  containerStyle={{ width: '100%' }}
-  inputStyle={{
-    width: '100%',
-    height: '42px',
-    padding: '0.75rem 1rem 0.75rem 3.5rem',
-    background: 'transparent',
-    border: '1px solid #e5e7eb',
-    borderRadius: '0.5rem',
-    fontSize: '0.95rem',
-    color: '#1f2937'
-  }}
-  buttonStyle={{
-    background: 'transparent',
-    border: '1px solid #e5e7eb',
-    borderRight: 'none',
-    borderRadius: '0.5rem 0 0 0.5rem'
-  }}
-  dropdownStyle={{
-    background: '#ffffff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '0.5rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-    marginTop: '4px'
-  }}
-/>
-          </div>
-        </motion.div>
+        {/* Phone Input */}
+               
 
-        {/* Subject Field */}
+        <motion.div 
+  className={styles.formGroup}
+  initial={{ opacity: 0, x: -20 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ delay: 0.25 }}
+>
+  <label>
+    <User size={18} className={styles.icon} />
+    Phone Number (Optional)
+  </label>
+  <div className={`${styles.inputWrapper} ${styles.phoneWrapper} ${focusedField === 'phone' ? styles.focused : ''} ${phoneStyles.phoneInputWrapper}`}>
+    <PhoneInput
+      defaultCountry="IN"
+      value={phoneNumber}
+      onChange={setPhoneNumber}
+      onFocus={() => handleFocus('phone')}
+      onBlur={handleBlur}
+      placeholder="Enter phone number"
+      international
+      countryCallingCodeEditable={false}
+      limitMaxLength={true}
+      addInternationalOption={false}
+    />
+  </div>
+</motion.div>
+
         <motion.div 
           className={styles.formGroup}
           initial={{ opacity: 0, x: -20 }}
@@ -259,7 +227,6 @@ export function ContactForm() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Message Field */}
         <motion.div 
           className={styles.formGroup}
           initial={{ opacity: 0, x: -20 }}
@@ -301,7 +268,6 @@ export function ContactForm() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Alert Messages */}
         <AnimatePresence>
           {submitStatus === 'success' && (
             <motion.div
@@ -332,7 +298,6 @@ export function ContactForm() {
           )}
         </AnimatePresence>
 
-        {/* Submit Button */}
         <motion.button 
           type="submit" 
           className={styles.submitButton}

@@ -71,7 +71,7 @@ const MessagesDashboard = () => {
       content: 'We are excited to announce the release of our new course...',
       sender: {
         id: '1',
-        name: 'John Doe',
+        name: 'Arsalan Rayees',
         role: 'admin'
       },
       recipients: {

@@ -56,7 +56,7 @@ const CourseReviews = () => {
       courseId: '1',
       courseName: 'Advanced React Development',
       userId: '1',
-      userName: 'John Doe',
+      userName: 'Arsalan Rayees',
       rating: 5,
       title: 'Excellent course!',
       content: 'This course exceeded my expectations. The content is well-structured and the instructor explains everything clearly.',

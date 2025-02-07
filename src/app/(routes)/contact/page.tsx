@@ -52,6 +52,13 @@ const faqData: { id: string; avatar: string; color: FaqColor; question: string; 
     color: "danger",
     question: "What certifications do you offer?",
     answer: "We offer preparation courses for major industry certifications including CompTIA Security+, CEH, CISSP, and more. Our programs include exam vouchers and practice tests. Additionally, we provide our own specialized certifications recognized by leading cybersecurity companies."
+  },
+  {
+    id: "5",
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+    color: "primary",
+    question: "Why should I choose Cyberfortech?",
+    answer: "Cyberfortech is a leading cybersecurity training provider with a proven track record of success. Our instructors are industry experts with years of experience in the field. We offer hands-on training, real-world projects, and personalized mentorship. Our platform is user-friendly and accessible from anywhere, with 24/7 support and resources."
   }
 ];
 
@@ -297,43 +304,56 @@ export default function ContactPage() {
         </div>
 
         <div className={styles.rightSection}>
-          <motion.div 
-            className={styles.formWrapper}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <ContactForm />
-          </motion.div>
+  <motion.div 
+    className={styles.formWrapper}
+    initial={{ opacity: 0, x: 20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.6 }}
+  >
+    <ContactForm />
+  </motion.div>
 
-          <motion.div 
-            className={styles.quickLinksSection}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h3>Quick Access</h3>
-            <div className={styles.quickLinksGrid}>
-              {quickLinks.map((link, index) => (
-                <motion.a
-                  key={link.title}
-                  href={link.link}
-                  className={styles.quickLink}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -5 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <div className={styles.quickLinkIcon}>{link.icon}</div>
-                  <div className={styles.quickLinkContent}>
-                    <h4>{link.title}</h4>
-                    <p>{link.description}</p>
-                  </div>
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+  <motion.div 
+    className={styles.quickLinksSection}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.4 }}
+  >
+    <motion.h3
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+    >
+      Quick Access
+    </motion.h3>
+    <div className={styles.quickLinksGrid}>
+      {quickLinks.map((link, index) => (
+        <motion.a
+          key={link.title}
+          href={link.link}
+          className={styles.quickLink}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          whileHover={{ 
+            y: -5,
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+          }}
+          transition={{ 
+            delay: index * 0.1,
+            duration: 0.2,
+            ease: "easeOut"
+          }}
+        >
+          <div className={styles.quickLinkIcon}>{link.icon}</div>
+          <div className={styles.quickLinkContent}>
+            <h4>{link.title}</h4>
+            <p>{link.description}</p>
+          </div>
+        </motion.a>
+      ))}
+    </div>
+  </motion.div>
+</div>
       </div>
     </motion.div>
   </section>

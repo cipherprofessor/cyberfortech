@@ -199,7 +199,7 @@ const CourseManagement = () => {
       id: '1',
       title: 'Advanced React Development',
       description: 'Master React with advanced concepts and patterns',
-      instructor: 'John Doe',
+      instructor: 'Arsalan Rayees',
       createdBy: 'Admin User',
       category: 'Web Development',
       level: 'advanced',
@@ -238,7 +238,7 @@ const CourseManagement = () => {
       { month: '2024-04', count: 420 }
     ],
     instructorPerformance: [
-      { instructor: 'John Doe', students: 850, rating: 4.8 },
+      { instructor: 'Arsalan Rayees', students: 850, rating: 4.8 },
       { instructor: 'Jane Smith', students: 720, rating: 4.6 },
       { instructor: 'Mike Johnson', students: 650, rating: 4.7 }
     ]

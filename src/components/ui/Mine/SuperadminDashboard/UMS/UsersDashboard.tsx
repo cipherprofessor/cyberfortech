@@ -40,7 +40,7 @@ const UsersDashboard = () => {
   const users: User[] = [
     {
       id: "1",
-      name: "John Doe",
+      name: "Arsalan Rayees",
       email: "john@example.com",
       joinDate: "2024-01-15",
       lastActive: "2024-01-25",
