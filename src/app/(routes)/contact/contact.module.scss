@@ -1,10 +1,24 @@
-// src/app/(routes)/contact/contact.module.scss
-
-// Main container styles
 .contactSection {
   padding: 4rem 1rem;
-  background: linear-gradient(to bottom, #f8fafc, #ffffff);
+  position: relative;
   min-height: 100vh;
+  background: radial-gradient(
+    circle at top right,
+    rgba(59, 130, 246, 0.1),
+    transparent 40%
+  );
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 400px;
+    background: linear-gradient(150deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+    z-index: -1;
+  }
 
   .container {
     max-width: 1400px;
@@ -12,36 +26,26 @@
   }
 }
 
-// Header styles
 .header {
   text-align: center;
   margin-bottom: 4rem;
   padding: 3rem;
-  background: linear-gradient(120deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.08));
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 1.5rem;
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='currentColor' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-    pointer-events: none;
-  }
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
 
   h2 {
     font-size: 3.5rem;
     font-weight: 800;
-    margin-bottom: 1rem;
     background: linear-gradient(135deg, #2563eb, #4f46e5);
     -webkit-background-clip: text;
     color: transparent;
-    display: inline-block;
     position: relative;
+    display: inline-block;
     
     &::after {
       content: '';
@@ -69,12 +73,10 @@
   }
 }
 
-// Layout styles
 .content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2.5rem;
-  padding: 0 1rem;
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
@@ -87,7 +89,12 @@
   gap: 2.5rem;
 }
 
-// Contact grid styles
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .contactGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -98,18 +105,18 @@
   }
 }
 
-// Contact card styles
 .contactCard {
   background: #ffffff;
   padding: 1.5rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: flex-start;
   gap: 1.25rem;
   position: relative;
   overflow: hidden;
+  border: 1px solid #f1f5f9;
   will-change: transform;
 
   &::before {
@@ -123,8 +130,9 @@
   }
 
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+    border-color: var(--card-color);
   }
 
   .cardIcon {
@@ -162,7 +170,6 @@
   }
 }
 
-// Card color variations
 .colorblue { --card-color: #3b82f6; }
 .colorgreen { --card-color: #10b981; }
 .colorpurple { --card-color: #8b5cf6; }
@@ -170,7 +177,6 @@
 .colorred { --card-color: #ef4444; }
 .colorindigo { --card-color: #6366f1; }
 
-// Description styles
 .description {
   font-size: 0.875rem;
   color: #6b7280;
@@ -179,7 +185,6 @@
   border-top: 1px dashed #e5e7eb;
 }
 
-// Social links styles
 .socialLinks {
   display: flex;
   gap: 1rem;
@@ -190,21 +195,19 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
+
 .socialLink {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1.25rem;
-  border-radius: 0.75rem;
-  text-decoration: none;
-  color: #4b5563;
-  transition: all 0.3s ease;
-  background: #f3f4f6;
-  flex: 1;
   min-width: 180px;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-2px);
+
+    .externalIcon {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
   .icon {
@@ -221,17 +224,12 @@
     width: 1rem;
     height: 1rem;
     opacity: 0;
-    transition: all 0.2s ease;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
     margin-left: auto;
-  }
-
-  &:hover .externalIcon {
-    opacity: 1;
-    transform: translateX(2px);
   }
 }
 
-// Social link variations
 .linkedin {
   &:hover {
     background: #0a66c2;
@@ -253,7 +251,6 @@
   }
 }
 
-// FAQ section styles
 .faqSection {
   background: #ffffff;
   padding: 2rem;
@@ -266,27 +263,18 @@
     color: #1f2937;
     margin-bottom: 1.5rem;
   }
-}
 
-.accordionItem {
-  background: transparent;
-  border: none;
-  margin-bottom: 1rem;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-
-  &[data-state="open"] {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  :global(.accordion-item) {
+    overflow: hidden;
+    transition: all 0.3s ease;
   }
-}
 
-.faqAnswer {
-  padding: 1.25rem;
-  color: #4b5563;
-  font-size: 0.95rem;
-  line-height: 1.6;
+  .faqAnswer {
+    color: #4b5563;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding: 1rem;
+  }
 }
 
 .faqFooter {
@@ -316,27 +304,26 @@
 
   &:hover {
     color: #2563eb;
-    text-decoration: underline;
+    gap: 0.5rem;
   }
 }
 
-// Form wrapper styles
 .formWrapper {
   background: #ffffff;
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 0;
-  padding-bottom: 0;
 
-  h3, .formDescription {
-    display: none;
+  :global(form) {
+    margin-bottom: 0;
   }
 }
 
-// Quick links styles
-.quickLinks {
-  margin-bottom: 2.5rem;
+.quickLinksSection {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 
   h3 {
     font-size: 1.5rem;
@@ -368,9 +355,9 @@
   border: 1px solid #e5e7eb;
 
   &:hover {
-    background: #f8fafc;
-    border-color: #3b82f6;
     transform: translateY(-5px);
+    border-color: #3b82f6;
+    background: linear-gradient(to right, #f8fafc, #f1f5f9);
   }
 
   .quickLinkIcon {
@@ -399,44 +386,40 @@
   }
 }
 
-// Continuation of dark mode styles in contact.module.scss
-
+// Dark mode styles
 :global(.dark) {
+  .contactSection {
+    background: #0f172a;
+
+    &::before {
+      background: linear-gradient(150deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+    }
+  }
+
   .header {
-    background: linear-gradient(120deg, rgba(59, 130, 246, 0.05), rgba(37, 99, 235, 0.05));
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
 
     p {
       color: #9ca3af;
     }
   }
 
-  .contactCard {
+  .contactCard, .socialLinks, .faqSection, .formWrapper, .quickLinksSection {
     background: #1e293b;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-color: #374151;
+  }
 
+  .contactCard {
     &:hover {
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      border-color: var(--card-color);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
 
     .cardContent {
-      h3 {
-        color: #f3f4f6;
-      }
-
-      p {
-        color: #9ca3af;
-      }
+      h3 { color: #f3f4f6; }
+      p { color: #9ca3af; }
     }
-  }
-
-  .description {
-    color: #9ca3af;
-    border-top-color: #374151;
-  }
-
-  .socialLinks {
-    background: #1e293b;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   }
 
   .socialLink {
@@ -444,109 +427,32 @@
     color: #e5e7eb;
 
     &:hover {
-      background: var(--hover-bg);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    span {
-      color: #e5e7eb;
-    }
-
-    .icon {
-      color: #e5e7eb;
-    }
-  }
-
-  .faqSection {
-    background: #1e293b;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-
-    h3 {
-      color: #f3f4f6;
-    }
-  }
-
-  .accordionItem {
-    background: rgba(255, 255, 255, 0.02);
-    box-shadow: none;
-
-    &[data-state="open"] {
-      background: rgba(255, 255, 255, 0.03);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    }
-  }
-
-  .faqAnswer {
-    color: #9ca3af;
-  }
-
-  .faqFooter {
-    border-top-color: #374151;
-
-    p {
-      color: #9ca3af;
-    }
-  }
-
-  .faqLink {
-    color: #60a5fa;
-
-    &:hover {
-      color: #93c5fd;
-    }
-  }
-
-  .formWrapper {
-    background: #1e293b;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  .quickLinks {
-    h3 {
-      color: #f3f4f6;
+      background: var(--hover-bg, #4b5563);
+      color: white;
     }
   }
 
   .quickLink {
     background: #1e293b;
     border-color: #374151;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      background: #273548;
+      background: #2d3748;
       border-color: #3b82f6;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .quickLinkIcon {
-      background: rgba(59, 130, 246, 0.15);
-      color: #60a5fa;
+      background: rgba(59, 130, 246, 0.2);
     }
 
     .quickLinkContent {
-      h4 {
-        color: #f3f4f6;
-      }
-
-      p {
-        color: #9ca3af;
-      }
+      h4 { color: #f3f4f6; }
+      p { color: #9ca3af; }
     }
   }
 
-  // Social media specific hover states in dark mode
-  .linkedin:hover {
-    background: #0a66c2;
-    color: #ffffff;
-  }
-
-  .youtube:hover {
-    background: #ff0000;
-    color: #ffffff;
-  }
-
-  .instagram:hover {
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-    color: #ffffff;
+  .faqSection {
+    h3 { color: #f3f4f6; }
+    .faqAnswer { color: #9ca3af; }
   }
 }

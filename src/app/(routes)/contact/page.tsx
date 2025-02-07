@@ -174,168 +174,166 @@ export default function ContactPage() {
 
   return (
     <section className={styles.contactSection}>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className={styles.container}
+    >
       <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className={styles.container}
+        className={styles.header}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        <motion.div 
-          className={styles.header}
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
         >
-          <h2>Get in Touch</h2>
-          <p>Have questions? We're here to help! Choose your preferred way to connect with us.</p>
-        </motion.div>
+          Get in Touch
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          Have questions? We're here to help! Choose your preferred way to connect with us.
+        </motion.p>
+      </motion.div>
 
-        <div className={styles.content}>
-          <div className={styles.mainContent}>
-            <div className={styles.contactGrid}>
-              {contactInfo.map((info, index) => (
-                <motion.div 
-                  key={info.title}
+      <div className={styles.content}>
+        <div className={styles.mainContent}>
+          <div className={styles.contactGrid}>
+            {contactInfo.map((info, index) => (
+              <motion.div 
+                key={info.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -5 }}
+                transition={{ 
+                  delay: index * 0.1,
+                  duration: 0.3,
+                  type: "spring",
+                  stiffness: 300
+                }}
+                className={`${styles.contactCard} ${styles[`color${info.color}`]}`}
+                onMouseEnter={() => setHoveredCard(info.title)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <div className={styles.cardIcon}>
+                  {info.icon}
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>{info.title}</h3>
+                  {info.details.map((detail, i) => (
+                    <p key={i}>{detail}</p>
+                  ))}
+                  {hoveredCard === info.title && (
+                    <motion.p 
+                      className={styles.description}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      {info.description}
+                    </motion.p>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className={styles.socialLinks}>
+            {socialLinks.map((social, index) => (
+              <Tooltip content={social.description} key={social.name}>
+                <motion.a
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  whileHover={{ y: -3 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`${styles.socialLink} ${styles[social.color]}`}
+                >
+                  {social.icon}
+                  <span>{social.name}</span>
+                  <ExternalLink size={14} className={styles.externalIcon} />
+                </motion.a>
+              </Tooltip>
+            ))}
+          </div>
+
+          <div className={styles.faqSection}>
+            <h3>Frequently Asked Questions</h3>
+            <Accordion selectionMode="multiple">
+              {faqData.map((faq) => (
+                <AccordionItem
+                  key={faq.id}
+                  aria-label={faq.question}
+                  startContent={
+                    <Avatar
+                      isBordered
+                      color={faq.color}
+                      radius="lg"
+                      src={faq.avatar}
+                    />
+                  }
+                  title={faq.question}
+                >
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className={styles.faqAnswer}
+                  >
+                    {faq.answer}
+                  </motion.div>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+
+        <div className={styles.rightSection}>
+          <motion.div 
+            className={styles.formWrapper}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <ContactForm />
+          </motion.div>
+
+          <motion.div 
+            className={styles.quickLinksSection}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h3>Quick Access</h3>
+            <div className={styles.quickLinksGrid}>
+              {quickLinks.map((link, index) => (
+                <motion.a
+                  key={link.title}
+                  href={link.link}
+                  className={styles.quickLink}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -5 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`${styles.contactCard} ${styles[`color${info.color}`]}`}
-                  onMouseEnter={() => setHoveredCard(info.title)}
-                  onMouseLeave={() => setHoveredCard(null)}
                 >
-                  <div className={styles.cardIcon}>
-                    {info.icon}
+                  <div className={styles.quickLinkIcon}>{link.icon}</div>
+                  <div className={styles.quickLinkContent}>
+                    <h4>{link.title}</h4>
+                    <p>{link.description}</p>
                   </div>
-                  <div className={styles.cardContent}>
-                    <h3>{info.title}</h3>
-                    {info.details.map((detail, i) => (
-                      <p key={i}>{detail}</p>
-                    ))}
-                    {hoveredCard === info.title && (
-                      <motion.p 
-                        className={styles.description}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                      >
-                        {info.description}
-                      </motion.p>
-                    )}
-                  </div>
-                </motion.div>
+                </motion.a>
               ))}
             </div>
-
-            <div className={styles.socialLinks}>
-              {socialLinks.map((social, index) => (
-                <Tooltip content={social.description} key={social.name}>
-                  <motion.a
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    whileHover={{ y: -3 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`${styles.socialLink} ${styles[social.color]}`}
-                  >
-                    {social.icon}
-                    <span>{social.name}</span>
-                    <ExternalLink size={14} className={styles.externalIcon} />
-                  </motion.a>
-                </Tooltip>
-              ))}
-            </div>
-            <OfficeLocations />
-
-            <div className={styles.faqSection}>
-              <h3>Frequently Asked Questions</h3>
-              <Accordion selectionMode="multiple">
-                {faqData.map((faq) => (
-                  <AccordionItem
-                    key={faq.id}
-                    aria-label={faq.question}
-                    startContent={
-                      <Avatar
-                        isBordered
-                        color={faq.color}
-                        radius="lg"
-                        src={faq.avatar}
-                      />
-                    }
-                    title={faq.question}
-                    className={styles.accordionItem}
-                  >
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className={styles.faqAnswer}
-                    >
-                      {faq.answer}
-                    </motion.div>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-
-              <motion.div 
-                className={styles.faqFooter}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                <p>
-                  Can't find what you're looking for? 
-                  <motion.span
-                    whileHover={{ x: 5 }}
-                    className={styles.faqLink}
-                  >
-                    Visit our Help Center <ArrowRight size={14} />
-                  </motion.span>
-                </p>
-              </motion.div>
-            </div>
-          </div>
-
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className={styles.formWrapper}
-          >
-            <h3>Send us a Message</h3>
-            <p className={styles.formDescription}>
-              Fill out the form below and we'll get back to you as soon as possible.
-              Your message will be directed to the appropriate team.
-            </p>
-            <ContactForm />
           </motion.div>
-
-          <div className={styles.quickLinks}>
-  <h3>Quick Access</h3>
-  <div className={styles.quickLinksGrid}>
-    {quickLinks.map((link, index) => (
-      <motion.a
-        key={link.title}
-        href={link.link}
-        className={styles.quickLink}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -5 }}
-        transition={{ delay: index * 0.1 }}
-      >
-        <div className={styles.quickLinkIcon}>{link.icon}</div>
-        <div className={styles.quickLinkContent}>
-          <h4>{link.title}</h4>
-          <p>{link.description}</p>
         </div>
-      </motion.a>
-    ))}
-  </div>
-</div>
-
-        </div>
-      </motion.div>
-    </section>
+      </div>
+    </motion.div>
+  </section>
   );
 }
