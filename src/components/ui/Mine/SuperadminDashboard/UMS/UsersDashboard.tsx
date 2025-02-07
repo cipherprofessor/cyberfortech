@@ -370,8 +370,7 @@ const UsersDashboard = () => {
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          // Continuation of
-                          src/components/ui/Mine/UsersDashboard/UsersDashboard.tsx
+                    
                           {user.name}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">

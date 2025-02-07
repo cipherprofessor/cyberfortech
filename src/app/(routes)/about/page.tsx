@@ -1,137 +1,343 @@
 "use client"
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import styles from './about.module.scss';
-import { StatsSection } from './StatsSection/StatsSection';
-import { TeamMember } from './TeamMember/TeamMember';
+
 import { AcUITimeline } from '@/components/ui/AcUI/TimeLine/TimeLineDemo';
 import { AcUiBentoGrid } from '@/components/ui/AcUI/BentoGrid/BentoGrid';
+import { KeyMetrics } from '@/components/home/KeyMetrics/KeyMetrics';
+import { TeamCard } from '@/components/ui/Mine/TeamCard/TeamCard';
+import { TeamGrid } from '@/components/ui/Mine/TeamCard/TeamGrid';
 
 export default function AboutPage() {
-  const team = [
-    {
-      name: "Ayan Ali Dar",
-      role: "Founder & CEO ",
-      image: "/team/ayan.png",
-      bio: "7+ years of experience in Marketing and Business Development",
-      socialLinks: {
-        linkedin: "https://www.linkedin.com/in/cyberfortech/",
-        twitter: "https://twitter.com/johndoe",
-      },
-    },
-    {
-      name: "Mohsin Manzoor Bhat",
-      role: "Instructor - AWS And Full Stack Developer",
-      image: "/team/mohsin.jpg",
-      bio: "3 Years of Experience in Cloud And Full Stack Development",
-      socialLinks: {
-        linkedin: "https://www.linkedin.com/in/bhatmohsin1913/",
-        twitter: "https://twitter.com/johndoe",
-      },
-    },
-    {
-      name: "Priyanka",
-      role: "CFO",
-      image: "/testm/testm2.avif",
-      bio: "5+ years of experience in finance and accounting",
-      socialLinks: {
-        linkedin: "https://linkedin.com/in/johndoe",
-        twitter: "https://twitter.com/johndoe",
-      },
-    },
-  ];
 
-  // const timeline = [
-  //   {
-  //     year: "2020",
-  //     title: "Founded CyberForTech",
-  //     description: "Started with a vision to make cybersecurity education accessible to everyone.",
-  //   },
-  //   {
-  //     year: "2021",
-  //     title: "Launched Pro Courses",
-  //     description: "Introduced advanced certification programs for professionals.",
-  //   },
-  //   {
-  //     year: "2022",
-  //     title: "Global Expansion",
-  //     description: "Reached students from over 50 countries worldwide.",
-  //   },
-  //   {
-  //     year: "2023",
-  //     title: "Industry Partnerships",
-  //     description: "Collaborated with leading tech companies for job placements.",
-  //   },
-  // ];
+  // For a single member
+const singleMember = {
+  name: "Ayan Ali Dar",
+  role: "Founder & CEO",
+  image: "/team/ayan.png",
+  bio: "7+ years of experience in Marketing and Business Development",
+  specialization: ["Marketing Strategy", "Business Development"],
+  experience: "7+ Years Experience",
+  achievements: ["Led 100+ successful marketing campaigns"],
+  location: "Cyber City, CC",
+  socialLinks: {
+    linkedin: "https://www.linkedin.com/in/cyberfortech/",
+    twitter: "https://twitter.com/johndoe",
+  }
+};
+
+// For multiple members
+const teamMembers = [
+  {
+    name: "Ayan Ali Dar",
+    cardColor: "purple" as 'purple',
+    role: "Founder & CEO",
+    image: "/team/ayan.png",
+    bio: "7+ years of experience in Marketing and Business Development",
+    // specialization: [
+    //   "Marketing Strategy",
+      // "Business Development",
+      // "Leadership",
+      // "Digital Marketing"
+    // ],
+    experience: "Marketing Expert",
+    achievements: [
+      // "Led 100+ successful marketing campaigns",
+      "Grew business revenue by 200%",
+      "Built partnerships with 50+ companies"
+    ],
+    location: "Cyber City, CC",
+    projects: 150,
+    // availability: "Available for consulting",
+    certifications: [
+      "Digital Marketing Expert",
+      "Business Strategy Specialist"
+    ],
+    contactInfo: {
+      email: "ayan@cyberfortech.com",
+      skype: "ayan.skype"
+    },
+    socialLinks: {
+      linkedin: "https://www.linkedin.com/in/cyberfortech/",
+      twitter: "https://twitter.com/johndoe",
+      github: "https://github.com/cyberfortech",
+      website: "https://cyberfortech.com",
+      medium: "https://medium.com/@cyberfortech"
+    }
+  },
+  {
+    name: "Mohsin Manzoor Bhat",
+    cardColor: "blue" as 'blue',
+    role: "AWS & Full Stack Developer",
+    image: "/team/mohsin.jpg",
+    bio: "5+ Years of Experience in Cloud And Full Stack Development",
+    // specialization: [
+    //   "Marketing Strategy",
+      // "Business Development",
+      // "Leadership",
+      // "Digital Marketing"
+    // ],
+    experience: "Web Dev Expert",
+    achievements: [
+      // "Led 100+ successful marketing campaigns",
+      "Build 50+ Full Stack Apps",
+      "AWS Certified Solutions Architect"
+    ],
+    location: "Chennai, India",
+    projects: 100,
+    // availability: "Available for consulting",
+    certifications: [
+      "Digital Marketing Expert",
+      "Business Strategy Specialist"
+    ],
+    contactInfo: {
+      email: "ayan@cyberfortech.com",
+      skype: "ayan.skype"
+    },
+    socialLinks: {
+      linkedin: "https://www.linkedin.com/in/cyberfortech/",
+      twitter: "https://twitter.com/johndoe",
+      github: "https://github.com/cyberfortech",
+      website: "https://cyberfortech.com",
+      medium: "https://medium.com/@cyberfortech"
+    }
+  },
+  {
+    name: "Arsalan Rayees",
+    cardColor: "orange" as 'orange',
+    role: "AI & Machine Learning Engineer",
+    image: "/team/arsalan.jpg",
+    bio: "2+ years of experience in AI and Machine Learning",
+    // specialization: [
+    //   "AWS Cloud",
+    //   "Full Stack",
+    //   "DevOps",
+    //   "System Architecture"
+    // ],
+    experience: "AI Expert",
+    achievements: [
+      // "100+ Cloud Deployments",
+      "Developed 15+ AI Models",
+      "Published 10+ Research Papers"
+    ],
+    location: "Tangmarg",
+    projects: 25,
+    // availability: "Available for Projects",
+    certifications: [
+      "AWS Solutions Architect",
+      "Full Stack Developer"
+    ],
+    contactInfo: {
+      email: "mohsin@cyberfortech.com",
+      skype: "mohsin.skype"
+    },
+    socialLinks: {
+      linkedin: "https://www.linkedin.com/in/bhatmohsin1913/",
+      github: "https://github.com/mohsinbhat",
+      website: "https://mohsinbhat.dev"
+    }
+  },
+  {
+    name: "Areeba Bhat",
+    cardColor: "green" as 'green',
+    role: "Cybersecurity Engineer",
+    image: "/testm/testm1.avif",
+    bio: "3+ years of experience in Cybersecurity and Ethical Hacking",
+    // specialization: [
+    //   "AWS Cloud",
+    //   "Full Stack",
+    //   "DevOps",
+    //   "System Architecture"
+    // ],
+    experience: "Cybersecurity Expert",
+    achievements: [
+      // "100+ Cloud Deployments",
+      "Performed 50+ Penetration Tests",
+      "Led 10+ Security Audits"
+    ],
+    location: "Kashmir, India",
+    projects: 35,
+    // availability: "Available for Projects",
+    certifications: [
+      "AWS Solutions Architect",
+      "Full Stack Developer"
+    ],
+    contactInfo: {
+      email: "mohsin@cyberfortech.com",
+      skype: "mohsin.skype"
+    },
+    socialLinks: {
+      linkedin: "https://www.linkedin.com/in/bhatmohsin1913/",
+      github: "https://github.com/mohsinbhat",
+      website: "https://mohsinbhat.dev"
+    }
+  }
+
+];
+
+
 
   return (
     <div className={styles.aboutContainer}>
-      {/* <section className={styles.hero}>
-        <div className={styles.content}>
-          <h1>About CyberForTech</h1>
-          <p>
-            Empowering the next generation of cybersecurity professionals through
-            expert-led education and hands-on training.
-          </p>
+      {/* Hero Section */}
+      <section className={styles.hero}>
+        <motion.div 
+          className={styles.heroContent}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1>Empowering the Future of Cybersecurity</h1>
+          <p>Building a safer digital world through education, innovation, and community.</p>
+        </motion.div>
+        <div className={styles.heroBackground}>
+          <div className={styles.overlay}></div>
+          <Image
+            src="/cyber1.png" // Add a relevant background image
+            alt="Cybersecurity Background"
+            fill
+            className={styles.bgImage}
+            priority
+          />
         </div>
-      </section> */}
-      
+      </section>
 
+      {/* Mission Section with Grid */}
       <section className={styles.mission}>
-        <div className={styles.grid}>
-          <div className={styles.imageContainer}>
-            <Image
-              src="/cyber1.png"
-              alt="Our Mission"
-              fill
-              className={styles.image}
-            />
-          </div>
-          <div className={styles.text}>
-            <h2>Our Mission</h2>
-            <p>
+        <div className={styles.missionHeader}>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            Our Mission
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className={styles.missionSubtext}
+          >
+            Bridging the cybersecurity skills gap with practical, industry-ready education
+          </motion.p>
+        </div>
+
+        <div className={styles.missionGrid}>
+          <motion.div 
+            className={styles.missionContent}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <p className={styles.missionText}>
               At CyberForTech, we believe that cybersecurity education should be
               accessible, practical, and up-to-date with the latest industry trends.
               Our mission is to bridge the cybersecurity skills gap by providing
               high-quality training that combines theoretical knowledge with
               hands-on experience.
             </p>
-            <div className={styles.values}>
-              <div className={styles.value}>
+            <div className={styles.valueCards}>
+              <motion.div 
+                className={styles.valueCard}
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <h3>Quality Education</h3>
                 <p>Expert-led courses with real-world applications</p>
-              </div>
-              <div className={styles.value}>
+              </motion.div>
+              <motion.div 
+                className={styles.valueCard}
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <h3>Practical Experience</h3>
                 <p>Hands-on labs and real-world scenarios</p>
-              </div>
-              <div className={styles.value}>
+              </motion.div>
+              <motion.div 
+                className={styles.valueCard}
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <h3>Community Support</h3>
                 <p>Active learning community and mentorship</p>
-              </div>
+              </motion.div>
+              <motion.div 
+                className={styles.valueCard}
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <h3>Community Support</h3>
+                <p>Active learning community and mentorship</p>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
+          <motion.div 
+            className={styles.missionImage}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+          >
+            <Image
+              src="/cyber1.png"
+              alt="Our Mission"
+              fill
+              className={styles.image}
+            />
+          </motion.div>
         </div>
       </section>
 
-      <StatsSection />
-
-      <section className={styles.BentoGrid}>
-      <AcUiBentoGrid/>
+      {/* Stats Section */}
+      <section className={styles.statsSection}>
+        <KeyMetrics />
       </section>
 
-      <section className={styles.journey}>
-        {/* <h2>Our Journey</h2>
-        <Timeline events={timeline} /> */}
+      {/* Bento Grid Section */}
+      <section className={styles.bentoSection}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={styles.bentoHeader}
+        >
+          <h2>Why Choose Us</h2>
+          <p>Discover what makes our approach to cybersecurity education unique</p>
+        </motion.div>
+        <AcUiBentoGrid />
+      </section>
+
+      {/* Journey Timeline */}
+      <section className={styles.journeySection}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={styles.journeyHeader}
+        >
+          <h2>Our Journey</h2>
+          <p>The milestones that shaped our growth</p>
+        </motion.div>
         <AcUITimeline />
       </section>
 
-      <section className={styles.team}>
-        <h2>Meet Our Team</h2>
-        <div className={styles.teamGrid}>
-          {team.map((member) => (
-            <TeamMember key={member.name} member={member} />
-          ))}
-        </div>
+      {/* Team Section */}
+      <section className={styles.teamSection}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={styles.sectionHeader}
+        >
+          <h2>Meet Our Team</h2>
+          <p>The experts behind CyberForTech's success</p>
+        </motion.div>
+
+        <TeamGrid 
+          members={teamMembers}
+          centered={false} // Set to true if you want centered layout
+        />
       </section>
     </div>
   );

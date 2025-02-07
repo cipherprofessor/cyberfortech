@@ -18,35 +18,40 @@ const metrics = [
     value: 10000,
     suffix: '+',
     label: 'Satisfied Students',
-    description: 'Globally trained professionals'
+    description: 'Globally trained professionals',
+    color: 'blue'
   },
   {
     icon: Award,
     value: 50,
     suffix: '+',
     label: 'Industry Awards',
-    description: 'Recognition for excellence'
+    description: 'Recognition for excellence',
+    color: 'purple'
   },
   {
     icon: BookOpen,
     value: 100,
     suffix: '+',
     label: 'Courses',
-    description: 'In-depth learning paths'
+    description: 'In-depth learning paths',
+    color: 'green'
   },
   {
     icon: Briefcase,
     value: 85,
     suffix: '%',
     label: 'Placement Rate',
-    description: 'Career success stories'
+    description: 'Career success stories',
+    color: 'orange'
   },
   {
     icon: GraduationCap,
     value: 200,
     suffix: '+',
     label: 'Expert Trainers',
-    description: 'Industry professionals'
+    description: 'Industry professionals',
+    color: 'red'
   }
 ];
 
@@ -92,7 +97,7 @@ export function KeyMetrics() {
               visible: { opacity: 1, y: 0 }
             }}
           >
-            Delivering excellence in cybersecurity education worldwide
+            Building the future of cybersecurity education
           </motion.p>
         </div>
 
@@ -100,7 +105,7 @@ export function KeyMetrics() {
           {metrics.map((metric, index) => (
             <motion.div
               key={index}
-              className={styles.metricCard}
+              className={`${styles.metricCard} ${styles[`color${metric.color}`]}`}
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: {
@@ -113,8 +118,11 @@ export function KeyMetrics() {
                 }
               }}
               whileHover={{ 
-                scale: 1.05,
-                transition: { duration: 0.2 } 
+                y: -8,
+                transition: { 
+                  duration: 0.2,
+                  ease: "easeOut"
+                }
               }}
             >
               <div className={styles.iconWrapper}>
@@ -133,27 +141,20 @@ export function KeyMetrics() {
                 />
                 {metric.suffix}
               </motion.div>
-              <h3 className={styles.label}>{metric.label}</h3>
-              <p className={styles.description}>{metric.description}</p>
+              <motion.div 
+                className={styles.content}
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : {}}
+                transition={{ delay: index * 0.2 }}
+              >
+                <h3 className={styles.label}>{metric.label}</h3>
+                <p className={styles.description}>{metric.description}</p>
+                <div className={styles.chip}>View Details</div>
+              </motion.div>
             </motion.div>
           ))}
         </div>
       </motion.div>
-
-      <div className={styles.background}>
-        <motion.div
-          className={styles.gradientOrb}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.5, 0.8, 0.5],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      </div>
     </section>
   );
 }
