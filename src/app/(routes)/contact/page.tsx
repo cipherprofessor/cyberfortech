@@ -18,6 +18,7 @@ import { Accordion, AccordionItem, Avatar, Tooltip } from "@heroui/react";
 import { ContactForm } from '@/app/(routes)/contact/ContactForm/ContactForm';
 import styles from './contact.module.scss';
 import { Calendar, FileCheck, BookOpen, Shield } from 'lucide-react';
+import { OfficeLocations } from './Map/Map';
 
 
 type FaqColor = "primary" | "success" | "warning" | "danger";
@@ -245,6 +246,7 @@ export default function ContactPage() {
                 </Tooltip>
               ))}
             </div>
+            <OfficeLocations />
 
             <div className={styles.faqSection}>
               <h3>Frequently Asked Questions</h3>
