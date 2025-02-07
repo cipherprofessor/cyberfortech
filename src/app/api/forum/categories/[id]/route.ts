@@ -14,12 +14,20 @@ export async function PUT(
   const tx = await client.transaction();
   
   try {
-    const { id } = params;
+    // Ensure params exists and await it
+    if (!params?.id) {
+      return NextResponse.json(
+        { error: 'Category ID is required' },
+        { status: 400 }
+      );
+    }
+    
+    const id = params.id;
     const body = await request.json();
     const {
       name,
       description,
-      icon,
+      icon, 
       color,
       display_order,
       is_active
