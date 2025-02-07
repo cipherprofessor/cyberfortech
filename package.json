@@ -81,6 +81,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-leaflet": "^5.0.0",
+    "react-phone-input-2": "^2.15.1",
     "recharts": "^2.15.0",
     "sass": "^1.83.4",
     "simple-icons": "^14.4.0",

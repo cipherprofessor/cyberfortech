@@ -238,3 +238,99 @@
     color: #f87171;
   }
 }
+
+// ContactForm.module.scss
+
+// ... (keep your existing styles)
+
+// Phone input styles
+.phoneContainer {
+  width: 100%;
+}
+
+.phoneInput {
+  width: 100% !important;
+  height: 42px !important;
+  padding: 0.75rem 1rem 0.75rem 3.5rem !important;
+  background: transparent !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.95rem !important;
+  color: #1f2937 !important;
+  transition: all 0.3s ease !important;
+
+  &:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+  }
+
+  &::placeholder {
+    color: #9ca3af !important;
+  }
+}
+
+.phoneButton {
+  background: transparent !important;
+  border: 1px solid #e5e7eb !important;
+  border-right: none !important;
+  border-radius: 0.5rem 0 0 0.5rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.phoneButtonHover {
+  background: #f3f4f6 !important;
+}
+
+.phoneDropdown {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+  margin-top: 4px !important;
+}
+
+.countryOption {
+  padding: 0.5rem 1rem !important;
+  
+  &:hover {
+    background: #f3f4f6 !important;
+  }
+}
+
+.countryOptionHighlight {
+  background: #f3f4f6 !important;
+}
+
+// Dark mode styles
+[data-theme='dark'] {
+  .phoneInput {
+    color: #f3f4f6 !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: #374151 !important;
+
+    &::placeholder {
+      color: #6b7280 !important;
+    }
+  }
+
+  .phoneButton {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: #374151 !important;
+  }
+
+  .phoneButtonHover {
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .phoneDropdown {
+    background: #1e293b !important;
+    border-color: #374151 !important;
+  }
+
+  .countryOption {
+    &:hover, &.countryOptionHighlight {
+      background: #263449 !important;
+    }
+  }
+}

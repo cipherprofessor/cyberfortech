@@ -1,15 +1,27 @@
 "use client"
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Send, User, Mail, MessageSquare, FileText, Loader2, MessageCircle } from 'lucide-react';
+import { 
+  Send, 
+  User, 
+  Mail, 
+  MessageSquare, 
+  FileText, 
+  Loader2, 
+  MessageCircle,
+  Phone 
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import styles from './ContactForm.module.scss';
 import { Alert } from '@heroui/react';
 
 type FormData = {
   name: string;
   email: string;
+  phone?: string;
   subject: string;
   message: string;
 };
@@ -18,6 +30,7 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [phone, setPhone] = useState("91"); // Default to India
 
   const {
     register,
@@ -31,9 +44,13 @@ export function ContactForm() {
     setSubmitStatus(null);
 
     try {
-      await axios.post('/api/contact', data);
+      await axios.post('/api/contact', {
+        ...data,
+        phone: phone || undefined
+      });
       setSubmitStatus('success');
       reset();
+      setPhone("91"); // Reset phone to default
     } catch (error) {
       setSubmitStatus('error');
     } finally {
@@ -51,8 +68,7 @@ export function ContactForm() {
 
   return (
     <>
-
-    <div className={styles.formHeader}>
+      <div className={styles.formHeader}>
         <MessageCircle className={styles.headerIcon} />
         <div className={styles.headerText}>
           <h2>Send us a Message</h2>
@@ -60,234 +76,286 @@ export function ContactForm() {
         </div>
       </div>
    
-    <motion.form 
-      className={styles.form} 
-      onSubmit={handleSubmit(onSubmit)}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.div 
-        className={styles.formGroup}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.1 }}
+      <motion.form 
+        className={styles.form} 
+        onSubmit={handleSubmit(onSubmit)}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        <label htmlFor="name">
-          <User size={18} className={styles.icon} />
-          Full Name
-        </label>
-        <div className={`${styles.inputWrapper} ${focusedField === 'name' ? styles.focused : ''}`}>
-          <input
-            id="name"
-            type="text"
-            placeholder="John Doe"
-            {...register('name', { 
-              required: 'Name is required',
-              minLength: {
-                value: 2,
-                message: 'Name must be at least 2 characters'
-              }
-            })}
-            className={errors.name ? styles.error : ''}
-            onFocus={() => handleFocus('name')}
-            onBlur={handleBlur}
-          />
-          <div className={styles.movingBorder} />
-        </div>
-        <AnimatePresence>
-          {errors.name && (
-            <motion.span 
-              className={styles.errorMessage}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              {errors.name.message}
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      <motion.div 
-        className={styles.formGroup}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <label htmlFor="email">
-          <Mail size={18} className={styles.icon} />
-          Email Address
-        </label>
-        <div className={`${styles.inputWrapper} ${focusedField === 'email' ? styles.focused : ''}`}>
-          <input
-            id="email"
-            type="email"
-            placeholder="example@email.com"
-            {...register('email', {
-              required: 'Email is required',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email address'
-              }
-            })}
-            className={errors.email ? styles.error : ''}
-            onFocus={() => handleFocus('email')}
-            onBlur={handleBlur}
-          />
-          <div className={styles.movingBorder} />
-        </div>
-        <AnimatePresence>
-          {errors.email && (
-            <motion.span 
-              className={styles.errorMessage}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              {errors.email.message}
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      <motion.div 
-        className={styles.formGroup}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <label htmlFor="subject">
-          <FileText size={18} className={styles.icon} />
-          Subject
-        </label>
-        <div className={`${styles.inputWrapper} ${focusedField === 'subject' ? styles.focused : ''}`}>
-          <input
-            id="subject"
-            type="text"
-            placeholder="How can we help you?"
-            {...register('subject', { 
-              required: 'Subject is required',
-              minLength: {
-                value: 5,
-                message: 'Subject must be at least 5 characters'
-              }
-            })}
-            className={errors.subject ? styles.error : ''}
-            onFocus={() => handleFocus('subject')}
-            onBlur={handleBlur}
-          />
-          <div className={styles.movingBorder} />
-        </div>
-        <AnimatePresence>
-          {errors.subject && (
-            <motion.span 
-              className={styles.errorMessage}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              {errors.subject.message}
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      <motion.div 
-        className={styles.formGroup}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4 }}
-      >
-        <label htmlFor="message">
-          <MessageSquare size={18} className={styles.icon} />
-          Message
-        </label>
-        <div className={`${styles.inputWrapper} ${focusedField === 'message' ? styles.focused : ''}`}>
-          <textarea
-            id="message"
-            placeholder="Write your message here..."
-            {...register('message', {
-              required: 'Message is required',
-              minLength: {
-                value: 10,
-                message: 'Message must be at least 10 characters'
-              }
-            })}
-            rows={5}
-            className={errors.message ? styles.error : ''}
-            onFocus={() => handleFocus('message')}
-            onBlur={handleBlur}
-          />
-          <div className={styles.movingBorder} />
-        </div>
-        <AnimatePresence>
-          {errors.message && (
-            <motion.span 
-              className={styles.errorMessage}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              {errors.message.message}
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      <AnimatePresence>
-        {submitStatus === 'success' && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Alert
-              color="success"
-              description="Thank you for your message! We'll get back to you soon."
-              title="Message Sent"
-              variant="faded"
+        {/* Name Field */}
+        <motion.div 
+          className={styles.formGroup}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <label htmlFor="name">
+            <User size={18} className={styles.icon} />
+            Full Name (Optional)
+          </label>
+          <div className={`${styles.inputWrapper} ${focusedField === 'name' ? styles.focused : ''}`}>
+            <input
+              id="name"
+              type="text"
+              placeholder="John Doe"
+              {...register('name', { 
+                minLength: {
+                  value: 2,
+                  message: 'Name must be at least 2 characters'
+                }
+              })}
+              className={errors.name ? styles.error : ''}
+              onFocus={() => handleFocus('name')}
+              onBlur={handleBlur}
             />
-          </motion.div>
-        )}
+          </div>
+          <AnimatePresence>
+            {errors.name && (
+              <motion.span 
+                className={styles.errorMessage}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                {errors.name.message}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.div>
 
-        {submitStatus === 'error' && (
-          <motion.div
-            className={styles.errorAlert}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-          >
-            Sorry, there was an error sending your message. Please try again.
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Email Field */}
+        <motion.div 
+          className={styles.formGroup}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <label htmlFor="email">
+            <Mail size={18} className={styles.icon} />
+            Email Address
+          </label>
+          <div className={`${styles.inputWrapper} ${focusedField === 'email' ? styles.focused : ''}`}>
+            <input
+              id="email"
+              type="email"
+              placeholder="example@email.com"
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email address'
+                }
+              })}
+              className={errors.email ? styles.error : ''}
+              onFocus={() => handleFocus('email')}
+              onBlur={handleBlur}
+            />
+          </div>
+          <AnimatePresence>
+            {errors.email && (
+              <motion.span 
+                className={styles.errorMessage}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                {errors.email.message}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.div>
 
-      <motion.button 
-        type="submit" 
-        className={styles.submitButton}
-        disabled={isSubmitting}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        {isSubmitting ? (
-          <>
-            <Loader2 className={`${styles.icon} ${styles.spin}`} />
-            Sending...
-          </>
-        ) : (
-          <>
-            Send Message
-            <Send className={styles.icon} />
-          </>
-        )}
-      </motion.button>
-    </motion.form>
+        {/* Phone Field */}
+        <motion.div 
+          className={styles.formGroup}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <label htmlFor="phone">
+            <Phone size={18} className={styles.icon} />
+            Phone Number (Optional)
+          </label>
+          <div className={`${styles.inputWrapper} ${focusedField === 'phone' ? styles.focused : ''}`}>
+          <PhoneInput
+  country={'in'}
+  value={phone}
+  onChange={(phone) => setPhone(phone)}
+  inputProps={{
+    id: 'phone',
+    onFocus: () => handleFocus('phone'),
+    onBlur: handleBlur,
+    maxLength: 20,
+    placeholder: 'Enter phone number'
+  }}
+  containerStyle={{ width: '100%' }}
+  inputStyle={{
+    width: '100%',
+    height: '42px',
+    padding: '0.75rem 1rem 0.75rem 3.5rem',
+    background: 'transparent',
+    border: '1px solid #e5e7eb',
+    borderRadius: '0.5rem',
+    fontSize: '0.95rem',
+    color: '#1f2937'
+  }}
+  buttonStyle={{
+    background: 'transparent',
+    border: '1px solid #e5e7eb',
+    borderRight: 'none',
+    borderRadius: '0.5rem 0 0 0.5rem'
+  }}
+  dropdownStyle={{
+    background: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '0.5rem',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+    marginTop: '4px'
+  }}
+/>
+          </div>
+        </motion.div>
+
+        {/* Subject Field */}
+        <motion.div 
+          className={styles.formGroup}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <label htmlFor="subject">
+            <FileText size={18} className={styles.icon} />
+            Subject
+          </label>
+          <div className={`${styles.inputWrapper} ${focusedField === 'subject' ? styles.focused : ''}`}>
+            <input
+              id="subject"
+              type="text"
+              placeholder="How can we help you?"
+              {...register('subject', { 
+                required: 'Subject is required',
+                minLength: {
+                  value: 5,
+                  message: 'Subject must be at least 5 characters'
+                }
+              })}
+              className={errors.subject ? styles.error : ''}
+              onFocus={() => handleFocus('subject')}
+              onBlur={handleBlur}
+            />
+          </div>
+          <AnimatePresence>
+            {errors.subject && (
+              <motion.span 
+                className={styles.errorMessage}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                {errors.subject.message}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Message Field */}
+        <motion.div 
+          className={styles.formGroup}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <label htmlFor="message">
+            <MessageSquare size={18} className={styles.icon} />
+            Message
+          </label>
+          <div className={`${styles.inputWrapper} ${focusedField === 'message' ? styles.focused : ''}`}>
+            <textarea
+              id="message"
+              placeholder="Write your message here..."
+              {...register('message', {
+                required: 'Message is required',
+                minLength: {
+                  value: 10,
+                  message: 'Message must be at least 10 characters'
+                }
+              })}
+              rows={5}
+              className={errors.message ? styles.error : ''}
+              onFocus={() => handleFocus('message')}
+              onBlur={handleBlur}
+            />
+          </div>
+          <AnimatePresence>
+            {errors.message && (
+              <motion.span 
+                className={styles.errorMessage}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                {errors.message.message}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Alert Messages */}
+        <AnimatePresence>
+          {submitStatus === 'success' && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Alert
+                color="success"
+                description="Thank you for your message! We'll get back to you soon."
+                title="Message Sent"
+                variant="faded"
+              />
+            </motion.div>
+          )}
+
+          {submitStatus === 'error' && (
+            <motion.div
+              className={styles.errorAlert}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              Sorry, there was an error sending your message. Please try again.
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Submit Button */}
+        <motion.button 
+          type="submit" 
+          className={styles.submitButton}
+          disabled={isSubmitting}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className={`${styles.icon} ${styles.spin}`} />
+              Sending...
+            </>
+          ) : (
+            <>
+              Send Message
+              <Send className={styles.icon} />
+            </>
+          )}
+        </motion.button>
+      </motion.form>
     </>
   );
 }

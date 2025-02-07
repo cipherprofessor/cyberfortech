@@ -216,7 +216,7 @@
   background: #ffffff;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px #3b82f61a;
 
   h3 {
     font-size: 1.5rem;
@@ -273,7 +273,7 @@
   background: #ffffff;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px #3b82f61a;
 
   :global(form) {
     margin-bottom: 0;
@@ -282,9 +282,9 @@
 
 .quickLinksSection {
   background: #ffffff;
-  padding: 2rem;
+  padding: 1rem 2rem 2rem ;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px #3b82f61a;
 
   h3 {
     font-size: 1.5rem;
@@ -418,7 +418,7 @@
   padding: 1.5rem;
   background: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px #3b82f61a;
   border: 1px solid #f1f5f9;
 }
 
@@ -548,7 +548,7 @@
   background: #ffffff;
   padding: 1.5rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 8px 32px #3b82f61a;
   display: flex;
   align-items: flex-start;
   gap: 1.25rem;
@@ -619,8 +619,6 @@
 
 
 
-
-// First, reset the grid container
 .contactGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -631,13 +629,6 @@
   }
 }
 
-// Wrapper for each card to contain the hover effect
-.cardWrapper {
-  position: relative;
-  height: fit-content;
-}
-
-// Card styles with isolated hover effects
 .contactCard {
   background: #ffffff;
   padding: 1.5rem;
@@ -648,33 +639,54 @@
   align-items: flex-start;
   gap: 1.25rem;
   position: relative;
-  isolation: isolate;
-  
-  // Use margin instead of transform for hover lift
-  margin: 0;
-  transition: 
-    margin 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+  overflow: hidden;
+  transform: translateZ(0);
+  transition: all 0.3s ease;
 
+  // Curved line on the left
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 6px;
     height: 100%;
     background: var(--card-color);
+    border-radius: 0 4px 4px 0;
+    opacity: 0.8;
+  }
+
+  // Gradient overlay for hover effect
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(var(--card-color-rgb), 0.03) 40%,
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
   &:hover {
-    margin-top: -4px;
-    margin-bottom: 4px;
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     border-color: var(--card-color);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+
+    &::before {
+      opacity: 1;
+    }
+
+    &::after {
+      opacity: 1;
+    }
 
     .cardIcon {
-      transform: scale(1.05);
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 4px 12px rgba(var(--card-color-rgb), 0.2);
     }
   }
 
@@ -688,12 +700,16 @@
     border-radius: 0.75rem;
     color: white;
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
   }
 
   .cardContent {
     flex: 1;
     min-width: 0;
+    position: relative;
+    z-index: 1;
 
     h3 {
       font-size: 1.125rem;
@@ -715,13 +731,31 @@
   }
 }
 
-// Color variations remain the same
-.colorblue { --card-color: #3b82f6; }
-.colorgreen { --card-color: #10b981; }
-.colorpurple { --card-color: #8b5cf6; }
-.colororange { --card-color: #f59e0b; }
-.colorred { --card-color: #ef4444; }
-.colorindigo { --card-color: #6366f1; }
+// Color variations with RGB values for opacity
+.colorblue { 
+  --card-color: #3b82f6; 
+  --card-color-rgb: 59, 130, 246;
+}
+.colorgreen { 
+  --card-color: #10b981; 
+  --card-color-rgb: 16, 185, 129;
+}
+.colorpurple { 
+  --card-color: #8b5cf6; 
+  --card-color-rgb: 139, 92, 246;
+}
+.colororange { 
+  --card-color: #f59e0b; 
+  --card-color-rgb: 245, 158, 11;
+}
+.colorred { 
+  --card-color: #ef4444; 
+  --card-color-rgb: 239, 68, 68;
+}
+.colorindigo { 
+  --card-color: #6366f1; 
+  --card-color-rgb: 99, 102, 241;
+}
 
 // Dark mode styles
 :global(.dark) {
@@ -730,8 +764,17 @@
     border-color: #334155;
 
     &:hover {
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
       background: #263449;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+
+      &::after {
+        background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(var(--card-color-rgb), 0.1) 40%,
+          transparent 60%
+        );
+      }
     }
 
     .cardContent {
@@ -740,3 +783,4 @@
     }
   }
 }
+
