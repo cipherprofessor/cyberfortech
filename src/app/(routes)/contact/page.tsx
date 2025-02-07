@@ -12,7 +12,8 @@ import {
   Clock,
   MessageSquare,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  Twitter
 } from 'lucide-react';
 import { Accordion, AccordionItem, Avatar, Tooltip } from "@heroui/react";
 import { ContactForm } from '@/app/(routes)/contact/ContactForm/ContactForm';
@@ -169,6 +170,13 @@ export default function ContactPage() {
       name: "Instagram",
       description: "Behind the scenes & community",
       color: "instagram"
+    },
+    {
+      icon: <Twitter />,
+      url: "https://instagram.com/cyberfortech",
+      name: "Twitter",
+      description: "Latest updates & announcements",
+      color: "twitter"
     }
   ];
 
@@ -204,43 +212,37 @@ export default function ContactPage() {
       <div className={styles.content}>
         <div className={styles.mainContent}>
           <div className={styles.contactGrid}>
-            {contactInfo.map((info, index) => (
-              <motion.div 
-                key={info.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -5 }}
-                transition={{ 
-                  delay: index * 0.1,
-                  duration: 0.3,
-                  type: "spring",
-                  stiffness: 300
-                }}
-                className={`${styles.contactCard} ${styles[`color${info.color}`]}`}
-                onMouseEnter={() => setHoveredCard(info.title)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <div className={styles.cardIcon}>
-                  {info.icon}
-                </div>
-                <div className={styles.cardContent}>
-                  <h3>{info.title}</h3>
-                  {info.details.map((detail, i) => (
-                    <p key={i}>{detail}</p>
-                  ))}
-                  {hoveredCard === info.title && (
-                    <motion.p 
-                      className={styles.description}
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                    >
-                      {info.description}
-                    </motion.p>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+          {contactInfo.map((info, index) => (
+  <div className={styles.cardWrapper} key={info.title}>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+      className={`${styles.contactCard} ${styles[`color${info.color}`]}`}
+      onMouseEnter={() => setHoveredCard(info.title)}
+      onMouseLeave={() => setHoveredCard(null)}
+    >
+      <div className={styles.cardIcon}>
+        {info.icon}
+      </div>
+      <div className={styles.cardContent}>
+        <h3>{info.title}</h3>
+        {info.details.map((detail, i) => (
+          <p key={i}>{detail}</p>
+        ))}
+        {hoveredCard === info.title && (
+          <motion.p 
+            className={styles.description}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            {info.description}
+          </motion.p>
+        )}
+      </div>
+    </motion.div>
+  </div>
+))}
           </div>
 
           <div className={styles.socialLinks}>

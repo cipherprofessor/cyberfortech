@@ -29,7 +29,7 @@
 .header {
   text-align: center;
   margin-bottom: 4rem;
-  padding: 3rem;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -95,77 +95,101 @@
   gap: 2rem;
 }
 
+
+// Color variations (no changes)
+.colorblue { --card-color: #3b82f6; }
+.colorgreen { --card-color: #10b981; }
+.colorpurple { --card-color: #8b5cf6; }
+.colororange { --card-color: #f59e0b; }
+.colorred { --card-color: #ef4444; }
+.colorindigo { --card-color: #6366f1; }
+
+// Dark mode
+:global(.dark) {
+  .contactCard {
+    background: #1e293b;
+    border-color: #334155;
+
+    &:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      background: #263449;
+    }
+
+    .cardContent {
+      h3 { color: #f3f4f6; }
+      p { color: #9ca3af; }
+    }
+  }
+}
+
+// Grid container to prevent hover effects from affecting adjacent cards
 .contactGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.25rem;
+  margin: 0;
+  padding: 0;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
 }
 
-.contactCard {
-  background: #ffffff;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #f1f5f9;
-  will-change: transform;
+// Dark mode adjustments
+:global(.dark) {
+  .contactCard {
+    background: #1e293b;
+    border-color: #334155;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--card-color);
-  }
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
-    border-color: var(--card-color);
-  }
-
-  .cardIcon {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--card-color);
-    border-radius: 0.75rem;
-    color: white;
-    flex-shrink: 0;
-  }
-
-  .cardContent {
-    flex: 1;
-
-    h3 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #1f2937;
-      margin-bottom: 0.75rem;
+    &:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      background: #263449;
     }
 
-    p {
-      color: #6b7280;
-      font-size: 0.875rem;
-      line-height: 1.5;
-      margin-bottom: 0.25rem;
+    .cardContent {
+      h3 { color: #f3f4f6; }
+      p { color: #9ca3af; }
+    }
+  }
+}
 
-      &:last-child {
-        margin-bottom: 0;
+@keyframes cardShine {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  50% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%) skewX(-15deg);
+  }
+}
+
+// Dark mode adjustments
+:global(.dark) {
+  .contactCard {
+    background: #1e293b;
+    border-color: #334155;
+
+    &:hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+      background: #263449;
+
+      &::after {
+        background: linear-gradient(
+          120deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.1) 50%,
+          transparent 100%
+        );
       }
+    }
+
+    .cardContent {
+      h3 { color: #f3f4f6; }
+      p { color: #9ca3af; }
     }
   }
 }
@@ -185,71 +209,8 @@
   border-top: 1px dashed #e5e7eb;
 }
 
-.socialLinks {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding: 1.5rem;
-  background: #ffffff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
 
 
-.socialLink {
-  min-width: 180px;
-  position: relative;
-  overflow: hidden;
-
-  &:hover {
-    transform: translateY(-2px);
-
-    .externalIcon {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  .icon {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  span {
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .externalIcon {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s ease;
-    margin-left: auto;
-  }
-}
-
-.linkedin {
-  &:hover {
-    background: #0a66c2;
-    color: white;
-  }
-}
-
-.youtube {
-  &:hover {
-    background: #ff0000;
-    color: white;
-  }
-}
-
-.instagram {
-  &:hover {
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-    color: white;
-  }
-}
 
 .faqSection {
   background: #ffffff;
@@ -405,7 +366,7 @@
     }
   }
 
-  .contactCard, .socialLinks, .faqSection, .formWrapper, .quickLinksSection {
+  .contactCard, .faqSection, .formWrapper, .quickLinksSection {
     background: #1e293b;
     border-color: #374151;
   }
@@ -422,15 +383,6 @@
     }
   }
 
-  .socialLink {
-    background: #374151;
-    color: #e5e7eb;
-
-    &:hover {
-      background: var(--hover-bg, #4b5563);
-      color: white;
-    }
-  }
 
   .quickLink {
     background: #1e293b;
@@ -454,5 +406,337 @@
   .faqSection {
     h3 { color: #f3f4f6; }
     .faqAnswer { color: #9ca3af; }
+  }
+}
+
+
+// Enhanced social links styles
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+.socialLink {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  color: #64748b;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: currentColor;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    &::before {
+      transform: translateX(100%);
+    }
+
+    .icon {
+      transform: scale(1.1);
+    }
+
+    .externalIcon {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+
+  span {
+    font-weight: 500;
+    font-size: 0.95rem;
+    flex: 1;
+  }
+
+  .externalIcon {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    color: currentColor;
+  }
+}
+
+// Social platforms specific styles
+.linkedin {
+  &:hover {
+    color: #0a66c2;
+    background: rgba(10, 102, 194, 0.05);
+  }
+}
+
+.youtube {
+  &:hover {
+    color: #ff0000;
+    background: rgba(255, 0, 0, 0.05);
+  }
+}
+
+.instagram {
+  &:hover {
+    color: #e4405f;
+    background: rgba(228, 64, 95, 0.05);
+  }
+}
+
+// Dark mode styles
+:global(.dark) {
+  .socialLinks {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .socialLink {
+    background: #0f172a;
+    border-color: #334155;
+    color: #94a3b8;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    &.linkedin:hover {
+      background: rgba(10, 102, 194, 0.1);
+    }
+
+    &.youtube:hover {
+      background: rgba(255, 0, 0, 0.1);
+    }
+
+    &.instagram:hover {
+      background: rgba(228, 64, 95, 0.1);
+    }
+  }
+}
+
+
+.contactCard {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  position: relative;
+  border: 1px solid #f1f5f9;
+  height: 100%;
+  transform-origin: center center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--card-color);
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--card-color);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    z-index: 2;
+
+    .cardIcon {
+      transform: scale(1.05);
+    }
+  }
+
+  .cardIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-color);
+    border-radius: 0.75rem;
+    color: white;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .cardContent {
+    flex: 1;
+    min-width: 0; // Prevent text overflow
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      color: #6b7280;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      margin-bottom: 0.25rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+
+
+
+// First, reset the grid container
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Wrapper for each card to contain the hover effect
+.cardWrapper {
+  position: relative;
+  height: fit-content;
+}
+
+// Card styles with isolated hover effects
+.contactCard {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  position: relative;
+  isolation: isolate;
+  
+  // Use margin instead of transform for hover lift
+  margin: 0;
+  transition: 
+    margin 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--card-color);
+  }
+
+  &:hover {
+    margin-top: -4px;
+    margin-bottom: 4px;
+    border-color: var(--card-color);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+
+    .cardIcon {
+      transform: scale(1.05);
+    }
+  }
+
+  .cardIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-color);
+    border-radius: 0.75rem;
+    color: white;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .cardContent {
+    flex: 1;
+    min-width: 0;
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      color: #6b7280;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      margin-bottom: 0.25rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Color variations remain the same
+.colorblue { --card-color: #3b82f6; }
+.colorgreen { --card-color: #10b981; }
+.colorpurple { --card-color: #8b5cf6; }
+.colororange { --card-color: #f59e0b; }
+.colorred { --card-color: #ef4444; }
+.colorindigo { --card-color: #6366f1; }
+
+// Dark mode styles
+:global(.dark) {
+  .contactCard {
+    background: #1e293b;
+    border-color: #334155;
+
+    &:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      background: #263449;
+    }
+
+    .cardContent {
+      h3 { color: #f3f4f6; }
+      p { color: #9ca3af; }
+    }
   }
 }
