@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // Insert contact form submission
     await db.execute({
       sql: `
-        INSERT INTO contact_us 
+        INSERT INTO contacts
         (id, name, email, phone, subject, message) 
         VALUES (?, ?, ?, ?, ?, ?)
       `,
