@@ -19,7 +19,7 @@ export interface Topic {
     id: number;
     title: string;
     content?: string;
-    category: string;
+    category_name?: string;
     categoryId: number;
     author: Author;
     timestamp: string;
@@ -88,6 +88,7 @@ export interface ApiTopic {
     total_posts: number;
     posts_today: number;
     active_posters: number;
+    
   }
   
   export interface SubCategory {
