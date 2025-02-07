@@ -1,21 +1,21 @@
 // src/components/TeamCard/TeamCard.tsx
-"use client"
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { 
-  Linkedin, 
-  Twitter, 
-  Github, 
-  Mail, 
-  Globe, 
-  MapPin, 
+"use client";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import {
+  Linkedin,
+  Twitter,
+  Github,
+  Mail,
+  Globe,
+  MapPin,
   Medal,
   Calendar,
   Briefcase,
-  MessageCircle
-} from 'lucide-react';
-import styles from './TeamCard.module.scss';
-import { Chip } from '@heroui/react';
+  MessageCircle,
+} from "lucide-react";
+import styles from "./TeamCard.module.scss";
+import { Chip } from "@heroui/react";
 
 interface SocialLinks {
   linkedin?: string;
@@ -46,7 +46,7 @@ interface TeamMemberProps {
     skype?: string;
   };
   socialLinks: SocialLinks;
-  cardColor?: 'blue' | 'purple' | 'green' | 'orange' | 'red' | 'indigo';
+  cardColor?: "blue" | "purple" | "green" | "orange" | "red" | "indigo";
 }
 
 export function TeamCard({
@@ -54,7 +54,7 @@ export function TeamCard({
   role,
   image,
   bio,
-  cardColor = 'blue',
+  cardColor = "blue",
   specialization = [],
   experience,
   achievements = [],
@@ -63,11 +63,11 @@ export function TeamCard({
   availability,
   projects,
   contactInfo,
-  socialLinks
+  socialLinks,
 }: TeamMemberProps) {
   return (
-    <motion.div 
-    className={`${styles.card} ${styles[cardColor]}`} 
+    <motion.div
+      className={`${styles.card} ${styles[cardColor]}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -75,7 +75,7 @@ export function TeamCard({
       transition={{ duration: 0.3 }}
     >
       <div className={styles.imageSection}>
-        <motion.div 
+        <motion.div
           className={styles.imageWrapper}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
@@ -117,11 +117,11 @@ export function TeamCard({
         </div>
 
         <p className={styles.bio}>{bio}</p>
-        
+
         {specialization.length > 0 && (
           <div className={styles.tags}>
             {specialization.map((skill, index) => (
-              <motion.span 
+              <motion.span
                 key={skill}
                 className={styles.tag}
                 initial={{ opacity: 0, scale: 0.8 }}

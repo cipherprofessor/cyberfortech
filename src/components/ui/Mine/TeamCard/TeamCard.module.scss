@@ -5,33 +5,33 @@ $colors: (
   blue: (
     primary: #3b82f6,
     gradient: linear-gradient(135deg, #3b82f6, #60a5fa),
-    shadow: rgba(59, 130, 246, 0.4)
+    shadow: rgba(59, 130, 246, 0.4),
   ),
   purple: (
     primary: #8b5cf6,
     gradient: linear-gradient(135deg, #8b5cf6, #a78bfa),
-    shadow: rgba(139, 92, 246, 0.4)
+    shadow: rgba(139, 92, 246, 0.4),
   ),
   green: (
     primary: #10b981,
     gradient: linear-gradient(135deg, #10b981, #34d399),
-    shadow: rgba(16, 185, 129, 0.4)
+    shadow: rgba(16, 185, 129, 0.4),
   ),
   orange: (
     primary: #f59e0b,
     gradient: linear-gradient(135deg, #f59e0b, #fbbf24),
-    shadow: rgba(245, 158, 11, 0.4)
+    shadow: rgba(245, 158, 11, 0.4),
   ),
   red: (
     primary: #ef4444,
     gradient: linear-gradient(135deg, #ef4444, #f87171),
-    shadow: rgba(239, 68, 68, 0.4)
+    shadow: rgba(239, 68, 68, 0.4),
   ),
   indigo: (
     primary: #6366f1,
     gradient: linear-gradient(135deg, #6366f1, #818cf8),
-    shadow: rgba(99, 102, 241, 0.4)
-  )
+    shadow: rgba(99, 102, 241, 0.4),
+  ),
 );
 
 .card {
@@ -44,9 +44,10 @@ $colors: (
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
   height: fit-content;
+  box-shadow: 0 4px 12px rgba(36, 41, 46, 0.152);
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -83,19 +84,15 @@ $colors: (
   position: relative;
   width: 100%;
   height: 180px;
-  
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     height: 80px;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.5),
-      transparent
-    );
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
     pointer-events: none;
   }
 }
@@ -108,7 +105,7 @@ $colors: (
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 0;
@@ -202,8 +199,8 @@ $colors: (
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-//   background: #4f5d7033;
-//   color: #0be0f5;
+  //   background: #4f5d7033;
+  //   color: #0be0f5;
   border-radius: 2rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -287,44 +284,44 @@ $colors: (
   color: #4b5563;
   transition: all 0.2s ease;
 
-//   &:hover {
-//     transform: translateY(-2px);
-//   }
+  //   &:hover {
+  //     transform: translateY(-2px);
+  //   }
 
   &.linkedin {
     background: #0a66c2ca;
     color: white;
-    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.587);
   }
 
   &.twitter {
     background: #1da0f2cb;
     color: white;
-    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
+    box-shadow: 0 4px 12px rgba(29, 160, 242, 0.533);
   }
 
   &.github {
     background: #24292ec7;
     color: white;
-    box-shadow: 0 4px 12px rgba(36, 41, 46, 0.2);
+    box-shadow: 0 4px 12px rgba(36, 41, 46, 0.528);
   }
 
   &.email {
     background: #ea4435c5;
     color: white;
-    box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
+    box-shadow: 0 4px 12px rgba(234, 68, 53, 0.466);
   }
 
   &.website {
     background: #6365f1c2;
     color: white;
-    box-shadow: 0 4px 12px rgba(99, 241, 187, 0.2);
+    box-shadow: 0 4px 12px rgba(99, 241, 187, 0.492);
   }
 
   &.skype {
     background: #b363f1c7;
     color: white;
-    box-shadow: 0 4px 12px rgba(113, 54, 181, 0.2);
+    box-shadow: 0 4px 12px rgba(113, 54, 181, 0.489);
   }
 
   &.linkedin:hover {
@@ -369,6 +366,7 @@ $colors: (
   .card {
     background: #1e293b;
     border-color: #374151;
+    box-shadow: 0 4px 12px rgba(253, 253, 253, 0.152);
   }
 
   .imageWrapper::after {
@@ -395,9 +393,8 @@ $colors: (
   }
 
   .bio {
-    color: #9ca3af;
+    color: #ffffff;
   }
-
 
   .tag {
     background: #374151;
@@ -430,75 +427,75 @@ $colors: (
     }
 
     &.linkedin {
-        background: #0a66c28c;
-        color: white;
-        box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
-      }
-    
-      &.twitter {
-        background: #1da0f281;
-        color: white;
-        box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
-      }
-    
-      &.github {
-        background: #24292e82;
-        color: white;
-        box-shadow: 0 4px 12px rgba(36, 41, 46, 0.2);
-      }
-    
-      &.email {
-        background: #ea44357b;
-        color: white;
-        box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
-      }
-    
-      &.website {
-        background: #6365f17e;
-        color: white;
-        box-shadow: 0 4px 12px rgba(99, 241, 187, 0.2);
-      }
-    
-      &.skype {
-        background: #b363f185;
-        color: white;
-        box-shadow: 0 4px 12px rgba(113, 54, 181, 0.2);
-      }
+      background: #0a66c28c;
+      color: white;
+      box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
+    }
 
-      &.linkedin:hover {
-        background: #0a66c2;
-        color: white;
-        box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
-      }
-    
-      &.twitter:hover {
-        background: #1da1f2;
-        color: white;
-        box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
-      }
-    
-      &.github:hover {
-        background: #24292e;
-        color: white;
-        box-shadow: 0 4px 12px rgba(36, 41, 46, 0.2);
-      }
-    
-      &.email:hover {
-        background: #ea4335;
-        color: white;
-        box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
-      }
-    
-      &.website:hover {
-        background: #6366f1;
-        color: white;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-      }
-    
-      &.skype:hover {
-        background: #b363f1;
-        color: white;
-        box-shadow: 0 4px 12px rgba(54, 181, 78, 0.2);
-      }
+    &.twitter {
+      background: #1da0f281;
+      color: white;
+      box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
+    }
+
+    &.github {
+      background: #24292e82;
+      color: white;
+      box-shadow: 0 4px 12px rgba(36, 41, 46, 0.2);
+    }
+
+    &.email {
+      background: #ea44357b;
+      color: white;
+      box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
+    }
+
+    &.website {
+      background: #6365f17e;
+      color: white;
+      box-shadow: 0 4px 12px rgba(99, 241, 187, 0.2);
+    }
+
+    &.skype {
+      background: #b363f185;
+      color: white;
+      box-shadow: 0 4px 12px rgba(113, 54, 181, 0.2);
+    }
+
+    &.linkedin:hover {
+      background: #0a66c2;
+      color: white;
+      box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
+    }
+
+    &.twitter:hover {
+      background: #1da1f2;
+      color: white;
+      box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
+    }
+
+    &.github:hover {
+      background: #24292e;
+      color: white;
+      box-shadow: 0 4px 12px rgba(36, 41, 46, 0.2);
+    }
+
+    &.email:hover {
+      background: #ea4335;
+      color: white;
+      box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
+    }
+
+    &.website:hover {
+      background: #6366f1;
+      color: white;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    &.skype:hover {
+      background: #b363f1;
+      color: white;
+      box-shadow: 0 4px 12px rgba(54, 181, 78, 0.2);
+    }
   }
 }
