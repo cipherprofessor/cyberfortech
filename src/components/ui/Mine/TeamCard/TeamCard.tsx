@@ -117,17 +117,7 @@ export function TeamCard({
         </div>
 
         <p className={styles.bio}>{bio}</p>
-
-        {experience && (
-          <div className={styles.experienceChip}>
-            <Chip color="default" variant="shadow">
-            <span>{experience}</span>
-      </Chip>
-            {/* <Calendar size={24} /> */}
-            
-          </div>
-        )}
-
+        
         {specialization.length > 0 && (
           <div className={styles.tags}>
             {specialization.map((skill, index) => (

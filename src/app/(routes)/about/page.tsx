@@ -43,9 +43,9 @@ const teamMembers = [
     // ],
     experience: "Marketing Expert",
     achievements: [
-      // "Led 100+ successful marketing campaigns",
+      "100+ marketing campaigns",
       "Grew business revenue by 200%",
-      "Built partnerships with 50+ companies"
+      "Partnerships with 50+ companies"
     ],
     location: "Cyber City, CC",
     projects: 150,
@@ -80,8 +80,8 @@ const teamMembers = [
     // ],
     experience: "Web Dev Expert",
     achievements: [
-      // "Led 100+ successful marketing campaigns",
-      "Build 50+ Full Stack Apps",
+       "Trained 1000+ Students",
+      "Developed 50+ Full Stack Apps",
       "AWS Certified Solutions Architect"
     ],
     location: "Chennai, India",
@@ -117,7 +117,7 @@ const teamMembers = [
     // ],
     experience: "AI Expert",
     achievements: [
-      // "100+ Cloud Deployments",
+      "20+ AI Projects",
       "Developed 15+ AI Models",
       "Published 10+ Research Papers"
     ],
@@ -133,9 +133,11 @@ const teamMembers = [
       skype: "mohsin.skype"
     },
     socialLinks: {
-      linkedin: "https://www.linkedin.com/in/bhatmohsin1913/",
-      github: "https://github.com/mohsinbhat",
-      website: "https://mohsinbhat.dev"
+      linkedin: "https://www.linkedin.com/in/cyberfortech/",
+      twitter: "https://twitter.com/johndoe",
+      github: "https://github.com/cyberfortech",
+      website: "https://cyberfortech.com",
+      medium: "https://medium.com/@cyberfortech"
     }
   },
   {
@@ -152,7 +154,7 @@ const teamMembers = [
     // ],
     experience: "Cybersecurity Expert",
     achievements: [
-      // "100+ Cloud Deployments",
+      "30+ Cybersecurity Projects",
       "Performed 50+ Penetration Tests",
       "Led 10+ Security Audits"
     ],
@@ -168,9 +170,11 @@ const teamMembers = [
       skype: "mohsin.skype"
     },
     socialLinks: {
-      linkedin: "https://www.linkedin.com/in/bhatmohsin1913/",
-      github: "https://github.com/mohsinbhat",
-      website: "https://mohsinbhat.dev"
+      linkedin: "https://www.linkedin.com/in/cyberfortech/",
+      twitter: "https://twitter.com/johndoe",
+      github: "https://github.com/cyberfortech",
+      website: "https://cyberfortech.com",
+      medium: "https://medium.com/@cyberfortech"
     }
   }
 
