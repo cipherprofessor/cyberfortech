@@ -168,29 +168,6 @@ const teamMembers = [
 
   return (
     <div className={styles.aboutContainer}>
-      {/* Hero Section */}
-      <section className={styles.hero}>
-        <motion.div 
-          className={styles.heroContent}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h1>Empowering the Future of Cybersecurity</h1>
-          <p>Building a safer digital world through education, innovation, and community.</p>
-        </motion.div>
-        <div className={styles.heroBackground}>
-          <div className={styles.overlay}></div>
-          <Image
-            src="/cyber1.png" // Add a relevant background image
-            alt="Cybersecurity Background"
-            fill
-            className={styles.bgImage}
-            priority
-          />
-        </div>
-      </section>
-
       {/* Mission Section with Grid */}
       <section className={styles.mission}>
         <div className={styles.missionHeader}>
@@ -304,8 +281,6 @@ const teamMembers = [
           viewport={{ once: true }}
           className={styles.journeyHeader}
         >
-          <h2>Our Journey</h2>
-          <p>The milestones that shaped our growth</p>
         </motion.div>
         <AcUITimeline />
       </section>
