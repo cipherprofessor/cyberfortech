@@ -5,7 +5,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: 50000;
   background-color: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(8px);
   transition: all 0.3s ease;
@@ -17,8 +17,8 @@
 
   .navContainer {
     margin: 0 auto;
-    padding: 0 0.5rem;  // Reduced padding for mobile
-    height: 60px;  // Slightly reduced height
+    padding: 0 0.5rem;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -38,7 +38,7 @@
   .logoContainer {
     display: flex;
     align-items: center;
-    gap: 0.375rem;  // Reduced gap
+    gap: 0.375rem;
     transition: all 0.3s ease;
 
     &:hover {
@@ -46,7 +46,7 @@
     }
 
     .logo {
-      width: 2rem;  // Reduced size
+      width: 2rem;
       height: 2rem;
       object-fit: contain;
 
@@ -57,21 +57,18 @@
     }
 
     .logoText {
-      font-size: 0.9rem;  // Reduced font size
+      font-size: 1rem;
       font-weight: 700;
-      background: linear-gradient(to right, #2563eb, #60a5fa);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #2563eb;
       font-family: 'Space Grotesk', system-ui, sans-serif;
 
       @media (min-width: 640px) {
         font-size: 1.25rem;
       }
 
-      // :global(.dark) & {
-      //   background: linear-gradient(to right, #60a5fa, #93c5fd);
-      // }
+      :global(.dark) & {
+        color: #60a5fa;
+      }
     }
   }
 
@@ -95,7 +92,6 @@
     font-weight: 500;
     color: #4b5563;
     transition: all 0.2s ease;
-    position: relative;
 
     svg {
       transition: transform 0.2s ease;
@@ -121,10 +117,10 @@
   .navActions {
     display: flex;
     align-items: center;
-    gap: 0.5rem;  // Reduced gap
+    gap: 0.5rem;
 
     .themeToggle {
-      padding: 0.375rem;  // Reduced padding
+      padding: 0.375rem;
       border-radius: 0.375rem;
       color: #4b5563;
       transition: all 0.2s ease;
@@ -136,17 +132,19 @@
 
     .authButtons {
       display: flex;
-      gap: 0.25rem;  // Reduced gap
+      gap: 1rem;
       
       .signInButton, .signUpButton {
         display: flex;
         transition: all 0.2s ease;
-        font-size: 0.875rem;  // Smaller font size
-        padding: 0.375rem 0.75rem;  // Reduced padding
+        font-size: 0.75rem;
+        padding: 0.375rem 0.75rem;
+        height: 2rem;
 
         @media (min-width: 640px) {
-          font-size: 1rem;
+          font-size: 0.875rem;
           padding: 0.5rem 1rem;
+          height: auto;
         }
       }
 
@@ -171,9 +169,7 @@
 
     .userButton {
       transition: transform 0.2s ease;
-      position: relative;
-      right: 0;
-      transform: scale(0.9);  // Slightly smaller
+      transform: scale(0.9);
 
       @media (min-width: 640px) {
         transform: scale(1);
@@ -194,8 +190,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.375rem;  // Reduced padding
-    margin-left: 0.25rem;  // Reduced margin
+    padding: 0.375rem;
+    margin-left: 0.25rem;
     border-radius: 0.375rem;
     color: #4b5563;
     transition: all 0.2s ease;
@@ -226,12 +222,11 @@
     .mobileNavLink {
       display: inline-flex;
       align-items: center;
-      width: auto;
-      min-width: max-content;
+      width: 100%;
       padding: 0.75rem 1rem;
       margin: 0.25rem 0;
       border-radius: 0.5rem;
-      font-size: 1rem;
+      font-size: 0.875rem;
       font-weight: 500;
       color: #4b5563;
       transition: all 0.2s ease;
@@ -256,64 +251,80 @@
       }
     }
 
-    .mobileThemeToggle {
-      padding: 0.75rem 0.5rem;
+    .mobileBottom {
       margin-top: 0.5rem;
       border-top: 1px solid #e5e7eb;
+      padding-top: 0.5rem;
 
-      button {
-        color: #4b5563;
-        width: auto;
-        min-width: max-content;
-        text-align: left;
-        border-radius: 0.5rem;
-        transition: all 0.2s ease;
+      .mobileActions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
 
-        &:hover {
-          background-color: #eff6ff;
-          color: #2563eb;
-        }
-      }
-      .mobileAuthButtons {
-        padding: 0.75rem 0.5rem;
-        margin-top: 0.5rem;
-        border-top: 1px solid #e5e7eb;
-      
-        button {
-          width: auto;
-          min-width: max-content;
-          justify-content: center;
-          padding: 0.75rem;
-          border-radius: 0.5rem;
-          transition: all 0.2s ease;
-          margin: 2px;
-      
-          &:first-child {
-            margin-bottom: 0.5rem;
-      
-            &:hover {
-              background-color: #f3f4f6;
-            }
+        .themeButton {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          font-size: 0.875rem;
+          color: #4b5563;
+          padding: 0.5rem 1rem;
+
+          &:hover {
+            background-color: #eff6ff;
+            color: #2563eb;
           }
-      
-          &:last-child {
-            background-color: #2563eb;
-            color: white;
-      
-            &:hover {
-              background-color: #1d4ed8;
-              transform: translateY(-1px);
+        }
+
+        .mobileAuthButtons {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .mobileButton {
+            width: 100%;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            height: 2.25rem;
+
+            &:first-child {
+              color: #4b5563;
+              
+              &:hover {
+                background-color: #f3f4f6;
+              }
+            }
+
+            &:last-child {
+              background-color: #2563eb;
+              color: white;
+
+              &:hover {
+                background-color: #1d4ed8;
+              }
             }
           }
         }
       }
     }
 
-   
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(156, 163, 175, 0.5);
+      border-radius: 3px;
+
+      &:hover {
+        background-color: rgba(156, 163, 175, 0.7);
+      }
+    }
   }
 }
-
-
 
 // Dark mode styles
 :global(.dark) {
@@ -343,28 +354,28 @@
       background-color: rgba(17, 24, 39, 0.98);
       border-color: #374151;
 
-      .mobileThemeToggle {
+      .mobileBottom {
         border-color: #374151;
 
-        button {
-          color: #d1d5db;
-
-          &:hover {
-            background-color: rgba(37, 99, 235, 0.1);
-            color: #60a5fa;
-          }
-        }
-      }
-
-      .mobileAuthButtons {
-        border-color: #374151;
-
-        button {
-          &:first-child {
+        .mobileActions {
+          .themeButton {
             color: #d1d5db;
 
             &:hover {
               background-color: rgba(37, 99, 235, 0.1);
+              color: #60a5fa;
+            }
+          }
+
+          .mobileAuthButtons {
+            .mobileButton {
+              &:first-child {
+                color: #d1d5db;
+
+                &:hover {
+                  background-color: rgba(37, 99, 235, 0.1);
+                }
+              }
             }
           }
         }
@@ -432,25 +443,5 @@
   }
   to {
     opacity: 1;
-  }
-}
-
-// Scrollbar styling for mobile nav
-.mobileNav {
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(156, 163, 175, 0.5);
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(156, 163, 175, 0.7);
   }
 }

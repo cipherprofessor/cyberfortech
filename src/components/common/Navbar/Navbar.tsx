@@ -56,17 +56,13 @@ export default function Navbar() {
     return pathname.startsWith(path);
   };
 
-  const cycleTheme = () => {
-    switch (theme) {
-      case 'light':
-        setTheme('dark');
-        break;
-      case 'dark':
-        setTheme('system');
-        break;
-      default:
-        setTheme('light');
-        break;
+  const handleThemeChange = () => {
+    if (theme === 'light') {
+      setTheme('dark');
+    } else if (theme === 'dark') {
+      setTheme('system');
+    } else {
+      setTheme('light');
     }
   };
 
@@ -143,6 +139,15 @@ export default function Navbar() {
 
         {/* Right Side Actions */}
         <div className={styles.navActions}>
+          <SwitchDarkLightModeIcon 
+            className={styles.themeToggle}
+            defaultSelected={theme === 'dark'}
+            onChange={(isSelected) => {
+              setTheme(isSelected ? 'dark' : 'light')
+            }}
+          />
+
+          {/* Desktop Auth Buttons */}
           <SignedOut>
             <div className={styles.authButtons}>
               <SignInButton>
@@ -169,15 +174,7 @@ export default function Navbar() {
             />
           </SignedIn>
 
-          <SwitchDarkLightModeIcon 
-            className={styles.themeToggle}
-            defaultSelected={theme === 'dark'}
-            onChange={(isSelected) => {
-              setTheme(isSelected ? 'dark' : 'light')
-            }}
-          />
-
-          {/* Mobile Menu Button - Moved to the end */}
+          {/* Mobile Menu Button */}
           <button
             className={styles.mobileMenuButton}
             onClick={() => setIsOpen(!isOpen)}
@@ -203,47 +200,14 @@ export default function Navbar() {
             transition={{ duration: 0.2 }}
             className={styles.mobileNav}
           >
+            {/* Mobile Navigation Links */}
             {renderNavLink("/", "Home", <Home className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/courses", "Courses", <BookOpen className="h-5 w-5 mr-3" />, true)}
             {renderRoleBasedLinks(true)}
             {renderNavLink("/forum", "Forum", <MessageSquare className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/about", "About", <InfoIcon className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-5 w-5 mr-3" />, true)}
-
-            <div className={styles.mobileThemeToggle}>
-              <Button 
-                variant="ghost" 
-                size="md" 
-                onPress={cycleTheme}
-                className="w-full justify-start px-4 py-2"
-              >
-                {theme === 'light' ? (
-                  <><Sun className="h-5 w-5 mr-2" /> Light Mode</>
-                ) : theme === 'dark' ? (
-                  <><Moon className="h-5 w-5 mr-2" /> Dark Mode</>
-                ) : (
-                  <><Monitor className="h-5 w-5 mr-2" /> System Mode</>
-                )}
-              </Button>
-
-              <SignedOut >
-                <SignInButton>
-                  <Button variant="ghost" className={styles.mobileAuthButtons} size="sm">
-                    Sign In
-                  </Button>
-                </SignInButton>
-                <SignUpButton>
-                  <Button variant="solid" className={styles.mobileAuthButtons} size="sm">
-                    Sign Up
-                  </Button>
-                </SignUpButton>
-              </SignedOut>
             
-
-            {/* <div className={styles.mobileAuthButtons}>
-              
-            </div> */}
-          </div>
           </motion.div>
         )}
       </AnimatePresence>
