@@ -67,13 +67,12 @@
   }
 }
 
-// Mission Section
+
 .mission {
   margin-bottom: 4rem;
   padding: 2rem;
-  // background: #ffffff;
   border-radius: 1.5rem;
-  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
 
   .missionHeader {
     text-align: center;
@@ -108,7 +107,7 @@
       .missionText {
         font-size: 1.125rem;
         line-height: 1.7;
-        color: #4b5563;
+        color: #303132;
         margin-bottom: 2rem;
       }
     }
@@ -136,10 +135,10 @@
 
 .valueCard {
   padding: 1.5rem;
-  // background: #f8fafc;
   border: 1px solid #e5e7eb;
   border-radius: 1rem;
   transition: all 0.3s ease;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 
   &:hover {
     transform: translateY(-5px);
@@ -160,12 +159,11 @@
   }
 }
 
-// Stats Section
 .statsSection {
   margin: 4rem 0;
 }
 
-// Bento Grid Section
+
 .bentoSection {
   margin: 4rem 0;
   
@@ -187,13 +185,12 @@
   }
 }
 
-// Journey Section
+
 .journeySection {
   margin: 4rem 0;
   padding: 3rem;
-  // background: #ffffff;
   border-radius: 1.5rem;
-  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
 
   .journeyHeader {
     text-align: center;
@@ -213,7 +210,6 @@
   }
 }
 
-// Team Section
 .teamSection {
   margin: 4rem 0;
 
@@ -242,7 +238,7 @@
   }
 }
 
-// Dark mode styles
+
 :global(.dark) {
   .mission,
   .journeySection {
@@ -254,23 +250,27 @@
   .journeyHeader,
   .teamHeader {
     h2 {
-      color: #f3f4f6;
+      color: #ffffff;
     }
 
     p {
-      color: #9ca3af;
+      color: #cfd2d9cd;
     }
   }
 
   .missionContent {
     .missionText {
-      color: #d1d5db;
+      color: #1658c0;
     }
+  }
+
+  .missionText{
+    color: #2ac016;
   }
 
 }
 
-// Responsive adjustments
+
 @media (max-width: 768px) {
   .aboutContainer {
     width: 95%;
@@ -294,8 +294,6 @@
   }
 }
 
-
-// Add to your about.module.scss
 .teamSection {
   padding: 4rem 0;
 
@@ -327,10 +325,8 @@
   }
 }
 
-// Dark mode
 :global(.dark) {
   .teamSection {
-    // background: linear-gradient(to bottom, #0f172a, #1e293b);
 
     .sectionHeader {
       h2 {
@@ -339,7 +335,7 @@
       }
 
       p {
-        color: #9ca3af;
+        color: #e0e3e9;
       }
     }
   }

@@ -1,33 +1,17 @@
 "use client"
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import styles from './about.module.scss';
+
 
 import { AcUITimeline } from '@/components/ui/AcUI/TimeLine/TimeLineDemo';
-import { AcUiBentoGrid } from '@/components/ui/AcUI/BentoGrid/BentoGrid';
 import { KeyMetrics } from '@/components/home/KeyMetrics/KeyMetrics';
-import { TeamCard } from '@/components/ui/Mine/TeamCard/TeamCard';
 import { TeamGrid } from '@/components/ui/Mine/TeamCard/TeamGrid';
+
+import styles from './about.module.scss';
 
 export default function AboutPage() {
 
-  // For a single member
-const singleMember = {
-  name: "Ayan Ali Dar",
-  role: "Founder & CEO",
-  image: "/team/ayan.png",
-  bio: "7+ years of experience in Marketing and Business Development",
-  specialization: ["Marketing Strategy", "Business Development"],
-  experience: "7+ Years Experience",
-  achievements: ["Led 100+ successful marketing campaigns"],
-  location: "Cyber City, CC",
-  socialLinks: {
-    linkedin: "https://www.linkedin.com/in/cyberfortech/",
-    twitter: "https://twitter.com/johndoe",
-  }
-};
-
-// For multiple members
+ 
 const teamMembers = [
   {
     name: "Ayan Ali Dar",
@@ -309,7 +293,7 @@ const teamMembers = [
           <h2>Why Choose Us</h2>
           <p>Discover what makes our approach to cybersecurity education unique</p>
         </motion.div>
-        <AcUiBentoGrid />
+        {/* <AcUiBentoGrid /> */}
       </section>
 
       {/* Journey Timeline */}
