@@ -1,43 +1,78 @@
-
 "use client";
 import { motion } from "framer-motion";
 import Image from 'next/image';
 import { Button } from "@/components/common/Button/Button";
 import { TypewriterEffect } from "@/components/ui/AcUI/TypeWritterEffect/typewriter-effect";
-// import { BackgroundBeams } from "@/components/ui/AcUI/BackgroundBeams/background-beams";
-// import { SparklesCore } from "@/components/ui/AcUI/Sparkles/sparkles";
+import { useState, useEffect } from 'react';
 import styles from "./HeroSection.module.scss";
 import { BackgroundBeams } from "@/components/ui/AcUI/BackgroundBeams/background-beams";
-import { SparklesCore } from "@/components/common/sparkles/sparkles";
-// import { SparklesCore } from "@/components/common/sparkles/sparkles";
 
 const words = [
   {
     text: "Transform",
-    className: "text-black dark:text-blue-500",
+    className: "text-zinc-900 dark:text-white",
   },
   {
     text: "Your",
-    className: "text-black dark:text-blue-500",
+    className: "text-zinc-900 dark:text-white",
   },
   {
     text: "Career",
-    className: "text-black dark:text-blue-500",
+    className: "text-zinc-900 dark:text-white",
   },
   {
     text: "with",
-    className: "text-black dark:text-blue-500",
+    className: "text-zinc-900 dark:text-white",
   },
   {
     text: "CyberForTech",
-    className: "text-blue-400 dark:text-blue-500 mt-4",
+    className: "text-blue-600 mt-6 dark:text-blue-400 font-bold",
   },
 ];
 
+const stats = [
+  { icon: "🧑‍💻", number: "10k+", label: "Active Students", increment: 50 },
+  { icon: "🏆", number: "95%", label: "Success Rate", increment: 1 },
+  { icon: "👩‍🏫", number: "50+", label: "Expert Trainers", increment: 1 }
+];
+
+const features = [
+  { icon: "🎯", title: "Targeted Learning", description: "Customized pathways for your goals" },
+  { icon: "🌟", title: "Industry Experts", description: "Learn from the best in cybersecurity" },
+  { icon: "🛡️", title: "Real-world Projects", description: "Hands-on practical experience" },
+];
+
 export function HeroSection() {
+  const [mounted, setMounted] = useState(false);
+  const [animatedStats, setAnimatedStats] = useState(stats.map(() => 0));
+
+  useEffect(() => {
+    setMounted(true);
+    // Animate stats
+    stats.forEach((stat, index) => {
+      const target = parseInt(stat.number) || 0;
+      let current = 0;
+      const increment = stat.increment;
+      const interval = setInterval(() => {
+        if (current < target) {
+          current += increment;
+          setAnimatedStats(prev => {
+            const newStats = [...prev];
+            newStats[index] = Math.min(current, target);
+            return newStats;
+          });
+        } else {
+          clearInterval(interval);
+        }
+      }, 50);
+    });
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <section className={styles.heroSection}>
-      <BackgroundBeams />    
+      <BackgroundBeams className={styles.backgroundBeams} />
       <div className={styles.content}>
         <div className={styles.gridContainer}>
           <motion.div
@@ -49,14 +84,15 @@ export function HeroSection() {
             <div className={styles.headingWrapper}>
               <TypewriterEffect words={words} />
             </div>
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
               className={styles.description}
             >
-              Master the skills that matter. Join our comprehensive cybersecurity program 
-              and transform your career with expert-led training, hands-on projects, 
+              Master the skills that matter in the ever-evolving world of cybersecurity. 
+              Join our comprehensive program for expert-led training, hands-on projects, 
               and industry-recognized certifications.
             </motion.p>
 
@@ -67,92 +103,38 @@ export function HeroSection() {
               className={styles.ctaGroup}
             >
               <Button size="lg" className={styles.primaryButton}>
-                Explore Programs
+                Start Learning Now
               </Button>
               <Button variant="outline" size="lg" className={styles.secondaryButton}>
-                Free Demo Class
+                Schedule Free Demo
               </Button>
             </motion.div>
+
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-              className={styles.trustBadges}
+              transition={{ delay: 0.7 }}
+              className={styles.featureGrid}
             >
-              <div className={styles.badge}>
-                <Image
-                  src="/logocompanies/aws.svg"
-                  alt="ISACA Certified"
-                  width={80}
-                  height={40}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <div className={styles.badge}>
-                <Image
-                  src="/logocompanies/ceh.png"
-                  alt="CompTIA Partner"
-                  width={80}
-                  height={40}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <div className={styles.badge}>
-                <Image
-                  src="/logocompanies/cisco-ar21.svg"
-                  alt="CISSP Certified"
-                  width={80}
-                  height={40}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <div className={styles.badge}>
-                <Image
-                  src="/logocompanies/gcp.svg"
-                  alt="CISSP Certified"
-                  width={80}
-                  height={40}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <div className={styles.badge}>
-                <Image
-                  src="/logocompanies/hashicorp.svg"
-                  alt="CISSP Certified"
-                  width={80}
-                  height={40}
-                  style={{ objectFit: 'contain' }}
-                />
-                </div>
-                <div className={styles.badge}>
-                <Image
-                  src="/logocompanies/nextjs-ar21.svg"
-                  alt="CISSP Certified"
-                  width={80}
-                  height={40}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <div className={styles.badge}>
-                <Image
-                  src="/logocompanies/nginx-ar21.svg"
-                  alt="CISSP Certified"
-                  width={80}
-                  height={40}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              <div className={styles.badge}>
-                <Image
-                  src="/logocompanies/reactjs-ar21.svg"
-                  alt="CISSP Certified"
-                  width={80}
-                  height={40}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
+              {features.map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                  className={styles.featureCard}
+                >
+                  <div className={styles.featureIconWrapper}>
+                  <span className={styles.featureIcon}>{feature.icon}</span>
+                  <h3 className={styles.featureTitle}>{feature.title}</h3>
+                  </div>
+                  <p className={styles.featureDescription}>{feature.description}</p>
+                </motion.div>
+              ))}
             </motion.div>
+            
+            
           </motion.div>
 
           <motion.div
@@ -161,53 +143,70 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className={styles.imageContent}
           >
-            <div className={styles.imageWrapper}>
+            {/* <div className={styles.imageWrapper}> */}
               <Image
                 src="/logo/cyber4.png"
                 alt="Cybersecurity Training"
                 width={600}
                 height={600}
                 className={styles.heroImage}
+                priority
               />
-            </div>
+            {/* </div> */}
 
             <div className={styles.statsGrid}>
-              <div className={styles.stat}>
-                <motion.span
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ delay: 1, type: "spring" }}
-                  className={styles.number}
+                  transition={{ delay: 1 + index * 0.2, type: "spring" }}
+                  className={styles.stat}
                 >
-                  10k+
-                </motion.span>
-                <span className={styles.label}>Active Students</span>
-              </div>
-              <div className={styles.stat}>
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 1.2, type: "spring" }}
-                  className={styles.number}
-                >
-                  95%
-                </motion.span>
-                <span className={styles.label}>Success Rate</span>
-              </div>
-              <div className={styles.stat}>
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 1.4, type: "spring" }}
-                  className={styles.number}
-                >
-                  50+
-                </motion.span>
-                <span className={styles.label}>Expert Trainers</span>
-              </div>
+                  <span className={styles.number}>
+                    {typeof animatedStats[index] === 'number' 
+                      ? Math.round(animatedStats[index]) + (stat.number.includes('%') ? '%' : '') 
+                      : '0'}
+                  </span>
+                  <span className={styles.label}>{stat.label}</span>
+                </motion.div>
+
+                
+              ))}
             </div>
+
+            
+
+            
           </motion.div>
         </div>
+        <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className={styles.trustBadges}
+            >
+              {[
+                "aws", "ceh", "cisco-ar21", "gcp", 
+                "hashicorp", "nextjs-ar21", "nginx-ar21", "reactjs-ar21"
+              ].map((logo, index) => (
+                <motion.div
+                  key={logo}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1 + index * 0.1 }}
+                  className={styles.badge}
+                >
+                  <Image
+                    src={`/logocompanies/${logo}.svg`}
+                    alt={`${logo} certification`}
+                    width={80}
+                    height={40}
+                    style={{ objectFit: 'contain' }}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
       </div>
     </section>
   );

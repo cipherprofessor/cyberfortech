@@ -56,15 +56,6 @@ export default function Navbar() {
     return pathname.startsWith(path);
   };
 
-  const handleThemeChange = () => {
-    if (theme === 'light') {
-      setTheme('dark');
-    } else if (theme === 'dark') {
-      setTheme('system');
-    } else {
-      setTheme('light');
-    }
-  };
 
   const renderNavLink = (href: string, label: string, icon: React.ReactNode, isMobile: boolean = false) => {
     const linkClass = isMobile ? styles.mobileNavLink : styles.navLink;
@@ -95,12 +86,6 @@ export default function Navbar() {
             "/dashboard/student-dashboard",
             "Dashboard",
             <LayoutDashboard className={`${isMobile ? "h-5 w-5 mr-3" : "h-4 w-4 mr-2"}`} />,
-            isMobile
-          )}
-          {renderNavLink(
-            "/dashboard/my-courses",
-            "My Courses",
-            <Library className={`${isMobile ? "h-5 w-5 mr-3" : "h-4 w-4 mr-2"}`} />,
             isMobile
           )}
         </>
