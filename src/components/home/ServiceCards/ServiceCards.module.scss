@@ -1,7 +1,7 @@
 .servicesSection {
   position: relative;
-  padding: 4rem 0;
   overflow: hidden;
+  // margin-bottom: 3rem;
 }
 
 .container {
@@ -10,13 +10,13 @@
   padding: 0 2rem;
   position: relative;
   z-index: 2;
+  margin-bottom: 2rem;
 }
 
 .header {
   position: relative;
-  margin-bottom: 5rem;
+  margin-bottom: 3rem;
   overflow: hidden;
-  padding: 3rem 0;
 }
 
 .headerContent {
@@ -299,7 +299,7 @@
   border-radius: 50%;
   background: linear-gradient(45deg, #007bff, #00bcd4);
   opacity: 0.5;
-  top: 40%;
+  top: 30%;
 }
 
 @keyframes shimmer {

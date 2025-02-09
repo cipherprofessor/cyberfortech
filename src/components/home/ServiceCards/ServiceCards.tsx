@@ -21,6 +21,7 @@ import {
 import CountUp from 'react-countup';
 import Link from 'next/link';
 import styles from './ServiceCards.module.scss';
+import { useRef } from 'react';
 
 const services = [
   {
@@ -104,6 +105,8 @@ const cardVariants = {
 };
 
 export function ServiceCards() {
+  const countUpRef1 = useRef(null);
+  const countUpRef2 = useRef(null);
   return (
     <section className={styles.servicesSection}>
       <div className={styles.container}>
@@ -142,19 +145,25 @@ export function ServiceCards() {
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   <Users className={styles.statIcon} />
-                  <div className={styles.statNumber}>
+                  <motion.div 
+                    className={styles.statNumber}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                  >
                     <CountUp
                       start={0}
                       end={100}
-                      duration={2.5}
                       suffix="+"
-                      enableScrollSpy
-                      scrollSpyOnce
+                      duration={2}
+                      redraw={true}
                     />
-                  </div>
+                  </motion.div>
                   <span className={styles.statLabel}>Clients Protected</span>
                 </motion.div>
+                
                 <div className={styles.divider} />
+                
                 <motion.div 
                   className={styles.statItem}
                   initial={{ scale: 0 }}
@@ -166,7 +175,9 @@ export function ServiceCards() {
                   <div className={styles.statNumber}>24/7</div>
                   <span className={styles.statLabel}>Security Monitoring</span>
                 </motion.div>
+                
                 <div className={styles.divider} />
+                
                 <motion.div 
                   className={styles.statItem}
                   initial={{ scale: 0 }}
@@ -175,17 +186,21 @@ export function ServiceCards() {
                   transition={{ duration: 0.5, delay: 0.5 }}
                 >
                   <BarChart2 className={styles.statIcon} />
-                  <div className={styles.statNumber}>
+                  <motion.div 
+                    className={styles.statNumber}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                  >
                     <CountUp
                       start={0}
-                      end={98.9}
-                      duration={2.5}
+                      end={99.9}
                       decimals={1}
                       suffix="%"
-                      enableScrollSpy
-                      scrollSpyOnce
+                      duration={2}
+                      redraw={true}
                     />
-                  </div>
+                  </motion.div>
                   <span className={styles.statLabel}>Success Rate</span>
                 </motion.div>
               </div>
