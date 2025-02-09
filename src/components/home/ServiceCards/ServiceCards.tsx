@@ -1,4 +1,4 @@
-// src/components/home/ServiceCards/ServiceCards.tsx
+"use client";
 import { motion } from 'framer-motion';
 import { 
   ShieldCheck, 
@@ -6,55 +6,85 @@ import {
   Cloud, 
   Network, 
   Lock, 
-  Search 
+  Search,
+  Shield,
+  Database,
+  FileCode2,
+  CloudLightning,
+  ShieldAlert,
+  CircuitBoard,
+  ArrowRight
 } from 'lucide-react';
-
+import Link from 'next/link';
 import styles from './ServiceCards.module.scss';
-import { HoverEffect } from '@/components/ui/card-hover-effect';
-import { BackgroundBeams } from '@/components/ui/AcUI/BackgroundBeams/background-beams';
 
 const services = [
   {
     title: "Network Security",
-    description: "Comprehensive network protection strategies and implementation",
+    description: "Implement robust network protection strategies with advanced threat detection and prevention systems.",
     icon: Network,
-    link: "/services/network-security"
+    decorativeIcon: CircuitBoard,
+    link: "/services/network-security",
+    color: "#007bff"
   },
   {
     title: "Application Security",
-    description: "Secure your applications from development to deployment",
+    description: "Secure your applications throughout the development lifecycle with our comprehensive security solutions.",
     icon: Code2,
-    link: "/services/application-security"
+    decorativeIcon: FileCode2,
+    link: "/services/application-security",
+    color: "#00bcd4"
   },
   {
     title: "Cloud Security",
-    description: "Protect your cloud infrastructure and data",
+    description: "Protect your cloud infrastructure with state-of-the-art security measures and continuous monitoring.",
     icon: Cloud,
-    link: "/services/cloud-security"
+    decorativeIcon: CloudLightning,
+    link: "/services/cloud-security",
+    color: "#6610f2"
   },
   {
     title: "Penetration Testing",
-    description: "Identify vulnerabilities before attackers do",
+    description: "Proactively identify and address vulnerabilities with our expert penetration testing services.",
     icon: Search,
-    link: "/services/penetration-testing"
+    decorativeIcon: ShieldAlert,
+    link: "/services/penetration-testing",
+    color: "#dc3545"
   },
   {
     title: "Security Compliance",
-    description: "Meet industry standards and regulatory requirements",
+    description: "Ensure compliance with industry standards and regulations through our comprehensive auditing services.",
     icon: ShieldCheck,
-    link: "/services/security-compliance"
+    decorativeIcon: Shield,
+    link: "/services/security-compliance",
+    color: "#28a745"
   },
   {
     title: "Incident Response",
-    description: "Quick and effective security incident handling",
+    description: "Rapid and effective security incident handling with our expert team available 24/7.",
     icon: Lock,
-    link: "/services/incident-response"
+    decorativeIcon: Database,
+    link: "/services/incident-response",
+    color: "#fd7e14"
   }
 ];
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  })
+};
+
 export function ServiceCards() {
   return (
-    
     <section className={styles.servicesSection}>
       <div className={styles.container}>
         <div className={styles.header}>
@@ -64,7 +94,7 @@ export function ServiceCards() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            Services We Provide
+            Our Services
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -72,28 +102,75 @@ export function ServiceCards() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Comprehensive cybersecurity solutions to protect your digital assets
+            Comprehensive cybersecurity solutions tailored to protect your digital assets
           </motion.p>
         </div>
 
-        <div className={styles.cardsContainer}>
-          <HoverEffect items={services.map(service => ({
-            title: service.title,
-            description: service.description,
-            icon: <service.icon className={styles.icon} />,
-            link: service.link
-          }))} />
-        </div>
-      </div>
+        <div className={styles.cardsGrid}>
+          {services.map((service, index) => (
+            <motion.div
+              key={service.title}
+              custom={index}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={cardVariants}
+              whileHover={{
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
+              className={styles.card}
+              style={{ '--card-color': service.color } as any}
+            >
+              <Link href={service.link} className={styles.cardLink}>
+                <div className={styles.cardContent}>
+                  <div className={styles.cardHeader}>
+                    <div 
+                      className={styles.iconContainer}
+                      style={{ '--icon-color': service.color } as any}
+                    >
+                      <service.icon className={styles.icon} />
+                      <motion.div
+                        className={styles.iconBackground}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <motion.div
+                        className={styles.decorativeIcon}
+                        animate={{
+                          rotate: [0, 360],
+                          scale: [1, 1.2, 1]
+                        }}
+                        transition={{
+                          duration: 8,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                      >
+                        <service.decorativeIcon />
+                      </motion.div>
+                    </div>
+                    <h3 className={styles.title}>
+                      {service.title}
+                    </h3>
+                  </div>
 
-      <div className={styles.background}>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className={styles.gradientOrb}
-        />
+                  <p className={styles.description}>{service.description}</p>
+
+                  <motion.div 
+                    className={styles.learnMore}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span>Learn More</span>
+                    <ArrowRight className={styles.arrowIcon} />
+                  </motion.div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
