@@ -14,11 +14,7 @@ import {
   ShieldAlert,
   CircuitBoard,
   ArrowRight,
-  CloudIcon,
-  CloudyIcon,
   Atom,
-  AtomIcon,
-  Code,
   ServerCrash
 } from 'lucide-react';
 import Link from 'next/link';
@@ -29,7 +25,7 @@ const services = [
     title: "Network Security",
     description: "Implement robust network protection strategies with advanced threat detection and prevention systems.",
     icon: Network,
-    decorativeIcon: Network,
+    decorativeIcon: CircuitBoard,
     link: "/services/network-security",
     color: "#007bff"
   },
@@ -37,7 +33,7 @@ const services = [
     title: "Application Security",
     description: "Secure your applications throughout the development lifecycle with our comprehensive security solutions.",
     icon: Code2,
-    decorativeIcon: Code2,
+    decorativeIcon: FileCode2,
     link: "/services/application-security",
     color: "#00bcd4"
   },
@@ -45,14 +41,14 @@ const services = [
     title: "Cloud Security",
     description: "Protect your cloud infrastructure with state-of-the-art security measures and continuous monitoring.",
     icon: Cloud,
-    decorativeIcon: Cloud,
+    decorativeIcon: CloudLightning,
     link: "/services/cloud-security",
     color: "#6610f2"
   },
   {
     title: "Penetration Testing",
     description: "Proactively identify and address vulnerabilities with our expert penetration testing services.",
-    icon: ShieldAlert,
+    icon: Search,
     decorativeIcon: ShieldAlert,
     link: "/services/penetration-testing",
     color: "#dc3545"
@@ -61,7 +57,7 @@ const services = [
     title: "Security Compliance",
     description: "Ensure compliance with industry standards and regulations through our comprehensive auditing services.",
     icon: ShieldCheck,
-    decorativeIcon: ShieldCheck,
+    decorativeIcon: Shield,
     link: "/services/security-compliance",
     color: "#28a745"
   },
@@ -69,7 +65,7 @@ const services = [
     title: "Incident Response",
     description: "Rapid and effective security incident handling with our expert team available 24/7.",
     icon: Lock,
-    decorativeIcon: Lock,
+    decorativeIcon: Database,
     link: "/services/incident-response",
     color: "#fd7e14"
   },
@@ -110,22 +106,67 @@ export function ServiceCards() {
     <section className={styles.servicesSection}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            Our Services
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            Comprehensive cybersecurity solutions tailored to protect your digital assets
-          </motion.p>
+          <div className={styles.headerContent}>
+            <div className={styles.glowCircle} />
+            <motion.div
+              className={styles.titleContainer}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+            >
+              {/* <span className={styles.subtitle}>Explore Our</span> */}
+              <h2 className={styles.title}>
+                <span className={styles.highlightText}>Explore Our Security</span> Services
+              </h2>
+              <div className={styles.underline} />
+            </motion.div>
+            
+            <motion.div
+              className={styles.descriptionContainer}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <p className={styles.description}>
+                Comprehensive cybersecurity solutions tailored to protect your digital assets
+              </p>
+              <div className={styles.stats}>
+                <div className={styles.statItem}>
+                  <span className={styles.statNumber}>100+</span>
+                  <span className={styles.statLabel}>Clients Protected</span>
+                </div>
+                <div className={styles.divider} />
+                <div className={styles.statItem}>
+                  <span className={styles.statNumber}>24/7</span>
+                  <span className={styles.statLabel}>Security Monitoring</span>
+                </div>
+                <div className={styles.divider} />
+                <div className={styles.statItem}>
+                  <span className={styles.statNumber}>99.9%</span>
+                  <span className={styles.statLabel}>Success Rate</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+          
+          <div className={styles.headerAccents}>
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={i}
+                className={styles.accentDot}
+                style={{
+                  left: `${20 + i * 30}%`,
+                  animationDelay: `${i * 0.2}s`
+                }}
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+              />
+            ))}
+          </div>
         </div>
 
         <div className={styles.cardsGrid}>
