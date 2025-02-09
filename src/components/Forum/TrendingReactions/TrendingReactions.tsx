@@ -62,7 +62,7 @@ export function TrendingReactions() {
         <RadioGroup 
           value={selectedPeriod}
           onValueChange={(value) => setSelectedPeriod(value as TimePeriod)}
-          className={styles.periodSelector}
+          className={`${styles.radioGroupItem} radio-group-item`}
         >
           <Radio value="hour">Past Hour</Radio>
           <Radio value="day">Today</Radio>

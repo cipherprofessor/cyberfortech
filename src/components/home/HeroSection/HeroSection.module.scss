@@ -342,6 +342,7 @@
 
   .textContent {
     align-items: center;
+    order: -1; // Changed this from being on the image to the text content
   }
 
   .description {
@@ -359,7 +360,7 @@
   }
 
   .imageContent {
-    order: -1;
+    order: 1; // Changed from -1 to 1
     margin-bottom: 2rem;
   }
 
