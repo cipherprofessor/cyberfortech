@@ -13,7 +13,13 @@ import {
   CloudLightning,
   ShieldAlert,
   CircuitBoard,
-  ArrowRight
+  ArrowRight,
+  CloudIcon,
+  CloudyIcon,
+  Atom,
+  AtomIcon,
+  Code,
+  ServerCrash
 } from 'lucide-react';
 import Link from 'next/link';
 import styles from './ServiceCards.module.scss';
@@ -23,7 +29,7 @@ const services = [
     title: "Network Security",
     description: "Implement robust network protection strategies with advanced threat detection and prevention systems.",
     icon: Network,
-    decorativeIcon: CircuitBoard,
+    decorativeIcon: Network,
     link: "/services/network-security",
     color: "#007bff"
   },
@@ -31,7 +37,7 @@ const services = [
     title: "Application Security",
     description: "Secure your applications throughout the development lifecycle with our comprehensive security solutions.",
     icon: Code2,
-    decorativeIcon: FileCode2,
+    decorativeIcon: Code2,
     link: "/services/application-security",
     color: "#00bcd4"
   },
@@ -39,14 +45,14 @@ const services = [
     title: "Cloud Security",
     description: "Protect your cloud infrastructure with state-of-the-art security measures and continuous monitoring.",
     icon: Cloud,
-    decorativeIcon: CloudLightning,
+    decorativeIcon: Cloud,
     link: "/services/cloud-security",
     color: "#6610f2"
   },
   {
     title: "Penetration Testing",
     description: "Proactively identify and address vulnerabilities with our expert penetration testing services.",
-    icon: Search,
+    icon: ShieldAlert,
     decorativeIcon: ShieldAlert,
     link: "/services/penetration-testing",
     color: "#dc3545"
@@ -55,7 +61,7 @@ const services = [
     title: "Security Compliance",
     description: "Ensure compliance with industry standards and regulations through our comprehensive auditing services.",
     icon: ShieldCheck,
-    decorativeIcon: Shield,
+    decorativeIcon: ShieldCheck,
     link: "/services/security-compliance",
     color: "#28a745"
   },
@@ -63,10 +69,26 @@ const services = [
     title: "Incident Response",
     description: "Rapid and effective security incident handling with our expert team available 24/7.",
     icon: Lock,
-    decorativeIcon: Database,
+    decorativeIcon: Lock,
     link: "/services/incident-response",
     color: "#fd7e14"
-  }
+  },
+  {
+    title: "AWS Cloud Security",
+    description: "Secure your AWS cloud environment with our advanced security solutions and best practices.",
+    icon: ServerCrash,
+    decorativeIcon: ServerCrash,
+    link: "/services/network-security",
+    color: "#007bff"
+  },
+  {
+    title: "Full Stack Development",
+    description: "Build scalable and secure web applications with our expert full stack development services.",
+    icon: Atom,
+    decorativeIcon: Atom,
+    link: "/services/application-security",
+    color: "#00bcd4"
+  },
 ];
 
 const cardVariants = {
