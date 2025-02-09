@@ -2,11 +2,6 @@
   padding: 4rem 1rem;
   position: relative;
   min-height: 100vh;
-  background: radial-gradient(
-    circle at top right,
-    rgba(59, 130, 246, 0.1),
-    transparent 40%
-  );
 
   &::before {
     content: '';
@@ -380,7 +375,7 @@
 // Dark mode styles
 :global(.dark) {
   .contactSection {
-    background: #0f172a;
+    // background: #0f172a;
 
     &::before {
       background: linear-gradient(150deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
@@ -602,13 +597,23 @@
   &:hover {
     transform: translateY(-4px);
     border-color: var(--card-color);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     z-index: 2;
 
     .cardIcon {
       transform: scale(1.05);
     }
-  }
+
+      &::after {
+        background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(var(--card-color-rgb), 0.1) 40%,
+          transparent 60%
+        );
+      }
+    }
+  
 
   .cardIcon {
     width: 2.5rem;

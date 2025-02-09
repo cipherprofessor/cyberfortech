@@ -114,6 +114,7 @@
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
 
   &::before {
     content: '';
@@ -251,6 +252,7 @@
 
     &:hover {
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+      border-color: var(--card-color);
     }
   }
 

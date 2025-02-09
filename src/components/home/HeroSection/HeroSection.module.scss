@@ -4,10 +4,8 @@
   overflow: hidden;
   padding: 2rem 0;
   transition: background-color 0.3s ease;
-  // box-shadow: 0 8px 32px #3b82f61a;
 
   :global(.dark) & {
-    // background-color: rgb(9, 9, 11);
   }
 }
 
@@ -31,7 +29,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  // align-items: center;
   min-height: calc(100vh - 16rem);
   
 }
@@ -190,7 +187,6 @@
   grid-template-columns: repeat(8, 1fr);
   gap: 1.5rem;
   max-width: 100%;
-  // box-shadow: 0 8px 32px #3b82f61a;
 }
 
 .badge {
