@@ -1,5 +1,5 @@
 .metricsSection {
-  padding: 2rem 1rem;
+  padding: 0.1rem 1rem;
   position: relative;
   overflow: hidden;
 }
@@ -11,27 +11,87 @@
 
 .header {
   text-align: center;
-  margin-bottom: 3rem;
+  // margin-bottom: 4rem;
+  position: relative;
+  padding: 0.3rem 0;
 
   h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1f2937;
+    font-size: 3.5rem;
+    font-weight: 800;
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, #1f2937, #4b5563);
+    line-height: 1.2;
+    background: linear-gradient(45deg, #1f2937, #3b82f6);
     -webkit-background-clip: text;
-    color: transparent;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+
+    :global(.dark) & {
+      background: linear-gradient(45deg, #f3f4f6, #60a5fa);
+      -webkit-background-clip: text;
+    }
 
     @media (max-width: 768px) {
-      font-size: 2rem;
+      font-size: 2.5rem;
     }
   }
 
   p {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
+    line-height: 1.6;
     color: #6b7280;
+    font-weight: 500;
     max-width: 600px;
     margin: 0 auto;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    :global(.dark) & {
+      color: #9ca3af;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      height: 2px;
+      width: 2rem;
+      background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+      border-radius: 2px;
+      display: block;
+
+      @media (max-width: 768px) {
+        width: 1.5rem;
+      }
+    }
+  }
+
+  .accentDot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3b82f6;
+    opacity: 0.5;
+
+    &:nth-child(1) {
+      top: 10%;
+      left: 15%;
+    }
+
+    &:nth-child(2) {
+      top: 60%;
+      right: 20%;
+    }
+
+    &:nth-child(3) {
+      bottom: 20%;
+      left: 30%;
+    }
+
+    :global(.dark) & {
+      background: #60a5fa;
+    }
   }
 }
 
@@ -39,7 +99,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-  padding: 1rem;
+  padding: 2rem 1rem;
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
