@@ -277,6 +277,7 @@
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 8px 32px #3b82f61a;
+  
 
   :global(.dark) & {
     background: rgba(39, 39, 42, 0.8);
@@ -286,6 +287,9 @@
 
   &:hover {
     transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(105, 102, 102, 0.194);
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
    
 
     :global(.dark) & {
