@@ -31,7 +31,7 @@ const words = [
 ];
 
 const stats = [
-  { icon: "🧑‍💻", number: "10k+", label: "Active Students", increment: 50 },
+  { icon: "🧑‍💻", number: "175+", label: "Active Students", increment: 50 },
   { icon: "🏆", number: "95%", label: "Success Rate", increment: 1 },
   { icon: "👩‍🏫", number: "50+", label: "Expert Trainers", increment: 1 }
 ];
