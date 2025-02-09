@@ -1,11 +1,16 @@
-// src/components/home/AboutCompany/AboutCompany.tsx
+"use client";
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { 
   CheckCircle2, 
   TrendingUp, 
   Users, 
-  Shield 
+  Shield,
+  Timer,
+  Award,
+  Medal,
+  Bookmark,
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/common/Button/Button';
 import styles from './AboutCompany.module.scss';
@@ -77,8 +82,8 @@ export function AboutCompany() {
               className={styles.title}
               variants={itemVariants}
             >
-              Building The Next Generation of 
-              <span className={styles.highlight}> Cybersecurity Experts</span>
+              Building The Next Generation of{" "}
+              <span className={styles.highlight}>Cybersecurity</span> Experts
             </motion.h2>
 
             <motion.p
@@ -112,14 +117,14 @@ export function AboutCompany() {
               ))}
             </motion.div>
 
-            <motion.div 
+            {/* <motion.div 
               className={styles.actions}
               variants={itemVariants}
             >
-              {/* <Button size="lg">
+              <Button size="lg">
                 Learn More About Us
-              </Button> */}
-            </motion.div>
+              </Button>
+            </motion.div> */}
           </motion.div>
 
           <motion.div 
@@ -139,25 +144,31 @@ export function AboutCompany() {
               />
               
               <motion.div 
-                className={styles.experienceBox}
+                className={styles.infoBox + ' ' + styles.experienceBox}
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.5 }}
               >
-                <span className={styles.number}>10+</span>
-                <span className={styles.text}>Years of Excellence in Cybersecurity Training</span>
+                <Clock className={styles.infoIcon} />
+                <div className={styles.infoContent}>
+                  <span className={styles.number}>10+</span>
+                  <span className={styles.text}>Years Experience</span>
+                </div>
               </motion.div>
 
               <motion.div 
-                className={styles.certificationBox}
+                className={styles.infoBox + ' ' + styles.certificationBox}
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.7, duration: 0.5 }}
               >
-                <span className={styles.number}>ISO 27001</span>
-                <span className={styles.text}>Certified Training Institute</span>
+                <Award className={styles.infoIcon} />
+                <div className={styles.infoContent}>
+                  <span className={styles.number}>ISO 27001</span>
+                  <span className={styles.text}>Certified</span>
+                </div>
               </motion.div>
             </div>
           </motion.div>
