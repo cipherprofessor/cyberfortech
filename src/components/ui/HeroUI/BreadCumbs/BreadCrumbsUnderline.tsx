@@ -2,13 +2,13 @@
 import {Breadcrumbs, BreadcrumbItem} from "@heroui/react";
 
 export default function BreadCrumbsUnderline() {
-  const underlines: Array<keyof typeof descriptions> = ["none", "hover", "always", "active", "focus"];
+  const underlines: Array<keyof typeof descriptions> = ["hover"];
   const descriptions = {
-    none: "No underline",
-    hover: "Underline on hover",
-    always: "Always underline",
-    active: "Underline on active",
-    focus: "Underline on focus",
+    // none: "No underline",
+    hover: "Directory",
+    // always: "Always underline",
+    // active: "Underline on active",
+    // focus: "Underline on focus",
   };
 
   return (
@@ -19,11 +19,9 @@ export default function BreadCrumbsUnderline() {
             {descriptions[u]} ({u})
           </p>
           <Breadcrumbs underline={u}>
-            <BreadcrumbItem>Home</BreadcrumbItem>
-            <BreadcrumbItem>Music</BreadcrumbItem>
-            <BreadcrumbItem>Artist</BreadcrumbItem>
-            <BreadcrumbItem>Album</BreadcrumbItem>
-            <BreadcrumbItem>Song</BreadcrumbItem>
+            <BreadcrumbItem>Cources</BreadcrumbItem>
+            <BreadcrumbItem>CyberSecurity</BreadcrumbItem>
+            <BreadcrumbItem>Advance Penetration Testing</BreadcrumbItem>
           </Breadcrumbs>
         </div>
       ))}

@@ -1,0 +1,190 @@
+// src/components/Forum/NestedReplies/NestedReplies.module.scss
+
+.nestedRepliesContainer {
+    margin-top: 24px;
+  }
+  
+  .replyWrapper {
+    margin-bottom: 20px;
+    
+    // Add indentation for nested replies
+    &.depth-1 { margin-left: 40px; }
+    &.depth-2 { margin-left: 80px; }
+    &.depth-3 { margin-left: 120px; }
+  }
+  
+  .replyContent {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  
+    .dark & {
+      background-color: #1f2937;
+      border: 1px solid #374151;
+    }
+  }
+  
+  .replyHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .authorInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .authorAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .authorName {
+    font-weight: 600;
+    color: #111827;
+  
+    .dark & {
+      color: #f9fafb;
+    }
+  }
+  
+  .replyDate {
+    font-size: 12px;
+    color: #6b7280;
+  
+    .dark & {
+      color: #9ca3af;
+    }
+  }
+  
+  .replyActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .actionButton {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #6b7280;
+    transition: all 0.2s;
+  
+    .dark & {
+      color: #9ca3af;
+    }
+  
+    &:hover:not(:disabled) {
+      background-color: #f3f4f6;
+  
+      .dark & {
+        background-color: #374151;
+      }
+    }
+  
+    &.liked {
+      color: #4f46e5;
+      background-color: #eff6ff;
+  
+      .dark & {
+        color: #818cf8;
+        background-color: #1e3a8a;
+      }
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .replyText {
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.6;
+  
+    .dark & {
+      color: #d1d5db;
+    }
+  
+    p {
+      margin-bottom: 12px;
+  
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  
+    a {
+      color: #4f46e5;
+      text-decoration: underline;
+  
+      .dark & {
+        color: #818cf8;
+      }
+    }
+  }
+  
+  .toggleReplies {
+    font-size: 13px;
+    color: #4f46e5;
+    padding: 4px 8px;
+    margin: 8px 0;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  
+    .dark & {
+      color: #818cf8;
+    }
+  
+    &:hover {
+      background-color: #f3f4f6;
+  
+      .dark & {
+        background-color: #374151;
+      }
+    }
+  }
+  
+  .nestedReplies {
+    margin-top: 12px;
+  }
+  
+  .replyForm {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+  
+    .dark & {
+      border-color: #374151;
+    }
+  }
+  
+  // Responsive design
+  @media (max-width: 768px) {
+    .replyWrapper {
+      &.depth-1 { margin-left: 20px; }
+      &.depth-2 { margin-left: 40px; }
+      &.depth-3 { margin-left: 60px; }
+    }
+  
+    .replyHeader {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  
+    .replyActions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }

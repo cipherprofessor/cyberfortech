@@ -1,0 +1,269 @@
+// src/components/Forum/TopicReplies/TopicReplies.module.scss
+
+.repliesContainer {
+    margin-top: 32px;
+  }
+  
+  .repliesHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  
+    h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #111827;
+  
+      .dark & {
+        color: #f9fafb;
+      }
+    }
+  }
+  
+  .repliesList {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .replyItem {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+  
+    .dark & {
+      background-color: #1f2937;
+      border: 1px solid #374151;
+    }
+  
+    &:hover {
+      transform: translateX(4px);
+    }
+  
+    &.isAnswer {
+      border: 2px solid #10b981;
+      position: relative;
+  
+      &::before {
+        content: 'Solution';
+        position: absolute;
+        top: -12px;
+        right: 20px;
+        background-color: #10b981;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .replyContent {
+    padding: 12px 0;
+    color: #374151;
+    line-height: 1.6;
+  
+    .dark & {
+      color: #d1d5db;
+    }
+  }
+  
+  .replyAuthor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .authorAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .authorInfo {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .authorName {
+    font-weight: 600;
+    color: #111827;
+    font-size: 14px;
+  
+    .dark & {
+      color: #f9fafb;
+    }
+  }
+  
+  .replyMeta {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #6b7280;
+    font-size: 12px;
+  
+    .dark & {
+      color: #9ca3af;
+    }
+  }
+  
+  .replyActions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+  
+    .dark & {
+      border-color: #374151;
+    }
+  }
+  
+  .actionButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #6b7280;
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+  
+    .dark & {
+      color: #9ca3af;
+    }
+  
+    &:hover:not(:disabled) {
+      background-color: #f3f4f6;
+      color: #4f46e5;
+  
+      .dark & {
+        background-color: #374151;
+        color: #818cf8;
+      }
+    }
+  
+    &.liked {
+      color: #4f46e5;
+      background-color: #eff6ff;
+  
+      .dark & {
+        color: #818cf8;
+        background-color: #1e3a8a;
+      }
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .markAnswerButton {
+    color: #059669;
+  
+    &:hover {
+      background-color: #ecfdf5;
+  
+      .dark & {
+        background-color: #064e3b;
+      }
+    }
+  }
+  
+  .moreButton {
+    padding: 6px;
+    border-radius: 6px;
+    color: #6b7280;
+    transition: all 0.2s;
+  
+    &:hover {
+      background-color: #f3f4f6;
+  
+      .dark & {
+        background-color: #374151;
+      }
+    }
+  }
+  
+  .nestedReplies {
+    margin-left: 40px;
+    margin-top: 16px;
+    padding-left: 16px;
+    border-left: 2px solid #e5e7eb;
+  
+    .dark & {
+      border-color: #374151;
+    }
+  }
+  
+  .replyForm {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+  
+    .dark & {
+      border-color: #374151;
+    }
+  }
+  
+  .toggleReplies {
+    margin-top: 12px;
+    color: #4f46e5;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+  
+    .dark & {
+      color: #818cf8;
+    }
+  
+    &:hover {
+      background-color: #f3f4f6;
+  
+      .dark & {
+        background-color: #374151;
+      }
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .replyItem {
+      padding: 16px;
+    }
+  
+    .replyAuthor {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  
+    .replyActions {
+      flex-wrap: wrap;
+    }
+  
+    .nestedReplies {
+      margin-left: 20px;
+      padding-left: 12px;
+    }
+  }

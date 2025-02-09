@@ -40,7 +40,7 @@ const UsersDashboard = () => {
   const users: User[] = [
     {
       id: "1",
-      name: "John Doe",
+      name: "Arsalan Rayees",
       email: "john@example.com",
       joinDate: "2024-01-15",
       lastActive: "2024-01-25",
@@ -124,17 +124,17 @@ const UsersDashboard = () => {
   // Action handlers
   const handleDeleteUsers = useCallback(() => {
     // Implement delete logic
-    console.log("Deleting users:", selectedUsers);
+    // console.log("Deleting users:", selectedUsers);
   }, [selectedUsers]);
 
   const handleBanUsers = useCallback(() => {
     // Implement ban logic
-    console.log("Banning users:", selectedUsers);
+    // console.log("Banning users:", selectedUsers);
   }, [selectedUsers]);
 
   const handleEmailUsers = useCallback(() => {
     // Implement email logic
-    console.log("Emailing users:", selectedUsers);
+    // console.log("Emailing users:", selectedUsers);
   }, [selectedUsers]);
 
   return (
@@ -370,8 +370,7 @@ const UsersDashboard = () => {
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          // Continuation of
-                          src/components/ui/Mine/UsersDashboard/UsersDashboard.tsx
+                    
                           {user.name}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">

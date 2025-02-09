@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { redirect } from 'next/navigation';
 
 export default function DashboardPage() {
-  const { isAuthenticated, isSuperAdmin, isAdmin, isStudent, isLoaded } = useAuth();
+  const { isAuthenticated, isSuperAdmin, isAdmin, isStudent } = useAuth();
   
   // if (!isLoaded) {
   //   return <div>Loading...</div>;

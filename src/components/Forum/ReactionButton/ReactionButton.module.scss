@@ -1,0 +1,126 @@
+// src/components/Forum/ReactionButton/ReactionButton.module.scss
+
+.reactionContainer {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .mainReactionButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #6b7280;
+    transition: all 0.2s;
+    background: none;
+  
+    &:hover:not(:disabled) {
+      background-color: #f3f4f6;
+      color: #4f46e5;
+  
+      .dark & {
+        background-color: #374151;
+        color: #818cf8;
+      }
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .reactionPicker {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 8px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    display: flex;
+    gap: 4px;
+    z-index: 10;
+  
+    .dark & {
+      background-color: #1f2937;
+      border: 1px solid #374151;
+    }
+  }
+  
+  .reactionOption {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    color: #6b7280;
+  
+    &:hover:not(:disabled) {
+      background-color: #f3f4f6;
+      color: #4f46e5;
+  
+      .dark & {
+        background-color: #374151;
+        color: #818cf8;
+      }
+    }
+  
+    &.active {
+      color: #4f46e5;
+      background-color: #eff6ff;
+  
+      .dark & {
+        color: #818cf8;
+        background-color: #1e3a8a;
+      }
+    }
+  }
+  
+  .reactionSummary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .reactionCount {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #6b7280;
+    padding: 2px 6px;
+    background-color: #f3f4f6;
+    border-radius: 12px;
+  
+    .dark & {
+      color: #9ca3af;
+      background-color: #374151;
+    }
+  }
+  
+  .spinner {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  // Responsive design
+  @media (max-width: 640px) {
+    .reactionPicker {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }

@@ -85,7 +85,7 @@ const TransactionsDashboard = () => {
       date: '2024-01-25T10:30:00',
       customer: {
         id: 'USR-001',
-        name: 'John Doe',
+        name: 'Arsalan Rayees',
         email: 'john@example.com',
         country: 'US'
       },

@@ -1,13 +1,13 @@
 "use client";
 import { motion } from 'framer-motion';
-// import { AnimatedTestimonials } from "./animated-testimonials";
 import dynamic from 'next/dynamic';
+import styles from './AnimatedTestimonials.module.scss';
 
-// Dynamically import the AnimatedTestimonials component
 const AnimatedTestimonials = dynamic(
   () => import('./animated-testimonials').then(mod => mod.AnimatedTestimonials),
-  { ssr: false } // Disable server-side rendering
+  { ssr: false }
 );
+
 
 
 
@@ -49,20 +49,86 @@ export function AceternityUIAnimatedTestimonialsUse() {
       src: "/testm/testm4.jpg",
     },
   ];
+  
+
   return (
-    <div className="flex flex-col items-center justify-center">
-      <motion.div 
-        className="text-center max-w-2xl mx-auto mb-8"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-      >
-        <h2 className="text-3xl font-bold mb-4">What Our Students Say</h2>
-        <p className="text-gray-600">
-          Hear from our successful graduates about their learning experience
-        </p>
-      </motion.div>
+    <div className={styles.testimonialSection}>
+      <div className={styles.headerWrapper}>
+        <motion.div 
+          className={styles.titleContent}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.2
+              }
+            }
+          }}
+        >
+          <div className={styles.glowBg} />
+          
+          <motion.h2
+            className={styles.title}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { 
+                opacity: 1, 
+                y: 0,
+                transition: {
+                  type: "spring",
+                  stiffness: 100
+                }
+              }
+            }}
+          >
+            Real Stories, Real Success
+            <div className={styles.underline} />
+          </motion.h2>
+
+          <motion.p
+            className={styles.subtitle}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { 
+                opacity: 1, 
+                y: 0,
+                transition: {
+                  type: "spring",
+                  stiffness: 100
+                }
+              }
+            }}
+          >
+            Transforming careers through expert-led cybersecurity education
+          </motion.p>
+
+          <div className={styles.decorativeElements}>
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={i}
+                className={styles.dot}
+                initial={{ scale: 0 }}
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  opacity: [0.3, 0.5, 0.3] 
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  delay: i * 0.4
+                }}
+              />
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
       <AnimatedTestimonials testimonials={testimonials} />
     </div>
   );
 }
+ 

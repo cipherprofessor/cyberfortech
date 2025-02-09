@@ -1,0 +1,1 @@
+CREATE TRIGGER IF NOT EXISTS update_course_timestamp AFTER UPDATE ON courses FOR EACH ROW BEGIN UPDATE courses SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id; END;

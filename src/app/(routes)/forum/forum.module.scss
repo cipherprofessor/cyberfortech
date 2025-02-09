@@ -1,149 +1,392 @@
-// src/app/forum/forum.module.scss
-.forumContainer {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+// src/app/(routes)/forum/forum.module.scss
+
+.pageContainer {
+  width: 90%;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+// Top Section with Forum Title and Stats
+.topSection {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+// Updated headerSection and related styles
+.headerSection {
+  flex: 1;
+  position: relative;
+  padding: 32px;
+  border-radius: 16px;
+  min-height: 180px;
+  display: flex;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+  isolation: isolate; // Creates new stacking context
+}
+
+// Background effects container
+.headerBackgroundEffects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 25%),
+      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 25%),
+      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.05) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    opacity: 0.4;
   }
-  
-  .forumHeader {
-    margin-bottom: 2rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      45deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%
+    );
+    background-size: 200% 200%;
+    animation: shimmer 3s infinite linear;
   }
-  
+}
+
+.headerContent {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.titleSection {
+  flex: 1;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+  }
+}
+
+.newTopicButton {
+  padding: 10px 16px;
+  background: white;
+  border: none;
+  border-radius: 8px;
+  color: #4f46e5;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-1px);
+    background: #f8fafc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% -200%; }
+  100% { background-position: 200% 200%; }
+}
+
+
+
+
+.headerContent {
+  position: relative;
+  z-index: 3; // Higher z-index to ensure content is above effects
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; // Changed to flex-start for better alignment
+  width: 100%;
+
   .titleSection {
-    margin-bottom: 1.5rem;
-  
+    flex: 1;
     h1 {
       font-size: 2rem;
       font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 0.5rem;
+      color: white;
+      margin: 0 0 8px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-  
+
     p {
-      color: #666;
-      font-size: 1.125rem;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
     }
   }
-  
-  .actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+}
+
+
+
+.statsCard {
+  width: 300px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+// Middle Section with Categories and Trending
+.middleSection {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.categoriesSection {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.trendingSection {
+  width: 300px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+
+// Loading States
+.skeletonBase {
+  animation: pulse 1.5s infinite;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+}
+
+@keyframes pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// Dark Mode
+:global(.dark) {
+  .headerSection {
+    background: linear-gradient(135deg, #312e81, #4338ca);
   }
-  
-  .searchBar {
-    flex: 1;
-    max-width: 500px;
-    position: relative;
+
+  .statsCard,
+  .categoriesSection,
+  .trendingSection
+   {
+    background: #1e293b;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
-  
-  .searchIcon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1.25rem;
-    height: 1.25rem;
-    color: #666;
-  }
-  
-  .searchInput {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 3rem;
-    border: 1px solid #eee;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-  
-    &:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
-    }
-  
-    &::placeholder {
-      color: #999;
-    }
-  }
-  
+
   .newTopicButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  
+    background: #1e293b;
+    color: #818cf8;
+
     &:hover {
-      background: #0056b3;
+      background: #2d3748;
     }
   }
-  
-  .buttonIcon {
-    width: 1.25rem;
-    height: 1.25rem;
+}
+
+
+.tableSection {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  width: 100%;
+  margin: 24px auto;
+  padding: 24px;
+
+}
+
+
+.pageContainer {
+  width: 90%;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.topSection {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  min-height: 180px; // Fixed height for consistency
+}
+
+
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% -200%;
   }
-  
-  .forumContent {
+  100% {
+    background-position: 200% 200%;
+  }
+}
+
+// Dark mode support
+:global(.dark) {
+  .headerSection {
+    background: linear-gradient(
+      135deg, 
+      #312e81 0%,
+      #4338ca 50%,
+      #4f46e5 100%
+    );
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+  }
+}
+
+.headerContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .titleSection {
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      margin: 0 0 8px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
+    }
+  }
+}
+
+.statsCard {
+  width: 300px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  height: 180px; // Fixed height
+}
+
+// Loading states
+.skeletonBase {
+  animation: pulse 1.5s infinite;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+}
+
+.statsSkeleton {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .skeletonHeader {
+    @extend .skeletonBase;
+    height: 24px;
+    width: 60%;
+  }
+
+  .skeletonStats {
     display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+
+    .skeletonStat {
+      @extend .skeletonBase;
+      height: 48px;
+    }
   }
-  
-  .mainSection {
+}
+
+.categorySkeleton {
+  padding: 20px;
+  height: 300px; // Fixed height for category section
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .skeletonHeader {
+    @extend .skeletonBase;
+    height: 32px;
+    width: 40%;
+  }
+
+  .skeletonItems {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-  }
-  
-  .sideSection {
-    position: sticky;
-    top: 2rem;
-    height: fit-content;
-  }
-  
-  @media (max-width: 1024px) {
-    .forumContent {
-      grid-template-columns: 1fr;
-    }
-  
-    .sideSection {
-      display: none;
+    gap: 12px;
+
+    .skeletonItem {
+      @extend .skeletonBase;
+      height: 80px;
     }
   }
-  
-  @media (max-width: 768px) {
-    .forumContainer {
-      padding: 1rem;
-    }
-  
-    .titleSection {
-      h1 {
-        font-size: 1.5rem;
-      }
-  
-      p {
-        font-size: 1rem;
-      }
-    }
-  
-    .actions {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  
-    .searchBar {
-      max-width: none;
-    }
-  
-    .newTopicButton {
-      width: 100%;
-      justify-content: center;
+}
+
+.trendingSkeleton {
+  padding: 20px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .skeletonHeader {
+    @extend .skeletonBase;
+    height: 24px;
+    width: 70%;
+  }
+
+  .skeletonItems {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .skeletonItem {
+      @extend .skeletonBase;
+      height: 40px;
     }
   }
+}
+

@@ -105,7 +105,7 @@ const AnnouncementsDashboard = () => {
       },
       createdBy: {
         id: '1',
-        name: 'John Doe',
+        name: 'Arsalan Rayees',
         role: 'admin'
       },
       createdAt: '2024-01-25T10:30:00',

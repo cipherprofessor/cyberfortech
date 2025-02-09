@@ -42,7 +42,7 @@ export function CourseDiscussion({ courseId }: CourseDiscussionProps) {
     {
       id: 1,
       userId: 'user1',
-      userName: 'John Doe',
+      userName: 'Arsalan Rayees',
       userAvatar: '/avatars/john.jpg',
       content: 'Great explanation of penetration testing concepts!',
       timestamp: '2024-01-20T10:30:00Z',

@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "migrate": "node --loader ts-node/esm src/db/migrations/scripts/migrate.ts",
-    "seed": "node --loader ts-node/esm src/db/seeds/seed.ts"
+    "seed": "tsx src/db/seeds/index.ts",
+    "seed:courses": "tsx src/db/seeds/seed_courses.ts",
+    "db:reset": "npm run migrate && npm run seed"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.9.15",
@@ -73,10 +75,15 @@
     "motion": "^12.0.3",
     "next": "15.1.5",
     "next-themes": "^0.4.4",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.4.0",
     "react": "^19.0.0",
+    "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-leaflet": "^5.0.0",
+    "react-phone-input-2": "^2.15.1",
+    "react-phone-number-input": "^3.4.11",
     "recharts": "^2.15.0",
     "sass": "^1.83.4",
     "simple-icons": "^14.4.0",

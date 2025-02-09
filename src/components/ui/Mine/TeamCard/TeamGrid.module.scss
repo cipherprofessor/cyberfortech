@@ -1,0 +1,31 @@
+// src/components/TeamCard/TeamGrid.module.scss
+.teamGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    padding: 1rem;
+  
+    &.single {
+      max-width: 400px;
+      margin: 0 auto;
+      
+      @media (max-width: 480px) {
+        max-width: 100%;
+      }
+    }
+  
+    &.centered {
+      place-items: center;
+    }
+  
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+  
+    @media (min-width: 1024px) {
+      &:not(.single) {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+    }
+  }

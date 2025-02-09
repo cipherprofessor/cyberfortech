@@ -1,0 +1,87 @@
+// ContactForm.PhoneInput.module.scss
+.phoneInputWrapper {
+    [class~="PhoneInput"] {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+  
+    [class~="PhoneInputCountry"] {
+      margin-left: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  
+    [class~="PhoneInputInput"] {
+      flex: 1;
+      border: none !important;
+      padding: 0 !important;
+      min-height: 42px;
+      background: none !important;
+      font-size: 0.95rem;
+      color: #1f2937;
+  
+      &::placeholder {
+        color: #9ca3af;
+      }
+    }
+  
+    [class~="PhoneInputCountrySelect"] {
+      position: absolute;
+      z-index: 1;
+      max-height: 20px;
+      overflow-y: auto;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+  
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+  
+      &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+        
+        &:hover {
+          background: #555;
+        }
+      }
+    }
+  }
+  
+  // Dark mode
+  [data-theme='dark'] .phoneInputWrapper {
+    [class~="PhoneInputInput"] {
+      color: #f3f4f6;
+  
+      &::placeholder {
+        color: #6b7280;
+      }
+    }
+  
+    [class~="PhoneInputCountrySelect"] {
+      background: #1e293b;
+      border-color: #374151;
+  
+      &::-webkit-scrollbar-track {
+        background: #1e293b;
+      }
+  
+      &::-webkit-scrollbar-thumb {
+        background: #4b5563;
+        
+        &:hover {
+          background: #6b7280;
+        }
+      }
+    }
+  }

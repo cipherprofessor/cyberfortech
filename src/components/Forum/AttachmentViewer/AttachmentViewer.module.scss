@@ -1,0 +1,137 @@
+// src/components/Forum/AttachmentViewer/AttachmentViewer.module.scss
+
+.attachmentsContainer {
+    margin-top: 16px;
+  }
+  
+  .attachmentsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .attachmentItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  
+    .dark & {
+      background-color: #1f2937;
+    }
+  
+    &:hover {
+      background-color: #f3f4f6;
+  
+      .dark & {
+        background-color: #374151;
+      }
+    }
+  }
+  
+  .attachmentInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #6b7280;
+  
+    .dark & {
+      color: #9ca3af;
+    }
+  }
+  
+  .fileDetails {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .fileName {
+    color: #111827;
+    font-size: 14px;
+  
+    .dark & {
+      color: #f9fafb;
+    }
+  }
+  
+  .fileSize {
+    font-size: 12px;
+    color: #6b7280;
+  
+    .dark & {
+      color: #9ca3af;
+    }
+  }
+  
+  .attachmentActions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .actionButton {
+    padding: 6px;
+    border-radius: 6px;
+    color: #6b7280;
+    transition: all 0.2s;
+  
+    &:hover {
+      background-color: #e5e7eb;
+      color: #4f46e5;
+  
+      .dark & {
+        background-color: #4b5563;
+        color: #818cf8;
+      }
+    }
+  
+    &.removeButton {
+      &:hover {
+        background-color: #fee2e2;
+        color: #dc2626;
+  
+        .dark & {
+          background-color: #7f1d1d;
+          color: #f87171;
+        }
+      }
+    }
+  }
+  
+  .previewModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+  
+    img {
+      max-width: 90%;
+      max-height: 90vh;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+  }
+  
+  .closePreview {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    color: white;
+    padding: 8px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s;
+  
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+  }

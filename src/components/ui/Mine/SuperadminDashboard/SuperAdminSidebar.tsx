@@ -86,6 +86,14 @@ const menuItems = [
     ]
   },
   {
+    label: "Discussion",
+    icon: <IconReportMoney className="h-5 w-5" />,
+    href: "/dashboard/superadmindashboard/discussions/forum",
+    subItems: [
+      { label: "Forum Mangement", href: "/dashboard/superadmindashboard/discussions/forum" },
+    ]
+  },
+  {
     label: "Settings",
     icon: <IconSettings className="h-5 w-5" />,
     href: "/dashboard/superadmindashboard/settings",

@@ -9,16 +9,16 @@ export async function GET() {
     const result = await db.execute(`
       SELECT 
         c.*,
-        u.name as instructor_name,
-        u.avatar_url as instructor_avatar,
+        i.name as instructor_name,
+        i.profile_image_url as instructor_avatar,
         COUNT(DISTINCT e.id) as total_students,
         AVG(r.rating) as average_rating,
         COUNT(DISTINCT r.id) as total_reviews
       FROM courses c
-      LEFT JOIN users u ON c.instructor_id = u.id
+      LEFT JOIN instructors i ON c.instructor_id = i.id
       LEFT JOIN enrollments e ON c.id = e.course_id
-      LEFT JOIN reviews r ON c.id = r.course_id
-      GROUP BY c.id
+      LEFT JOIN course_reviews r ON c.id = r.course_id
+      GROUP BY c.id, i.name, i.profile_image_url
       ORDER BY c.created_at DESC
     `);
 
@@ -31,6 +31,7 @@ export async function GET() {
     );
   }
 }
+
 export async function POST(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
@@ -44,6 +45,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, description, price, duration, level, category } = body;
 
+    // First, get the instructor ID for this user
+    const instructorResult = await db.execute({
+      sql: 'SELECT id FROM instructors WHERE user_id = ?',
+      args: [userId]
+    });
+
+    if (!instructorResult.rows.length) {
+      return NextResponse.json(
+        { error: 'User is not an instructor' },
+        { status: 403 }
+      );
+    }
+
+    const instructorId = instructorResult.rows[0].id;
     const courseId = crypto.randomUUID();
 
     await db.execute({
@@ -56,9 +71,11 @@ export async function POST(request: NextRequest) {
           duration, 
           level, 
           category,
-          instructor_id
+          instructor_id,
+          created_at,
+          updated_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       `,
       args: [
         courseId,
@@ -68,7 +85,7 @@ export async function POST(request: NextRequest) {
         duration,
         level,
         category,
-        userId
+        instructorId
       ]
     });
 
@@ -86,7 +103,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// For specific course operations
 export async function getCourseById(
   request: Request,
   { params }: { params: { courseId: string } }
@@ -96,17 +112,17 @@ export async function getCourseById(
       sql: `
         SELECT 
           c.*,
-          u.name as instructor_name,
-          u.avatar_url as instructor_avatar,
+          i.name as instructor_name,
+          i.profile_image_url as instructor_avatar,
           COUNT(DISTINCT e.id) as total_students,
           AVG(r.rating) as average_rating,
           COUNT(DISTINCT r.id) as total_reviews
         FROM courses c
-        LEFT JOIN users u ON c.instructor_id = u.id
+        LEFT JOIN instructors i ON c.instructor_id = i.id
         LEFT JOIN enrollments e ON c.id = e.course_id
-        LEFT JOIN reviews r ON c.id = r.course_id
+        LEFT JOIN course_reviews r ON c.id = r.course_id
         WHERE c.id = ?
-        GROUP BY c.id
+        GROUP BY c.id, i.name, i.profile_image_url
       `,
       args: [params.courseId]
     });

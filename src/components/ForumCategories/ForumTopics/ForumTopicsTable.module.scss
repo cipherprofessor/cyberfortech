@@ -1,0 +1,42 @@
+// src/components/ForumCategories/ForumTopics/ForumTopicsTable.module.scss
+
+.container {
+    width: 100%;
+  }
+  
+  .section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  
+    .dark & {
+      background-color: #1f2937;
+    }
+  }
+  
+  .error {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fee2e2;
+    border-radius: 8px;
+    color: #dc2626;
+    text-align: center;
+  
+    .dark & {
+      background-color: #7f1d1d;
+      color: #fecaca;
+    }
+  }
+  
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    color: #6b7280;
+  
+    .dark & {
+      color: #9ca3af;
+    }
+  }

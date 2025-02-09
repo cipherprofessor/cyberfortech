@@ -1,0 +1,1 @@
+CREATE TRIGGER IF NOT EXISTS update_topic_last_reply AFTER INSERT ON forum_posts BEGIN UPDATE forum_topics SET last_reply_at = NEW.created_at WHERE topic_id = NEW.topic_id; END;

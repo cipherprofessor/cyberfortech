@@ -1,18 +1,25 @@
-// src/hooks/useAuth.ts
 'use client';
+// src/hooks/useAuth.ts
 import { useUser } from "@clerk/nextjs";
+import { ROLES } from '@/constants';
+import { isAdmin } from '@/utils';
+import type { Role } from '@/types';
 
 export function useAuth() {
   const { user, isLoaded } = useUser();
-  const role = user?.publicMetadata?.example as string;
+  
+  // Handle both metadata structures with default STUDENT role
+  const role = !user?.publicMetadata ? ROLES.STUDENT :
+               user?.publicMetadata?.role as Role || 
+               (user?.publicMetadata?.data === "example" ? ROLES.STUDENT : ROLES.STUDENT);
 
   return {
     user,
     isLoaded,
     isAuthenticated: !!user,
-    isSuperAdmin: role === 'superadmin',
-    isAdmin: ['admin'].includes(role),
-    isStudent: role === 'data',
+    isSuperAdmin: role === ROLES.SUPERADMIN,
+    isAdmin: isAdmin(role),
+    isStudent: role === ROLES.STUDENT || user?.publicMetadata?.data === "example",
     role
   };
 }

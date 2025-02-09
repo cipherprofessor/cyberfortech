@@ -266,7 +266,7 @@ const ManageAdmins: React.FC = () => {
   const admins: Admin[] = [
     {
       id: '1',
-      name: 'John Doe',
+      name: 'Arsalan Rayees',
       email: 'john@example.com',
       role: 'super_admin',
       permissions: ['manage_users', 'manage_courses'],
@@ -347,12 +347,12 @@ const ManageAdmins: React.FC = () => {
   // Handlers
   const handleCreateAdmin = (data: Partial<Admin>) => {
     // Implement create admin logic
-    console.log('Creating admin:', data);
+    // console.log('Creating admin:', data);
   };
 
   const handleUpdatePermissions = (adminId: string, permissions: string[]) => {
     // Implement permission update logic
-    console.log('Updating permissions:', { adminId, permissions });
+    // console.log('Updating permissions:', { adminId, permissions });
   };
 
   return (

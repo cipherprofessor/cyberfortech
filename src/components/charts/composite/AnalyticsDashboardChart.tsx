@@ -248,7 +248,7 @@ export const EnhancedAnalyticsDashboardChart: React.FC<EnhancedAnalyticsDashboar
 
   const handleExport = useCallback((format: 'csv' | 'png' | 'svg') => {
     // Implement export logic here
-    console.log(`Exporting as ${format}`);
+    // console.log(`Exporting as ${format}`);
   }, []);
 
   return (

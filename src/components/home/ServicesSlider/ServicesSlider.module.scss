@@ -1,234 +1,486 @@
-// src/components/home/ServicesSlider/ServicesSlider.module.scss
+// ServicesSlider.module.scss
+
 .sliderSection {
-    padding: 4rem 0;
-    background: white;
-    overflow: hidden;
+  padding: 3rem 0rem 1rem 0rem;
+  // background-color: rgb(250, 250, 250);
+  overflow: hidden;
+  position: relative;
+  transition: background-color 0.3s ease;
+
+  :global(.dark) & {
+    // background-color: rgb(9, 9, 11);
   }
-  
-  .header {
-    text-align: center;
-    margin-bottom: 4rem;
-    padding: 0 2rem;
-  
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 1rem;
-    }
-  
-    p {
-      font-size: 1.125rem;
-      color: #666;
-      max-width: 600px;
-      margin: 0 auto;
-    }
+}
+
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  pointer-events: none;
+  z-index: 1;
+
+  :global(.dark) & {
   }
-  
-  .sliderContainer {
+}
+
+.container {
+  max-width: 1400px;
+  margin: 1.3rem auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.header {
+  text-align: center;
+  // margin-bottom: 4rem;
+  position: relative;
+
+  .subtitle {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3b82f6;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
     position: relative;
-    width: 100%;
-    padding: 2rem 0;
-  }
-  
-  .slider {
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .track {
-    display: flex;
-    gap: 2rem;
-    width: fit-content;
-    
-    &:hover {
-      animation-play-state: paused;
+    padding: 0.5rem 1rem;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 2rem;
+
+    :global(.dark) & {
+      color: #60a5fa;
+      background: rgba(59, 130, 246, 0.2);
     }
   }
-  
-  .serviceCard {
-    min-width: 300px;
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-  
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-  
-      .iconWrapper {
-        background: rgba(0, 123, 255, 0.15);
-        transform: scale(1.1);
+
+  h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: rgb(17, 24, 39);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+
+    :global(.dark) & {
+      color: rgb(243, 244, 246);
+    }
+  }
+
+  p {
+    font-size: 1.25rem;
+    color: rgb(75, 85, 99);
+    max-width: 620px;
+    margin: 1px auto 2rem auto;
+    line-height: 1.6;
+
+    :global(.dark) & {
+      color: rgb(156, 163, 175);
+    }
+  }
+}
+
+.sliderContainer {
+  position: relative;
+  width: 100%;
+  padding: 0.2rem 0;
+  margin: 1.2rem 0;
+}
+
+.slider {
+  width: 100%;
+  overflow: hidden;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.track {
+  display: flex;
+  gap: 2rem;
+  width: fit-content;
+  padding: 1rem;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.serviceCard {
+  min-width: 300px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 0;
+  border-radius: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+
+  :global(.dark) & {
+    background: rgba(24, 24, 27, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: var(--card-color);
+    box-shadow: 
+      0 20px 40px -20px var(--card-color),
+      0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    :global(.dark) & {
+      box-shadow: 
+        0 20px 40px -20px var(--card-color),
+        0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .iconWrapper {
+      transform: scale(1.1);
+      
+      .iconBg {
+        opacity: 0.2;
+        transform: scale(1.2);
       }
     }
+
+    .learnMore {
+      color: var(--card-color);
+      gap: 0.75rem;
+    }
   }
-  
+}
+
+.cardContent {
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+}
+
+.iconWrapper {
+  position: relative;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--card-color);
+  position: relative;
+  z-index: 2;
+}
+
+.iconBg {
+  position: absolute;
+  inset: 0;
+  background: var(--card-color);
+  opacity: 0.1;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.serviceCard h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+  margin-bottom: 0.75rem;
+  transition: color 0.3s ease;
+
+  :global(.dark) & {
+    color: rgb(243, 244, 246);
+  }
+}
+
+.serviceCard p {
+  font-size: 0.875rem;
+  color: rgb(75, 85, 99);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+
+  :global(.dark) & {
+    color: rgb(156, 163, 175);
+  }
+}
+
+.learnMore {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(75, 85, 99);
+  transition: all 0.3s ease;
+
+  :global(.dark) & {
+    color: rgb(156, 163, 175);
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.gradientLeft,
+.gradientRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 150px;
+  z-index: 2;
+}
+
+.gradientLeft {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    rgb(250, 250, 250),
+    rgba(250, 250, 250, 0)
+  );
+
+  :global(.dark) & {
+    background: linear-gradient(
+      to right,
+      rgb(9, 9, 11),
+      rgba(9, 9, 11, 0)
+    );
+  }
+}
+
+.gradientRight {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    rgb(250, 250, 250),
+    rgba(250, 250, 250, 0)
+  );
+
+  :global(.dark) & {
+    background: linear-gradient(
+      to left,
+      rgb(9, 9, 11),
+      rgba(9, 9, 11, 0)
+    );
+  }
+}
+
+.cta {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.button {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  background: linear-gradient(45deg, #3b82f6, #60a5fa);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.5);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.6);
+    background: linear-gradient(45deg, #4f8df9, #73b2fd);
+  }
+
+  :global(.dark) & {
+    box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
+
+    &:hover {
+      box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.4);
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 1200px) {
+  .header {
+    h2 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 1.125rem;
+    }
+  }
+
+  .serviceCard {
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sliderSection {
+    padding: 3rem 0;
+  }
+
+  .container {
+    padding: 0 1.5rem;
+  }
+
+  .gradientLeft,
+  .gradientRight {
+    width: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    margin-bottom: 3rem;
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+      padding: 0 1rem;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      padding: 0.4rem 0.8rem;
+    }
+  }
+
+  .serviceCard {
+    min-width: 260px;
+  }
+
+  .cardContent {
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+  }
+
   .iconWrapper {
-    width: 3.5rem;
-    height: 3.5rem;
-    background: rgba(0, 123, 255, 0.1);
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    transition: all 0.3s ease;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
   }
-  
+
   .icon {
     width: 1.5rem;
     height: 1.5rem;
-    color: #007bff;
   }
-  
+
   .serviceCard h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
   }
-  
+
   .serviceCard p {
-    font-size: 0.875rem;
-    color: #666;
-    line-height: 1.5;
+    font-size: 0.813rem;
   }
-  
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
+
+  .button {
+    padding: 0.875rem 1.75rem;
+    font-size: 0.938rem;
   }
-  
+}
+
+@media (max-width: 480px) {
+  .sliderSection {
+    padding: 2rem 0;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .header {
+    h2 {
+      font-size: 1.75rem;
+    }
+  }
+
+  .serviceCard {
+    min-width: 240px;
+    box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+  }
+
+  .cardContent {
+    padding: 1.25rem;
+    box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+  }
+
   .gradientLeft,
   .gradientRight {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 150px;
-    z-index: 2;
+    width: 60px;
   }
-  
-  .gradientLeft {
-    left: 0;
-    background: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 0)
-    );
-  }
-  
-  .gradientRight {
-    right: 0;
-    background: linear-gradient(
-      to left,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 0)
-    );
-  }
-  
+
   .cta {
-    text-align: center;
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
-  
-  .button {
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    font-weight: 500;
-    color: white;
-    background: #007bff;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
-  
+}
+
+// Touch Device Optimization
+@media (hover: none) {
+  .serviceCard {
     &:hover {
-      background: #0056b3;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+      transform: none;
     }
-  }
-  
-  @media (max-width: 1024px) {
-    .sliderSection {
-      padding: 4rem 0;
-    }
-  
-    .header {
-      h2 {
-        font-size: 2rem;
-      }
-  
-      p {
-        font-size: 1rem;
+
+    .iconWrapper {
+      &:hover {
+        transform: none;
       }
     }
   }
-  
-  @media (max-width: 768px) {
-    .header {
-      padding: 0 1rem;
-    }
-  
-    .serviceCard {
-      min-width: 260px;
-      padding: 1.5rem;
-    }
-  
-    .gradientLeft,
-    .gradientRight {
-      width: 100px;
+
+  .button {
+    &:hover {
+      transform: none;
     }
   }
-  
-  // Dark mode support
-  @media (prefers-color-scheme: dark) {
-    .sliderSection {
-      background: #1a1a1a;
-    }
-  
-    .header {
-      h2 {
-        color: white;
-      }
-  
-      p {
-        color: #999;
-      }
-    }
-  
-    .serviceCard {
-      background: #222;
-  
-      h3 {
-        color: white;
-      }
-  
-      p {
-        color: #999;
-      }
-    }
-  
-    .gradientLeft {
-      background: linear-gradient(
-        to right,
-        rgba(26, 26, 26, 1),
-        rgba(26, 26, 26, 0)
-      );
-    }
-  
-    .gradientRight {
-      background: linear-gradient(
-        to left,
-        rgba(26, 26, 26, 1),
-        rgba(26, 26, 26, 0)
-      );
+}
+
+// Animation for card hover state
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--card-color-rgb), 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--card-color-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--card-color-rgb), 0);
+  }
+}
+
+// Pause animation when user prefers reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+
+  .serviceCard {
+    &:hover {
+      transform: none;
     }
   }
+
+  .button {
+    &:hover {
+      transform: none;
+    }
+  }
+}

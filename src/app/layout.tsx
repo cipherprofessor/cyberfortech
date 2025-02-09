@@ -32,7 +32,7 @@ export default function RootLayout({
         >
           <Providers>
             <Navbar />
-            <main className="mt-16">{children}
+            <main className="mt-16 light text-foreground bg-background">{children}
             <SpeedInsights/>
             <Analytics />
             </main>
