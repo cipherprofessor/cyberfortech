@@ -13,10 +13,12 @@ import {
   CloudLightning,
   ShieldAlert,
   CircuitBoard,
-  ArrowRight,
+  ArrowRight,Users, Clock, BarChart2,
   Atom,
   ServerCrash
 } from 'lucide-react';
+
+import CountUp from 'react-countup';
 import Link from 'next/link';
 import styles from './ServiceCards.module.scss';
 
@@ -115,9 +117,8 @@ export function ServiceCards() {
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              {/* <span className={styles.subtitle}>Explore Our</span> */}
               <h2 className={styles.title}>
-                <span className={styles.highlightText}>Explore Our Security</span> Services
+                Explore Our <span className={styles.highlightText}>Security</span> Services
               </h2>
               <div className={styles.underline} />
             </motion.div>
@@ -133,20 +134,60 @@ export function ServiceCards() {
                 Comprehensive cybersecurity solutions tailored to protect your digital assets
               </p>
               <div className={styles.stats}>
-                <div className={styles.statItem}>
-                  <span className={styles.statNumber}>100+</span>
+                <motion.div 
+                  className={styles.statItem}
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <Users className={styles.statIcon} />
+                  <div className={styles.statNumber}>
+                    <CountUp
+                      start={0}
+                      end={100}
+                      duration={2.5}
+                      suffix="+"
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                  </div>
                   <span className={styles.statLabel}>Clients Protected</span>
-                </div>
+                </motion.div>
                 <div className={styles.divider} />
-                <div className={styles.statItem}>
-                  <span className={styles.statNumber}>24/7</span>
+                <motion.div 
+                  className={styles.statItem}
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <Clock className={styles.statIcon} />
+                  <div className={styles.statNumber}>24/7</div>
                   <span className={styles.statLabel}>Security Monitoring</span>
-                </div>
+                </motion.div>
                 <div className={styles.divider} />
-                <div className={styles.statItem}>
-                  <span className={styles.statNumber}>99.9%</span>
+                <motion.div 
+                  className={styles.statItem}
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <BarChart2 className={styles.statIcon} />
+                  <div className={styles.statNumber}>
+                    <CountUp
+                      start={0}
+                      end={98.9}
+                      duration={2.5}
+                      decimals={1}
+                      suffix="%"
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                  </div>
                   <span className={styles.statLabel}>Success Rate</span>
-                </div>
+                </motion.div>
               </div>
             </motion.div>
           </div>
