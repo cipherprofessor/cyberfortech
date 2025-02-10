@@ -1,86 +1,119 @@
-"use client"
+// src/components/courses/CourseContent/CourseContent.tsx
+'use client';
+
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Play } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, PlayCircle, Lock } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import styles from './CourseContent.module.scss';
 
-type Lesson = {
+interface Lesson {
+  id: string;
   title: string;
   duration: string;
-};
+  order_index: number;
+}
 
-type Section = {
+interface Section {
+  id: string;
   title: string;
   lessons: Lesson[];
-};
+}
 
-type CourseContentProps = {
+interface CourseContentProps {
   course: {
-    topics: string[];
-    curriculum: Section[];
+    sections: Section[];
   };
-};
+}
 
 export function CourseContent({ course }: CourseContentProps) {
-  const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0]));
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
-  const toggleSection = (index: number) => {
-    const newExpandedSections = new Set(expandedSections);
-    if (expandedSections.has(index)) {
-      newExpandedSections.delete(index);
-    } else {
-      newExpandedSections.add(index);
-    }
-    setExpandedSections(newExpandedSections);
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev => 
+      prev.includes(sectionId)
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
   };
 
   return (
-    <div className={styles.content}>
-      <section className={styles.section}>
-        <h2>What You'll Learn</h2>
-        <ul className={styles.topicsList}>
-          {course.topics.map((topic, index) => (
-            <li key={index}>{topic}</li>
-          ))}
-        </ul>
-      </section>
+    <div className={`${styles.courseContent} ${isDark ? styles.dark : ''}`}>
+      <h2 className={styles.title}>Course Content</h2>
+      
+      <div className={styles.stats}>
+        <span>{course.sections.length} sections</span>
+        <span>•</span>
+        <span>
+          {course.sections.reduce((total, section) => 
+            total + section.lessons.length, 0
+          )} lessons
+        </span>
+      </div>
 
-      <section className={styles.section}>
-        <h2>Course Content</h2>
-        <div className={styles.curriculum}>
-          {course.curriculum.map((section, sectionIndex) => (
-            <div key={sectionIndex} className={styles.curriculumSection}>
-              <button
-                className={styles.sectionHeader}
-                onClick={() => toggleSection(sectionIndex)}
+      <div className={styles.sections}>
+        {course.sections.map((section, index) => (
+          <motion.div
+            key={section.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            className={styles.section}
+          >
+            <button
+              className={styles.sectionHeader}
+              onClick={() => toggleSection(section.id)}
+            >
+              <div className={styles.sectionInfo}>
+                <h3>Section {index + 1}: {section.title}</h3>
+                <span className={styles.lessonCount}>
+                  {section.lessons.length} lessons
+                </span>
+              </div>
+              <motion.div
+                animate={{ rotate: expandedSections.includes(section.id) ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className={styles.sectionTitle}>
-                  <span>Section {sectionIndex + 1}: {section.title}</span>
-                  <span className={styles.lessonCount}>
-                    {section.lessons.length} lessons
-                  </span>
-                </div>
-                {expandedSections.has(sectionIndex) ? (
-                  <ChevronUp className={styles.icon} />
-                ) : (
-                  <ChevronDown className={styles.icon} />
-                )}
-              </button>
-              
-              {expandedSections.has(sectionIndex) && (
-                <div className={styles.lessons}>
+                <ChevronDown className={styles.icon} />
+              </motion.div>
+            </button>
+
+            <AnimatePresence>
+              {expandedSections.includes(section.id) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className={styles.lessonList}
+                >
                   {section.lessons.map((lesson, lessonIndex) => (
-                    <div key={lessonIndex} className={styles.lesson}>
-                      <Play className={styles.playIcon} />
-                      <span className={styles.lessonTitle}>{lesson.title}</span>
+                    <motion.div
+                      key={lesson.id}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ duration: 0.3, delay: lessonIndex * 0.05 }}
+                      className={styles.lesson}
+                    >
+                      <div className={styles.lessonInfo}>
+                        {lessonIndex < 2 ? (
+                          <PlayCircle className={styles.playIcon} />
+                        ) : (
+                          <Lock className={styles.lockIcon} />
+                        )}
+                        <span className={styles.lessonTitle}>{lesson.title}</span>
+                      </div>
                       <span className={styles.duration}>{lesson.duration}</span>
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               )}
-            </div>
-          ))}
-        </div>
-      </section>
+            </AnimatePresence>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }

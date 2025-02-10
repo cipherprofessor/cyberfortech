@@ -1,46 +1,33 @@
 "use client"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Slider, Checkbox, RadioGroup } from '@heroui/react';
-import { Star } from 'lucide-react';
+import { 
+  Star, 
+  Search,
+  Clock,
+  Wallet,
+  BarChart2,
+  Filter,
+  BookOpen,
+  GraduationCap,
+  RefreshCcw,
+  Tag,
+  ChevronDown,
+  Clock3,
+  Clock8,
+  Clock12,
+  ArrowUpDown,
+  SortAsc,
+  SortDesc
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './CourseFilter.module.scss';
 
-type Course = {
-  id: string;
-  title: string;
-  description: string;
-  image_url: string;
-  duration: string;
-  level: string;
-  price: number;
-  average_rating: number;
-  total_students: number;
-  instructor_name: string;
-  category: string;
-  instructor_avatar?: string;
-  total_reviews?: number;
-  created_at?: string;
-  updated_at?: string;
-  instructor_id?: string;
-};
-
-type FilterState = {
-  priceRange: number[];
-  selectedLevels: string[];
-  selectedCategories: string[];
-  durationRange: string;
-  minRating: number;
-  search: string;
-};
-
-interface CourseFilterProps {
-  onFilterChange?: (filters: FilterState) => void;
-  courses?: Course[];
-}
 
 export function CourseFilter({ 
-  onFilterChange = () => {}, 
+  onFilterChange,
   courses = [] 
-}: Partial<CourseFilterProps>) {
+}: CourseFilterProps) {
   const defaultMaxPrice = 1000;
   const [priceRange, setPriceRange] = useState<[number, number]>([0, defaultMaxPrice]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
@@ -48,33 +35,56 @@ export function CourseFilter({
   const [durationRange, setDurationRange] = useState<string>('all');
   const [minRating, setMinRating] = useState<number>(0);
   const [search, setSearch] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>('newest');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  // Calculate derived values
-  const levels = Array.from(new Set(courses.map(course => course.level)));
-  const categories = Array.from(new Set(courses.map(course => course.category.trim())));
-  const maxPrice = courses.length > 0
-    ? Math.max(...courses.map(course => course.price))
-    : defaultMaxPrice;
+  // Calculate derived values using useMemo
+  const { maxPrice, levels, categories } = useMemo(() => {
+    const calculatedMaxPrice = courses.length > 0
+      ? Math.max(...courses.map(course => course.price))
+      : defaultMaxPrice;
+
+    const uniqueLevels = Array.from(new Set(courses.map(course => course.level)));
+    const uniqueCategories = Array.from(new Set(courses.map(course => course.category.trim())));
+
+    return {
+      maxPrice: calculatedMaxPrice,
+      levels: uniqueLevels,
+      categories: uniqueCategories
+    };
+  }, [courses, defaultMaxPrice]);
+
+  const sortOptions = [
+    { value: 'newest', label: 'Newest', icon: Clock },
+    { value: 'price', label: 'Price', icon: Wallet },
+    { value: 'rating', label: 'Rating', icon: Star },
+    { value: 'duration', label: 'Duration', icon: Clock }
+  ];
 
   useEffect(() => {
-    if (maxPrice && maxPrice !== priceRange[1]) {
+    if (maxPrice !== priceRange[1]) {
       setPriceRange([0, maxPrice]);
     }
   }, [maxPrice]);
 
-  useEffect(() => {
-    if (onFilterChange) {
-      const filters: FilterState = {
-        priceRange,
-        selectedLevels,
-        selectedCategories,
-        durationRange,
-        minRating,
-        search
-      };
-      onFilterChange(filters);
+  const handlePriceRangeChange = (value: number | number[]) => {
+    if (Array.isArray(value) && value.length === 2) {
+      setPriceRange([value[0], value[1]]);
     }
-  }, [priceRange, selectedLevels, selectedCategories, durationRange, minRating, search, onFilterChange]);
+  };
+
+  const handleSortChange = (value: string) => {
+    if (value === sortBy) {
+      setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(value);
+      setSortOrder('desc');
+    }
+  };
+
+  const handleRatingChange = (rating: number) => {
+    setMinRating(rating === minRating ? 0 : rating);
+  };
 
   const handleLevelChange = (level: string) => {
     setSelectedLevels(prev =>
@@ -92,14 +102,6 @@ export function CourseFilter({
     );
   };
 
-  const handleDurationChange = (value: string) => {
-    setDurationRange(value);
-  };
-
-  const handleRatingChange = (value: number) => {
-    setMinRating(value);
-  };
-
   const resetFilters = () => {
     setPriceRange([0, maxPrice]);
     setSelectedLevels([]);
@@ -107,33 +109,89 @@ export function CourseFilter({
     setDurationRange('all');
     setMinRating(0);
     setSearch('');
+    setSortBy('newest');
+    setSortOrder('desc');
+
+    // Reset all checkboxes manually
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]') as NodeListOf<HTMLInputElement>;
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    // Reset all radio buttons
+    const radios = document.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
+    radios.forEach(radio => {
+      radio.checked = radio.value === 'all';
+    });
   };
 
-  return (
-    <div className={styles.filterContainer}>
-      <h2>Filters</h2>
+  useEffect(() => {
+    const filters: FilterState = {
+      priceRange: [priceRange[0], priceRange[1]],
+      selectedLevels,
+      selectedCategories,
+      durationRange,
+      minRating,
+      search,
+      sortBy,
+      sortOrder
+    };
+    onFilterChange?.(filters);
+  }, [priceRange, selectedLevels, selectedCategories, durationRange, minRating, search, sortBy, sortOrder]);
 
+  return (
+    <motion.div 
+      className={styles.filterContainer}
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Search Input */}
       <section className={styles.section}>
-        <h3>Search</h3>
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search courses..."
-          className={styles.searchInput}
-        />
+        <h3><Search size={16} /> Search Courses</h3>
+        <div className={styles.searchWrapper}>
+          <Search size={16} className={styles.searchIcon} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search courses..."
+            className={styles.searchInput}
+          />
+        </div>
       </section>
-      
+
+      {/* Sort Options */}
+      <section className={styles.section}>
+        <h3><ArrowUpDown size={16} /> Sort By</h3>
+        <div className={styles.sortButtons}>
+          {sortOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => handleSortChange(option.value)}
+              className={`${styles.sortButton} ${sortBy === option.value ? styles.active : ''}`}
+            >
+              <option.icon size={16} />
+              <span>{option.label}</span>
+              {sortBy === option.value && (
+                <span className={styles.sortOrderIcon}>
+                  {sortOrder === 'asc' ? <SortAsc size={14} /> : <SortDesc size={14} />}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Price Range */}
       <section className={styles.section}>
-        <h3>Price Range</h3>
+        <h3><Wallet size={16} /> Price Range</h3>
         <Slider
           value={priceRange}
           minValue={0}
           maxValue={maxPrice}
           step={10}
-          onChange={(value) => setPriceRange(Array.isArray(value) ? value as [number, number] : [value, value] as [number, number])}
+          onChange={handlePriceRangeChange}
         />
         <div className={styles.priceInputs}>
           <span>${priceRange[0]}</span>
@@ -143,7 +201,7 @@ export function CourseFilter({
 
       {/* Rating Filter */}
       <section className={styles.section}>
-        <h3>Minimum Rating</h3>
+        <h3><Star size={16} /> Minimum Rating</h3>
         <div className={styles.ratingContainer}>
           {[1, 2, 3, 4, 5].map((rating) => (
             <button
@@ -156,7 +214,7 @@ export function CourseFilter({
                   key={index}
                   size={16}
                   className={styles.star}
-                  fill={minRating >= rating ? "gold" : "none"}
+                  fill={minRating >= rating ? "currentColor" : "none"}
                 />
               ))}
             </button>
@@ -164,63 +222,16 @@ export function CourseFilter({
         </div>
       </section>
 
-      {/* Duration Filter */}
-      <section className={styles.section}>
-        <h3>Duration</h3>
-        <RadioGroup
-          value={durationRange}
-          onValueChange={handleDurationChange}
-          className={styles.durationGroup}
-        >
-          <div className={styles.radioOption}>
-            <input
-              type="radio"
-              id="all"
-              value="all"
-              checked={durationRange === 'all'}
-              onChange={() => handleDurationChange('all')}
-            />
-            <label htmlFor="all">All</label>
-          </div>
-          <div className={styles.radioOption}>
-            <input
-              type="radio"
-              id="short"
-              value="short"
-              checked={durationRange === 'short'}
-              onChange={() => handleDurationChange('short')}
-            />
-            <label htmlFor="short">Short (≤ 4 hours)</label>
-          </div>
-          <div className={styles.radioOption}>
-            <input
-              type="radio"
-              id="medium"
-              value="medium"
-              checked={durationRange === 'medium'}
-              onChange={() => handleDurationChange('medium')}
-            />
-            <label htmlFor="medium">Medium (4-8 hours)</label>
-          </div>
-          <div className={styles.radioOption}>
-            <input
-              type="radio"
-              id="long"
-              value="long"
-              checked={durationRange === 'long'}
-              onChange={() => handleDurationChange('long')}
-            />
-            <label htmlFor="long">Long (&gt; 8 hours)</label>
-          </div>
-        </RadioGroup>
-      </section>
-
       {/* Level Filter */}
       {levels.length > 0 && (
         <section className={styles.section}>
-          <h3>Level</h3>
-          {levels.map(level => (
-            <div key={level} className={styles.checkboxItem}>
+          <h3><GraduationCap size={16} /> Level</h3>
+          {levels.map((level: string) => (
+            <div 
+              key={level} 
+              className={styles.checkboxItem}
+              onClick={() => handleLevelChange(level)}
+            >
               <Checkbox
                 id={`level-${level}`}
                 checked={selectedLevels.includes(level)}
@@ -235,9 +246,13 @@ export function CourseFilter({
       {/* Categories Filter */}
       {categories.length > 0 && (
         <section className={styles.section}>
-          <h3>Categories</h3>
-          {categories.map(category => (
-            <div key={category} className={styles.checkboxItem}>
+          <h3><Tag size={16} /> Categories</h3>
+          {categories.map((category: string) => (
+            <div 
+              key={category} 
+              className={styles.checkboxItem}
+              onClick={() => handleCategoryChange(category)}
+            >
               <Checkbox
                 id={`category-${category}`}
                 checked={selectedCategories.includes(category)}
@@ -250,11 +265,16 @@ export function CourseFilter({
       )}
 
       {/* Reset Button */}
-      <div className={styles.buttonContainer}>
+      <motion.div 
+        className={styles.buttonContainer}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
         <button className={styles.resetButton} onClick={resetFilters}>
+          <RefreshCcw size={16} />
           Reset All Filters
         </button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

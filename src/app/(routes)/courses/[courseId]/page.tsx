@@ -1,76 +1,114 @@
-// import { CourseContent } from '@/components/courses/CourseContent';
-// import { CourseHeader } from '@/components/courses/CourseHeader';
-// import { CourseSidebar } from '@/components/courses/CourseSidebar';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import axios from 'axios';
 import { CourseContent } from '@/components/courses/CourseContent/CourseContent';
 import { CourseHeader } from '@/components/courses/CourseHeader/CourseHeader';
 import { CourseSidebar } from '@/components/courses/CourseSidebar/CourseSidebar';
+import { useTheme } from 'next-themes';
+import { Loader2 } from 'lucide-react';
 import styles from './course-detail.module.scss';
 
-export default async function CourseDetailPage({
+interface CourseSection {
+  id: string;
+  title: string;
+  lessons: Array<{
+    id: string;
+    title: string;
+    duration: string;
+    order_index: number;
+  }>;
+}
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  instructor_name: string;
+  instructor_avatar: string;
+  price: number;
+  duration: string;
+  level: string;
+  average_rating: number;
+  total_students: number;
+  total_reviews: number;
+  sections: CourseSection[];
+}
+
+export default function CourseDetailPage({
   params,
 }: {
   params: { courseId: string };
 }) {
-  // In a real app, fetch course data from API
-  const course = {
-    id: params.courseId,
-    title: "Advanced Penetration Testing",
-    description: "Master the art of ethical hacking and penetration testing with hands-on labs and real-world scenarios. Learn to identify and exploit vulnerabilities in networks, web applications, and systems.",
-    instructor: {
-      name: "Arsalan Rayees",
-      title: "Senior Security Engineer",
-      avatar: "/instructor-avatar.jpg",
-      bio: "15+ years of experience in cybersecurity",
-    },
-    price: 299.99,
-    duration: "12 weeks",
-    level: "Advanced",
-    rating: 4.8,
-    studentsEnrolled: 1234,
-    lastUpdated: "2024-01-15",
-    language: "English",
-    certificate: true,
-    topics: [
-      "Network Penetration Testing",
-      "Web Application Security",
-      "Wireless Network Security",
-      "Mobile Application Testing",
-      "Cloud Security Testing",
-    ],
-    curriculum: [
-      {
-        title: "Introduction to Penetration Testing",
-        lessons: [
-          { title: "Understanding Penetration Testing", duration: "45:00" },
-          { title: "Setting Up Your Lab Environment", duration: "1:15:00" },
-          { title: "Basic Tools and Techniques", duration: "1:30:00" },
-        ],
-      },
-      {
-        title: "Network Penetration Testing",
-        lessons: [
-          { title: "Network Scanning and Enumeration", duration: "2:00:00" },
-          { title: "Vulnerability Assessment", duration: "1:45:00" },
-          { title: "Exploitation Techniques", duration: "2:30:00" },
-        ],
-      },
-      // More sections...
-    ],
-  };
+  const [course, setCourse] = useState<Course | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await axios.get(`/api/courses/${params.courseId}`);
+        setCourse(response.data);
+      } catch (err) {
+        setError('Failed to load course details');
+        console.error('Error fetching course:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [params.courseId]);
+
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <Loader2 className={styles.loadingSpinner} />
+        <p>Loading course details...</p>
+      </div>
+    );
+  }
+
+  if (error || !course) {
+    return (
+      <div className={styles.errorContainer}>
+        <h2>Error</h2>
+        <p>{error || 'Failed to load course'}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.courseContainer}>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className={`${styles.courseContainer} ${isDark ? styles.dark : ''}`}
+    >
       <CourseHeader course={course} />
       
       <div className={styles.courseContent}>
-        <main className={styles.mainContent}>
+        <motion.main 
+          className={styles.mainContent}
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <CourseContent course={course} />
-        </main>
+        </motion.main>
         
-        <aside className={styles.sidebar}>
+        <motion.aside 
+          className={styles.sidebar}
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
           <CourseSidebar course={course} />
-        </aside>
+        </motion.aside>
       </div>
-    </div>
+    </motion.div>
   );
 }

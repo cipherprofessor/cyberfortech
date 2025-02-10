@@ -1,45 +1,20 @@
 "use client"
 import { useCallback, useEffect, useState } from 'react';
+
 import styles from './CourseList.module.scss';
 import { CourseCard } from '../CourseCard/CourseCard';
 import { CourseCardPlaceholder } from '../CourseCard/CourseCardPlaceholder';
 import { Button, Pagination } from '@heroui/react';
 import { CourseFilter } from '../CourseFilter/CourseFilter';
 
-type Course = {
-  id: string;
-  title: string;
-  description: string;
-  image_url: string;
-  duration: string;
-  level: string;
-  price: number;
-  average_rating: number;
-  total_students: number;
-  instructor_name: string;
-  category: string;
-  instructor_avatar?: string;
-  total_reviews?: number;
-  created_at?: string;
-  updated_at?: string;
-  instructor_id?: string;
-};
 
-type FilterState = {
-  priceRange: number[];
-  selectedLevels: string[];
-  selectedCategories: string[];
-  durationRange: string;
-  minRating: number;
-  search: string;
-};
 
 export function CourseList() {
   const [courses, setCourses] = useState<Course[]>([]); // Initialize with empty array
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]); // Initialize with empty array
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const coursesPerPage = 10;
+  const coursesPerPage = 9;
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -58,8 +33,26 @@ export function CourseList() {
     fetchCourses();
   }, []);
 
-  const handleFilterChange = useCallback((filters: FilterState) => {
+  const handleFilterChange = (filters: FilterState) => {
     let filtered = [...courses];
+  
+    // Apply sorting
+    filtered.sort((a, b) => {
+      const multiplier = filters.sortOrder === 'asc' ? 1 : -1;
+      
+      switch (filters.sortBy) {
+        case 'newest':
+          return multiplier * (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        case 'price':
+          return multiplier * (a.price - b.price);
+        case 'rating':
+          return multiplier * (a.average_rating - b.average_rating);
+        case 'duration':
+          return multiplier * (parseInt(a.duration) - parseInt(b.duration));
+        default:
+          return 0;
+      }
+    });
 
 
     // Filter by price range
@@ -114,7 +107,7 @@ export function CourseList() {
 
     setFilteredCourses(filtered);
     setCurrentPage(1);
-  }, [courses]); 
+  };
 
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;

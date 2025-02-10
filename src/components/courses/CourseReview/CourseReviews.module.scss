@@ -1,0 +1,235 @@
+// src/components/courses/CourseReviews/CourseReviews.module.scss
+.reviewsContainer {
+    padding: 2rem 0;
+    transition: all 0.3s ease;
+  
+    &.dark {
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0a0;
+      --card-bg: #2d2d2d;
+      --border-color: #404040;
+      --hover-bg: #353535;
+    }
+  }
+  
+  .title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+  }
+  
+  .reviewPrompt {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .writeReviewButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #3b82f6;
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  
+    &:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+  
+      .icon {
+        transform: rotate(-15deg);
+      }
+    }
+  
+    .icon {
+      transition: transform 0.3s ease;
+    }
+  }
+  
+  .reviewForm {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  
+  .ratingInput {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  
+    .star {
+      cursor: pointer;
+      color: #d1d5db;
+      transition: all 0.2s ease;
+  
+      &:hover {
+        transform: scale(1.2);
+      }
+  
+      &.filled {
+        color: #fbbf24;
+      }
+    }
+  }
+  
+  .commentInput {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    resize: vertical;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+  }
+  
+  .formActions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+  
+  .userReview {
+    margin-bottom: 2rem;
+    
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .reviewsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .reviewCard {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .reviewHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .reviewInfo {
+    flex: 1;
+  }
+  
+  .userName {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+  
+  .rating {
+    display: flex;
+    gap: 0.25rem;
+  
+    .star {
+      color: #d1d5db;
+  
+      &.filled {
+        color: #fbbf24;
+      }
+    }
+  }
+  
+  .date {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  
+  .comment {
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .helpfulButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    background: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  
+    &:hover {
+      background: var(--hover-bg);
+      color: #3b82f6;
+      border-color: #3b82f6;
+    }
+  
+    svg {
+      transition: transform 0.3s ease;
+    }
+  
+    &:hover svg {
+      transform: scale(1.2);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .reviewsContainer {
+      padding: 1rem 0;
+    }
+  
+    .title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  
+    .reviewCard {
+      padding: 1rem;
+    }
+  
+    .reviewHeader {
+      flex-wrap: wrap;
+    }
+  
+    .date {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+  }

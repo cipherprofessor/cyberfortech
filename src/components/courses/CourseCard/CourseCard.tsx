@@ -4,21 +4,21 @@ import Image from 'next/image';
 import { Star } from 'lucide-react';
 import styles from './CourseCard.module.scss';
 
-type CourseCardProps = {
-  course: {
-    id: string;
-    title: string;
-    description: string;
-    image_url: string; // Changed from imageUrl to match API
-    duration: string;
-    level: string;
-    price: number;
-    average_rating: number; // Changed from rating to match API
-    total_students: number; // Changed from studentsEnrolled to match API
-    instructor_name: string;
-    category: string;
-  };
-};
+// type CourseCardProps = {
+//   course: {
+//     id: string;
+//     title: string;
+//     description: string;
+//     image_url: string; // Changed from imageUrl to match API
+//     duration: string;
+//     level: string;
+//     price: number;
+//     average_rating: number; // Changed from rating to match API
+//     total_students: number; // Changed from studentsEnrolled to match API
+//     instructor_name: string;
+//     category: string;
+//   };
+// };
 
 export function CourseCard({ course }: CourseCardProps) {
   const defaultImageUrl = '/cyberimagecoursecover.jpg';
@@ -50,7 +50,7 @@ export function CourseCard({ course }: CourseCardProps) {
         <div className={styles.details}>
           <span className={styles.duration}>{course.duration}</span>
           <span className={styles.students}>
-            {course.total_students ? course.total_students.toLocaleString() : '0'} students
+            {course.total_students ? (course.enrollment_count ?? 0).toLocaleString() : '0'} Students
           </span>
         </div>
         

@@ -1,28 +1,80 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
-// import { auth } from '@clerk/nextjs';
+import { Row } from '@libsql/client';
+
+interface CourseLesson {
+  id: string;
+  title: string;
+  duration: string;
+  order_index: number;
+}
+
+interface CourseSection {
+  id: string;
+  title: string;
+  order_index: number;
+  course_id: string;
+  lessons: CourseLesson[];
+}
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  price: number;
+  duration: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  instructor_id: string;
+  instructor_name: string | null;
+  category: string;
+  created_at: string;
+  updated_at: string;
+  average_rating: number;
+  total_students: number;
+  total_reviews: number;
+}
+
+function safeString(value: unknown): string {
+  return String(value || '');
+}
+
+function safeNumber(value: unknown): number {
+  const num = Number(value);
+  return isNaN(num) ? 0 : num;
+}
 
 export async function GET(
   request: Request,
   { params }: { params: { courseId: string } }
 ) {
   try {
+    // Access courseId directly from params object
     const { courseId } = params;
+
     const result = await db.execute({
       sql: `
         SELECT 
           c.*,
-          u.name as instructor_name,
-          u.avatar_url as instructor_avatar,
-          COUNT(DISTINCT e.id) as total_students,
-          AVG(r.rating) as average_rating,
-          COUNT(DISTINCT r.id) as total_reviews
+          i.name as instructor_name,
+          (
+            SELECT COUNT(*)
+            FROM enrollments
+            WHERE course_id = c.id
+          ) as total_students,
+          (
+            SELECT COUNT(*)
+            FROM course_reviews
+            WHERE course_id = c.id
+          ) as total_reviews,
+          (
+            SELECT AVG(rating)
+            FROM course_reviews
+            WHERE course_id = c.id
+          ) as average_rating
         FROM courses c
-        LEFT JOIN users u ON c.instructor_id = u.id
-        LEFT JOIN enrollments e ON c.id = e.course_id
-        LEFT JOIN reviews r ON c.id = r.course_id
+        LEFT JOIN instructors i ON c.instructor_id = i.id
         WHERE c.id = ?
-        GROUP BY c.id
       `,
       args: [courseId]
     });
@@ -34,32 +86,66 @@ export async function GET(
       );
     }
 
-    const course = result.rows[0];
+    const row = result.rows[0];
+    
+    const course: Course = {
+      id: safeString(row.id),
+      title: safeString(row.title),
+      description: safeString(row.description),
+      image_url: safeString(row.image_url),
+      price: safeNumber(row.price),
+      duration: safeString(row.duration),
+      level: safeString(row.level) as Course['level'],
+      instructor_id: safeString(row.instructor_id),
+      instructor_name: row.instructor_name ? safeString(row.instructor_name) : null,
+      category: safeString(row.category),
+      created_at: safeString(row.created_at),
+      updated_at: safeString(row.updated_at),
+      average_rating: safeNumber(row.average_rating),
+      total_students: safeNumber(row.total_students),
+      total_reviews: safeNumber(row.total_reviews)
+    };
 
-    // Fetch course sections and lessons
     const sectionsResult = await db.execute({
       sql: `
+        WITH lesson_data AS (
+          SELECT 
+            section_id,
+            json_group_array(
+              json_object(
+                'id', id,
+                'title', title,
+                'duration', duration,
+                'order_index', order_index
+              )
+            ) as lessons
+          FROM course_lessons
+          GROUP BY section_id
+        )
         SELECT 
-          s.*,
-          json_group_array(json_object(
-            'id', l.id,
-            'title', l.title,
-            'duration', l.duration,
-            'order_index', l.order_index
-          )) as lessons
-        FROM course_sections s
-        LEFT JOIN course_lessons l ON s.id = l.section_id
-        WHERE s.course_id = ?
-        GROUP BY s.id
-        ORDER BY s.order_index
+          cs.*,
+          COALESCE(ld.lessons, '[]') as lessons
+        FROM course_sections cs
+        LEFT JOIN lesson_data ld ON cs.id = ld.section_id
+        WHERE cs.course_id = ?
+        ORDER BY cs.order_index
       `,
       args: [courseId]
     });
 
+    const sections = sectionsResult.rows.map(row => ({
+      id: safeString(row.id),
+      title: safeString(row.title),
+      order_index: safeNumber(row.order_index),
+      course_id: safeString(row.course_id),
+      lessons: JSON.parse(safeString(row.lessons)) as CourseLesson[]
+    }));
+
     return NextResponse.json({
       ...course,
-      sections: sectionsResult.rows
+      sections
     });
+
   } catch (error) {
     console.error('Error fetching course:', error);
     return NextResponse.json(
