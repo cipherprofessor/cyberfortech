@@ -1,8 +1,8 @@
-"use client"
-import { useState, useEffect, useMemo } from 'react';
-import { Slider, Checkbox, RadioGroup } from '@heroui/react';
-import { 
-  Star, 
+"use client";
+import { useState, useEffect, useMemo } from "react";
+import { Slider, Checkbox, RadioGroup } from "@heroui/react";
+import {
+  Star,
   Search,
   Clock,
   Wallet,
@@ -18,47 +18,54 @@ import {
   Clock12,
   ArrowUpDown,
   SortAsc,
-  SortDesc
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import styles from './CourseFilter.module.scss';
+  SortDesc,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import styles from "./CourseFilter.module.scss";
 
-
-export function CourseFilter({ 
+export function CourseFilter({
   onFilterChange,
-  courses = [] 
+  courses = [],
 }: CourseFilterProps) {
   const defaultMaxPrice = 1000;
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, defaultMaxPrice]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    0,
+    defaultMaxPrice,
+  ]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [durationRange, setDurationRange] = useState<string>('all');
+  const [durationRange, setDurationRange] = useState<string>("all");
   const [minRating, setMinRating] = useState<number>(0);
-  const [search, setSearch] = useState<string>('');
-  const [sortBy, setSortBy] = useState<string>('newest');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [search, setSearch] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("newest");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Calculate derived values using useMemo
   const { maxPrice, levels, categories } = useMemo(() => {
-    const calculatedMaxPrice = courses.length > 0
-      ? Math.max(...courses.map(course => course.price))
-      : defaultMaxPrice;
+    const calculatedMaxPrice =
+      courses.length > 0
+        ? Math.max(...courses.map((course) => course.price))
+        : defaultMaxPrice;
 
-    const uniqueLevels = Array.from(new Set(courses.map(course => course.level)));
-    const uniqueCategories = Array.from(new Set(courses.map(course => course.category.trim())));
+    const uniqueLevels = Array.from(
+      new Set(courses.map((course) => course.level))
+    );
+    const uniqueCategories = Array.from(
+      new Set(courses.map((course) => course.category.trim()))
+    );
 
     return {
       maxPrice: calculatedMaxPrice,
       levels: uniqueLevels,
-      categories: uniqueCategories
+      categories: uniqueCategories,
     };
   }, [courses, defaultMaxPrice]);
 
   const sortOptions = [
-    { value: 'newest', label: 'Newest', icon: Clock },
-    { value: 'price', label: 'Price', icon: Wallet },
-    { value: 'rating', label: 'Rating', icon: Star },
-    { value: 'duration', label: 'Duration', icon: Clock }
+    { value: "newest", label: "Newest", icon: Clock },
+    { value: "price", label: "Price", icon: Wallet },
+    { value: "rating", label: "Rating", icon: Star },
+    { value: "duration", label: "Duration", icon: Clock },
   ];
 
   useEffect(() => {
@@ -75,10 +82,10 @@ export function CourseFilter({
 
   const handleSortChange = (value: string) => {
     if (value === sortBy) {
-      setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortBy(value);
-      setSortOrder('desc');
+      setSortOrder("desc");
     }
   };
 
@@ -87,42 +94,29 @@ export function CourseFilter({
   };
 
   const handleLevelChange = (level: string) => {
-    setSelectedLevels(prev =>
-      prev.includes(level)
-        ? prev.filter(l => l !== level)
-        : [...prev, level]
+    setSelectedLevels((prev) =>
+      prev.includes(level) ? prev.filter((l) => l !== level) : [...prev, level]
     );
   };
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategories(prev =>
+    setSelectedCategories((prev) =>
       prev.includes(category)
-        ? prev.filter(c => c !== category)
+        ? prev.filter((c) => c !== category)
         : [...prev, category]
     );
   };
 
+  // Update the resetFilters function
   const resetFilters = () => {
     setPriceRange([0, maxPrice]);
     setSelectedLevels([]);
     setSelectedCategories([]);
-    setDurationRange('all');
+    setDurationRange("all");
     setMinRating(0);
-    setSearch('');
-    setSortBy('newest');
-    setSortOrder('desc');
-
-    // Reset all checkboxes manually
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]') as NodeListOf<HTMLInputElement>;
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = false;
-    });
-
-    // Reset all radio buttons
-    const radios = document.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
-    radios.forEach(radio => {
-      radio.checked = radio.value === 'all';
-    });
+    setSearch("");
+    setSortBy("newest");
+    setSortOrder("desc");
   };
 
   useEffect(() => {
@@ -134,13 +128,22 @@ export function CourseFilter({
       minRating,
       search,
       sortBy,
-      sortOrder
+      sortOrder,
     };
     onFilterChange?.(filters);
-  }, [priceRange, selectedLevels, selectedCategories, durationRange, minRating, search, sortBy, sortOrder]);
+  }, [
+    priceRange,
+    selectedLevels,
+    selectedCategories,
+    durationRange,
+    minRating,
+    search,
+    sortBy,
+    sortOrder,
+  ]);
 
   return (
-    <motion.div 
+    <motion.div
       className={styles.filterContainer}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -148,7 +151,9 @@ export function CourseFilter({
     >
       {/* Search Input */}
       <section className={styles.section}>
-        <h3><Search size={16} /> Search Courses</h3>
+        <h3>
+          <Search size={16} /> Search Courses
+        </h3>
         <div className={styles.searchWrapper}>
           <Search size={16} className={styles.searchIcon} />
           <input
@@ -163,19 +168,27 @@ export function CourseFilter({
 
       {/* Sort Options */}
       <section className={styles.section}>
-        <h3><ArrowUpDown size={16} /> Sort By</h3>
+        <h3>
+          <ArrowUpDown size={16} /> Sort By
+        </h3>
         <div className={styles.sortButtons}>
           {sortOptions.map((option) => (
             <button
               key={option.value}
               onClick={() => handleSortChange(option.value)}
-              className={`${styles.sortButton} ${sortBy === option.value ? styles.active : ''}`}
+              className={`${styles.sortButton} ${
+                sortBy === option.value ? styles.active : ""
+              }`}
             >
               <option.icon size={16} />
               <span>{option.label}</span>
               {sortBy === option.value && (
                 <span className={styles.sortOrderIcon}>
-                  {sortOrder === 'asc' ? <SortAsc size={14} /> : <SortDesc size={14} />}
+                  {sortOrder === "asc" ? (
+                    <SortAsc size={14} />
+                  ) : (
+                    <SortDesc size={14} />
+                  )}
                 </span>
               )}
             </button>
@@ -185,7 +198,9 @@ export function CourseFilter({
 
       {/* Price Range */}
       <section className={styles.section}>
-        <h3><Wallet size={16} /> Price Range</h3>
+        <h3>
+          <Wallet size={16} /> Price Range
+        </h3>
         <Slider
           value={priceRange}
           minValue={0}
@@ -201,13 +216,17 @@ export function CourseFilter({
 
       {/* Rating Filter */}
       <section className={styles.section}>
-        <h3><Star size={16} /> Minimum Rating</h3>
+        <h3>
+          <Star size={16} /> Minimum Rating
+        </h3>
         <div className={styles.ratingContainer}>
           {[1, 2, 3, 4, 5].map((rating) => (
             <button
               key={rating}
               onClick={() => handleRatingChange(rating)}
-              className={`${styles.ratingButton} ${minRating === rating ? styles.active : ''}`}
+              className={`${styles.ratingButton} ${
+                minRating === rating ? styles.active : ""
+              }`}
             >
               {Array.from({ length: rating }).map((_, index) => (
                 <Star
@@ -222,50 +241,56 @@ export function CourseFilter({
         </div>
       </section>
 
-      {/* Level Filter */}
       {levels.length > 0 && (
         <section className={styles.section}>
-          <h3><GraduationCap size={16} /> Level</h3>
+          <h3>
+            <GraduationCap size={16} /> Level
+          </h3>
           {levels.map((level: string) => (
-            <div 
-              key={level} 
+            <label
+              key={level}
               className={styles.checkboxItem}
-              onClick={() => handleLevelChange(level)}
+              htmlFor={`level-${level}`}
             >
-              <Checkbox
-                id={`level-${level}`}
-                checked={selectedLevels.includes(level)}
-                onChange={() => handleLevelChange(level)}
-              />
-              <label htmlFor={`level-${level}`}>{level}</label>
-            </div>
+              <div className={styles.checkboxWrapper}>
+                <Checkbox
+                  id={`level-${level}`}
+                  checked={selectedLevels.includes(level)}
+                  onChange={() => handleLevelChange(level)}
+                />
+                <span className={styles.checkboxLabel}>{level}</span>
+              </div>
+            </label>
           ))}
         </section>
       )}
 
-      {/* Categories Filter */}
       {categories.length > 0 && (
         <section className={styles.section}>
-          <h3><Tag size={16} /> Categories</h3>
+          <h3>
+            <Tag size={16} /> Categories
+          </h3>
           {categories.map((category: string) => (
-            <div 
-              key={category} 
+            <label
+              key={category}
               className={styles.checkboxItem}
-              onClick={() => handleCategoryChange(category)}
+              htmlFor={`category-${category}`}
             >
-              <Checkbox
-                id={`category-${category}`}
-                checked={selectedCategories.includes(category)}
-                onChange={() => handleCategoryChange(category)}
-              />
-              <label htmlFor={`category-${category}`}>{category}</label>
-            </div>
+              <div className={styles.checkboxWrapper}>
+                <Checkbox
+                  id={`category-${category}`}
+                  checked={selectedCategories.includes(category)}
+                  onChange={() => handleCategoryChange(category)}
+                />
+                <span className={styles.checkboxLabel}>{category}</span>
+              </div>
+            </label>
           ))}
         </section>
       )}
 
       {/* Reset Button */}
-      <motion.div 
+      <motion.div
         className={styles.buttonContainer}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}

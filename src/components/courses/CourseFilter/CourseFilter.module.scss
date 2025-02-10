@@ -470,3 +470,34 @@
   }
 }
 
+.checkboxItem {
+  display: block; 
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f9fafb;
+
+    :global(.dark) & {
+      background-color: #374151;
+    }
+  }
+}
+
+.checkboxWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkboxLabel {
+  font-size: 0.875rem;
+  color: #4b5563;
+  user-select: none;
+
+  :global(.dark) & {
+    color: #d1d5db;
+  }
+}
