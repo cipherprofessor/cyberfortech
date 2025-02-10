@@ -2,15 +2,13 @@
   padding: 1.5rem;
   background-color: white;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
-              0 10px 15px -3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
 
   :global(.dark) & {
     background-color: #1f2937;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2),
-                0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
   }
 }
 

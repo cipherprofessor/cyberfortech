@@ -9,7 +9,6 @@ type Course = {
     price: number;
     average_rating: number;
     enrollment_count?: number;
-    // instructor_name: string;
     category: string;
     instructor_avatar?: string;
     total_reviews?: number;
@@ -21,7 +20,7 @@ type Course = {
     rating?: number;
     instructor_name: string | null;
     instructor_profile_image_url: string | null;
-    
+
   };
   
   type FilterState = {
@@ -55,6 +54,21 @@ type Course = {
     instructor_profile_image_url: string | null;
   };
 };
+
+interface CourseHeaderProps {
+  course: {
+    title: string;
+    description: string;
+    // instructor_name?: string | undefined;
+    instructor_avatar: string;
+    level: string;
+    duration: string;
+    average_rating: number;
+    total_reviews: number;
+    total_students: number;
+    instructor_name?: string ;
+  };
+}
 
 
 

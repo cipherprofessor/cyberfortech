@@ -6,19 +6,6 @@ import { Star, Users, BarChart2, Clock, Award } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import styles from './CourseHeader.module.scss';
 
-interface CourseHeaderProps {
-  course: {
-    title: string;
-    description: string;
-    instructor_name: string;
-    instructor_avatar: string;
-    level: string;
-    duration: string;
-    average_rating: number;
-    total_reviews: number;
-    total_students: number;
-  };
-}
 
 export function CourseHeader({ course }: CourseHeaderProps) {
   const { theme } = useTheme();
