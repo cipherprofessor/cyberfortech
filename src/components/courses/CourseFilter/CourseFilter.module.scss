@@ -185,6 +185,36 @@
   align-items: center;
 }
 
+.clearSearch {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #6b7280;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+
+  :global(.dark) & {
+    color: #9ca3af;
+
+    &:hover {
+      background-color: #374151;
+      color: #d1d5db;
+    }
+  }
+}
+
+
 .searchIcon {
   position: absolute;
   left: 0.75rem;
@@ -205,6 +235,7 @@
   transition: all 0.2s ease;
   background-color: white;
   color: #1a1a1a;
+  padding-right: 2.5rem;
 
   :global(.dark) & {
     background-color: #374151;
@@ -390,24 +421,29 @@
   gap: 0.75rem;
   padding: 0.5rem;
   border-radius: 0.5rem;
+  cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
     background-color: #f9fafb;
+  }
 
-    :global(.dark) & {
+  :global(.dark) & {
+    &:hover {
       background-color: #374151;
     }
   }
+}
 
-  label {
-    font-size: 0.875rem;
-    color: #4b5563;
-    cursor: pointer;
+.checkboxLabel {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
+  user-select: none;
 
-    :global(.dark) & {
-      color: #d1d5db;
-    }
+  :global(.dark) & {
+    color: #d1d5db;
   }
 }
 
