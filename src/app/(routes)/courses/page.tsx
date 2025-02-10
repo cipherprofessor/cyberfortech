@@ -1,39 +1,24 @@
+// courses/page.tsx
 "use client"
 
 import { CourseList } from "@/components/courses/CourseList/CourseList";
-import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
 import { 
   Filter, 
-  SortDesc, 
-  SortAsc, 
-  BookOpen, 
   GraduationCap,
-  Search,
-  Clock,
-  TrendingUp,
-  DollarSign
+  Sparkles
 } from "lucide-react";
 import { useState } from "react";
 import styles from "./courses.module.scss";
 
 export default function CoursesPage() {
-  const { theme, setTheme } = useTheme();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [currentSort, setCurrentSort] = useState("newest");
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.6 }
   };
-
-  // const sortOptions = [
-  //   { value: "newest", label: "Newest First", icon: <Clock size={18} /> },
-  //   { value: "popular", label: "Most Popular", icon: <TrendingUp size={18} /> },
-  //   { value: "price-low", label: "Price: Low to High", icon: <DollarSign size={18} /> },
-  //   { value: "price-high", label: "Price: High to Low", icon: <DollarSign size={18} /> }
-  // ];
 
   return (
     <div className={styles.pageWrapper}>
@@ -44,30 +29,22 @@ export default function CoursesPage() {
           animate="animate"
           variants={fadeIn}
         >
-          <div className={styles.headerContent}>
-            <div className={styles.headerIcon}>
-              <GraduationCap size={40} className={styles.icon} />
+          <div className={styles.headerLeft}>
+            <GraduationCap size={55} className={styles.icon} />
+            <div className={styles.headerText}>
+              <h1>Our Courses</h1>
+              <p>Explore our comprehensive range of cybersecurity courses</p>
             </div>
-            <h1>Our Courses</h1>
-            <p>Explore our comprehensive range of cybersecurity courses</p>
           </div>
+          <motion.div 
+            className={styles.headerBadge}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Sparkles size={16} />
+            <span>New courses added regularly</span>
+          </motion.div>
         </motion.div>
-
-        {/* <div className={styles.controlsSection}>
-
-          <div className={styles.sortingDesktop}>
-            {sortOptions.map((option) => (
-              <button
-                key={option.value}
-                className={`${styles.sortButton} ${currentSort === option.value ? styles.active : ''}`}
-                onClick={() => setCurrentSort(option.value)}
-              >
-                {option.icon}
-                <span>{option.label}</span>
-              </button>
-            ))}
-          </div>
-        </div> */}
 
         <main className={styles.courseSection}>
           <motion.div 
@@ -83,18 +60,6 @@ export default function CoursesPage() {
               <Filter size={16} />
               <span>Filters</span>
             </button>
-
-            {/* <select 
-              className={styles.sortSelect}
-              value={currentSort}
-              onChange={(e) => setCurrentSort(e.target.value)}
-            >
-              {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select> */}
           </motion.div>
 
           <motion.div
