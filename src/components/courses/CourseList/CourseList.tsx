@@ -61,8 +61,6 @@ export function CourseList() {
   const handleFilterChange = useCallback((filters: FilterState) => {
     let filtered = [...courses];
 
-    // console.log('Before category filter:', filtered.length); // Debug log
-    // console.log('Selected categories:', filters.selectedCategories); // Debug log
 
     // Filter by price range
     filtered = filtered.filter(course => 
@@ -116,7 +114,7 @@ export function CourseList() {
 
     setFilteredCourses(filtered);
     setCurrentPage(1);
-  }, [courses]); // Add courses as dependency
+  }, [courses]); 
 
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;

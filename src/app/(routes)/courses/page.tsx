@@ -1,4 +1,3 @@
-import { CourseFilter } from "@/components/courses/CourseFilter/CourseFilter"; 
 import { CourseList } from "@/components/courses/CourseList/CourseList";
 import styles from "./courses.module.scss";
 
@@ -11,12 +10,6 @@ export default function CoursesPage() {
           <p>Explore our comprehensive range of cybersecurity courses</p>
         </div>
 
-        {/* <div className={styles.content}>
-          <aside className={styles.filterSection}>
-            <div className={styles.filterWrapper}>
-              <CourseFilter />
-            </div>
-          </aside> */}
 
           <main className={styles.courseSection}>
             <div className={styles.mobileSorting}>
