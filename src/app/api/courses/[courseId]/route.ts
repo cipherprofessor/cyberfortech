@@ -1,39 +1,6 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
-import { Row } from '@libsql/client';
 
-interface CourseLesson {
-  id: string;
-  title: string;
-  duration: string;
-  order_index: number;
-}
-
-interface CourseSection {
-  id: string;
-  title: string;
-  order_index: number;
-  course_id: string;
-  lessons: CourseLesson[];
-}
-
-interface Course {
-  id: string;
-  title: string;
-  description: string;
-  image_url: string;
-  price: number;
-  duration: string;
-  level: 'Beginner' | 'Intermediate' | 'Advanced';
-  instructor_id: string;
-  instructor_name: string | null;
-  category: string;
-  created_at: string;
-  updated_at: string;
-  average_rating: number;
-  total_students: number;
-  total_reviews: number;
-}
 
 function safeString(value: unknown): string {
   return String(value || '');
@@ -57,6 +24,7 @@ export async function GET(
         SELECT 
           c.*,
           i.name as instructor_name,
+          i.profile_image_url as instructor_profile_image_url,
           (
             SELECT COUNT(*)
             FROM enrollments
@@ -98,6 +66,7 @@ export async function GET(
       level: safeString(row.level) as Course['level'],
       instructor_id: safeString(row.instructor_id),
       instructor_name: row.instructor_name ? safeString(row.instructor_name) : null,
+      instructor_profile_image_url: row.instructor_profile_image_url ? safeString(row.instructor_profile_image_url) : null,
       category: safeString(row.category),
       created_at: safeString(row.created_at),
       updated_at: safeString(row.updated_at),

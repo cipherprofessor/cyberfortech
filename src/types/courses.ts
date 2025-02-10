@@ -1,5 +1,5 @@
 type Course = {
-    createdAt: string | number | Date;
+    createdAt?: string | number | Date;
     id: string;
     title: string;
     description: string;
@@ -9,7 +9,7 @@ type Course = {
     price: number;
     average_rating: number;
     enrollment_count?: number;
-    instructor_name: string;
+    // instructor_name: string;
     category: string;
     instructor_avatar?: string;
     total_reviews?: number;
@@ -19,7 +19,8 @@ type Course = {
     total_students: number;
     ratings?: number;
     rating?: number;
-
+    instructor_name: string | null;
+    instructor_profile_image_url: string | null;
     
   };
   
@@ -51,6 +52,7 @@ type Course = {
     category: string;
     total_students?: number;
     ratings?: number;
+    instructor_profile_image_url: string | null;
   };
 };
 
@@ -62,4 +64,11 @@ type Course = {
     courses?: Course[];
   }
 
+
+  interface CourseLesson {
+    id: string;
+    title: string;
+    duration: string;
+    order_index: number;
+  }
 

@@ -19,6 +19,8 @@ import styles from './CourseCard.module.scss';
 export function CourseCard({ course }: CourseCardProps) {
   const defaultImageUrl = '/cyberimagecoursecover.jpg';
   const [imgError, setImgError] = useState(false);
+  const defaultInstructorImage = '/team/instructor_default.jpg'; // Add a default avatar image
+  const [instructorImgError, setInstructorImgError] = useState(false);
 
   const imageSource = imgError ? defaultImageUrl : course.image_url;
 
@@ -129,9 +131,18 @@ export function CourseCard({ course }: CourseCardProps) {
           <p className={styles.description}>{course.description}</p>
           
           <div className={styles.instructor}>
-            <GraduationCap size={16} />
-            <span>{course.instructor_name}</span>
-          </div>
+  <div className={styles.instructorAvatar}>
+    <Image
+      src={instructorImgError ? defaultInstructorImage : (course.instructor_profile_image_url || defaultInstructorImage)}
+      alt={course.instructor_name || 'Instructor'}
+      width={24}
+      height={24}
+      className={styles.instructorImage}
+      onError={() => setInstructorImgError(true)}
+    />
+  </div>
+  <span>{course.instructor_name}</span>
+</div>
           
           <div className={styles.details}>
             <div className={styles.detailItem}>
