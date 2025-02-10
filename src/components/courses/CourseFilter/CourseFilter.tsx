@@ -13,8 +13,9 @@ import {
   SortAsc,
   SortDesc,
   X,
+  FilterIcon,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import styles from "./CourseFilter.module.scss";
 
 export function CourseFilter({
@@ -31,7 +32,7 @@ export function CourseFilter({
   const [durationRange, setDurationRange] = useState<string>("all");
   const [minRating, setMinRating] = useState<number>(0);
   const [search, setSearch] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("newest");
+  const [sortBy, setSortBy] = useState<string>("rating");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Calculate derived values using useMemo
@@ -56,9 +57,9 @@ export function CourseFilter({
   }, [courses, defaultMaxPrice]);
 
   const sortOptions = [
+    { value: "rating", label: "Rating", icon: Star },
     { value: "newest", label: "Newest", icon: Clock },
     { value: "price", label: "Price", icon: Wallet },
-    { value: "rating", label: "Rating", icon: Star },
     { value: "duration", label: "Duration", icon: Clock },
   ];
 
@@ -112,27 +113,8 @@ export function CourseFilter({
     setSortBy('newest');
     setSortOrder('desc');
   
-    // Force update checkboxes
-    const levelCheckboxes = levels.map(level => 
-      document.getElementById(`level-${level}`)
-    ) as HTMLInputElement[];
-    
-    const categoryCheckboxes = categories.map(category => 
-      document.getElementById(`category-${category}`)
-    ) as HTMLInputElement[];
-  
-    [...levelCheckboxes, ...categoryCheckboxes].forEach(checkbox => {
-      if (checkbox) checkbox.checked = false;
-    });
-  
-    // Force update radio buttons
-    const radios = document.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
-    radios.forEach(radio => {
-      radio.checked = radio.value === 'all';
-    });
-  
-    // Trigger the filter update
-    onFilterChange?.({
+    // Update the filter state immediately
+    const resetFilterState: FilterState = {
       priceRange: [0, maxPrice],
       selectedLevels: [],
       selectedCategories: [],
@@ -141,7 +123,9 @@ export function CourseFilter({
       search: '',
       sortBy: 'newest',
       sortOrder: 'desc'
-    });
+    };
+    
+    onFilterChange?.(resetFilterState);
   };
 
   useEffect(() => {
@@ -153,19 +137,10 @@ export function CourseFilter({
       minRating,
       search,
       sortBy,
-      sortOrder,
+      sortOrder
     };
     onFilterChange?.(filters);
-  }, [
-    priceRange,
-    selectedLevels,
-    selectedCategories,
-    durationRange,
-    minRating,
-    search,
-    sortBy,
-    sortOrder,
-  ]);
+  }, [priceRange, selectedLevels, selectedCategories, durationRange, minRating, search, sortBy, sortOrder]);
 
   return (
     <motion.div
@@ -176,7 +151,7 @@ export function CourseFilter({
     >
      {/* // Update the Search Input section */}
 <section className={styles.section}>
-  <h3><Search size={16} /> Search Courses</h3>
+  <h3><FilterIcon size={16} /> Filters</h3>
   <div className={styles.searchWrapper}>
     <Search size={16} className={styles.searchIcon} />
     <input
@@ -272,57 +247,58 @@ export function CourseFilter({
           ))}
         </div>
       </section>
-{/* 
-      // Update the Level Filter section */}
+
+   
+
+{/* Level Filter */}
 {levels.length > 0 && (
   <section className={styles.section}>
     <h3><GraduationCap size={16} /> Level</h3>
     {levels.map((level: string) => (
-      <div 
+      <label 
         key={level} 
         className={styles.checkboxItem}
-        onClick={() => {
-          const checkbox = document.getElementById(`level-${level}`) as HTMLInputElement;
-          if (checkbox) checkbox.checked = !checkbox.checked;
-          handleLevelChange(level);
-        }}
+        htmlFor={`level-${level}`}
       >
-        <Checkbox
-          id={`level-${level}`}
-          checked={selectedLevels.includes(level)}
-          onChange={() => handleLevelChange(level)}
-        />
-        <span className={styles.checkboxLabel}>{level}</span>
-      </div>
+        <div className={styles.checkboxWrapper}>
+          <input
+            type="checkbox"
+            id={`level-${level}`}
+            checked={selectedLevels.includes(level)}
+            onChange={() => handleLevelChange(level)}
+            className={styles.checkbox}
+          />
+          <span className={styles.checkboxLabel}>{level}</span>
+        </div>
+      </label>
     ))}
   </section>
 )}
 
- {/* Update the Categories Filter section */}
+{/* Categories Filter */}
 {categories.length > 0 && (
   <section className={styles.section}>
     <h3><Tag size={16} /> Categories</h3>
     {categories.map((category: string) => (
-      <div 
+      <label 
         key={category} 
         className={styles.checkboxItem}
-        onClick={() => {
-          const checkbox = document.getElementById(`category-${category}`) as HTMLInputElement;
-          if (checkbox) checkbox.checked = !checkbox.checked;
-          handleCategoryChange(category);
-        }}
+        htmlFor={`category-${category}`}
       >
-        <Checkbox
-          id={`category-${category}`}
-          checked={selectedCategories.includes(category)}
-          onChange={() => handleCategoryChange(category)}
-        />
-        <span className={styles.checkboxLabel}>{category}</span>
-      </div>
+        <div className={styles.checkboxWrapper}>
+          <input
+            type="checkbox"
+            id={`category-${category}`}
+            checked={selectedCategories.includes(category)}
+            onChange={() => handleCategoryChange(category)}
+            className={styles.checkbox}
+          />
+          <span className={styles.checkboxLabel}>{category}</span>
+        </div>
+      </label>
     ))}
   </section>
 )}
-
 
       {/* Reset Button */}
       <motion.div
