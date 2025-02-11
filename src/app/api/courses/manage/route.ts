@@ -42,6 +42,7 @@ export async function GET() {
   }
 }
 
+// src/app/api/courses/manage/route.ts
 export async function POST(request: Request) {
   try {
     const data = await request.json();
@@ -75,9 +76,14 @@ export async function POST(request: Request) {
       ]
     });
 
+    // Convert BigInt to string or number
+    const courseId = typeof result.lastInsertRowid === 'bigint' 
+      ? result.lastInsertRowid.toString()
+      : result.lastInsertRowid;
+
     return NextResponse.json({ 
       message: 'Course created successfully',
-      courseId: result.lastInsertRowid 
+      courseId: courseId
     });
   } catch (error) {
     console.error('Error creating course:', error);

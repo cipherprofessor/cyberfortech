@@ -47,6 +47,16 @@ export function CourseManagement() {
     type: 'success',
     message: ''
   });
+
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    show: boolean;
+    courseId: string | null;
+    courseName: string;
+  }>({
+    show: false,
+    courseId: null,
+    courseName: ''
+  });
   
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -88,7 +98,7 @@ export function CourseManagement() {
   };
 
   const handleDeleteClick = (courseId: string, courseName: string) => {
-    setShowDeleteConfirm({
+    setDeleteConfirm({
       show: true,
       courseId,
       courseName
@@ -96,17 +106,29 @@ export function CourseManagement() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!showDeleteConfirm.courseId) return;
-
+    if (!deleteConfirm.courseId) return;
+  
     try {
-      await axios.delete(`/api/courses/manage/${showDeleteConfirm.courseId}`);
-      await fetchCourses();
-      showAlert('success', 'Course deleted successfully');
+      const response = await axios.delete(`/api/courses/manage/${deleteConfirm.courseId}`);
+      
+      if (response.data.success) {
+        // Show success message
+        showAlert('success', 'Course deleted successfully');
+        // Update the courses list
+        await fetchCourses();
+      } else {
+        throw new Error(response.data.error || 'Failed to delete course');
+      }
     } catch (error) {
       console.error('Error deleting course:', error);
       showAlert('error', 'Failed to delete course');
     } finally {
-      setShowDeleteConfirm({ show: false });
+      // Close the confirmation dialog
+      setDeleteConfirm({
+        show: false,
+        courseId: null,
+        courseName: ''
+      });
     }
   };
 
@@ -301,12 +323,16 @@ export function CourseManagement() {
         onSubmit={handleModalSubmit}
       />
 
-      <DeleteConfirmDialog
-        show={showDeleteConfirm.show}
-        courseName={showDeleteConfirm.courseName || ''}
-        onConfirm={handleDeleteConfirm}
-        onCancel={() => setShowDeleteConfirm({ show: false })}
-      />
+<DeleteConfirmDialog
+  show={deleteConfirm.show}
+  courseName={deleteConfirm.courseName}
+  onConfirm={handleDeleteConfirm}
+  onCancel={() => setDeleteConfirm({
+    show: false,
+    courseId: null,
+    courseName: ''
+  })}
+/>
     </div>
   );
 }

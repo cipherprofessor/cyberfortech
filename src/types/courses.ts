@@ -1,5 +1,7 @@
 // src/types/courses.ts
 
+export type CourseLevel = 'Beginner' | 'Intermediate' | 'Advanced';
+
 export type Section = {
     id: string;
     title: string;
@@ -31,7 +33,7 @@ export type Course = {
     instructor_name: string | null;
     instructor_profile_image_url: string | null;
     sections: CourseSection[]; // Adding sections for course detail page
-    level: 'beginner' | 'intermediate' | 'advanced';
+    level?: CourseLevel;
 };
 
 export type CourseSection = {
@@ -122,4 +124,30 @@ export interface CourseModalProps {
     popularCategories: { category: string; count: number; }[];
     monthlyEnrollments: { month: string; count: number; }[];
     instructorPerformance: { instructor: string; students: number; rating: number; }[];
+  }
+
+
+  export interface CourseModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    mode: 'create' | 'edit';
+    course?: Course | null;
+    onSubmit: (courseData: Partial<Course>) => Promise<void>;
+  }
+  
+ export interface Instructor {
+    id: string;
+    name: string;
+    email: string;
+    profile_image_url: string | null;
+    specialization?: string;
+    rating?: number;
+    total_courses?: number;
+  }
+
+  export interface DeleteConfirmDialogProps {
+    show: boolean;
+    courseName: string;
+    onConfirm: () => void;
+    onCancel: () => void;
   }

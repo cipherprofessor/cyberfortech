@@ -1,14 +1,68 @@
 // src/app/api/courses/manage/[courseId]/route.ts
 import { db } from '@/lib/db';
-import { Transaction } from '@libsql/client';
 import { NextResponse } from 'next/server';
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { courseId: string } }
+) {
+  try {
+    // Instead of using a transaction directly, we'll use execute with multiple statements
+    const result = await db.execute({
+      sql: `
+        -- Delete reviews
+        DELETE FROM course_reviews WHERE course_id = ?;
+        
+        -- Delete enrollments
+        DELETE FROM enrollments WHERE course_id = ?;
+        
+        -- Delete lessons from all sections of this course
+        DELETE FROM course_lessons 
+        WHERE section_id IN (
+          SELECT id FROM course_sections WHERE course_id = ?
+        );
+        
+        -- Delete sections
+        DELETE FROM course_sections WHERE course_id = ?;
+        
+        -- Finally delete the course
+        DELETE FROM courses WHERE id = ?;
+      `,
+      args: [
+        params.courseId,
+        params.courseId,
+        params.courseId,
+        params.courseId,
+        params.courseId
+      ]
+    });
+
+    // Check if any rows were affected
+    if (result.rowsAffected === 0) {
+      return NextResponse.json(
+        { error: 'Course not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ 
+      success: true,
+      message: 'Course deleted successfully' 
+    });
+  } catch (error) {
+    console.error('Error deleting course:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete course' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function GET(
   request: Request,
   { params }: { params: { courseId: string } }
 ) {
   try {
-    const courseId = params.courseId;
     const result = await db.execute({
       sql: `
         SELECT 
@@ -19,7 +73,7 @@ export async function GET(
         LEFT JOIN instructors i ON c.instructor_id = i.id
         WHERE c.id = ?
       `,
-      args: [courseId]
+      args: [params.courseId]
     });
 
     if (!result.rows.length) {
@@ -44,7 +98,6 @@ export async function PUT(
   { params }: { params: { courseId: string } }
 ) {
   try {
-    const courseId = params.courseId;
     const data = await request.json();
     const {
       title,
@@ -57,7 +110,7 @@ export async function PUT(
       image_url
     } = data;
 
-    await db.execute({
+    const result = await db.execute({
       sql: `
         UPDATE courses
         SET 
@@ -81,11 +134,19 @@ export async function PUT(
         category,
         instructor_id,
         image_url,
-        courseId
+        params.courseId
       ]
     });
 
+    if (result.rowsAffected === 0) {
+      return NextResponse.json(
+        { error: 'Course not found' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json({ 
+      success: true,
       message: 'Course updated successfully' 
     });
   } catch (error) {
@@ -96,69 +157,3 @@ export async function PUT(
     );
   }
 }
-
-
-export async function DELETE(
-    request: Request,
-    { params }: { params: { courseId: string } }
-  ) {
-    try {
-      const courseId = params.courseId;
-      const transaction = db.transaction('write');
-  
-      try {
-        // Delete enrollments
-        await (await transaction).execute({
-          sql: 'DELETE FROM enrollments WHERE course_id = ?',
-          args: [courseId]
-        });
-  
-        // Delete reviews 
-        await (await transaction).execute({
-          sql: 'DELETE FROM course_reviews WHERE course_id = ?',
-          args: [courseId]
-        });
-  
-        // Delete course sections and lessons
-        const sections = await (await transaction).execute({
-          sql: 'SELECT id FROM course_sections WHERE course_id = ?',
-          args: [courseId]
-        });
-  
-        for (const section of sections.rows) {
-          await (await transaction).execute({
-            sql: 'DELETE FROM course_lessons WHERE section_id = ?',
-            args: [section.id]
-          });
-        }
-  
-        await (await transaction).execute({
-          sql: 'DELETE FROM course_sections WHERE course_id = ?',
-          args: [courseId]
-        });
-  
-        // Finally delete the course
-        await (await transaction).execute({
-          sql: 'DELETE FROM courses WHERE id = ?',
-          args: [courseId]
-        });
-  
-        await (await transaction).commit();
-        
-        return NextResponse.json({ 
-          message: 'Course deleted successfully' 
-        });
-      } catch (error) {
-        await (await transaction).rollback();
-        throw error;
-      } finally {
-        (await transaction).close();
-      }
-    } catch (error) {
-      console.error('Error deleting course:', error);
-      return NextResponse.json(
-        { error: 'Failed to delete course' },
-        { status: 500 }
-      );
-    }
-  }
