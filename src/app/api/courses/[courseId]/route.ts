@@ -14,11 +14,12 @@ function safeNumber(value: unknown): number {
 
 export async function GET(
   request: Request,
-  { params }: { params: { courseId: string } }
+  { params }: { params: { courseId: string | Promise<string> } }
 ) {
   try {
-    // Await the params
+    // Resolve the courseId
     const courseId = await Promise.resolve(params.courseId);
+    
     if (!courseId) {
       return NextResponse.json(
         { error: 'Course ID is required' },

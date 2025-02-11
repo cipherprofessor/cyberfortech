@@ -1,7 +1,7 @@
 // src/app/(routes)/courses/[courseId]/page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { CourseContent } from '@/components/courses/CourseContent/CourseContent';
@@ -16,21 +16,36 @@ import {
 import styles from './course-detail.module.scss';
 import { Course } from '@/types/courses';
 
-export default function CourseDetailPage({
-  params,
-}: {
-  params: { courseId: string };
-}) {
+interface CourseDetailPageProps {
+  params: { courseId: string | Promise<string> };
+}
+
+export default function CourseDetailPage({ params }: CourseDetailPageProps) {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const [courseId, setCourseId] = useState<string>('');
 
-  const fetchCourse = async () => {
+  // Function to resolve courseId from params
+  const resolveCourseId = useCallback(async () => {
+    try {
+      const resolvedId = await Promise.resolve(params.courseId);
+      setCourseId(resolvedId);
+    } catch (err) {
+      console.error('Error resolving courseId:', err);
+      setError('Invalid course ID');
+    }
+  }, [params.courseId]);
+
+  // Fetch course data
+  const fetchCourse = useCallback(async (id: string) => {
+    if (!id) return;
+    
     try {
       setLoading(true);
-      const response = await axios.get(`/api/courses/${params.courseId}`);
+      const response = await axios.get(`/api/courses/${id}`);
       setCourse(response.data);
       setError(null);
     } catch (err) {
@@ -39,11 +54,19 @@ export default function CourseDetailPage({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
+  // Resolve courseId when component mounts
   useEffect(() => {
-    fetchCourse();
-  }, [params.courseId]);
+    resolveCourseId();
+  }, [resolveCourseId]);
+
+  // Fetch course when courseId is resolved
+  useEffect(() => {
+    if (courseId) {
+      fetchCourse(courseId);
+    }
+  }, [courseId, fetchCourse]);
 
   if (loading) {
     return (
@@ -86,7 +109,7 @@ export default function CourseDetailPage({
           className={styles.retryButton}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={fetchCourse}
+          onClick={() => courseId && fetchCourse(courseId)}
           aria-label="Retry loading course"
         >
           <RefreshCw size={16} aria-hidden="true" />
