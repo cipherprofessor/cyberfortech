@@ -99,6 +99,12 @@ export type ChartDataPoint = {
     data: [string, number][];
   }
   
+
+  export interface ApacheGeoMapChartProps {
+    title?: string;
+    data: { name: string; value: number }[];
+  }
+  
   
   
   

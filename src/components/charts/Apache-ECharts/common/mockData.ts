@@ -268,3 +268,12 @@ export const lineChartData: ChartDataPoint[] = [
     ["F", 50],
   ];
   
+
+  export const geoMapData = [
+    { name: "United States", value: 500 },
+    { name: "China", value: 700 },
+    { name: "India", value: 600 },
+    { name: "Brazil", value: 300 },
+    { name: "Russia", value: 400 },
+  ];
+  

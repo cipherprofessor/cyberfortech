@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Tabs, Tab, Card, CardBody } from "@heroui/react";
-import { barChartData, boxplotData, bubbleChartData, candlestickData, chordChartData, forceGraphData, gaugeChartData, mockTreemapData, parallelChartData, polarChartData, sankeyChartData, scatterChartData, sunburstChartData, waterfallChartData } from "@/components/charts/Apache-ECharts/common/mockData";
+import { barChartData, boxplotData, bubbleChartData, candlestickData, chordChartData, forceGraphData, gaugeChartData, geoMapData, mockTreemapData, parallelChartData, polarChartData, sankeyChartData, scatterChartData, sunburstChartData, waterfallChartData } from "@/components/charts/Apache-ECharts/common/mockData";
 import ApacheBubbleChart from "@/components/charts/Apache-ECharts/ApacheBubbleChart/ApacheBubbleChart";
 import ApacheCandlestickChart from "@/components/charts/Apache-ECharts/ApacheCandlestickChart/ApacheCandlestickChart";
 import ApacheSankeyChart from "@/components/charts/Apache-ECharts/ApacheSankeyChart/ApacheSankeyChart";
@@ -11,6 +11,7 @@ import ApacheSunburstChart from "@/components/charts/Apache-ECharts/ApacheSunbur
 import ApacheForceGraph from "@/components/charts/Apache-ECharts/ApacheForceGraph/ApacheForceGraph";
 import ApacheParallelChart from "@/components/charts/Apache-ECharts/ApacheParallelChart/ApacheParallelChart";
 import ApachePolarChart from "@/components/charts/Apache-ECharts/ApachePolarChart/ApachePolarChart";
+import ApacheGeoMapChart from "@/components/charts/Apache-ECharts/ApacheGeoMapChart/ApacheGeoMapChart";
 
 
 
@@ -26,18 +27,14 @@ export default function ChartsDashboardTab3() {
         selectedKey={selected}
         onSelectionChange={(key) => setSelected(key.toString())}
       >
-        <Tab key="ApacheBubbleChart" title="Apache Bubble Chart">
-          <Card>
-            <CardBody>
-              <ApacheBubbleChart
-              title="Bubble Chart Example" 
-              xAxisLabel="X Axis" 
-              yAxisLabel="Y Axis" 
-              data={bubbleChartData}
-            /> 
-            </CardBody>
-          </Card>
-        </Tab>
+        <Tab key="ApacheGeoMapChart" title="Apache Geo Map Chart">
+  <Card>
+    <CardBody>
+      <ApacheGeoMapChart title="World Geo Map" data={geoMapData} />
+    </CardBody>
+  </Card>
+</Tab>
+
 
         </Tabs>
     </div>
