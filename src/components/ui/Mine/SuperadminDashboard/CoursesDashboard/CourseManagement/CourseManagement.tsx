@@ -1,7 +1,7 @@
 // src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/CourseManagement.tsx
 'use client';
 
-import { useState, useEffect,useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Book, 
@@ -12,79 +12,60 @@ import {
   Filter,
   SortAsc,
   MoreVertical,
-  AlertCircle
+  AlertTriangle,
+  Clock,
+  Users,
+  Star
 } from 'lucide-react';
 import axios from 'axios';
 import { useTheme } from 'next-themes';
+import { CourseModal } from './CourseModal';
+
 import styles from './CourseManagement.module.scss';
 import { Course } from '@/types/courses';
-import { CourseModal } from './CourseModal';
-import { toast } from 'react-hot-toast';
-
-
-export const handleImageUpload = async (file: string) => {
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    const response = await axios.post('/api/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
-    return response.data.url;
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    throw new Error('Failed to upload image');
-  }
-};
-
+import { SuccessAlert, ErrorAlert } from '../../../Alert/Alert';
+import { DeleteConfirmDialog } from '../DeleteConfirmation/DeleteConfirmation';
 
 export function CourseManagement() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<{
+    show: boolean;
+    courseId?: string;
+    courseName?: string;
+  }>({ show: false });
+  const [alertState, setAlertState] = useState<{
+    show: boolean;
+    type: 'success' | 'error';
+    message: string;
+  }>({
+    show: false,
+    type: 'success',
+    message: ''
+  });
+  
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  
-   
 
-  const handleCreateCourse = async (courseData: Partial<Course>) => {
-    try {
-      setLoading(true);
-      
-      // Handle image upload if there's a file 
-      if (courseData.image_url) {
-        const imageUrl = await handleImageUpload(courseData.image_url);
-        courseData.image_url = imageUrl;
-      }
-      
-      await axios.post('/api/courses/manage', courseData);
-      await fetchCourses();
-      toast.success('Course created successfully!');
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Error creating course:', error);
-      toast.error('Failed to create course');
-    } finally {
-      setLoading(false);
-    }
+  const showAlert = (type: 'success' | 'error', message: string) => {
+    setAlertState({ show: true, type, message });
+    setTimeout(() => {
+      setAlertState(prev => ({ ...prev, show: false }));
+    }, 3000);
   };
-
 
   const fetchCourses = async () => {
     try {
       setLoading(true);
       const response = await axios.get('/api/courses/manage');
       setCourses(response.data);
-    } catch (err) {
-      setError('Failed to fetch courses');
-      console.error('Error fetching courses:', err);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      showAlert('error', 'Failed to fetch courses');
     } finally {
       setLoading(false);
     }
@@ -94,32 +75,11 @@ export function CourseManagement() {
     fetchCourses();
   }, []);
 
-
-  const handleUpdateCourse = async (courseData: Partial<Course>) => {
-    if (!selectedCourse?.id) return;
-
-    try {
-      setLoading(true);
-      
-      // Handle image upload if there's a new file
-      if (courseData.image_url) {
-        const imageUrl = await handleImageUpload(courseData.image_url);
-        courseData.image_url = imageUrl;
-      }
-      
-      await axios.put(`/api/courses/manage/${selectedCourse.id}`, courseData);
-      await fetchCourses();
-      toast.success('Course updated successfully!');
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Error updating course:', error);
-      toast.error('Failed to update course');
-    } finally {
-      setLoading(false);
-    }
+  const handleCreateCourse = () => {
+    setModalMode('create');
+    setSelectedCourse(null);
+    setIsModalOpen(true);
   };
-
-
 
   const handleEditCourse = (course: Course) => {
     setModalMode('edit');
@@ -127,42 +87,70 @@ export function CourseManagement() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteCourse = async (courseId: string) => {
+  const handleDeleteClick = (courseId: string, courseName: string) => {
+    setShowDeleteConfirm({
+      show: true,
+      courseId,
+      courseName
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!showDeleteConfirm.courseId) return;
+
     try {
-      const result = await toast.promise(
-        axios.delete(`/api/courses/manage/${courseId}`),
-        {
-          loading: 'Deleting course...',
-          success: 'Course deleted successfully!',
-          error: 'Failed to delete course'
-        }
-      );
-      
+      await axios.delete(`/api/courses/manage/${showDeleteConfirm.courseId}`);
       await fetchCourses();
+      showAlert('success', 'Course deleted successfully');
     } catch (error) {
       console.error('Error deleting course:', error);
+      showAlert('error', 'Failed to delete course');
+    } finally {
+      setShowDeleteConfirm({ show: false });
     }
   };
 
+  const handleModalSubmit = async (courseData: Partial<Course>) => {
+    try {
+      if (modalMode === 'create') {
+        await axios.post('/api/courses/manage', courseData);
+        showAlert('success', 'Course created successfully');
+      } else {
+        await axios.put(`/api/courses/manage/${selectedCourse?.id}`, courseData);
+        showAlert('success', 'Course updated successfully');
+      }
+      await fetchCourses();
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error saving course:', error);
+      showAlert('error', `Failed to ${modalMode} course`);
+      throw error; // Re-throw to be handled by the modal
+    }
+  };
 
   const filteredCourses = courses.filter(course => 
     course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.instructor_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
-  const openCreateModal = () => {
-    setModalMode('create');
-    setSelectedCourse(null);
-    setIsModalOpen(true);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
   };
 
-  const openEditModal = (course: Course) => {
-    setModalMode('edit');
-    setSelectedCourse(course);
-    setIsModalOpen(true);
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1
+    }
   };
-
 
   if (loading) {
     return (
@@ -180,7 +168,20 @@ export function CourseManagement() {
 
   return (
     <div className={`${styles.container} ${isDark ? styles.dark : ''}`}>
-      {/* Header Section */}
+      {alertState.show && (
+        alertState.type === 'success' ? (
+          <SuccessAlert
+            message={alertState.message}
+            onClose={() => setAlertState(prev => ({ ...prev, show: false }))}
+          />
+        ) : (
+          <ErrorAlert
+            message={alertState.message}
+            onClose={() => setAlertState(prev => ({ ...prev, show: false }))}
+          />
+        )
+      )}
+
       <motion.div 
         className={styles.header}
         initial={{ opacity: 0, y: -20 }}
@@ -196,7 +197,7 @@ export function CourseManagement() {
 
         <motion.button
           className={styles.createButton}
-          onClick={openCreateModal}
+          onClick={handleCreateCourse}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -205,7 +206,6 @@ export function CourseManagement() {
         </motion.button>
       </motion.div>
 
-      {/* Search and Filter Section */}
       <motion.div 
         className={styles.controls}
         initial={{ opacity: 0 }}
@@ -221,95 +221,92 @@ export function CourseManagement() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-
-        <div className={styles.filterControls}>
-          <button className={styles.filterButton}>
-            <Filter size={20} />
-            <span>Filter</span>
-          </button>
-          <button className={styles.sortButton}>
-            <SortAsc size={20} />
-            <span>Sort</span>
-          </button>
-        </div>
       </motion.div>
 
-      {/* Courses Grid */}
-      <motion.div 
+      <motion.div
         className={styles.coursesGrid}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
       >
-        <AnimatePresence>
-          {filteredCourses.map((course, index) => (
-            <motion.div
-              key={course.id}
-              className={styles.courseCard}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-            >
-              <div className={styles.courseImage}>
-                <img 
-                  src={course.image_url || '/default-course.jpg'} 
-                  alt={course.title}
-                  className={styles.image}
-                />
-                <div className={styles.courseLevel}>{course.level}</div>
-              </div>
+        {filteredCourses.map((course) => (
+          <motion.div
+            key={course.id}
+            className={styles.courseCard}
+            variants={itemVariants}
+            whileHover={{ y: -5 }}
+          >
+            <div className={styles.courseImage}>
+              <img 
+                src={course.image_url || '/default-course.jpg'} 
+                alt={course.title}
+                className={styles.image}
+              />
+              <div className={styles.courseLevel}>{course.level}</div>
+            </div>
 
-              <div className={styles.courseInfo}>
-                <h3>{course.title}</h3>
-                <p>{course.description}</p>
+            <div className={styles.courseInfo}>
+              <h3>{course.title}</h3>
+              <p>{course.description}</p>
 
-                <div className={styles.courseStats}>
+              <div className={styles.courseStats}>
+                <div className={styles.stat}>
+                  <Clock size={16} />
                   <span>{course.duration}</span>
-                  <span>{course.enrollment_count} Students</span>
                 </div>
-
-                <div className={styles.courseActions}>
-                  <button
-                    onClick={() => openEditModal(course)}
-                    className={styles.editButton}
-                  >
-                    <Edit2 size={16} />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteCourse(course.id)}
-                    className={styles.deleteButton}
-                  >
-                    <Trash2 size={16} />
-                    Delete
-                  </button>
+                <div className={styles.stat}>
+                  <Users size={16} />
+                  <span>{course.total_students || 0} students</span>
+                </div>
+                <div className={styles.stat}>
+                  <Star size={16} />
+                  <span>{course.average_rating?.toFixed(1) || '0.0'}</span>
                 </div>
               </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+
+              <div className={styles.courseActions}>
+                <button
+                  onClick={() => handleEditCourse(course)}
+                  className={styles.editButton}
+                >
+                  <Edit2 size={16} />
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteClick(course.id, course.title)}
+                  className={styles.deleteButton}
+                >
+                  <Trash2 size={16} />
+                  Delete
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </motion.div>
 
       {filteredCourses.length === 0 && (
         <div className={styles.emptyState}>
-          <AlertCircle size={48} />
+          <AlertTriangle size={48} />
           <h3>No courses found</h3>
           <p>Try adjusting your search or create a new course</p>
         </div>
       )}
-
-      {/* Course Modal will be added here */}
 
       <CourseModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         mode={modalMode}
         course={selectedCourse}
-        onSubmit={modalMode === 'create' ? handleCreateCourse : handleUpdateCourse}
-        loading={loading}
+        onSubmit={handleModalSubmit}
       />
 
+      <DeleteConfirmDialog
+        show={showDeleteConfirm.show}
+        courseName={showDeleteConfirm.courseName || ''}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setShowDeleteConfirm({ show: false })}
+      />
     </div>
   );
 }

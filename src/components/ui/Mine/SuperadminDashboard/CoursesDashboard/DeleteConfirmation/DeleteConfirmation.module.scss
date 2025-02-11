@@ -1,0 +1,93 @@
+// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/DeleteConfirmation.module.scss
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 1rem;
+  }
+  
+  .dialog {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+  
+    .iconWrapper {
+      margin-bottom: 1.5rem;
+  
+      .icon {
+        color: #ef4444;
+      }
+    }
+  
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #1f2937;
+    }
+  
+    p {
+      color: #6b7280;
+      margin-bottom: 2rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+  
+      strong {
+        color: #1f2937;
+      }
+    }
+  }
+  
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  
+    button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+  
+      &.cancelButton {
+        background: #f3f4f6;
+        color: #1f2937;
+        border: 1px solid #e5e7eb;
+  
+        &:hover {
+          background: #e5e7eb;
+        }
+      }
+  
+      &.deleteButton {
+        background: #ef4444;
+        color: white;
+        border: none;
+  
+        &:hover {
+          background: #dc2626;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .dialog {
+      padding: 1.5rem;
+    }
+  
+    .actions {
+      flex-direction: column;
+    }
+  }
