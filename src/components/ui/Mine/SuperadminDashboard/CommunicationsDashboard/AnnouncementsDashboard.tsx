@@ -2,8 +2,8 @@
 // src/components/ui/Mine/CommunicationsDashboard/AnnouncementsDashboard.tsx
 
 import React, { useState } from 'react';
-import { DonutChart } from '@/components/charts/base/DonutChart';
-import { EnhancedAnalyticsDashboardChart } from '@/components/charts/composite/AnalyticsDashboardChart';
+import { DonutChart } from '@/components/charts/Re-charts/base/DonutChart';
+import { EnhancedAnalyticsDashboardChart } from '@/components/charts/Re-charts/composite/AnalyticsDashboardChart';
 import {
   IconBellRinging,
   IconUsers,

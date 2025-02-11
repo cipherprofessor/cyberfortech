@@ -6,9 +6,9 @@ import {
   Tooltip, Legend, ResponsiveContainer, Scatter, ReferenceLine
 } from 'recharts';
 import { motion } from 'framer-motion';
-import { chartColors } from '@/components/charts/config/colors';
-import { ChartTooltip } from '@/components/charts/components/Tooltip';
-import { chartGradients } from '@/components/charts/config/gradients';
+import { chartColors } from '@/components/charts/Re-charts/config/colors';
+import { ChartTooltip } from '@/components/charts/Re-charts/components/Tooltip';
+import { chartGradients } from '@/components/charts/Re-charts/config/gradients';
 
 
 interface Series {

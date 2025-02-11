@@ -6,8 +6,8 @@ import {
   EnhancedAnalyticsDashboardChart,
   ChartSeries,
   ChartDataPoint
-} from '@/components/charts/composite/AnalyticsDashboardChart';
-import { DonutChart } from '@/components/charts/base/DonutChart';
+} from '@/components/charts/Re-charts/composite/AnalyticsDashboardChart';
+import { DonutChart } from '@/components/charts/Re-charts/base/DonutChart';
 import { 
   IconUsers, 
   IconUserPlus, 

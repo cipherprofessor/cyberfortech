@@ -16,7 +16,7 @@ import {
   IconEdit,
   IconDownload,
 } from "@tabler/icons-react";
-import { DonutChart } from "@/components/charts/base/DonutChart";
+import { DonutChart } from "@/components/charts/Re-charts/base/DonutChart";
 
 interface User {
   id: string;

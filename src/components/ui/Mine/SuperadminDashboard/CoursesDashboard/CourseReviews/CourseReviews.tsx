@@ -15,8 +15,8 @@ import {
   IconMessageCircle,
   IconCalendar
 } from '@tabler/icons-react';
-import { EnhancedAnalyticsDashboardChart } from '@/components/charts/composite/AnalyticsDashboardChart';
-import { DonutChart } from '@/components/charts/base/DonutChart';
+import { EnhancedAnalyticsDashboardChart } from '@/components/charts/Re-charts/composite/AnalyticsDashboardChart';
+import { DonutChart } from '@/components/charts/Re-charts/base/DonutChart';
 
 interface Review {
   id: string;

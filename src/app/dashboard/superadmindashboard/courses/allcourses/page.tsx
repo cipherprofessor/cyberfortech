@@ -10,7 +10,7 @@ const AllCoursesPage = () => {
       {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Course Management
+          Course Management by Super Admin
         </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Create, manage, and monitor all courses and their performance
@@ -19,7 +19,7 @@ const AllCoursesPage = () => {
 
       {/* Main Dashboard Component */}
       <SuperAdminCourseDashboard 
-        isOpen={false} 
+        isOpen={true} 
         onClose={() => {}} 
         onSubmit={() => {}}
       />

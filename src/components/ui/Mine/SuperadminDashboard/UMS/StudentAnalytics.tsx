@@ -5,7 +5,7 @@ import {
   LineChart,
   RadarChart,
   BarChart
-} from '@/components/charts';
+} from '@/components/charts/Re-charts';
 import {
   IconBrain,
   IconTrophy,

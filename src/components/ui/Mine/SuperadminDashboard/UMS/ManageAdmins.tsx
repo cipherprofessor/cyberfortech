@@ -2,7 +2,7 @@
 
 
 import React, { useState } from 'react';
-import { DonutChart } from '@/components/charts/base/DonutChart';
+import { DonutChart } from '@/components/charts/Re-charts/base/DonutChart';
 import {
   IconUserCog,
   IconShieldCheck,

@@ -1,7 +1,7 @@
 'use client';
-import { EnhancedAnalyticsDashboardChart } from '@/components/charts/composite/AnalyticsDashboardChart';
+import { EnhancedAnalyticsDashboardChart } from '@/components/charts/Re-charts/composite/AnalyticsDashboardChart';
 import React from 'react';
-import type { ChartSeries, ChartDataPoint } from '@/components/charts/composite/AnalyticsDashboardChart';
+import type { ChartSeries, ChartDataPoint } from '@/components/charts/Re-charts/composite/AnalyticsDashboardChart';
 
 // Define the data type to match ChartDataPoint
 interface AnalyticsDataPoint extends ChartDataPoint {

@@ -58,7 +58,7 @@ export function CourseManagement() {
     try {
       setLoading(true);
       
-      // Handle image upload if there's a file XXXXXXXXXX
+      // Handle image upload if there's a file 
       if (courseData.image_url) {
         const imageUrl = await handleImageUpload(courseData.image_url);
         courseData.image_url = imageUrl;
@@ -94,11 +94,6 @@ export function CourseManagement() {
     fetchCourses();
   }, []);
 
-  // const handleCreateCourse = () => {
-  //   setModalMode('create');
-  //   setSelectedCourse(null);
-  //   setIsModalOpen(true);
-  // };
 
   const handleUpdateCourse = async (courseData: Partial<Course>) => {
     if (!selectedCourse?.id) return;
@@ -271,12 +266,12 @@ export function CourseManagement() {
 
                 <div className={styles.courseStats}>
                   <span>{course.duration}</span>
-                  <span>{course.total_students} students</span>
+                  <span>{course.enrollment_count} Students</span>
                 </div>
 
                 <div className={styles.courseActions}>
                   <button
-                    onClick={() => handleEditCourse(course)}
+                    onClick={() => openEditModal(course)}
                     className={styles.editButton}
                   >
                     <Edit2 size={16} />

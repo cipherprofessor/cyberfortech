@@ -113,3 +113,13 @@ export interface CourseModalProps {
     loading?: boolean;
     onSubmit: (courseData: Partial<Course>) => Promise<void>;
   }
+
+  export interface CourseAnalytics {
+    totalEnrollments: number;
+    totalCompletions: number;
+    averageWatchTime: number;
+    totalRevenue: number;
+    popularCategories: { category: string; count: number; }[];
+    monthlyEnrollments: { month: string; count: number; }[];
+    instructorPerformance: { instructor: string; students: number; rating: number; }[];
+  }

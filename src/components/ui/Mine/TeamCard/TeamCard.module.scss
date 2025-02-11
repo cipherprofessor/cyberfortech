@@ -62,23 +62,23 @@ $colors: (
   }
 
   // Generate color-specific styles
-  @each $color, $values in $colors {
-    &.#{$color} {
-      &::before {
-        background: map-get($values, gradient);
-      }
+//   @each $color, $values in $colors {
+//     &.#{$color} {
+//       &::before {
+//         background: map-get($values, gradient);
+//       }
 
-      .roleChip {
-        background: rgba(map-get($values, primary), 0.1);
-        color: map-get($values, primary);
-      }
+//       .roleChip {
+//         background: rgba(map-get($values, primary), 0.1);
+//         color: map-get($values, primary);
+//       }
 
-      .achievementIcon {
-        color: #f59e0b; // Keep golden color for all variants
-      }
-    }
-  }
-}
+//       .achievementIcon {
+//         color: #f59e0b; // Keep golden color for all variants
+//       }
+//     }
+//   }
+// }
 
 .imageSection {
   position: relative;
@@ -498,4 +498,5 @@ $colors: (
       box-shadow: 0 4px 12px rgba(54, 181, 78, 0.2);
     }
   }
+}
 }

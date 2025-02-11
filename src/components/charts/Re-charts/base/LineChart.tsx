@@ -12,26 +12,68 @@ import {
 } from 'recharts';
 import { motion } from 'framer-motion';
 import { ChartTooltip } from '../components/Tooltip';
-import { chartGradients } from '../config/gradients';
-import { chartColors } from '../config/colors';
-// import { chartColors, chartGradients } from '../config';
+
+// Types
+interface DataPoint {
+  [key: string]: string | number;
+}
+
+interface LineConfig {
+  key: string;
+  name: string;
+  color?: string;
+  gradient?: keyof typeof defaultGradients;
+}
+
+interface GradientStop {
+  offset: string;
+  color: string;
+  opacity: number;
+}
+
+interface GradientConfig {
+  [key: string]: GradientStop[];
+}
 
 interface LineChartProps {
-  data: any[];
-  lines: {
-    key: string;
-    name: string;
-    color?: string;
-    gradient?: string;
-  }[];
+  data: DataPoint[];
+  lines: LineConfig[];
   xAxis: string;
   height?: number;
   currency?: boolean;
-  formatter?: (value: any) => string;
+  formatter?: (value: number) => string;
   animationDuration?: number;
 }
 
-export const LineChart = ({
+// Default gradients
+const defaultGradients: GradientConfig = {
+  primary: [
+    { offset: '0%', color: '#3B82F6', opacity: 0.8 },
+    { offset: '100%', color: '#2563EB', opacity: 0.3 },
+  ],
+  success: [
+    { offset: '0%', color: '#10B981', opacity: 0.8 },
+    { offset: '100%', color: '#059669', opacity: 0.3 },
+  ],
+  warning: [
+    { offset: '0%', color: '#F59E0B', opacity: 0.8 },
+    { offset: '100%', color: '#D97706', opacity: 0.3 },
+  ],
+  error: [
+    { offset: '0%', color: '#EF4444', opacity: 0.8 },
+    { offset: '100%', color: '#DC2626', opacity: 0.3 },
+  ],
+};
+
+// Default colors
+const defaultColors = {
+  primary: '#3B82F6',
+  success: '#10B981',
+  warning: '#F59E0B',
+  error: '#EF4444',
+};
+
+export const LineChart: React.FC<LineChartProps> = ({
   data,
   lines,
   xAxis,
@@ -39,8 +81,8 @@ export const LineChart = ({
   currency = false,
   formatter,
   animationDuration = 1000
-}: LineChartProps) => {
-  const [chartData, setChartData] = useState<any[]>([]);
+}) => {
+  const [chartData, setChartData] = useState<DataPoint[]>([]);
 
   useEffect(() => {
     setChartData([]);
@@ -50,6 +92,17 @@ export const LineChart = ({
     return () => clearTimeout(timer);
   }, [data]);
 
+  const getGradientStops = (line: LineConfig): GradientStop[] => {
+    if (line.gradient && defaultGradients[line.gradient]) {
+      return defaultGradients[line.gradient];
+    }
+    return defaultGradients.primary;
+  };
+
+  const getLineColor = (line: LineConfig): string => {
+    return line.color || defaultColors.primary;
+  };
+
   return (
     <div className="w-full transition-transform duration-300 hover:scale-[1.02]">
       <ResponsiveContainer width="100%" height={height}>
@@ -58,7 +111,7 @@ export const LineChart = ({
           margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
         >
           <defs>
-            {lines.map(line => (
+            {lines.map((line: LineConfig) => (
               <linearGradient
                 key={`gradient-${line.key}`}
                 id={`gradient-${line.key}`}
@@ -67,15 +120,14 @@ export const LineChart = ({
                 x2="0"
                 y2="1"
               >
-                {(line.gradient ? chartGradients[line.gradient] : chartGradients.primary)
-                  .map((stop: { offset: string | number | undefined; color: string | undefined; opacity: string | number | undefined; }, index: React.Key | null | undefined) => (
-                    <stop
-                      key={index}
-                      offset={stop.offset}
-                      stopColor={stop.color}
-                      stopOpacity={stop.opacity}
-                    />
-                  ))}
+                {getGradientStops(line).map((stop: GradientStop, index: number) => (
+                  <stop
+                    key={index}
+                    offset={stop.offset}
+                    stopColor={stop.color}
+                    stopOpacity={stop.opacity}
+                  />
+                ))}
               </linearGradient>
             ))}
           </defs>
@@ -103,7 +155,7 @@ export const LineChart = ({
           
           <Legend />
           
-          {lines.map(line => (
+          {lines.map((line: LineConfig) => (
             <Line
               key={line.key}
               type="monotone"
@@ -112,12 +164,12 @@ export const LineChart = ({
               stroke={`url(#gradient-${line.key})`}
               strokeWidth={3}
               dot={{ 
-                fill: line.color || chartColors.primary.base, 
+                fill: getLineColor(line), 
                 strokeWidth: 2 
               }}
               activeDot={{ 
                 r: 8, 
-                fill: line.color || chartColors.primary.base 
+                fill: getLineColor(line)
               }}
               animationDuration={animationDuration}
               animationEasing="ease-in-out"

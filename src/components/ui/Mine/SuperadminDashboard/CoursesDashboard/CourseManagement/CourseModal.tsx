@@ -62,17 +62,6 @@ const courseSchema = z.object({
       }
     }, [course, mode, reset]);
 
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     try {
-//       await onSubmit(formData);
-//       onClose();
-//     } catch (error) {
-//       console.error('Error submitting course:', error);
-//       // Show error toast
-//     }
-//   };
-
 const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;

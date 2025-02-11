@@ -77,3 +77,25 @@ export interface ChartDimensions {
     loading?: boolean;
   }
   
+
+  export interface DataPoint {
+    [key: string]: string | number;
+  }
+  
+  export interface SeriesConfig {
+    type: 'line' | 'bar' | 'area';
+    key: string;
+    name: string;
+    color?: string;
+    gradient?: string;
+    yAxisId?: 'left' | 'right';  // Restrict to valid values
+  }
+  
+  export interface ZoomableTimelineChartProps {
+    data: DataPoint[];
+    series: SeriesConfig[];
+    xAxis: string;
+    height?: number;
+    currency?: boolean;
+    formatter?: (value: number) => string;
+  }
