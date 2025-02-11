@@ -1,0 +1,15 @@
+.chartContainer {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: var(--background-primary);
+    transition: all 0.3s ease-in-out;
+  
+    &.dark {
+      background: #1e1e2f;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+    }
+  }
+  
