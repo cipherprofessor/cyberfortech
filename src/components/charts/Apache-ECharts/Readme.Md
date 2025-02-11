@@ -1,1 +1,1 @@
-Area, Bar, Funnel,Gauge,Heatmap,Line,Pie,Radar,Scatter,TreeMap,
+Area, Bar,BoxPlot,Bubble,CandleStick, Funnel,Gauge,Heatmap,Line,Pie,Radar,Scatter,TreeMap,Waterfall,ChordChart

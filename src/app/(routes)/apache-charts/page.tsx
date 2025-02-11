@@ -1,20 +1,14 @@
 "use client";
 
 import ChartsDashboardTab1 from "./Tab1";
-
-// import { AceternityUIAnimatedTestimonialsUse } from "@/components/ui/Aceternity/AnimatedTestimonials/AnimatedTestimonialsUse";
-
-// import { AceternityUIAnimatedTestimonialsDemo } from "@/components/ui/Aceternity/AnimatedTestimonials/AnimatedTestimonialsUSe";
+import ChartsDashboardTab2 from "./Tab2";
 
 export default function Home() {
   return (
-    // <div >
-    //   Welcome To Next JS Repo with MongoDB
-
-    // </div>
     <>
-      <div className="flex flex-col items-center justify-center m-20  p-20">
+      <div className="flex flex-col items-center justify-center m-20  p-20 mb-30">
         <ChartsDashboardTab1 />
+        <ChartsDashboardTab2 />
       </div>
     </>
   );

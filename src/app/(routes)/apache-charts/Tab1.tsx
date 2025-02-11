@@ -9,11 +9,12 @@ import ApacheAreaChart from "@/components/charts/Apache-ECharts/ApacheAreaChart/
 import ApacheRadarChart from "@/components/charts/Apache-ECharts/ApacheRadarChart/ApacheRadarChart";
 import ApacheFunnelChart from "@/components/charts/Apache-ECharts/ApacheFunnelChart/ApacheFunnelChart";
 import ApacheScatterChart from "@/components/charts/Apache-ECharts/ApacheScatterChart/ApacheScatterChart";
-import { barChartData, boxplotData, gaugeChartData, mockTreemapData, scatterChartData } from "@/components/charts/Apache-ECharts/common/mockData";
+import { barChartData, boxplotData, gaugeChartData, mockTreemapData, scatterChartData, waterfallChartData } from "@/components/charts/Apache-ECharts/common/mockData";
 import ApacheHeatmapChart from "@/components/charts/Apache-ECharts/ApacheHeatmapChart/ApacheHeatmapChart";
 import ApacheGaugeChart from "@/components/charts/Apache-ECharts/ApacheGaugeChart/ApacheGaugeChart";
 import ApacheTreemapChart from "@/components/charts/Apache-ECharts/ApacheTreemapChart/ApacheTreemapChart";
 import ApacheBoxplotChart from "@/components/charts/Apache-ECharts/ApacheBoxplotChart/ApacheBoxplotChart";
+import ApacheWaterfallChart from "@/components/charts/Apache-ECharts/ApacheWaterfallChart/ApacheWaterfallChart";
 
 
 
@@ -135,6 +136,16 @@ export default function ChartsDashboardTab1() {
             xAxisLabel="Months" 
             yAxisLabel="Revenue (USD)" 
             data={boxplotData}
+          />
+        </Tab>
+
+
+        <Tab key="waterfall" title="Waterfall Chart">
+          <ApacheWaterfallChart 
+            title="Quarterly Revenue Changes" 
+            xAxisLabel="Quarters" 
+            yAxisLabel="Revenue (USD)" 
+            data={waterfallChartData}
           />
         </Tab>
 

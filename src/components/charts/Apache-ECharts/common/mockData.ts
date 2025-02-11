@@ -137,6 +137,65 @@ export const lineChartData: ChartDataPoint[] = [
     [690, 740, 790, 810, 870],
   ];
   
+  export const waterfallChartData = [
+    { label: "Start", value: 3000 },
+    { label: "Q1", value: -1200 },
+    { label: "Q2", value: 800 },
+    { label: "Q3", value: -600 },
+    { label: "Q4", value: 900 },
+    { label: "End", value: 3900 },
+  ];
+  
+  
+  
+  export const bubbleChartData = [
+    { x: 10, y: 20, size: 15 },
+    { x: 20, y: 30, size: 25 },
+    { x: 30, y: 10, size: 10 },
+    { x: 40, y: 50, size: 30 },
+    { x: 50, y: 40, size: 20 },
+  ];
+
+  export const candlestickData: [string, number, number, number, number][] = [
+    ["2024-02-01", 110, 130, 105, 125], // [Date, Open, High, Low, Close]
+    ["2024-02-02", 125, 10, 120, 100],
+    ["2024-02-03", 135, 145, 130, 140],
+    ["2024-02-04", 140, 150, 135, 145],
+    ["2024-02-05", 145, 155, 140, 150],
+  ];
+
+
+  export const sankeyChartData = {
+    nodes: [
+      { name: "Source A" },
+      { name: "Source B" },
+      { name: "Source C" },
+      { name: "Target X" },
+      { name: "Target Y" },
+    ],
+    links: [
+      { source: "Source A", target: "Target X", value: 10 },
+      { source: "Source B", target: "Target X", value: 15 },
+      { source: "Source C", target: "Target Y", value: 20 },
+    ],
+  };
+
+
+  export const chordChartData = {
+    nodes: [
+      { name: "Node A", value: 30, color: "#FF5733" },
+      { name: "Node B", value: 50, color: "#33FF57" },
+      { name: "Node C", value: 40, color: "#3399FF" },
+      { name: "Node D", value: 35, color: "#FFD700" },
+    ],
+    links: [
+      { source: "Node A", target: "Node B", value: 10, color: "#FF5733" },
+      { source: "Node A", target: "Node C", value: 20, color: "#33FF57" },
+      { source: "Node B", target: "Node D", value: 15, color: "#3399FF" },
+      { source: "Node C", target: "Node D", value: 25, color: "#FFD700" },
+    ],
+  };
+  
   
   
   

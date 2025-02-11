@@ -29,6 +29,50 @@ export type ChartDataPoint = {
   }
   
   
+  export interface ApacheWaterfallChartProps {
+    title?: string;
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+    data?: { label: string; value: number }[];
+  }
+  
+
+  export interface ApacheBubbleChartProps {
+    title?: string;
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+    data?: { x: number; y: number; size: number }[];
+  }
+
+
+  export interface ApacheCandlestickChartProps {
+    title?: string;
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+    data?: [string, number, number, number, number][]; // [Date, Open, High, Low, Close]
+  }
+
+  export interface ApacheSankeyChartProps {
+    title?: string;
+    data: {
+      nodes: { name: string }[];
+      links: { source: string; target: string; value: number }[];
+    };
+  }
+
+  export interface ApacheChordChartProps {
+    title?: string;
+    data: { name: string; value: number; color?: string }[];
+    links: { source: string; target: string; value: number; color?: string }[];
+  }
+  
+  
+  
+
+
+  
+  
+  
   
   
   
