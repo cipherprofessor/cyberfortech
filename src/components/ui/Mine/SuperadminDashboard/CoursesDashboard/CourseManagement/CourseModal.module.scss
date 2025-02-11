@@ -1,0 +1,222 @@
+// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/CourseModal.module.scss
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  
+  .modal {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+  
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--border-color);
+      border-radius: 20px;
+      border: 2px solid var(--card-bg);
+    }
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+  
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+  
+    .closeButton {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+  
+      &:hover {
+        background: var(--hover-bg);
+        color: var(--text-primary);
+      }
+    }
+  }
+  
+  .form {
+    padding: 1.5rem;
+  }
+  
+  .formGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  
+    &.fullWidth {
+      grid-column: span 2;
+  
+      @media (max-width: 640px) {
+        grid-column: span 1;
+      }
+    }
+  
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+  
+    input,
+    textarea,
+    select {
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      background: var(--background);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+  
+      &:focus {
+        outline: none;
+        border-color: var(--button-bg);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+      }
+  
+      &::placeholder {
+        color: var(--text-secondary);
+      }
+    }
+  
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+  
+    .inputWithIcon {
+      position: relative;
+      display: flex;
+      align-items: center;
+  
+      input {
+        padding-left: 2.5rem;
+      }
+  
+      svg {
+        position: absolute;
+        left: 0.75rem;
+        color: var(--text-secondary);
+      }
+    }
+  }
+  
+  .imageUpload {
+    border: 2px dashed var(--border-color);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      border-color: var(--button-bg);
+      background: var(--hover-bg);
+    }
+  
+    .uploadIcon {
+      color: var(--button-bg);
+      margin-bottom: 1rem;
+    }
+  
+    input[type="file"] {
+      display: none;
+    }
+  
+    p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+  }
+  
+  .modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .cancelButton {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background: var(--background);
+    color: var(--text-primary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: var(--hover-bg);
+    }
+  }
+  
+  .submitButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--button-bg);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: var(--button-hover);
+      transform: translateY(-1px);
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }

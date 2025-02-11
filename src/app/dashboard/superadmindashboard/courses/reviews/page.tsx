@@ -1,7 +1,7 @@
 // src/app/dashboard/courses/reviews/page.tsx
 'use client';
 
-import CourseReviews from '@/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseReviews';
+import CourseReviews from '@/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseReviews/CourseReviews';
 import React from 'react';
 
 

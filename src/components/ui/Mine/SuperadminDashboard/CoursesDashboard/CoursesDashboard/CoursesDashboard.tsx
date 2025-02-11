@@ -62,7 +62,7 @@ interface CreateCourseModalProps {
   onSubmit: (data: Partial<Course>) => void;
 }
 
-const CreateCourseModal: React.FC<CreateCourseModalProps> = ({ isOpen, onClose, onSubmit }) => {
+export const SuperAdminCourseDashboard: React.FC<CreateCourseModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const [formData, setFormData] = useState<Partial<Course>>({
     title: '',
     description: '',
@@ -688,51 +688,13 @@ const CourseManagement = () => {
               </div>
             )}
   
-            {/* Empty State */}
-            {filteredCourses.length === 0 && (
-              <div className="text-center py-12">
-                <IconBook className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                  No courses found
-                </h3>
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  No courses match your search criteria.
-                </p>
-              </div>
-            )}
-          </div>
-  
-          {/* Pagination */}
-          <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                Showing {filteredCourses.length} of {courses.length} courses
-              </div>
-              <div className="flex items-center space-x-2">
-                <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm 
-                  font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
-                  Previous
-                </button>
-                <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm 
-                  font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
-                  Next
-                </button>
-              </div>
-            </div>
-          </div>
+            
+          </div>  
+
         </div>
-  
-        {/* Create Course Modal */}
-        <CreateCourseModal
-          isOpen={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-          onSubmit={(data) => {
-            // console.log('Creating course:', data);
-            // Implement course creation logic
-          }}
-        />
+
       </div>
     );
   };
   
-  export default CourseManagement;
+  export default SuperAdminCourseDashboard;

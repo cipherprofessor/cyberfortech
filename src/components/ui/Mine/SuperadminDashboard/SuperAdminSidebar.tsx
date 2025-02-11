@@ -57,9 +57,9 @@ const menuItems = [
     icon: <IconBook className="h-5 w-5" />,
     href: "/dashboard/superadmindashboard/courses",
     subItems: [
-      { label: "All Courses", href: "/dashboard/superadmindashboard/courses/allcourses" },
-      // { label: "Categories", href: "/dashboard/superadmindashboard/courses/categories" },
-      { label: "Reviews", href: "/dashboard/superadmindashboard/courses/reviews" },
+      { label: "Courses Dashboard", href: "/dashboard/superadmindashboard/courses/allcourses" },
+      { label: "Courses Mangement", href: "/dashboard/superadmindashboard/courses/management" },
+      { label: "Course Reviews", href: "/dashboard/superadmindashboard/courses/reviews" },
     ]
   },
   {

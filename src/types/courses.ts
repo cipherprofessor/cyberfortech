@@ -15,7 +15,7 @@ export type Course = {
     description: string;
     image_url: string;
     duration: string;
-    level: string;
+    // level: string;
     price: number;
     average_rating: number;
     enrollment_count?: number;
@@ -31,6 +31,7 @@ export type Course = {
     instructor_name: string | null;
     instructor_profile_image_url: string | null;
     sections: CourseSection[]; // Adding sections for course detail page
+    level: 'beginner' | 'intermediate' | 'advanced';
 };
 
 export type CourseSection = {
@@ -103,3 +104,12 @@ export interface CourseContentProps {
     sections: Section[];
   };
 }
+
+export interface CourseModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    mode: 'create' | 'edit';
+    course?: Course | null;
+    loading?: boolean;
+    onSubmit: (courseData: Partial<Course>) => Promise<void>;
+  }
