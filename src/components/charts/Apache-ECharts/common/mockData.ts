@@ -196,7 +196,75 @@ export const lineChartData: ChartDataPoint[] = [
     ],
   };
   
+
+  export const sunburstChartData = [
+    {
+      name: "Category A",
+      children: [
+        {
+          name: "Subcategory A1",
+          value: 10,
+          itemStyle: { color: "#FF5733" },
+        },
+        {
+          name: "Subcategory A2",
+          children: [
+            { name: "Item A2-1", value: 5, itemStyle: { color: "#FFC300" } },
+            { name: "Item A2-2", value: 7, itemStyle: { color: "#FF5733" } },
+          ],
+        },
+      ],
+    },
+    {
+      name: "Category B",
+      children: [
+        { name: "Subcategory B1", value: 15, itemStyle: { color: "#33FF57" } },
+        { name: "Subcategory B2", value: 12, itemStyle: { color: "#3399FF" } },
+      ],
+    },
+  ];
+  
+
+
+  export const forceGraphData = {
+    nodes: [
+      { name: "Node A", value: 20, color: "#FF5733" },
+      { name: "Node B", value: 25, color: "#33FF57" },
+      { name: "Node C", value: 15, color: "#3399FF" },
+      { name: "Node D", value: 30, color: "#FFD700" },
+    ],
+    links: [
+      { source: "Node A", target: "Node B" },
+      { source: "Node B", target: "Node C" },
+      { source: "Node C", target: "Node D" },
+      { source: "Node D", target: "Node A" },
+    ],
+  };
+  
+
+  export const parallelChartData = {
+    dimensions: ["Speed", "Acceleration", "Efficiency", "Power", "Torque", "Fuel Consumption"],
+    data: [
+      [90, 120, 80, 100, 70, 30],
+      [70, 110, 85, 95, 65, 40],
+      [80, 130, 70, 110, 75, 35],
+      [100, 140, 75, 105, 80, 25],
+      [85, 125, 90, 120, 60, 45],
+      [95, 115, 78, 108, 68, 38],
+      [78, 135, 82, 115, 72, 28],
+      [88, 128, 76, 102, 74, 33],
+      [92, 140, 84, 118, 69, 27],
+      [86, 122, 88, 125, 73, 31],
+    ],
+  };
   
   
-  
+  export const polarChartData: [string, number][] = [
+    ["A", 40],
+    ["B", 80],
+    ["C", 60],
+    ["D", 100],
+    ["E", 70],
+    ["F", 50],
+  ];
   

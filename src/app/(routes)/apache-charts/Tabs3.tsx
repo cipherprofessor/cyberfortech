@@ -15,7 +15,7 @@ import ApachePolarChart from "@/components/charts/Apache-ECharts/ApachePolarChar
 
 
 
-export default function ChartsDashboardTab2() {
+export default function ChartsDashboardTab3() {
   const [selected, setSelected] = React.useState("line");
 
   return (
@@ -38,85 +38,6 @@ export default function ChartsDashboardTab2() {
             </CardBody>
           </Card>
         </Tab>
-  
-        
-        <Tab key="ApacheCandlestickChart" title="Apache Candlestick Chart">
-  <Card>
-    <CardBody>
-      <ApacheCandlestickChart
-        title="Stock Market Data"
-        xAxisLabel="Date"
-        yAxisLabel="Price"
-        data={candlestickData} // Ensure your data is structured correctly
-      />
-    </CardBody>
-  </Card>
-</Tab>
-
-<Tab key="ApacheSankeyChart" title="Apache Sankey Chart">
-  <Card>
-    <CardBody>
-      <ApacheSankeyChart
-        title="Flow of Data"
-        data={sankeyChartData}
-      />
-    </CardBody>
-  </Card>
-</Tab>
-
-
-<Tab key="ApacheChordChart" title="Apache Chord Chart">
-  <Card>
-    <CardBody>
-      <ApacheChordChart
-        title="Chord Graph Visualization"
-        data={chordChartData.nodes}
-        links={chordChartData.links}
-      />
-    </CardBody>
-  </Card>
-</Tab>
-
-
-<Tab key="ApacheSunburstChart" title="Apache Sunburst Chart">
-  <Card>
-    <CardBody>
-      <ApacheSunburstChart title="Sunburst Visualization" data={sunburstChartData} />
-    </CardBody>
-  </Card>
-</Tab>
-
-
-<Tab key="ApacheForceGraph" title="Apache Force Graph">
-  <Card>
-    <CardBody>
-      <ApacheForceGraph title="Network Connections" data={forceGraphData} />
-    </CardBody>
-  </Card>
-</Tab>
-
-
-<Tab key="ApacheParallelChart" title="Apache Parallel Chart">
-  <Card>
-    <CardBody>
-      <ApacheParallelChart title="Performance Analysis" data={parallelChartData.data} dimensions={parallelChartData.dimensions} />
-    </CardBody>
-  </Card>
-</Tab>
-
-<Tab key="ApachePolarChart" title="Apache Polar Chart">
-  <Card>
-    <CardBody>
-      <ApachePolarChart title="Polar Chart Example" data={polarChartData} />
-    </CardBody>
-  </Card>
-</Tab>
-
-
-
-
-
-
 
         </Tabs>
     </div>

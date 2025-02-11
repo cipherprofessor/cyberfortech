@@ -65,6 +65,40 @@ export type ChartDataPoint = {
     data: { name: string; value: number; color?: string }[];
     links: { source: string; target: string; value: number; color?: string }[];
   }
+
+  export interface ApacheSunburstChartProps {
+    title?: string;
+    data: ApacheSunburstNode[];
+  }
+  
+  export interface ApacheSunburstNode {
+    name: string;
+    value?: number;
+    children?: ApacheSunburstNode[];
+    itemStyle?: { color?: string };
+  }
+  
+  export interface ApacheForceGraphProps {
+    title?: string;
+    data: {
+      nodes: { name: string; value: number; color?: string }[];
+      links: { source: string; target: string }[];
+    };
+  }
+  
+
+  export interface ApacheParallelChartProps {
+    title?: string;
+    dimensions: string[];
+    data: number[][];
+  }
+  
+
+  export interface ApachePolarChartProps {
+    title?: string;
+    data: [string, number][];
+  }
+  
   
   
   
