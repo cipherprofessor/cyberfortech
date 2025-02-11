@@ -6,25 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, PlayCircle, Lock } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import styles from './CourseContent.module.scss';
+import { CourseContentProps, Section } from '@/types/courses';
 
-interface Lesson {
-  id: string;
-  title: string;
-  duration: string;
-  order_index: number;
-}
-
-interface Section {
-  id: string;
-  title: string;
-  lessons: Lesson[];
-}
-
-interface CourseContentProps {
-  course: {
-    sections: Section[];
-  };
-}
 
 export function CourseContent({ course }: CourseContentProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);

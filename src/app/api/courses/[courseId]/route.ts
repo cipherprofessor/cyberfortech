@@ -1,6 +1,7 @@
+//src/app/api/courses/[courseId]/route.ts
 import { db } from '@/lib/db';
+import { Course, CourseLesson } from '@/types/courses';
 import { NextResponse } from 'next/server';
-
 
 function safeString(value: unknown): string {
   return String(value || '');
@@ -16,8 +17,14 @@ export async function GET(
   { params }: { params: { courseId: string } }
 ) {
   try {
-    // Access courseId directly from params object
-    const { courseId } = params;
+    // Await the params
+    const courseId = await Promise.resolve(params.courseId);
+    if (!courseId) {
+      return NextResponse.json(
+        { error: 'Course ID is required' },
+        { status: 400 }
+      );
+    }
 
     const result = await db.execute({
       sql: `
@@ -72,7 +79,8 @@ export async function GET(
       updated_at: safeString(row.updated_at),
       average_rating: safeNumber(row.average_rating),
       total_students: safeNumber(row.total_students),
-      total_reviews: safeNumber(row.total_reviews)
+      total_reviews: safeNumber(row.total_reviews),
+      sections: []
     };
 
     const sectionsResult = await db.execute({
@@ -84,8 +92,12 @@ export async function GET(
               json_object(
                 'id', id,
                 'title', title,
+                'description', description,
+                'content_type', content_type,
+                'content_url', content_url,
                 'duration', duration,
-                'order_index', order_index
+                'is_free_preview', is_free_preview,
+                'sequence_number', sequence_number
               )
             ) as lessons
           FROM course_lessons
@@ -97,7 +109,7 @@ export async function GET(
         FROM course_sections cs
         LEFT JOIN lesson_data ld ON cs.id = ld.section_id
         WHERE cs.course_id = ?
-        ORDER BY cs.order_index
+        ORDER BY cs.sequence_number
       `,
       args: [courseId]
     });
@@ -105,7 +117,9 @@ export async function GET(
     const sections = sectionsResult.rows.map(row => ({
       id: safeString(row.id),
       title: safeString(row.title),
-      order_index: safeNumber(row.order_index),
+      description: safeString(row.description),
+      sequence_number: safeNumber(row.sequence_number),
+      is_free_preview: Boolean(row.is_free_preview),
       course_id: safeString(row.course_id),
       lessons: JSON.parse(safeString(row.lessons)) as CourseLesson[]
     }));

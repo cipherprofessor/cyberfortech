@@ -1,40 +1,20 @@
+// src/app/(routes)/courses/[courseId]/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { CourseContent } from '@/components/courses/CourseContent/CourseContent';
 import { CourseHeader } from '@/components/courses/CourseHeader/CourseHeader';
 import { CourseSidebar } from '@/components/courses/CourseSidebar/CourseSidebar';
 import { useTheme } from 'next-themes';
-import { Loader2 } from 'lucide-react';
+import { 
+  Loader2, 
+  AlertTriangle,
+  RefreshCw
+} from 'lucide-react';
 import styles from './course-detail.module.scss';
-
-interface CourseSection {
-  id: string;
-  title: string;
-  lessons: Array<{
-    id: string;
-    title: string;
-    duration: string;
-    order_index: number;
-  }>;
-}
-
-interface Course {
-  id: string;
-  title: string;
-  description: string;
-  instructor_name: string;
-  instructor_avatar: string;
-  price: number;
-  duration: string;
-  level: string;
-  average_rating: number;
-  total_students: number;
-  total_reviews: number;
-  sections: CourseSection[];
-}
+import { Course } from '@/types/courses';
 
 export default function CourseDetailPage({
   params,
@@ -47,68 +27,105 @@ export default function CourseDetailPage({
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const response = await axios.get(`/api/courses/${params.courseId}`);
-        setCourse(response.data);
-      } catch (err) {
-        setError('Failed to load course details');
-        console.error('Error fetching course:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCourse = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/courses/${params.courseId}`);
+      setCourse(response.data);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load course details');
+      console.error('Error fetching course:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCourse();
   }, [params.courseId]);
 
   if (loading) {
     return (
-      <div className={styles.loadingContainer}>
-        <Loader2 className={styles.loadingSpinner} />
+      <motion.div 
+        className={styles.loadingContainer}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        >
+          <Loader2 
+            className={styles.loadingSpinner}
+            aria-label="Loading course details" 
+          />
+        </motion.div>
         <p>Loading course details...</p>
-      </div>
+      </motion.div>
     );
   }
 
   if (error || !course) {
     return (
-      <div className={styles.errorContainer}>
-        <h2>Error</h2>
+      <motion.div 
+        className={styles.errorContainer}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <AlertTriangle 
+          size={48} 
+          className={styles.errorIcon}
+          aria-label="Error icon" 
+        />
+        <h2>Error Loading Course</h2>
         <p>{error || 'Failed to load course'}</p>
-      </div>
+        <motion.button
+          className={styles.retryButton}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={fetchCourse}
+          aria-label="Retry loading course"
+        >
+          <RefreshCw size={16} aria-hidden="true" />
+          Retry
+        </motion.button>
+      </motion.div>
     );
   }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className={`${styles.courseContainer} ${isDark ? styles.dark : ''}`}
-    >
-      <CourseHeader course={course} />
-      
-      <div className={styles.courseContent}>
-        <motion.main 
-          className={styles.mainContent}
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <CourseContent course={course} />
-        </motion.main>
+    <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className={`${styles.courseContainer} ${isDark ? styles.dark : ''}`}
+      >
+        <CourseHeader course={course} />
         
-        <motion.aside 
-          className={styles.sidebar}
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <CourseSidebar course={course} />
-        </motion.aside>
-      </div>
-    </motion.div>
+        <div className={styles.courseContent}>
+          <motion.main 
+            className={styles.mainContent}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <CourseContent course={course} />
+          </motion.main>
+          
+          <motion.aside 
+            className={styles.sidebar}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <CourseSidebar course={course} />
+          </motion.aside>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
