@@ -1,0 +1,19 @@
+.chartContainer {
+    padding: 16px;
+    background-color: var(--chart-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .dark {
+    --chart-bg: #1E1E2F;
+  }
+  
+  .chartTitle {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: inherit;
+  }
+  

@@ -8,15 +8,27 @@ export type ChartDataPoint = {
     value: number;
   };
   
-  // export type ChartDataPoint = {
-  //   label: string;
-  //   value: number;
-  // };
+  export interface HeatmapChartProps {
+    title: string;
+  }
+
+  export interface ApacheGaugeChartProps {
+    title: string;
+    data: { value: number; name: string }[];
+  }
   
-  export const pieChartData = [
-    { label: "Category A", value: 30 },
-    { label: "Category B", value: 20 },
-    { label: "Category C", value: 25 },
-    { label: "Category D", value: 15 },
-    { label: "Category E", value: 10 },
-  ];
+  export interface ChartData {
+    name: string;
+    value: number;
+  }
+  export interface ApacheBoxplotChartProps {
+    title?: string;
+    data?: number[][]; // Array of arrays for boxplot data
+    xAxisLabel?: string; // Custom X-axis label
+    yAxisLabel?: string; // Custom Y-axis label
+  }
+  
+  
+  
+  
+  

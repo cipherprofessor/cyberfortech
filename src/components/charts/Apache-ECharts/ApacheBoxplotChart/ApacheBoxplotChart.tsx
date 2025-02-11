@@ -2,17 +2,15 @@
 
 import ReactECharts from "echarts-for-react";
 import { useTheme } from "next-themes";
-import styles from "./ApacheBarChart.module.scss";
+import styles from "./ApacheBoxplotChart.module.scss";
 import { useEffect, useState } from "react";
+import { ApacheBoxplotChartProps } from "../common/types";
 
-interface ApacheBarChartProps {
-  title?: string;
-  data?: { label: string; value: number }[];
-}
-
-const ApacheBarChart: React.FC<ApacheBarChartProps> = ({
-  title = "Bar Chart",
+const ApacheBoxplotChart: React.FC<ApacheBoxplotChartProps> = ({
+  title = "Boxplot Chart",
   data,
+  xAxisLabel = "Categories",
+  yAxisLabel = "Values",
 }) => {
   const { theme } = useTheme();
   const [isDark, setIsDark] = useState(false);
@@ -21,15 +19,15 @@ const ApacheBarChart: React.FC<ApacheBarChartProps> = ({
     setIsDark(theme === "dark");
   }, [theme]);
 
-  const colors = ["#A5D6A7", "#90CAF9", "#CE93D8", "#FFCC80", "#B0BEC5", "#F48FB1"];
+  const colors = ["#FF7043", "#42A5F5", "#66BB6A", "#FFCA28", "#AB47BC"];
 
   const chartData =
     data || [
-      { label: "Category A", value: 120 },
-      { label: "Category B", value: 90 },
-      { label: "Category C", value: 70 },
-      { label: "Category D", value: 50 },
-      { label: "Category E", value: 30 },
+      [655, 850, 940, 980, 1070],
+      [760, 800, 845, 865, 930],
+      [740, 780, 810, 870, 920],
+      [680, 720, 760, 800, 850],
+      [690, 740, 790, 810, 870],
     ];
 
   const options = {
@@ -43,40 +41,43 @@ const ApacheBarChart: React.FC<ApacheBarChartProps> = ({
     },
 
     tooltip: {
-      trigger: "axis",
+      trigger: "item",
       backgroundColor: isDark ? "#1E1E2F" : "#fff",
       borderColor: isDark ? "#333" : "#ddd",
       textStyle: { color: isDark ? "#fff" : "#333" },
       extraCssText: "box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);",
     },
 
-    legend: {
-      orient: "horizontal",
-      bottom: 10,
-      textStyle: { color: isDark ? "#EAEAEA" : "#333" },
-    },
-
     xAxis: {
       type: "category",
-      data: chartData.map((item) => item.label),
+      name: xAxisLabel, // Dynamically set X-axis label
+      nameLocation: "middle",
+      nameGap: 30,
+      data: ["A", "B", "C", "D", "E"],
       axisLine: { lineStyle: { color: isDark ? "#AAA" : "#333" } },
       axisLabel: { color: isDark ? "#EAEAEA" : "#333" },
+      nameTextStyle: { fontSize: 14, fontWeight: "bold", color: isDark ? "#EAEAEA" : "#333" },
     },
 
     yAxis: {
       type: "value",
+      name: yAxisLabel, // Dynamically set Y-axis label
+      nameLocation: "middle",
+      nameGap: 50,
       axisLine: { lineStyle: { color: isDark ? "#AAA" : "#333" } },
       axisLabel: { color: isDark ? "#EAEAEA" : "#333" },
       splitLine: { lineStyle: { color: isDark ? "#444" : "#DDD" } },
+      nameTextStyle: { fontSize: 14, fontWeight: "bold", color: isDark ? "#EAEAEA" : "#333" },
     },
 
     series: [
       {
-        name: "Revenue",
-        type: "bar",
+        name: "Boxplot",
+        type: "boxplot",
         data: chartData.map((item, index) => ({
-          value: item.value,
+          value: item,
           itemStyle: {
+            borderColor: colors[index % colors.length],
             color: {
               type: "linear",
               x: 0,
@@ -85,16 +86,17 @@ const ApacheBarChart: React.FC<ApacheBarChartProps> = ({
               y2: 1,
               colorStops: [
                 { offset: 0, color: colors[index % colors.length] },
-                { offset: 1, color: "#E0E0E0" },
+                { offset: 1, color: "rgba(255,255,255,0.5)" },
               ],
             },
-            borderRadius: [3, 3, 0, 0],
-            shadowBlur: 5,
-            shadowColor: "rgba(0,0,0,0.1)",
           },
         })),
-        barWidth: "50%",
-        emphasis: { scale: 1.05 },
+        emphasis: {
+          itemStyle: {
+            borderColor: "#FF4081",
+            color: "rgba(255, 64, 129, 0.5)",
+          },
+        },
         animationDuration: 800,
       },
     ],
@@ -107,4 +109,4 @@ const ApacheBarChart: React.FC<ApacheBarChartProps> = ({
   );
 };
 
-export default ApacheBarChart;
+export default ApacheBoxplotChart;

@@ -1,0 +1,17 @@
+.chartContainer {
+    width: 100%;
+    height: 350px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--chart-bg);
+    transition: background-color 0.3s ease-in-out;
+  
+    &.dark {
+      --chart-bg: #1e1e2f;
+    }
+  
+    &:not(.dark) {
+      --chart-bg: #fff;
+    }
+  }
+  
