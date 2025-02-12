@@ -155,6 +155,20 @@ export type ChartDataPoint = {
     xAxisLabel?: string;
     yAxisLabel?: string;
   }
+
+  export type StreamGraphData = {
+    x: string;
+  } & Record<string, number>;
+  
+  export type ApacheStreamGraphData = {
+    x: string;
+    [key: string]: number | string; // Ensure x is allowed as a string, while others are numbers
+  };
+  
+
+ 
+  
+  
   
   
   

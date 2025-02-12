@@ -1,4 +1,4 @@
-import { ApacheGroupedBarChartProps, ApacheStackedAreaChartProps, BarChartData, ChartDataPoint } from "./types";
+import { ApacheGroupedBarChartProps, ApacheStackedAreaChartProps, ApacheStreamGraphData, BarChartData, ChartDataPoint } from "./types";
 
 
 export const lineChartData: ChartDataPoint[] = [
@@ -348,6 +348,21 @@ export const groupedBarChartData: ApacheGroupedBarChartProps["data"] = [
   { x: "Mar", ProductA: 170, ProductB: 190, ProductC: 130 },
   { x: "Apr", ProductA: 140, ProductB: 200, ProductC: 120 },
 ];
+
+
+
+
+export const streamGraphMockData: ApacheStreamGraphData[] = [
+  { x: "Jan", ProductA: 30, ProductB: 20, ProductC: 40, ProductD: 50 },
+  { x: "Feb", ProductA: 40, ProductB: 30, ProductC: 50, ProductD: 60 },
+  { x: "Mar", ProductA: 50, ProductB: 40, ProductC: 60, ProductD: 70 },
+  { x: "Apr", ProductA: 60, ProductB: 50, ProductC: 70, ProductD: 80 },
+  { x: "May", ProductA: 70, ProductB: 60, ProductC: 80, ProductD: 90 },
+  { x: "Jun", ProductA: 80, ProductB: 70, ProductC: 90, ProductD: 100 },
+];
+
+
+
 
 
 

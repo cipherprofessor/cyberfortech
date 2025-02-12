@@ -3,13 +3,14 @@
 import React from "react";
 import { Tabs, Tab, Card, CardBody } from "@heroui/react";
 import ApacheGeoMapChart from "@/components/charts/Apache-ECharts/ApacheGeoMapChart/ApacheGeoMapChart";
-import { bar3DChartData, geoMapData, groupedBarChartData, stackedAreaChartData, stackedBarChartData, stepLineChartData, surface3DChartData, temperatureStepLineData } from "@/components/charts/Apache-ECharts/common/mockData";
+import { bar3DChartData, geoMapData, groupedBarChartData, stackedAreaChartData, stackedBarChartData, stepLineChartData, streamGraphMockData, surface3DChartData, temperatureStepLineData } from "@/components/charts/Apache-ECharts/common/mockData";
 import Apache3DBarChart from "@/components/charts/Apache-ECharts/Apache3DBarChart/Apache3DBarChart";
 import Apache3DSurfaceChart from "@/components/charts/Apache-ECharts/Apache3DSurfaceChart/Apache3DSurfaceChart";
 import ApacheStepLineChart from "@/components/charts/Apache-ECharts/ApacheStepLineChart/ApacheStepLineChart";
 import ApacheStackedAreaChart from "@/components/charts/Apache-ECharts/ApacheStackedAreaChart/ApacheStackedAreaChart";
 import ApacheStackedBarChart from "@/components/charts/Apache-ECharts/ApacheStackedBarChart/ApacheStackedBarChart";
 import ApacheGroupedBarChart from "@/components/charts/Apache-ECharts/ApacheGroupedBarChart/ApacheGroupedBarChart";
+import ApacheStreamGraphChart from "@/components/charts/Apache-ECharts/ApacheStreamGraphChart/ApacheStreamGraphChart";
 
 
 export default function ChartsDashboardTab3() {
@@ -105,7 +106,7 @@ export default function ChartsDashboardTab3() {
 </Tab>
 
 
-<Tab key="ApacheGroupedBarChart" title="Apache Grouped Bar Chart">
+<Tab key="ApacheGroupedBarChart" title="Grouped Bar Chart">
   <Card>
     <CardBody>
       <ApacheGroupedBarChart
@@ -118,7 +119,24 @@ export default function ChartsDashboardTab3() {
   </Card>
 </Tab>
 
-        
+
+<Tab key="ApacheStreamGraphChartt" title="Stream Graph Chart">
+  <Card>
+    <CardBody>
+
+    <ApacheStreamGraphChart
+      data={streamGraphMockData}
+      xAxisLabel="Months"
+      yAxisLabel="Sales"
+      lightColors={["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]}
+      darkColors={["#ffb74d", "#81c784", "#64b5f6", "#e57373"]}
+    />
+
+    </CardBody>
+
+  </Card>
+</Tab>
+
 
 
       </Tabs>

@@ -1,1 +1,1 @@
-Area, Bar,BoxPlot,Bubble,CandleStick, Funnel,Gauge,Heatmap,Line,Pie,Radar,Scatter,Sankey,TreeMap,Waterfall,ChordChart, Sunbrust,ForceGraph, ParallelChart,PolarChart,GeoMapChart,3dbar,3d surface chart, StepLineChart,StackedAreaChart,StackedBarChart,GroupedBarChart,
+Area, Bar,BoxPlot,Bubble,CandleStick, Funnel,Gauge,Heatmap,Line,Pie,Radar,Scatter,Sankey,TreeMap,Waterfall,ChordChart, Sunbrust,ForceGraph, ParallelChart,PolarChart,GeoMapChart,3dbar,3d surface chart, StepLineChart,StackedAreaChart,StackedBarChart,GroupedBarChart,StreamGraphChart
