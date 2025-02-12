@@ -2,6 +2,7 @@
 
 import ChartsDashboardTab1 from "./Tab1";
 import ChartsDashboardTab2 from "./Tab2";
+import ChartsDashboardTab4 from "./Tab4";
 import ChartsDashboardTab3 from "./Tabs3";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
         <ChartsDashboardTab1 />
         <ChartsDashboardTab2 />
         <ChartsDashboardTab3 />
+        <ChartsDashboardTab4 />
       </div>
     </>
   );

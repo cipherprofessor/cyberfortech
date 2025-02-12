@@ -1,92 +1,88 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import ReactECharts from "echarts-for-react";
-import { ApacheStreamGraphData } from "../common/types";
 
-interface ApacheStreamGraphChartProps {
-  data: ApacheStreamGraphData[];
-  xAxisLabel?: string;
-  yAxisLabel?: string;
-  lightColors?: string[];
-  darkColors?: string[];
-}
+import React from "react";
+import { useTheme } from "next-themes";
+import * as echarts from "echarts/core";
+import { LineChart } from "echarts/charts";
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+} from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
+import ReactECharts from "echarts-for-react";
+import styles from "./ApacheStreamGraphChart.module.scss";
+import { ApacheStreamGraphChartProps } from "../common/types";
+
+echarts.use([TitleComponent, TooltipComponent, GridComponent, LegendComponent, LineChart, CanvasRenderer]);
 
 const ApacheStreamGraphChart: React.FC<ApacheStreamGraphChartProps> = ({
+  title = "Stream Graph",
   data,
-  xAxisLabel = "Months",
-  yAxisLabel = "Sales",
-  lightColors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8"], // Light mode colors
-  darkColors = ["#FFB74D", "#81C784", "#64B5F6", "#E57373"], // Dark mode colors
+  xAxisLabel = "Categories",
+  yAxisLabel = "Values",
 }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
-  useEffect(() => {
-    // Detect system dark mode
-    const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDarkMode(darkModeMediaQuery.matches);
+  // Extract categories & series
+  const categories = data.map((item) => item.x);
+  const seriesNames = Object.keys(data[0]).filter((key) => key !== "x");
 
-    const listener = (e: MediaQueryListEvent) => setIsDarkMode(e.matches);
-    darkModeMediaQuery.addEventListener("change", listener);
+  const seriesData = seriesNames.map((name) => ({
+    name,
+    type: "line",
+    stack: "total",
+    areaStyle: {},
+    smooth: true,
+    emphasis: { focus: "series" },
+    data: data.map((item) => item[name] as number),
+  }));
 
-    return () => darkModeMediaQuery.removeEventListener("change", listener);
-  }, []);
-
-  if (data.length === 0) return <p>No data available</p>;
-
-  const categories = Object.keys(data[0]).filter((key) => key !== "x");
-
-  const option = {
-    backgroundColor: isDarkMode ? "#1E1E1E" : "#FFFFFF",
+  const options = {
+    backgroundColor: isDark ? "#1A1A2E" : "#FFFFFF",
+    title: {
+      text: title,
+      left: "center",
+      textStyle: { color: isDark ? "#FFFFFF" : "#333" },
+    },
     tooltip: {
       trigger: "axis",
       axisPointer: { type: "shadow" },
-      textStyle: { color: isDarkMode ? "#fff" : "#000" },
+      formatter: (params: any) => {
+        let tooltipContent = `<b>${params[0].axisValue}</b><br/>`;
+        params.forEach((item: any) => {
+          tooltipContent += `<span style="display:inline-block;width:10px;height:10px;margin-right:5px;background:${item.color};"></span>
+            ${item.seriesName}: <b>${item.value}</b><br/>`;
+        });
+        return tooltipContent;
+      },
     },
     legend: {
-      data: categories,
-      textStyle: { color: isDarkMode ? "#fff" : "#000" },
-      top: 20,
+      top: 30,
+      textStyle: { color: isDark ? "#FFFFFF" : "#333" },
     },
+    grid: { left: "5%", right: "5%", bottom: "10%", containLabel: true },
     xAxis: {
       type: "category",
-      data: data.map((item) => item.x),
       name: xAxisLabel,
-      nameLocation: "center",
-      nameGap: 40, // Centering the label
-      nameTextStyle: {
-        fontSize: 14,
-        fontWeight: "bold",
-        color: isDarkMode ? "#fff" : "#000",
-      },
-      axisLabel: { color: isDarkMode ? "#ccc" : "#333" },
-      axisLine: { lineStyle: { color: isDarkMode ? "#777" : "#ccc" } },
+      data: categories,
+      axisLine: { lineStyle: { color: isDark ? "#FFFFFF" : "#333" } },
     },
     yAxis: {
       type: "value",
       name: yAxisLabel,
-      nameLocation: "center",
-      nameRotate: 90, // Rotate to match Y axis
-      nameGap: 50, // Centering the label
-      nameTextStyle: {
-        fontSize: 14,
-        fontWeight: "bold",
-        color: isDarkMode ? "#fff" : "#000",
-      },
-      axisLabel: { color: isDarkMode ? "#ccc" : "#333" },
-      axisLine: { lineStyle: { color: isDarkMode ? "#777" : "#ccc" } },
+      axisLine: { lineStyle: { color: isDark ? "#FFFFFF" : "#333" } },
     },
-    series: categories.map((category, index) => ({
-      name: category,
-      type: "line",
-      stack: "total",
-      areaStyle: {},
-      emphasis: { focus: "series" },
-      data: data.map((item) => Number(item[category])),
-      color: isDarkMode ? darkColors[index % darkColors.length] : lightColors[index % lightColors.length],
-    })),
+    series: seriesData.length > 0 ? seriesData : [{ type: "line", data: [] }],
   };
 
-  return <ReactECharts option={option} style={{ height: "400px" }} />;
+  return (
+    <div className={styles.chartContainer}>
+      <ReactECharts option={options} style={{ height: "500px", width: "100%" }} />
+    </div>
+  );
 };
 
 export default ApacheStreamGraphChart;

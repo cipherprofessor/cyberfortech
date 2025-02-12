@@ -352,14 +352,23 @@ export const groupedBarChartData: ApacheGroupedBarChartProps["data"] = [
 
 
 
-export const streamGraphMockData: ApacheStreamGraphData[] = [
+export const streamGraphMockData = [
   { x: "Jan", ProductA: 30, ProductB: 20, ProductC: 40, ProductD: 50 },
-  { x: "Feb", ProductA: 40, ProductB: 30, ProductC: 50, ProductD: 60 },
-  { x: "Mar", ProductA: 50, ProductB: 40, ProductC: 60, ProductD: 70 },
-  { x: "Apr", ProductA: 60, ProductB: 50, ProductC: 70, ProductD: 80 },
-  { x: "May", ProductA: 70, ProductB: 60, ProductC: 80, ProductD: 90 },
-  { x: "Jun", ProductA: 80, ProductB: 70, ProductC: 90, ProductD: 100 },
+  { x: "Feb", ProductA: 35, ProductB: 25, ProductC: 45, ProductD: 55 },
+  { x: "Mar", ProductA: 40, ProductB: 30, ProductC: 50, ProductD: 60 },
+  { x: "Apr", ProductA: 45, ProductB: 35, ProductC: 55, ProductD: 65 },
+  { x: "May", ProductA: 50, ProductB: 40, ProductC: 60, ProductD: 70 },
 ];
+
+export const ribbonChartMockData = [
+  { source: "A", target: "B", value: 10 },
+  { source: "A", target: "C", value: 20 },
+  { source: "B", target: "D", value: 15 },
+  { source: "C", target: "D", value: 25 },
+  { source: "D", target: "E", value: 30 },
+  { source: "E", target: "F", value: 40 },
+];
+
 
 
 

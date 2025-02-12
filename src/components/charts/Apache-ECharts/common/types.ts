@@ -160,11 +160,23 @@ export type ChartDataPoint = {
     x: string;
   } & Record<string, number>;
   
-  export type ApacheStreamGraphData = {
-    x: string;
-    [key: string]: number | string; // Ensure x is allowed as a string, while others are numbers
-  };
-  
+  export interface ApacheStreamGraphData {
+      x: string;
+      [key: string]: number | string;
+    }
+
+    export interface ApacheRibbonChartProps {
+      title?: string;
+      data: { source: string; target: string; value: number }[];
+    }
+    
+    export interface ApacheStreamGraphChartProps {
+      title?: string;
+      data: { x: string; [key: string]: number | string }[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+    
 
  
   
