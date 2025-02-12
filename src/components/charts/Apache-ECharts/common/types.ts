@@ -104,6 +104,71 @@ export type ChartDataPoint = {
     title?: string;
     data: { name: string; value: number }[];
   }
+
+
+  export interface Bar3DChartProps {
+    title?: string;
+    data: { x: string; y: string; z: number }[]; // Ensure data is an array of objects
+  }
+  
+  export interface Surface3DChartProps {
+    title?: string;
+    data: number[][][];
+  }
+
+  export interface Apache3DSurfaceChartProps {
+    title?: string;
+    data: number[][]; // Array of [x, y, z] values
+  }
+
+  export interface ApacheStepLineChartProps {
+    title?: string;
+    data: { x: string; y: number }[]; // X (category) and Y (value)
+    xAxisLabel?: string; // Custom label for X-Axis
+    yAxisLabel?: string; // Custom label for Y-Axis
+    metricUnit?: string; // Optional unit for tooltip (e.g., "°C", "kg", "%")
+  }
+
+  export interface ApacheStackedAreaChartProps {
+    title?: string;
+    data: {
+      x: string; // Ensure x is always a string
+      Revenue: number;
+      Expenses: number;
+      Profit: number;
+    }[];
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+  }
+  
+
+  export interface ApacheStackedBarChartProps {
+    title?: string;
+    data: { x: string; Revenue: number; Profit: number; Expenses: number }[];
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+  }
+
+  export interface ApacheGroupedBarChartProps {
+    title?: string;
+    data: Array<{ x: string } & Record<string, number | string>>;
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   

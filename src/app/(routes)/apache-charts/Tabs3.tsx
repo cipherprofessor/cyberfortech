@@ -2,25 +2,20 @@
 
 import React from "react";
 import { Tabs, Tab, Card, CardBody } from "@heroui/react";
-import { barChartData, boxplotData, bubbleChartData, candlestickData, chordChartData, forceGraphData, gaugeChartData, geoMapData, mockTreemapData, parallelChartData, polarChartData, sankeyChartData, scatterChartData, sunburstChartData, waterfallChartData } from "@/components/charts/Apache-ECharts/common/mockData";
-import ApacheBubbleChart from "@/components/charts/Apache-ECharts/ApacheBubbleChart/ApacheBubbleChart";
-import ApacheCandlestickChart from "@/components/charts/Apache-ECharts/ApacheCandlestickChart/ApacheCandlestickChart";
-import ApacheSankeyChart from "@/components/charts/Apache-ECharts/ApacheSankeyChart/ApacheSankeyChart";
-import ApacheChordChart from "@/components/charts/Apache-ECharts/ApacheChordChart/ApacheChordChart";
-import ApacheSunburstChart from "@/components/charts/Apache-ECharts/ApacheSunburstChart/ApacheSunburstChart";
-import ApacheForceGraph from "@/components/charts/Apache-ECharts/ApacheForceGraph/ApacheForceGraph";
-import ApacheParallelChart from "@/components/charts/Apache-ECharts/ApacheParallelChart/ApacheParallelChart";
-import ApachePolarChart from "@/components/charts/Apache-ECharts/ApachePolarChart/ApachePolarChart";
 import ApacheGeoMapChart from "@/components/charts/Apache-ECharts/ApacheGeoMapChart/ApacheGeoMapChart";
-
-
+import { bar3DChartData, geoMapData, groupedBarChartData, stackedAreaChartData, stackedBarChartData, stepLineChartData, surface3DChartData, temperatureStepLineData } from "@/components/charts/Apache-ECharts/common/mockData";
+import Apache3DBarChart from "@/components/charts/Apache-ECharts/Apache3DBarChart/Apache3DBarChart";
+import Apache3DSurfaceChart from "@/components/charts/Apache-ECharts/Apache3DSurfaceChart/Apache3DSurfaceChart";
+import ApacheStepLineChart from "@/components/charts/Apache-ECharts/ApacheStepLineChart/ApacheStepLineChart";
+import ApacheStackedAreaChart from "@/components/charts/Apache-ECharts/ApacheStackedAreaChart/ApacheStackedAreaChart";
+import ApacheStackedBarChart from "@/components/charts/Apache-ECharts/ApacheStackedBarChart/ApacheStackedBarChart";
+import ApacheGroupedBarChart from "@/components/charts/Apache-ECharts/ApacheGroupedBarChart/ApacheGroupedBarChart";
 
 
 export default function ChartsDashboardTab3() {
-  const [selected, setSelected] = React.useState("line");
+  const [selected, setSelected] = React.useState("geo");
 
   return (
-
     <div className="flex w-full flex-col">
       <Tabs
         aria-label="Chart Options"
@@ -28,15 +23,105 @@ export default function ChartsDashboardTab3() {
         onSelectionChange={(key) => setSelected(key.toString())}
       >
         <Tab key="ApacheGeoMapChart" title="Apache Geo Map Chart">
+          <Card>
+            <CardBody>
+              <ApacheGeoMapChart title="World Geo Map" data={geoMapData} />
+            </CardBody>
+          </Card>
+        </Tab>
+
+        <Tab key="Apache3DBarChart" title="3D Bar Chart">
+          <Card>
+            <CardBody>
+              <Apache3DBarChart title="3D Bar Chart Example" data={bar3DChartData} />
+            </CardBody>
+          </Card>
+        </Tab>
+
+        <Tab key="Apache3DSurfaceChart" title="3D Surface Chart">
+          <Card>
+            <CardBody>
+              <Apache3DSurfaceChart title="3D Surface Chart Example" data={surface3DChartData} />
+            </CardBody>
+          </Card>
+        </Tab>
+
+
+        <Tab key="ApacheStepLineChart" title="Step Line Chart">
+          <Card>
+            <CardBody>
+              <ApacheStepLineChart
+                title="Monthly Sales Trend"
+                data={stepLineChartData}
+                xAxisLabel="Month"
+                yAxisLabel="Sales"
+                metricUnit=" units"
+              />
+            </CardBody>
+          </Card>
+        </Tab>
+
+        <Tab key="ApacheTemperatureChart" title="Temperature Trend">
+          <Card>
+            <CardBody>
+              <ApacheStepLineChart
+                title="Daily Temperature Fluctuations"
+                data={temperatureStepLineData}
+                xAxisLabel="Day"
+                yAxisLabel="Temperature"
+                metricUnit="°C"
+              />
+            </CardBody>
+          </Card>
+        </Tab>
+
+
+
+        <Tab key="stackedArea" title="Stacked Area Chart">
+          <Card>
+            <CardBody>
+              <ApacheStackedAreaChart
+                title=""
+                data={stackedAreaChartData}
+                xAxisLabel="Months"
+                yAxisLabel="Financial Metrics ($)"
+              />
+            </CardBody>
+          </Card>
+        </Tab>
+
+
+        <Tab key="StackedBarChart" title="Stacked Bar Chart">
   <Card>
     <CardBody>
-      <ApacheGeoMapChart title="World Geo Map" data={geoMapData} />
+      <ApacheStackedBarChart 
+        title="Quarterly Revenue Breakdown" 
+        data={stackedBarChartData} 
+        xAxisLabel="Quarter" 
+        yAxisLabel="Amount ($)"
+      />
     </CardBody>
   </Card>
 </Tab>
 
 
-        </Tabs>
+<Tab key="ApacheGroupedBarChart" title="Apache Grouped Bar Chart">
+  <Card>
+    <CardBody>
+      <ApacheGroupedBarChart
+        title="Product Sales Comparison"
+        data={groupedBarChartData}
+        xAxisLabel="Months"
+        yAxisLabel="Sales Count"
+      />
+    </CardBody>
+  </Card>
+</Tab>
+
+        
+
+
+      </Tabs>
     </div>
   );
 }

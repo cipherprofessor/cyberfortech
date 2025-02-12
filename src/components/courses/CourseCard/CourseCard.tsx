@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import styles from './CourseCard.module.scss';
+import { CourseCardProps } from '@/types/courses';
 
 export function CourseCard({ course }: CourseCardProps) {
   const defaultImageUrl = '/cyberimagecoursecover.jpg';

@@ -1,4 +1,4 @@
-import { BarChartData, ChartDataPoint } from "./types";
+import { ApacheGroupedBarChartProps, ApacheStackedAreaChartProps, BarChartData, ChartDataPoint } from "./types";
 
 
 export const lineChartData: ChartDataPoint[] = [
@@ -277,3 +277,83 @@ export const lineChartData: ChartDataPoint[] = [
     { name: "Russia", value: 400 },
   ];
   
+
+
+  export const bar3DChartData: { x: string; y: string; z: number }[] = [
+    { x: "A", y: "Category 1", z: 50 },
+    { x: "B", y: "Category 2", z: 80 },
+    { x: "C", y: "Category 3", z: 30 },
+    { x: "D", y: "Category 4", z: 90 },
+    { x: "E", y: "Category 5", z: 70 },
+  ];
+  
+  
+  export const surface3DChartData: [number, number, number][] = [];
+for (let i = -10; i <= 10; i++) {
+  for (let j = -10; j <= 10; j++) {
+    const z = Math.sin(i) * Math.cos(j); // Example function for Z values
+    surface3DChartData.push([i, j, z]);
+  }
+}
+
+
+export const stepLineChartData = [
+  { x: "Jan", y: 10 },
+  { x: "Feb", y: 15 },
+  { x: "Mar", y: 12 },
+  { x: "Apr", y: 18 },
+  { x: "May", y: 20 },
+  { x: "Jun", y: 22 },
+  { x: "Jul", y: 25 },
+  { x: "Aug", y: 28 },
+  { x: "Sep", y: 30 },
+  { x: "Oct", y: 32 },
+  { x: "Nov", y: 35 },
+  { x: "Dec", y: 38 },
+];
+
+// Example for temperature trends
+export const temperatureStepLineData = [
+  { x: "Monday", y: 12 },
+  { x: "Tuesday", y: 15 },
+  { x: "Wednesday", y: 14 },
+  { x: "Thursday", y: 18 },
+  { x: "Friday", y: 21 },
+  { x: "Saturday", y: 19 },
+  { x: "Sunday", y: 17 },
+];
+
+
+
+ 
+export const stackedAreaChartData: ApacheStackedAreaChartProps["data"] = [
+  { x: "Jan", Revenue: 12000, Expenses: 8000, Profit: 4000 },
+  { x: "Feb", Revenue: 15000, Expenses: 9000, Profit: 6000 },
+  { x: "Mar", Revenue: 18000, Expenses: 10000, Profit: 8000 },
+  { x: "Apr", Revenue: 20000, Expenses: 11000, Profit: 9000 },
+  { x: "May", Revenue: 22000, Expenses: 12000, Profit: 10000 },
+];
+
+export const stackedBarChartData: { x: string; Revenue: number; Profit: number; Expenses: number }[] = [
+  { x: "Q1", Revenue: 5000, Profit: 1200, Expenses: 3000 },
+  { x: "Q2", Revenue: 7000, Profit: 1500, Expenses: 4000 },
+  { x: "Q3", Revenue: 6500, Profit: 1400, Expenses: 3800 },
+  { x: "Q4", Revenue: 8000, Profit: 2000, Expenses: 5000 },
+];
+
+
+export const groupedBarChartData: ApacheGroupedBarChartProps["data"] = [
+  { x: "Jan", ProductA: 120, ProductB: 180, ProductC: 90 },
+  { x: "Feb", ProductA: 150, ProductB: 160, ProductC: 110 },
+  { x: "Mar", ProductA: 170, ProductB: 190, ProductC: 130 },
+  { x: "Apr", ProductA: 140, ProductB: 200, ProductC: 120 },
+];
+
+
+
+
+
+
+
+
+
