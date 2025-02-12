@@ -213,6 +213,94 @@ export type ChartDataPoint = {
       bin: string;
       frequency: number;
     }
+
+    export interface ApacheBulletChartProps {
+      title?: string;
+      data: ApacheBulletChartData[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+    
+    export interface ApacheBulletChartData {
+      category: string;
+      actual: number;
+      target: number;
+    }
+
+
+    export interface ApacheLollipopChartProps {
+      title?: string;
+      data: ApacheLollipopChartData[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+    
+    export interface ApacheLollipopChartData {
+      x: string;
+      value: number;
+    }
+
+    export interface ApacheMarimekkoChartProps {
+      title?: string;
+      data: ApacheMarimekkoData[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+    
+    export type ApacheMarimekkoData = {
+      x: string;
+      width: number;
+      [key: string]: number | string; // Allow other numerical series dynamically
+    };
+
+
+    export interface ApacheViolinChartData {
+      x: string;
+      values: [number, number, number, number, number]; // Min, Q1, Median, Q3, Max
+    }
+    
+    export interface ApacheViolinChartProps {
+      title?: string;
+      data: ApacheViolinChartData[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+
+    export interface ApacheDumbbellChartProps {
+      title?: string;
+      data: ApacheDumbbellData[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+    
+    export interface ApacheDumbbellData {
+      x: string;
+      [key: string]: number | string;
+    }
+
+
+    export interface ApacheDotPlotChartProps {
+      title?: string;
+      data: ApacheDotPlotData[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+    
+    export interface ApacheDotPlotData {
+      x: string;
+      value: number;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

@@ -1,4 +1,4 @@
-import { ApacheGroupedBarChartProps, ApacheHistogramChartData, ApachePyramidChartData, ApacheStackedAreaChartProps, ApacheStreamGraphData, BarChartData, ChartDataPoint } from "./types";
+import { ApacheBulletChartData, ApacheDotPlotData, ApacheDumbbellData, ApacheGroupedBarChartProps, ApacheHistogramChartData, ApacheLollipopChartData, ApacheMarimekkoData, ApachePyramidChartData, ApacheStackedAreaChartProps, ApacheStreamGraphData, ApacheViolinChartData, BarChartData, ChartDataPoint } from "./types";
 
 
 export const lineChartData: ChartDataPoint[] = [
@@ -396,6 +396,81 @@ export const histogramChartData: ApacheHistogramChartData[] = [
   { bin: "50-60", frequency: 10 },
   { bin: "60-70", frequency: 5 },
 ];
+
+export const bulletChartData: ApacheBulletChartData[] = [
+  { category: "Sales", actual: 75, target: 100 },
+  { category: "Revenue", actual: 85, target: 90 },
+  { category: "Growth", actual: 60, target: 80 },
+  { category: "Profit", actual: 90, target: 95 },
+];
+
+
+export const mockLollipopChartData: ApacheLollipopChartData[] = [
+  { x: "A", value: 120 },
+  { x: "B", value: 200 },
+  { x: "C", value: 150 },
+  { x: "D", value: 80 },
+  { x: "E", value: 180 },
+];
+
+
+
+
+export const ApacheMarimekkoMockData: ApacheMarimekkoData[] = [
+  { x: "Category A", width: 10, Series1: 30, Series2: 70 },
+  { x: "Category B", width: 20, Series1: 40, Series2: 60 },
+  { x: "Category C", width: 15, Series1: 50, Series2: 50 },
+  { x: "Category D", width: 25, Series1: 20, Series2: 80 },
+];
+
+
+export const mockApacheViolinChartData: ApacheViolinChartData[] = [
+  { x: "Category A", values: [10, 20, 30, 40, 50] },
+  { x: "Category B", values: [15, 25, 35, 45, 55] },
+  { x: "Category C", values: [5, 15, 25, 35, 45] },
+  { x: "Category D", values: [12, 22, 32, 42, 52] },
+  { x: "Category E", values: [8, 18, 28, 38, 48] },
+  { x: "Category F", values: [20, 30, 40, 50, 60] },
+];
+
+export const mockDumbbellData: ApacheDumbbellData[] = [
+  { x: "Category A", Series1: 10, Series2: 50 },
+  { x: "Category B", Series1: 20, Series2: 70 },
+  { x: "Category C", Series1: 15, Series2: 65 },
+  { x: "Category D", Series1: 25, Series2: 85 },
+  { x: "Category E", Series1: 30, Series2: 90 },
+  { x: "Category F", Series1: 35, Series2: 100 },
+  { x: "Category G", Series1: 40, Series2: 110 },
+  { x: "Category H", Series1: 45, Series2: 120 },
+];
+
+
+export const apacheDotPlotMockData: ApacheDotPlotData[] = [
+  { x: "Category A", value: 10 },
+  { x: "Category A", value: 15 },
+  { x: "Category A", value: 18 },
+  { x: "Category A", value: 22 },
+  { x: "Category B", value: 8 },
+  { x: "Category B", value: 12 },
+  { x: "Category B", value: 20 },
+  { x: "Category B", value: 25 },
+  { x: "Category C", value: 5 },
+  { x: "Category C", value: 9 },
+  { x: "Category C", value: 14 },
+  { x: "Category C", value: 19 },
+  { x: "Category D", value: 6 },
+  { x: "Category D", value: 11 },
+  { x: "Category D", value: 17 },
+  { x: "Category D", value: 23 },
+];
+
+
+
+
+
+
+
+
 
 
 

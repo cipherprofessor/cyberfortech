@@ -3,10 +3,16 @@
 import React from "react";
 import { Tabs, Tab, Card, CardBody } from "@heroui/react";
 import ApacheRibbonChart from "@/components/charts/Apache-ECharts/ApacheRibbonChart/ApacheRibbonChart";
-import { densityPlotData, histogramChartData, pyramidChartData, ribbonChartMockData } from "@/components/charts/Apache-ECharts/common/mockData";
+import { apacheDotPlotMockData, ApacheMarimekkoMockData, bulletChartData, densityPlotData, histogramChartData, mockApacheViolinChartData, mockDumbbellData, mockLollipopChartData, pyramidChartData, ribbonChartMockData } from "@/components/charts/Apache-ECharts/common/mockData";
 import ApacheDensityPlotChart from "@/components/charts/Apache-ECharts/ApacheDensityPlotChart/ApacheDensityPlotChart";
 import ApachePyramidChart from "@/components/charts/Apache-ECharts/ApachePyramidChart/ApachePyramidChart";
 import ApacheHistogramChart from "@/components/charts/Apache-ECharts/ApacheHistogramChart/ApacheHistogramChart";
+import ApacheBulletChart from "@/components/charts/Apache-ECharts/ApacheBulletChart/ApacheBulletChart";
+import ApacheLollipopChart from "@/components/charts/Apache-ECharts/ApacheLollipopChart/ApacheLollipopChart";
+import ApacheMarimekkoChart from "@/components/charts/Apache-ECharts/ApacheMarimekkoChart/ApacheMarimekkoChart";
+import ApacheViolinChart from "@/components/charts/Apache-ECharts/ApacheViolinChart/ApacheViolinChart";
+import ApacheDumbbellChart from "@/components/charts/Apache-ECharts/ApacheDumbbellChart/ApacheDumbbellChart";
+import ApacheDotPlotChart from "@/components/charts/Apache-ECharts/ApacheDotPlotChart/ApacheDotPlotChart";
 
 
 
@@ -71,32 +77,91 @@ export default function ChartsDashboardTab4() {
           </Card>
         </Tab>
 
-        {/* <Tab key="" title="">
+        <Tab key="ApacheBulletChart" title="Bullet Chart">
           <Card>
             <CardBody>
+            <ApacheBulletChart
+        title="Performance Metrics"
+        data={bulletChartData}
+        xAxisLabel="Percentage"
+        yAxisLabel="Metrics"
+      />
+            </CardBody>
+          </Card>
+        </Tab>
+
+
+        <Tab key="ApacheLollipopChart" title="Lollipop Chart">
+          <Card>
+            <CardBody>
+            <ApacheLollipopChart
+        title="Sales Data Lollipop Chart"
+        data={mockLollipopChartData}
+        xAxisLabel="Products"
+        yAxisLabel="Sales"
+      />
+            </CardBody>
+          </Card>
+        </Tab>
+
+
+
+        <Tab key="ApacheMarimekkoChart" title="Marimekko Chart">
+          <Card>
+            <CardBody>
+
+             <ApacheMarimekkoChart
+        title="Sales Distribution"
+        data={ApacheMarimekkoMockData}
+        xAxisLabel="Product Categories"
+        yAxisLabel="Market Share (%)"
+      />
             
             </CardBody>
           </Card>
-        </Tab> */}
+        </Tab>
 
 
-        {/* <Tab key="" title="">
+         <Tab key="ViolinChart" title="Violin Chart">
           <Card>
             <CardBody>
-            
+            <ApacheViolinChart
+        title="Distribution Analysis"
+        data={mockApacheViolinChartData}
+        xAxisLabel="Categories"
+        yAxisLabel="Values"
+      />
             </CardBody>
           </Card>
-        </Tab> */}
+        </Tab>
 
 
-
-        {/* <Tab key="" title="">
+         <Tab key="DumbbellChart" title="Dumbbell Chart">
           <Card>
             <CardBody>
-            
+            <ApacheDumbbellChart
+      title="Custom Dumbbell Chart"
+      data={mockDumbbellData}
+      xAxisLabel="Categories"
+      yAxisLabel="Values"
+    />
             </CardBody>
           </Card>
-        </Tab> */}
+        </Tab>
+
+
+         <Tab key="DotPlotChart" title=" Apache Dot Plot Chart">
+          <Card>
+            <CardBody>
+             <ApacheDotPlotChart 
+        title="Dot Plot Visualization" 
+        data={apacheDotPlotMockData}
+        xAxisLabel="Category"
+        yAxisLabel="Value"
+      />
+            </CardBody>
+          </Card>
+        </Tab>
 
 
 
