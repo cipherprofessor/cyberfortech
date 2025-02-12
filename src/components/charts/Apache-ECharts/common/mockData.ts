@@ -1,4 +1,4 @@
-import { ApacheGroupedBarChartProps, ApacheStackedAreaChartProps, ApacheStreamGraphData, BarChartData, ChartDataPoint } from "./types";
+import { ApacheGroupedBarChartProps, ApacheHistogramChartData, ApachePyramidChartData, ApacheStackedAreaChartProps, ApacheStreamGraphData, BarChartData, ChartDataPoint } from "./types";
 
 
 export const lineChartData: ChartDataPoint[] = [
@@ -368,6 +368,36 @@ export const ribbonChartMockData = [
   { source: "D", target: "E", value: 30 },
   { source: "E", target: "F", value: 40 },
 ];
+
+export const densityPlotData = [
+  { x: "A", Series1: 0.1, Series2: 0.15 },
+  { x: "B", Series1: 0.2, Series2: 0.25 },
+  { x: "C", Series1: 0.3, Series2: 0.35 },
+  { x: "D", Series1: 0.4, Series2: 0.45 },
+  { x: "E", Series1: 0.5, Series2: 0.55 },
+];
+
+
+export const pyramidChartData: ApachePyramidChartData[] = [
+  { category: "Category A", value: 100 },
+  { category: "Category B", value: 80 },
+  { category: "Category C", value: 60 },
+  { category: "Category D", value: 40 },
+  { category: "Category E", value: 20 },
+];
+
+
+export const histogramChartData: ApacheHistogramChartData[] = [
+  { bin: "0-10", frequency: 5 },
+  { bin: "10-20", frequency: 15 },
+  { bin: "20-30", frequency: 30 },
+  { bin: "30-40", frequency: 25 },
+  { bin: "40-50", frequency: 20 },
+  { bin: "50-60", frequency: 10 },
+  { bin: "60-70", frequency: 5 },
+];
+
+
 
 
 

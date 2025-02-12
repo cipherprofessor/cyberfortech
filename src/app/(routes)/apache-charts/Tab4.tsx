@@ -3,7 +3,10 @@
 import React from "react";
 import { Tabs, Tab, Card, CardBody } from "@heroui/react";
 import ApacheRibbonChart from "@/components/charts/Apache-ECharts/ApacheRibbonChart/ApacheRibbonChart";
-import { ribbonChartMockData } from "@/components/charts/Apache-ECharts/common/mockData";
+import { densityPlotData, histogramChartData, pyramidChartData, ribbonChartMockData } from "@/components/charts/Apache-ECharts/common/mockData";
+import ApacheDensityPlotChart from "@/components/charts/Apache-ECharts/ApacheDensityPlotChart/ApacheDensityPlotChart";
+import ApachePyramidChart from "@/components/charts/Apache-ECharts/ApachePyramidChart/ApachePyramidChart";
+import ApacheHistogramChart from "@/components/charts/Apache-ECharts/ApacheHistogramChart/ApacheHistogramChart";
 
 
 
@@ -30,25 +33,64 @@ export default function ChartsDashboardTab4() {
         </Tab>
 
 
+        <Tab key="DensityPlotChart" title="DensityPlotChart">
+          <Card>
+            <CardBody>
+            <ApacheDensityPlotChart 
+        title="Custom Density Plot"
+        data={densityPlotData}
+        xAxisLabel="Categories"
+        yAxisLabel="Density Values"
+      />
+            </CardBody>
+          </Card>
+        </Tab>
+
+
+        <Tab key="ApachePyramidChart" title="ApachePyramidChart">
+          <Card>
+            <CardBody>
+            <ApachePyramidChart title="Sales Pyramid" data={pyramidChartData} />
+            </CardBody>
+          </Card>
+        </Tab>
+
+        
+
+        <Tab key="ApacheHistogramChart" title="Histogram Chart">
+          <Card>
+            <CardBody>
+            <ApacheHistogramChart
+        title="Data Distribution"
+        data={histogramChartData}
+        xAxisLabel="Data Bins"
+        yAxisLabel="Number of Occurrences"
+        barWidth={40}
+      />
+            </CardBody>
+          </Card>
+        </Tab>
+
         {/* <Tab key="" title="">
           <Card>
             <CardBody>
             
             </CardBody>
           </Card>
-        </Tab>
+        </Tab> */}
 
 
-        <Tab key="" title="">
+        {/* <Tab key="" title="">
           <Card>
             <CardBody>
             
             </CardBody>
           </Card>
-        </Tab>
+        </Tab> */}
 
 
-        <Tab key="" title="">
+
+        {/* <Tab key="" title="">
           <Card>
             <CardBody>
             

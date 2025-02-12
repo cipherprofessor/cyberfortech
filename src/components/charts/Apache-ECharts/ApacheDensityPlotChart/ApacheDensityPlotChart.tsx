@@ -1,0 +1,99 @@
+"use client";
+
+import React from "react";
+import { useTheme } from "next-themes";
+import * as echarts from "echarts/core";
+import {
+  LineChart,
+  LineSeriesOption,
+} from "echarts/charts";
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  DatasetComponent,
+} from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
+import ReactECharts from "echarts-for-react";
+import styles from "./ApacheDensityPlotChart.module.scss";
+import { ApacheDensityPlotChartProps } from "../common/types";
+
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  LineChart,
+  DatasetComponent,
+  CanvasRenderer,
+]);
+
+const ApacheDensityPlotChart: React.FC<ApacheDensityPlotChartProps> = ({
+  title = "Density Plot Chart",
+  data,
+  xAxisLabel = "Categories",
+  yAxisLabel = "Values",
+}) => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  // Extract categories & series
+  const categories = data.map((item) => item.x);
+  const seriesNames = Object.keys(data[0]).filter((key) => key !== "x");
+
+  const seriesData = seriesNames.map((name) => ({
+    name,
+    type: "line",
+    smooth: true,
+    emphasis: { focus: "series" },
+    data: data.map((item) => item[name] as number),
+  }));
+
+  const options = {
+    backgroundColor: isDark ? "#1A1A2E" : "#FFFFFF",
+    title: {
+      text: title,
+      left: "center",
+      textStyle: { color: isDark ? "#FFFFFF" : "#333" },
+    },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: { type: "line" },
+      formatter: (params: any) => {
+        let tooltipContent = `<b>${params[0].axisValue}</b><br/>`;
+        params.forEach((item: any) => {
+          tooltipContent += `<span style="display:inline-block;width:10px;height:10px;margin-right:5px;background:${item.color};"></span>
+            ${item.seriesName}: <b>${item.value}</b><br/>`;
+        });
+        return tooltipContent;
+      },
+    },
+    legend: { top: 30, textStyle: { color: isDark ? "#FFFFFF" : "#333" } },
+    grid: { left: "10%", right: "10%", bottom: "15%", containLabel: true },
+    xAxis: {
+      type: "category",
+      name: xAxisLabel,
+      nameLocation: "center",
+      nameGap: 35,
+      data: categories,
+      axisLine: { lineStyle: { color: isDark ? "#FFFFFF" : "#333" } },
+    },
+    yAxis: {
+      type: "value",
+      name: yAxisLabel,
+      nameLocation: "center",
+      nameGap: 50,
+      axisLine: { lineStyle: { color: isDark ? "#FFFFFF" : "#333" } },
+    },
+    series: seriesData,
+  };
+
+  return (
+    <div className={styles.chartContainer}>
+      <ReactECharts option={options} style={{ height: "500px", width: "100%" }} />
+    </div>
+  );
+};
+
+export default ApacheDensityPlotChart;

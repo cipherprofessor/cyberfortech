@@ -178,6 +178,44 @@ export type ChartDataPoint = {
     }
     
 
+    export interface ApacheDensityPlotChartProps {
+      title?: string;
+      data: { x: string; [key: string]: number | string }[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+    
+    
+    
+
+    export interface ApachePyramidChartProps {
+      title?: string;
+      data: ApachePyramidChartData[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+    }
+    
+    export interface ApachePyramidChartData {
+      category: string;
+      value: number;
+    }
+
+
+    export interface ApacheHistogramChartProps {
+      title?: string;
+      data: ApacheHistogramChartData[];
+      xAxisLabel?: string;
+      yAxisLabel?: string;
+      barWidth?: number;
+    }
+    
+    export interface ApacheHistogramChartData {
+      bin: string;
+      frequency: number;
+    }
+    
+    
+    
  
   
   
