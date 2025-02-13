@@ -2,29 +2,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Book, 
-  Plus, 
-  Search, 
-  Edit2,
-  Trash2, 
-  Filter,
-  SortAsc,
-  MoreVertical,
-  AlertTriangle,
-  Clock,
-  Users,
-  Star
-} from 'lucide-react';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useTheme } from 'next-themes';
+
 import { CourseModal } from './CourseModal';
+import { Header } from './components/Header/Header';
+import { SearchControls } from './components/SearchControls/SearchControls';
+import { CourseCard } from './components/CourseCard/CourseCard';
+import { EmptyState } from './components/EmptyState/EmptyState';
+import { Loading } from './components/Loading/Loading';
+import { DeleteConfirmDialog } from '../DeleteConfirmation/DeleteConfirmation';
+import { SuccessAlert, ErrorAlert } from '../../../Alert/Alert';
+import { Course } from '@/types/courses';
 
 import styles from './CourseManagement.module.scss';
-import { Course } from '@/types/courses';
-import { SuccessAlert, ErrorAlert } from '../../../Alert/Alert';
-import { DeleteConfirmDialog } from '../DeleteConfirmation/DeleteConfirmation';
 
 export function CourseManagement() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -33,11 +25,6 @@ export function CourseManagement() {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<{
-    show: boolean;
-    courseId?: string;
-    courseName?: string;
-  }>({ show: false });
   const [alertState, setAlertState] = useState<{
     show: boolean;
     type: 'success' | 'error';
@@ -107,14 +94,12 @@ export function CourseManagement() {
 
   const handleDeleteConfirm = async () => {
     if (!deleteConfirm.courseId) return;
-  
+    
     try {
       const response = await axios.delete(`/api/courses/manage/${deleteConfirm.courseId}`);
       
       if (response.data.success) {
-        // Show success message
         showAlert('success', 'Course deleted successfully');
-        // Update the courses list
         await fetchCourses();
       } else {
         throw new Error(response.data.error || 'Failed to delete course');
@@ -123,7 +108,6 @@ export function CourseManagement() {
       console.error('Error deleting course:', error);
       showAlert('error', 'Failed to delete course');
     } finally {
-      // Close the confirmation dialog
       setDeleteConfirm({
         show: false,
         courseId: null,
@@ -146,7 +130,7 @@ export function CourseManagement() {
     } catch (error) {
       console.error('Error saving course:', error);
       showAlert('error', `Failed to ${modalMode} course`);
-      throw error; // Re-throw to be handled by the modal
+      throw error;
     }
   };
 
@@ -166,26 +150,8 @@ export function CourseManagement() {
     }
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1
-    }
-  };
-
   if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        >
-          <Book className={styles.loadingIcon} />
-        </motion.div>
-        <p>Loading courses...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -204,46 +170,8 @@ export function CourseManagement() {
         )
       )}
 
-      <motion.div 
-        className={styles.header}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className={styles.titleSection}>
-          <Book className={styles.titleIcon} />
-          <div>
-            <h1>Course Management</h1>
-            <p>Manage and organize all courses in the system</p>
-          </div>
-        </div>
-
-        <motion.button
-          className={styles.createButton}
-          onClick={handleCreateCourse}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Plus size={20} />
-          <span>Create Course</span>
-        </motion.button>
-      </motion.div>
-
-      <motion.div 
-        className={styles.controls}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div className={styles.searchBar}>
-          <Search size={20} />
-          <input
-            type="text"
-            placeholder="Search courses..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </motion.div>
+      <Header onCreateCourse={handleCreateCourse} />
+      <SearchControls searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
       <motion.div
         className={styles.coursesGrid}
@@ -252,68 +180,16 @@ export function CourseManagement() {
         animate="visible"
       >
         {filteredCourses.map((course) => (
-          <motion.div
+          <CourseCard
             key={course.id}
-            className={styles.courseCard}
-            variants={itemVariants}
-            whileHover={{ y: -5 }}
-          >
-            <div className={styles.courseImage}>
-              <img 
-                src={course.image_url || '/default-course.jpg'} 
-                alt={course.title}
-                className={styles.image}
-              />
-              <div className={styles.courseLevel}>{course.level}</div>
-            </div>
-
-            <div className={styles.courseInfo}>
-              <h3>{course.title}</h3>
-              <p>{course.description}</p>
-
-              <div className={styles.courseStats}>
-                <div className={styles.stat}>
-                  <Clock size={16} />
-                  <span>{course.duration}</span>
-                </div>
-                <div className={styles.stat}>
-                  <Users size={16} />
-                  <span>{course.total_students || 0} students</span>
-                </div>
-                <div className={styles.stat}>
-                  <Star size={16} />
-                  <span>{course.average_rating?.toFixed(1) || '0.0'}</span>
-                </div>
-              </div>
-
-              <div className={styles.courseActions}>
-                <button
-                  onClick={() => handleEditCourse(course)}
-                  className={styles.editButton}
-                >
-                  <Edit2 size={16} />
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteClick(course.id, course.title)}
-                  className={styles.deleteButton}
-                >
-                  <Trash2 size={16} />
-                  Delete
-                </button>
-              </div>
-            </div>
-          </motion.div>
+            course={course}
+            onEdit={handleEditCourse}
+            onDelete={handleDeleteClick}
+          />
         ))}
       </motion.div>
 
-      {filteredCourses.length === 0 && (
-        <div className={styles.emptyState}>
-          <AlertTriangle size={48} />
-          <h3>No courses found</h3>
-          <p>Try adjusting your search or create a new course</p>
-        </div>
-      )}
+      {filteredCourses.length === 0 && <EmptyState />}
 
       <CourseModal
         isOpen={isModalOpen}
@@ -323,16 +199,16 @@ export function CourseManagement() {
         onSubmit={handleModalSubmit}
       />
 
-<DeleteConfirmDialog
-  show={deleteConfirm.show}
-  courseName={deleteConfirm.courseName}
-  onConfirm={handleDeleteConfirm}
-  onCancel={() => setDeleteConfirm({
-    show: false,
-    courseId: null,
-    courseName: ''
-  })}
-/>
+      <DeleteConfirmDialog
+        show={deleteConfirm.show}
+        courseName={deleteConfirm.courseName}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteConfirm({
+          show: false,
+          courseId: null,
+          courseName: ''
+        })}
+      />
     </div>
   );
 }

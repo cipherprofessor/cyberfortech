@@ -1,0 +1,287 @@
+// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/components/InstructorSelect/InstructorSelect.module.scss
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+  
+    &.dark {
+      .selectTrigger {
+        background: var(--dark-input-bg);
+        border-color: var(--dark-border-color);
+  
+        &:hover {
+          border-color: var(--dark-border-hover);
+        }
+      }
+  
+      .dropdown {
+        background: var(--dark-input-bg);
+        border-color: var(--dark-border-color);
+      }
+  
+      .searchInput {
+        background: var(--dark-secondary-bg);
+        border-color: var(--dark-border-color);
+        color: var(--dark-text-primary);
+  
+        &::placeholder {
+          color: var(--dark-text-secondary);
+        }
+      }
+  
+      .option {
+        &:hover {
+          background: var(--dark-hover-bg);
+        }
+  
+        &.selected {
+          background: var(--dark-selected-bg);
+        }
+      }
+    }
+  
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+  }
+  
+  .selectContainer {
+    position: relative;
+    width: 100%;
+  }
+  
+  .selectTrigger {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.5rem 1rem;
+    background: var(--background);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      border-color: var(--button-bg);
+    }
+  
+    &.open {
+      border-color: var(--button-bg);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+  }
+  
+  .selectedInstructor {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+  }
+  
+  .instructorAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+  }
+  
+  .instructorInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .instructorName {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  
+  .instructorEmail {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  
+  .placeholder {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .chevron {
+    color: var(--text-secondary);
+    transition: transform 0.2s ease;
+  
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+  
+  .clearButton {
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: var(--hover-bg);
+      color: var(--danger-color);
+    }
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: var(--background);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .searchContainer {
+    position: relative;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .searchIcon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    background: var(--background);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+  
+    &:focus {
+      outline: none;
+      border-color: var(--button-bg);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+  
+    &::placeholder {
+      color: var(--text-secondary);
+    }
+  }
+  
+  .optionsList {
+    overflow-y: auto;
+    max-height: 240px;
+    padding: 0.5rem;
+  
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--border-color);
+      border-radius: 20px;
+      border: 2px solid var(--background);
+    }
+  }
+  
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: var(--hover-bg);
+    }
+  
+    &.selected {
+      background: var(--selected-bg);
+    }
+  }
+  
+  .noResults {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  
+    .infoIcon {
+      color: var(--text-secondary);
+      cursor: help;
+      transition: color 0.2s ease;
+  
+      &:hover {
+        color: var(--button-bg);
+      }
+    }
+  
+    .tooltipText {
+      visibility: hidden;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 100%;
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      font-size: 0.75rem;
+      font-weight: normal;
+      border-radius: 0.5rem;
+      white-space: nowrap;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-color);
+      width: max-content;
+      max-width: 200px;
+      z-index: 60;
+  
+      &::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: var(--border-color);
+      }
+    }
+  
+    &:hover .tooltipText {
+      visibility: visible;
+    }
+  }

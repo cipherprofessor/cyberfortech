@@ -1,21 +1,16 @@
-// src/components/charts/base/DonutChart.tsx
 import React, { useState, useCallback } from 'react';
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  Sector
+  PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, Sector
 } from 'recharts';
 import { motion } from 'framer-motion';
+import { IconChartPie } from '@tabler/icons-react';
 
 interface DonutChartProps {
   data: Array<{
     name: string;
     value: number;
     color?: string;
+    icon?: React.ReactNode;
   }>;
   height?: number;
   innerRadius?: number;
@@ -49,8 +44,8 @@ const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
+  const mx = cx + (outerRadius + 20) * cos;
+  const my = cy + (outerRadius + 20) * sin;
   const ex = mx + (cos >= 0 ? 1 : -1) * 22;
   const ey = my;
   const textAnchor = cos >= 0 ? 'start' : 'end';
@@ -61,32 +56,34 @@ const renderActiveShape = (props: any) => {
         cx={cx}
         cy={cy}
         innerRadius={innerRadius}
-        outerRadius={outerRadius}
+        outerRadius={outerRadius + 8}
         startAngle={startAngle}
         endAngle={endAngle}
         fill={fill}
+        className="drop-shadow-lg"
       />
       <Sector
         cx={cx}
         cy={cy}
         startAngle={startAngle}
         endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
+        innerRadius={outerRadius + 10}
+        outerRadius={outerRadius + 12}
         fill={fill}
       />
       <path
         d={`M${mx},${my}L${ex},${ey}`}
         stroke={fill}
+        strokeWidth={2}
         fill="none"
+        className="drop-shadow-sm"
       />
-      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+      <circle cx={ex} cy={ey} r={3} fill={fill} stroke="none" className="drop-shadow-md" />
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
         textAnchor={textAnchor}
-        fill="#888"
-        className="text-sm"
+        className="text-sm fill-gray-600 dark:fill-gray-300"
       >
         {`${payload.name} (${(percent * 100).toFixed(1)}%)`}
       </text>
@@ -95,12 +92,74 @@ const renderActiveShape = (props: any) => {
         y={ey}
         dy={18}
         textAnchor={textAnchor}
-        fill="#333"
-        className="text-sm font-medium"
+        className="text-sm font-medium fill-gray-800 dark:fill-gray-100"
       >
         {value.toLocaleString()}
       </text>
     </g>
+  );
+};
+
+const CustomTooltip = ({ active, payload, currency }: any) => {
+  if (active && payload && payload.length) {
+    const color = payload[0].payload.color || COLORS.primary[0];
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg"
+        style={{ border: `2px solid ${color}` }}
+      >
+        <div className="flex items-center gap-2">
+          {payload[0].payload.icon}
+          <p className="text-gray-900 dark:text-white font-medium">
+            {payload[0].name}
+          </p>
+        </div>
+        <p className="text-gray-600 dark:text-gray-300 mt-1">
+          {currency ? '$' : ''}{payload[0].value.toLocaleString()}
+        </p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
+          {(payload[0].payload.percent * 100).toFixed(1)}%
+        </p>
+      </motion.div>
+    );
+  }
+  return null;
+};
+
+const CustomLegend = (props: any) => {
+  const { payload, activeIndex, onMouseEnter, onMouseLeave } = props;
+  
+  return (
+    <ul className="flex flex-col gap-2">
+      {payload.map((entry: any, index: number) => (
+        <motion.li
+          key={`legend-${index}`}
+          className="flex items-center gap-2 cursor-pointer"
+          onMouseEnter={() => onMouseEnter(entry, index)}
+          onMouseLeave={onMouseLeave}
+          whileHover={{ scale: 1.02 }}
+          animate={{
+            opacity: activeIndex === -1 || activeIndex === index ? 1 : 0.6
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: entry.color }}
+            />
+            {entry.payload.icon}
+            <span className="text-sm text-gray-700 dark:text-gray-300">
+              {entry.value}
+            </span>
+          </div>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            ({entry.payload.value.toLocaleString()})
+          </span>
+        </motion.li>
+      ))}
+    </ul>
   );
 };
 
@@ -116,6 +175,7 @@ export const DonutChart: React.FC<DonutChartProps> = ({
   currency = false,
   interactive = true,
   animate = true,
+  
 }) => {
   const [activeIndex, setActiveIndex] = useState<number>(-1);
 
@@ -128,30 +188,9 @@ export const DonutChart: React.FC<DonutChartProps> = ({
     [interactive]
   );
 
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-          <p className="text-gray-900 dark:text-white font-medium">
-            {payload[0].name}
-          </p>
-          <p className="text-gray-600 dark:text-gray-300">
-            {currency ? '$' : ''}{payload[0].value.toLocaleString()}
-          </p>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            {(payload[0].payload.percent * 100).toFixed(1)}%
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
-
   return (
     <motion.div
-      className="w-full relative"
+      className="w-full relative bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -166,8 +205,7 @@ export const DonutChart: React.FC<DonutChartProps> = ({
             cy="50%"
             innerRadius={innerRadius}
             outerRadius={outerRadius}
-            fill="#8884d8"
-            paddingAngle={2}
+            paddingAngle={3}
             dataKey="value"
             onMouseEnter={onPieEnter}
             onMouseLeave={() => setActiveIndex(-1)}
@@ -179,22 +217,34 @@ export const DonutChart: React.FC<DonutChartProps> = ({
               <Cell
                 key={`cell-${index}`}
                 fill={entry.color || COLORS.primary[index % COLORS.primary.length]}
-                className="transition-opacity duration-200"
+                className="transition-all duration-300 drop-shadow-lg"
                 style={{
                   opacity: activeIndex === -1 || activeIndex === index ? 1 : 0.6,
+                  filter: activeIndex === index ? 'brightness(1.1)' : 'none',
                 }}
               />
             ))}
           </Pie>
 
-          {showTooltip && <Tooltip content={<CustomTooltip />} />}
+          {showTooltip && (
+            <Tooltip
+              content={<CustomTooltip currency={currency} />}
+              position={{ y: -10 }}
+            />
+          )}
 
           {showLegend && (
             <Legend
+              content={
+                <CustomLegend
+                  activeIndex={activeIndex}
+                  onMouseEnter={(entry: any, index: number) => setActiveIndex(index)}
+                  onMouseLeave={() => setActiveIndex(-1)}
+                />
+              }
               verticalAlign="middle"
               align="right"
               layout="vertical"
-              iconType="circle"
               wrapperStyle={{
                 paddingLeft: '10%',
               }}
@@ -203,10 +253,12 @@ export const DonutChart: React.FC<DonutChartProps> = ({
         </PieChart>
       </ResponsiveContainer>
 
-      {/* Center Text */}
       {centerText && (
-        <div 
+        <motion.div 
           className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5 }}
           style={{ marginTop: height / 2 - 20 }}
         >
           {typeof centerText === 'string' ? (
@@ -223,28 +275,8 @@ export const DonutChart: React.FC<DonutChartProps> = ({
               </p>
             </>
           )}
-        </div>
+        </motion.div>
       )}
     </motion.div>
   );
 };
-
-// Usage example:
-const data = [
-  { name: 'Category A', value: 400, color: '#3B82F6' },
-  { name: 'Category B', value: 300, color: '#10B981' },
-  { name: 'Category C', value: 300, color: '#F59E0B' },
-  { name: 'Category D', value: 200, color: '#EF4444' },
-];
-
-<DonutChart 
-  data={data}
-  height={400}
-  centerText={{
-    primary: '$1,200',
-    secondary: 'Total Revenue'
-  }}
-  currency
-  showLabels
-  interactive
-/>

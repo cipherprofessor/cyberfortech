@@ -32,6 +32,9 @@ const nextConfig: NextConfig = {
       },
       {
         hostname: 'ik.imagekit.io'
+      },
+      {
+        hostname: 'i.pravatar.cc'
       }
     ],
   },

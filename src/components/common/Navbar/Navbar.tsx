@@ -28,6 +28,8 @@ import styles from './Navbar.module.scss';
 import { useAuth } from '@/hooks/useAuth';
 import Image from 'next/image';
 import SwitchDarkLightModeIcon from '@/components/ui/HeroUI/Switch/SwitchDarkLightModeIcon';
+import { IconLayoutDashboardFilled } from '@tabler/icons-react';
+import DarkLightThemeButton from '@/components/darklightthemebutton';
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -123,6 +125,7 @@ export default function Navbar() {
           {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-4 w-4 mr-2" />)}
           {renderNavLink("/tabs", "My tabs", <PhoneCall className="h-4 w-4 mr-2" />)}
           {renderNavLink("/apache-charts", "Charts", <ChartSplineIcon className="h-4 w-4 mr-2" />)}
+          {renderNavLink("/workspace", "My Workspace", <IconLayoutDashboardFilled className="h-4 w-4 mr-2" />)}
         </div>
 
         {/* Right Side Actions */}
@@ -134,6 +137,7 @@ export default function Navbar() {
               setTheme(isSelected ? 'dark' : 'light')
             }}
           />
+          {/* <DarkLightThemeButton /> */}
 
           {/* Desktop Auth Buttons */}
           <SignedOut>

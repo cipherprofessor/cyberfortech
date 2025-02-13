@@ -1,0 +1,225 @@
+// components/SuperAdminCourseDashboard/SuperAdminCourseDashboard.module.scss
+
+.dashboardContainer {
+    padding: 1.5rem;
+    
+    @media (max-width: 768px) {
+      padding: 1rem;
+    }
+  }
+  
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .statCard {
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+  
+  .statContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .statInfo {
+    flex: 1;
+  }
+  
+  .statTitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+  }
+  
+  .statValue {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+  }
+  
+  .statChange {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .statIcon {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    
+    .icon {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+  
+  // Card Variants
+  .blueCard {
+    background-color: rgba(239, 246, 255, 0.8);
+  
+    .statIcon {
+      background-color: rgba(59, 130, 246, 0.1);
+      
+      .icon {
+        color: #3B82F6;
+      }
+    }
+  }
+  
+  .greenCard {
+    background-color: rgba(236, 253, 245, 0.8);
+  
+    .statIcon {
+      background-color: rgba(16, 185, 129, 0.1);
+      
+      .icon {
+        color: #10B981;
+      }
+    }
+  }
+  
+  .purpleCard {
+    background-color: rgba(245, 243, 255, 0.8);
+  
+    .statIcon {
+      background-color: rgba(139, 92, 246, 0.1);
+      
+      .icon {
+        color: #8B5CF6;
+      }
+    }
+  }
+  
+  .goldCard {
+    background-color: rgba(254, 249, 195, 0.8);
+  
+    .statIcon {
+      background-color: rgba(245, 158, 11, 0.1);
+      
+      .icon {
+        color: #F59E0B;
+      }
+    }
+  }
+  
+  // Dark mode styles
+  :global(.dark) {
+    .statCard {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  
+    .statTitle {
+      color: #9CA3AF;
+    }
+  
+    .blueCard {
+      background-color: rgba(30, 58, 138, 0.3);
+  
+      .statIcon {
+        background-color: rgba(59, 130, 246, 0.2);
+        
+        .icon {
+          color: #60A5FA;
+        }
+      }
+    }
+  
+    .greenCard {
+      background-color: rgba(6, 78, 59, 0.3);
+  
+      .statIcon {
+        background-color: rgba(16, 185, 129, 0.2);
+        
+        .icon {
+          color: #34D399;
+        }
+      }
+    }
+  
+    .purpleCard {
+      background-color: rgba(76, 29, 149, 0.3);
+  
+      .statIcon {
+        background-color: rgba(139, 92, 246, 0.2);
+        
+        .icon {
+          color: #A78BFA;
+        }
+      }
+    }
+  
+    .goldCard {
+      background-color: rgba(120, 53, 15, 0.3);
+  
+      .statIcon {
+        background-color: rgba(245, 158, 11, 0.2);
+        
+        .icon {
+          color: #FBBF24;
+        }
+      }
+    }
+  }
+  
+  .chartsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .chartCard {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  
+    &:hover {
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+  
+    :global(.dark) & {
+      background-color: rgba(31, 41, 55, 0.7);
+    }
+  }
+  
+  .chartTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #1F2937;
+  
+    :global(.dark) & {
+      color: #F3F4F6;
+    }
+  }
+  
+  .donutChartContainer {
+    height: 300px;
+    width: 100%;
+  }

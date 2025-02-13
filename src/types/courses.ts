@@ -16,7 +16,8 @@ export type Course = {
     title: string;
     description: string;
     image_url: string;
-    duration: string;
+    // duration: string;
+    duration: string | undefined;
     // level: string;
     price: number;
     average_rating: number;
@@ -34,7 +35,32 @@ export type Course = {
     instructor_profile_image_url: string | null;
     sections: CourseSection[]; // Adding sections for course detail page
     level?: CourseLevel;
+
+
+
 };
+
+
+export interface Course11 {
+  id: string;
+  title: string;
+  description: string;
+  instructor: string;
+  createdBy: string;
+  category: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  duration: number; // in minutes
+  enrollments: number;
+  completionRate: number;
+  averageRating: number;
+  totalWatchTime: number;
+  revenue: number;
+  status: 'draft' | 'published' | 'archived';
+  lastUpdated: string;
+  thumbnail: string;
+  sections: number;
+  lessons: number;
+}
 
 export type CourseSection = {
     id: string;
@@ -151,3 +177,5 @@ export interface CourseModalProps {
     onConfirm: () => void;
     onCancel: () => void;
   }
+
+

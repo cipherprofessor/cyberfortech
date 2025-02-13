@@ -12,6 +12,7 @@ import {
   DrilldownChart, 
 } from "@/components/charts/Re-charts";
 import { ZoomableTimelineChart } from "@/components/charts/Re-charts/interactive/ZoomableTimeLineChart";
+import DynamicFileUpload from "@/components/ui/example-uploader/page";
 
 export default function ChartsDashboard() {
   const [selected, setSelected] = React.useState("area");
@@ -295,6 +296,16 @@ const brushData = [
     </CardBody>
   </Card>
 </Tab>
+
+<Tab key="drilldown1" title="Drilldown Chart">
+  <Card>
+    <CardBody>
+    <DynamicFileUpload />
+    </CardBody>
+  </Card>
+</Tab>
+
+
 
       </Tabs>
     </div>
