@@ -1,3 +1,4 @@
+//src/app/layout.tsx
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/common/Navbar/Navbar";
@@ -41,15 +42,15 @@ export default function RootLayout({
             </main>
             {/* <Footer /> */}
           </Providers>
-          {/* <NextSSRPlugin
+          <NextSSRPlugin
           
-           * The `extractRouterConfig` will extract **only** the route configs
-           * from the router to prevent additional information from being
-           * leaked to the client. The data passed to the client is the same
-           * as if you were to fetch `/api/uploadthing` directly.
+          //  * The `extractRouterConfig` will extract **only** the route configs
+          //  * from the router to prevent additional information from being
+          //  * leaked to the client. The data passed to the client is the same
+          //  * as if you were to fetch `/api/uploadthing` directly.
            
           routerConfig={extractRouterConfig(ourFileRouter)}
-        /> */}
+        />
         </body>
       </html>
     </ClerkProvider>

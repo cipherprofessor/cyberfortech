@@ -1,13 +1,13 @@
-// components/layout/Layout.module.scss
+// src/components/layout/Layout.module.scss
 .layout {
-    @apply min-h-screen flex;
-  }
+  @apply min-h-screen flex bg-background text-foreground;
+}
+
+.main {
+  @apply flex-1 ml-0 md:ml-[72px] p-4 md:p-6
+    transition-all duration-300 ease-in-out;
   
-  .main {
-    @apply flex-1 ml-0 md:ml-[72px] p-4 md:p-8
-      transition-all duration-300 ease-in-out;
-    
-    [data-expanded="true"] & {
-      @apply md:ml-[240px];
-    }
+  [data-sidebar-expanded="true"] & {
+    @apply md:ml-[280px];
   }
+}

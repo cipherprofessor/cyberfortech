@@ -1,61 +1,80 @@
-// // components/layout/Sidebar.module.scss
-// .sidebar {
-//     @apply fixed left-0 top-0 z-40 h-screen hidden md:flex flex-col
-//       bg-background border-r border-border
-//       shadow-[0_8px_30px_rgb(0,0,0,0.12)]
-//       dark:shadow-[0_8px_30px_rgb(0,0,0,0.24)];
+// src/components/layout/Sidebar.module.scss
+.sidebar {
+  @apply fixed left-0 top-0 z-40 h-screen hidden md:flex flex-col
+    bg-background border-r border-border
+    shadow-[0_3px_10px_rgb(0,0,0,0.08)]
+    dark:shadow-[0_3px_10px_rgb(0,0,0,0.2)]
+    transition-all duration-300 ease-in-out;
+  
+  .sidebarHeader {
+    @apply flex items-center justify-between p-4 border-b border-border;
     
-//     .sidebarHeader {
-//       @apply flex items-center justify-between p-4 border-b border-border;
+    .logo {
+      @apply font-bold text-xl text-primary
+        transition-all duration-200 ease-in-out;
+    }
+    
+    .headerActions {
+      @apply flex items-center gap-1;
       
-//       .logo {
-//         @apply font-bold text-xl text-primary;
-//       }
-      
-//       .toggleBtn {
-//         @apply hover:bg-accent hover:text-accent-foreground
-//           transition-colors duration-200;
-//       }
-//     }
-    
-//     .nav {
-//       @apply flex flex-col gap-2 p-4 overflow-y-auto;
-//     }
-//   }
+      .themeToggle, .toggleBtn {
+        @apply hover:bg-accent hover:text-accent-foreground
+          transition-colors duration-200;
+      }
+    }
+  }
   
-//   .linkWrapper {
-//     @apply w-full text-decoration-none;
-//   }
+  .nav {
+    @apply flex flex-col gap-1 p-3 overflow-y-auto;
+    
+    &::-webkit-scrollbar {
+      @apply w-2;
+    }
+    
+    &::-webkit-scrollbar-track {
+      @apply bg-transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      @apply bg-accent rounded-full;
+    }
+  }
+}
+
+.linkWrapper {
+  @apply w-full no-underline; // Changed text-decoration-none to no-underline
+}
+
+.navItem {
+  @apply flex items-center gap-3 p-3 rounded-lg
+    text-muted-foreground cursor-pointer
+    transition-all duration-200
+    hover:bg-accent hover:text-accent-foreground
+    active:scale-95;
   
-//   .navItem {
-//     @apply flex items-center gap-3 p-3 rounded-lg
-//       text-muted-foreground cursor-pointer
-//       transition-all duration-200
-//       hover:bg-accent hover:text-accent-foreground;
-    
-//     &.active {
-//       @apply bg-primary text-primary-foreground
-//         hover:bg-primary/90;
-//     }
-    
-//     .icon {
-//       @apply w-5 h-5 shrink-0;
-//     }
-    
-//     .label {
-//       @apply text-sm font-medium truncate;
-//     }
-//   }
+  &.active {
+    @apply bg-primary text-primary-foreground
+      hover:bg-primary/90;
+  }
   
-//   .mobileMenuBtn {
-//     @apply fixed top-4 left-4 z-50 md:hidden
-//       hover:bg-accent hover:text-accent-foreground;
-//   }
+  .icon {
+    @apply w-5 h-5 shrink-0;
+  }
   
-//   .mobileMenu {
-//     @apply p-4 md:hidden;
-    
-//     .mobileNavItems {
-//       @apply flex flex-col gap-2 mt-8;
-//     }
-//   }
+  .label {
+    @apply text-sm font-medium truncate;
+  }
+}
+
+.mobileMenuBtn {
+  @apply fixed top-4 left-4 z-50 md:hidden
+    hover:bg-accent hover:text-accent-foreground;
+}
+
+.mobileMenu {
+  @apply p-4 md:hidden;
+  
+  .mobileNavItems {
+    @apply flex flex-col gap-2 mt-8;
+  }
+}

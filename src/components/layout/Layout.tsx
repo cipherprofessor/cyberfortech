@@ -1,4 +1,4 @@
-// components/layout/Layout.tsx
+// src/components/layout/Layout.tsx
 import React from 'react';
 import { Sidebar } from './Sidebar';
 import styles from './Layout.module.scss';
