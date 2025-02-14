@@ -1,10 +1,10 @@
 
 .sidebar {
-    width: 250px;
+    width: 200px;
     height: 100vh;
     background: #ffffff; // Light mode background
     border-right: 1px solid #e0e0e0; // Light mode border
-    padding: 1.5rem;
+    padding: 1rem;
     transition: all 0.3s ease;
     position: fixed;
     top: 0;
@@ -36,7 +36,8 @@
     .nav {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 1rem;
+        margin-top: 47px;
     }
 }
 
@@ -96,6 +97,48 @@
     }
 }
 
+// Update mainItem and subItem styles
+.sidebarItem {
+    .mainItem {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      
+      // Add these specific selectors
+      &.mainLabel {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #202020;
+        
+        .dark & {
+          color: #fff;
+        }
+      }
+      
+      .icon {
+        display: flex;
+        align-items: center;
+      }
+    }
+  
+    .subItems {
+      .subItem {
+        &.subLabel {
+          font-size: 0.8rem;
+          color: #080808;
+          
+          .dark & {
+            color: #ccc;
+          }
+        }
+      }
+    }
+  }
+  
+
 .mobileMenuButton {
     display: none; // Hidden by default
     position: fixed;
@@ -127,3 +170,4 @@
     background: rgba(0, 0, 0, 0.5); // Semi-transparent black
     z-index: 99; // Below sidebar but above main content
 }
+

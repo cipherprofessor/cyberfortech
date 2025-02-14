@@ -22,10 +22,3 @@ export interface SubItem {
   icon: ReactNode;
 }
 
-export interface SidebarItemProps {
-  label: string;
-  icon: ReactNode;
-  href?: string;
-  subItems?: SubItem[];
-  isCollapsed?: boolean;
-}

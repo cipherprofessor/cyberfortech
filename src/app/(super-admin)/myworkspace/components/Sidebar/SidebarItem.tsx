@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import styles from './Sidebar.module.scss';
-import { SidebarItemProps } from '../lib/types';
+import { SidebarItemProps } from './types';
 
-export function SidebarItem({ label, icon, href, subItems }: SidebarItemProps) {
+export function SidebarItem({ label, icon, href, subItems, labelClassName }: SidebarItemProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSubItems = (e: React.MouseEvent) => {
@@ -21,7 +21,7 @@ export function SidebarItem({ label, icon, href, subItems }: SidebarItemProps) {
     <div className={styles.sidebarItem}>
       <Link
         href={href || '#'}
-        className={styles.mainItem}
+        className={`${styles.mainItem} ${labelClassName}`} // Add labelClassName here
         onClick={toggleSubItems}
       >
         <div className={styles.icon}>{icon}</div>
@@ -47,7 +47,7 @@ export function SidebarItem({ label, icon, href, subItems }: SidebarItemProps) {
                 <Link
                   key={index}
                   href={subItem.href}
-                  className={styles.subItem}
+                  className={`${styles.subItem} ${subItem.labelClassName}`} // Add subItem labelClassName
                 >
                   <div className={styles.icon}>{subItem.icon}</div>
                   <span>{subItem.label}</span>
