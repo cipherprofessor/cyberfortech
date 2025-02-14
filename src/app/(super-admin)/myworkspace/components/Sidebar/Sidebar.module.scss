@@ -1,3 +1,4 @@
+
 .sidebar {
     width: 250px;
     height: 100vh;
@@ -12,8 +13,9 @@
     overflow-y: auto;
 
     &.dark {
-        background: #1a1a1a; // Dark mode background
-        border-right-color: #333333; // Dark mode border
+        // background: #1a1a1a; // Dark mode background
+        border-right-color: rgb(25,25,28);// Dark mode border
+        background: rgb(25,25,28);
     }
 
     &.mobile {
@@ -51,6 +53,7 @@
         border-radius: 0.5rem;
         color: #666666; // Light mode text
         text-decoration: none;
+        size: 20px;
 
         .dark & {
             color: #cccccc; // Dark mode text

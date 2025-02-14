@@ -1,33 +1,47 @@
-import { Users, BookOpen, Activity, Clock, Settings, BarChart, PieChart, Bell, LockIcon, HelpCircle, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, Mail, MailIcon, MailboxIcon, MessageCircle, Book, BookIcon, BookUpIcon, BookKeyIcon, UserIcon, User2Icon, UserCircle2Icon, LayoutDashboard } from 'lucide-react';
-import { Stat } from './types';
+import { IconCertificate } from '@tabler/icons-react';
+import { DollarSign, Users, GraduationCap, BookOpen, ChartColumnDecreasingIcon, LucideSquareDashed, LucidePanelTopClose } from 'lucide-react';
 
-export const stats: Stat[] = [
+export const mockStats = [
   {
-    title: 'Active Users',
-    value: '1,234',
-    icon: <Users size={24} />,
-    change: '+12%',
-    color: 'bg-[hsl(var(--chart-1))]',
+    id: 1,
+    title: 'Total Revenue',
+    value: '$25,378',
+    change: 5.35,
+    icon: <DollarSign className="text-blue-500" />
   },
   {
+    id: 2,
+    title: 'Total Students',
+    value: '78,565',
+    change: 12.1,
+    icon: <Users className="text-pink-500" />
+  },
+  {
+    id: 3,
+    title: 'Total Instructors',
+    value: '6,247',
+    change: -10.21,
+    icon: <GraduationCap className="text-red-500" />
+  },
+  {
+    id: 4,
     title: 'Total Courses',
-    value: '56',
-    icon: <BookOpen size={24} />,
-    change: '+5%',
-    color: 'bg-[hsl(var(--chart-2))]',
+    value: '2,467',
+    change: 16.1,
+    icon: <ChartColumnDecreasingIcon className="text-green-500" />
   },
   {
-    title: 'Active Sessions',
-    value: '789',
-    icon: <Activity size={24} />,
-    change: '-3%',
-    color: 'bg-[hsl(var(--chart-3))]',
+    id: 5,
+    title: 'Certifications ',
+    value: '2,4670',
+    change: 16.1,
+    icon: <IconCertificate className="text-purple-500" />
   },
   {
-    title: 'Avg. Time Spent',
-    value: '12m',
-    icon: <Clock size={24} />,
-    change: '+8%',
-    color: 'bg-[hsl(var(--chart-4))]',
-  },
+    id: 6,
+    title: 'Total Leads',
+    value: '2,467',
+    change: -16.1,
+    icon: <LucidePanelTopClose className="text-yellow-500" />
+  }
 ];

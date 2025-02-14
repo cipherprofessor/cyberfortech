@@ -67,3 +67,61 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* 
+My workspace is set up as follows: */
+
+/* 
+[data-theme-mode=dark] {
+  --body-bg-rgb: 25,25,28;
+  --body-bg-rgb2: 45,45,48;
+  --menu-bg: rgb(var(--body-bg-rgb));
+  --menu-border-color: hsla(0,0%,100%,.1);
+  --menu-prime-color: hsla(0,0%,100%,.4);
+  --header-bg: rgb(var(--body-bg-rgb));
+  --header-prime-color: hsla(0,0%,100%,.4);
+  --header-border-color: hsla(0,0%,100%,.1);
+  --custom-white: rgb(var(--body-bg-rgb));
+  --custom-black: #fff;
+  --default-border: hsla(0,0%,100%,.1);
+  --default-text-color: hsla(0,0%,100%,.8);
+  --light-rgb: 43,46,49;
+  --dark-rgb: 240,245,248;
+  --bootstrap-card-border: hsla(0,0%,100%,.1);
+  --list-hover-focus-bg: hsla(0,0%,100%,.1);
+  --default-background: rgb(var(--body-bg-rgb2));
+  --default-body-bg-color: rgb(var(--body-bg-rgb2));
+  --text-muted: hsla(0,0%,100%,.5);
+  --input-border: hsla(0,0%,100%,.1);
+  --form-control-bg: rgb(var(--body-bg-rgb));
+  color-scheme: dark;
+  --gray-1: #110f0f;
+  --gray-2: hsla(0,0%,100%,.1);
+  --gray-3: #393946;
+  --gray-4: hsla(0,0%,100%,.2);
+  --gray-5: #73738c;
+  --gray-6: #8f8fa3;
+  --gray-7: #ababba;
+  --gray-8: #c7c7d1;
+  --gray-9: #e3e3e8;
+  --white-1: rgba(0,0,0,.1);
+  --white-2: rgba(0,0,0,.2);
+  --white-3: rgba(0,0,0,.3);
+  --white-4: rgba(0,0,0,.4);
+  --white-5: rgba(0,0,0,.5);
+  --white-6: rgba(0,0,0,.6);
+  --white-7: rgba(0,0,0,.7);
+  --white-8: rgba(0,0,0,.8);
+  --white-9: rgba(0,0,0,.9);
+  --black-1: hsla(0,0%,100%,.1);
+  --black-2: hsla(0,0%,100%,.2);
+  --black-3: hsla(0,0%,100%,.3);
+  --black-4: hsla(0,0%,100%,.4);
+  --black-5: hsla(0,0%,100%,.5);
+  --black-6: hsla(0,0%,100%,.6);
+  --black-7: hsla(0,0%,100%,.7);
+  --black-8: hsla(0,0%,100%,.8);
+  --black-9: hsla(0,0%,100%,.9)
+}
+ */
