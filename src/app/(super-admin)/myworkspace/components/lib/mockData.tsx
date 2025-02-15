@@ -1,5 +1,17 @@
 import { IconCertificate } from '@tabler/icons-react';
-import { DollarSign, Users, GraduationCap, BookOpen, ChartColumnDecreasingIcon, LucideSquareDashed, LucidePanelTopClose } from 'lucide-react';
+import { 
+  DollarSign, 
+  Users, 
+  GraduationCap, 
+  ChartColumnDecreasing,
+  PanelTopClose,
+  LayoutGrid,
+  Megaphone,
+  Code2,
+  BarChart2,
+  CircleDot,
+  Database
+} from 'lucide-react';
 import styles from './mockData.module.scss';
 import { IconType, ListCardCategory } from './types';
 
@@ -33,15 +45,15 @@ export const mockStats = [
     title: 'Total Courses',
     value: '2,467',
     change: -16.1,
-    icon: <ChartColumnDecreasingIcon className={styles.courcesIcon}  />,
+    icon: <ChartColumnDecreasing className={styles.courcesIcon} />,
     iconType: "courses" as IconType
   },
   {
     id: 5,
-    title: 'Certifications ',
+    title: 'Certifications',
     value: '2,4670',
     change: 16.1,
-    icon: <IconCertificate className={styles.certificationsIcon}  />,
+    icon: <IconCertificate className={styles.certificationsIcon} />,
     iconType: "certifications" as IconType
   },
   {
@@ -49,11 +61,10 @@ export const mockStats = [
     title: 'Total Leads',
     value: '2,467',
     change: -16.1,
-    icon: <LucidePanelTopClose className={styles.leadsIcon}  />,
+    icon: <PanelTopClose className={styles.leadsIcon} />,
     iconType: "leads" as IconType
   }
 ];
-
 
 export const courseCategories: ListCardCategory[] = [
   {
@@ -61,7 +72,7 @@ export const courseCategories: ListCardCategory[] = [
     title: 'UI / UX Design',
     courseCount: 10000,
     price: 199.99,
-    icon: 'layout-grid',
+    icon: <LayoutGrid size={18}  className={styles.leadsIcon}/>,
     color: '#5B5FFF'
   },
   {
@@ -69,7 +80,7 @@ export const courseCategories: ListCardCategory[] = [
     title: 'Digital Marketing',
     courseCount: 90,
     price: 599.99,
-    icon: 'megaphone',
+    icon: <Megaphone size={18}/>,
     color: '#FF5BCD'
   },
   {
@@ -77,7 +88,7 @@ export const courseCategories: ListCardCategory[] = [
     title: 'Web Development',
     courseCount: 250,
     price: 299.99,
-    icon: 'code-2',
+    icon: <Code2 size={18}/>,
     color: '#FF5B8F'
   },
   {
@@ -85,7 +96,7 @@ export const courseCategories: ListCardCategory[] = [
     title: 'Stocks & Trading',
     courseCount: 100,
     price: 999.99,
-    icon: 'bar-chart-2',
+    icon: <BarChart2 size={18}/>,
     color: '#FF8F5B'
   },
   {
@@ -93,7 +104,7 @@ export const courseCategories: ListCardCategory[] = [
     title: 'Angular Course',
     courseCount: 300,
     price: 399.99,
-    icon: 'circle-dot',
+    icon: <CircleDot size={18}/>,
     color: '#845BFF'
   },
   {
@@ -101,7 +112,7 @@ export const courseCategories: ListCardCategory[] = [
     title: 'Full Stack Course',
     courseCount: 500,
     price: 199.99,
-    icon: 'database',
+    icon: <Database size={18}/>,
     color: '#5BC9FF'
   }
 ];

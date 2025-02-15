@@ -10,6 +10,7 @@ import { Sidebar } from './components/Sidebar/Sidebar';
 import KPICard from './components/ui/Card/KPICard';
 import { courseCategories, mockStats } from './components/lib/mockData';
 import ListCourseCard from './components/ui/ListCard/ListCard';
+import ListCardContainer from './components/ui/ListCard/ListCardContainer';
 
 export default function MyWorkspacePage() {
   const { theme } = useTheme();
@@ -82,26 +83,15 @@ export default function MyWorkspacePage() {
   ))}
 </motion.div>
 
-        <div className={styles.additionalContent}>
+        {/* <div className={styles.additionalContent}>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-      {courseCategories.map(category => (
-        <ListCourseCard key={category.id} category={category} />
-      ))}
-    </div>
-         
-          {/* <motion.div 
-            className={styles.chartSection}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <h2 className={styles.sectionTitle}>Performance Overview</h2>
-            <div className={styles.chartPlaceholder}>
-              
-            </div>
-          </motion.div> */}
-        </div>
+        <div className=""> */}
+        <ListCardContainer categories={courseCategories} />
+      {/* {courseCategories.map(category => (
+        <ListCardContainer key={category.id} categories={courseCategories} />
+      ))} */}
+    {/* </div>
+        </div> */}
       </main>
     </div>
   );

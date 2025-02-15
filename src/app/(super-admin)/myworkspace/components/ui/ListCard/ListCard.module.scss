@@ -1,124 +1,105 @@
-// CourseCard.module.scss
+// ListCard.module.scss
 .card {
     --accent-color: #5B5FFF;
     
     display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 1rem;
-    padding: 1.25rem;
-    background-color: var(--card-bg);
+    gap: 0.75rem;
+    padding: 0.1rem;
     border-radius: 1rem;
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
-    max-width: 27rem;
     
-    @media (max-width: 768px) {
-      padding: 1rem;
-      flex-direction: column;
-      text-align: center;
-      gap: 0.75rem;
-    }
+    // background-color: rgba(255, 255, 255, 0.8);
+    // border: 1px solid rgba(59, 131, 246, 0.213);
+    // box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
     
-    // Light mode
-    :global([data-theme="light"]) & {
-      --card-bg: rgba(255, 255, 255, 0.8);
-      --text-primary: #1a1a1a;
-      --text-secondary: #666666;
-      box-shadow: 
-        0 4px 6px rgba(0, 0, 0, 0.05),
-        0 10px 15px rgba(0, 0, 0, 0.1);
-      
-      &:hover {
-        --card-bg: rgba(255, 255, 255, 1);
-        box-shadow: 
-          0 8px 12px rgba(0, 0, 0, 0.08),
-          0 16px 24px rgba(0, 0, 0, 0.12);
-      }
+    &.dark {
+        // background-color: rgb(25, 25, 28);
+        // border: 1px solid rgba(255, 255, 255, 0.1);
+        // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        
+        .title {
+            color: #ffffff;
+        }
+        
+        .price {
+            color: #ffffff;
+        }
+        
+        // .courseCount {
+        //     color: #ff0303;
+        // }
     }
-    
-    // Dark mode
-    :global([data-theme="dark"]) & {
-      --card-bg: rgba(30, 30, 30, 0.8);
-      --text-primary: #ffffff;
-      --text-secondary: #a0a0a0;
-      box-shadow: 
-        0 4px 6px rgba(0, 0, 0, 0.2),
-        0 10px 15px rgba(0, 0, 0, 0.3);
-      
-      &:hover {
-        --card-bg: rgba(40, 40, 40, 1);
-        box-shadow: 
-          0 8px 12px rgba(0, 0, 0, 0.25),
-          0 16px 24px rgba(0, 0, 0, 0.35);
-      }
-    }
-  }
-  
-  .iconWrapper {
+}
+
+.iconWrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 1px;
     background-color: var(--accent-color);
-    color: white;
+    color: rgb(255, 255, 255);
     transition: all 0.3s ease;
     
+    
     @media (max-width: 768px) {
-      width: 40px;
-      height: 40px;
+        width: 40px;
+        height: 40px;
     }
     
     svg {
-      transition: transform 0.3s ease;
+        transition: transform 0.3s ease;
     }
     
     .card:hover & {
-      filter: brightness(1.1);
-      
-      svg {
-        transform: scale(1.1);
-      }
+        filter: brightness(1.1);
+        
+        svg {
+            transform: scale(1.1);
+        }
     }
-  }
-  
-  .content {
+}
+
+.content {
     flex: 1;
     min-width: 0;
-  }
-  
-  .title {
+}
+
+.title {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #000000;
     transition: color 0.3s ease;
     
     .card:hover & {
-      color: var(--accent-color);
+        color: var(--accent-color);
     }
-  }
-  
-  .courseCount {
+}
+
+.courseCount {
     margin: 0.25rem 0 0;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-  }
-  
-  .price {
-    font-size: 1.5rem;
+    font-size: 0.675rem;
+    color: #666666;
+}
+
+.price {
+    font-size: 0.7rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #000000;
     transition: all 0.3s ease;
     
     .card:hover & {
-      color: var(--accent-color);
-      transform: scale(1.05);
+        color: var(--accent-color);
+        transform: scale(1.05);
     }
     
     @media (max-width: 768px) {
-      font-size: 1.25rem;
+        font-size: 1.25rem;
     }
-  }
+}

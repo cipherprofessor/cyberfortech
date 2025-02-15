@@ -26,21 +26,26 @@ export interface SubItem {
 
 export type IconType = 'revenue' | 'users' | 'instructors' |'courses' | 'certifications' | 'leads' ;
 
+// types.ts
 export interface KPICardProps {
   title: string;
-  value: string | number;
+  value: string;
   change: number;
   icon: React.ReactNode;
   iconType: IconType;
   className?: string;
 }
 
+export interface ListCardProps {
+  category: ListCardCategory;
+  className?: string;
+}
 
 export interface ListCardCategory {
   id: string;
   title: string;
   courseCount: number;
   price: number;
-  icon: string;
+  icon: React.ReactNode;
   color: string;
 }

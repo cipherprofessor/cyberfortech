@@ -1,0 +1,27 @@
+.container {
+    display: grid;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 10px;
+    transition: all 0.6s;
+    max-width: 18rem;
+    
+    // Light theme
+    // background-color: #ffffff;
+    border: 1px solid rgba(59, 131, 246, 0.213);
+    box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+    
+    &.dark {
+      background-color: rgb(25, 25, 28);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+  }
+
+ 

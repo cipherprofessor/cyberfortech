@@ -2,17 +2,6 @@
 import React from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
-import { 
-  DollarSign,
-  Users,
-  BookOpen,
-  GraduationCap,
-  TrendingUp,
-  TrendingDown,
-  Package,
-  Activity,
-  LucideIcon
-} from 'lucide-react';
 import styles from './KPICard.module.scss';
 import { KPICardProps } from '../../lib/types';
 
