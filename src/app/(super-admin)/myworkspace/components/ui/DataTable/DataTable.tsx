@@ -1,7 +1,10 @@
+"use client";
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ArrowUpDown, Pencil, Trash2, ChevronDown } from 'lucide-react';
 import styles from './DataTable.module.scss';
+import TableSkeleton from './TableSkeleton';
+import { DeleteConfirmationModal, EditOrderModal } from './OrderModals';
 
 export type SortDirection = 'asc' | 'desc' | null;
 export type DataType = 'text' | 'number' | 'date' | 'status' | 'actions';
@@ -17,97 +20,138 @@ export interface Column<T> {
 }
 
 export interface TableProps<T> {
-  data: T[];
-  columns: Column<T>[];
-  title?: string;
-  showSearch?: boolean;
-  showColumnToggle?: boolean;
-  selectable?: boolean;
-  onSelectionChange?: (selectedItems: T[]) => void;
-  onEdit?: (item: T) => void;
-  onDelete?: (items: T[]) => void;
-  className?: string;
-  searchPlaceholder?: string;
-}
+    data: T[];
+    columns: Column<T>[];
+    title?: string;
+    showSearch?: boolean;
+    isLoading?: boolean;
+    selectable?: boolean;
+    onSelectionChange?: (selectedItems: T[]) => void;
+    onEdit?: (item: T) => void;
+    onDelete?: (items: T[]) => void;
+    className?: string;
+    searchPlaceholder?: string;
+  }
 
-function DataTable<T extends { id: string | number }>({
-  data,
-  columns: defaultColumns,
-  title = "Recent Orders",
-  showSearch = true,
-  showColumnToggle = true,
-  selectable = true,
-  onSelectionChange,
-  onEdit,
-  onDelete,
-  className = "",
-  searchPlaceholder = "Search orders..."
-}: TableProps<T>) {
-  const [columns, setColumns] = useState(defaultColumns);
-  const [selectedItems, setSelectedItems] = useState<T[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortConfig, setSortConfig] = useState<{
-    key: keyof T | 'actions';
-    direction: SortDirection;
-  }>({ key: 'id', direction: null });
+  function DataTable<T extends { id: string | number }>({
+    data,
+    columns: defaultColumns,
+    title = "Recent Orders",
+    showSearch = true,
+    isLoading = false,
+    selectable = true,
+    onSelectionChange,
+    onEdit,
+    onDelete,
+    className = "",
+    searchPlaceholder = "Search orders..."
+  }: TableProps<T>) {
+    const [selectedItems, setSelectedItems] = useState<T[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortConfig, setSortConfig] = useState<{
+      key: keyof T | 'actions';
+      direction: SortDirection;
+    }>({ key: 'id', direction: null });
 
-  const visibleColumns = columns.filter(col => col.visible !== false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [selectedForEdit, setSelectedForEdit] = useState<T | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<T[]>([]);
+  
+    const visibleColumns = defaultColumns.filter(col => col.visible !== false);
+  
 
-  const handleSort = (key: keyof T | 'actions') => {
-    if (!columns.find(col => col.key === key)?.sortable) return;
-
-    setSortConfig(current => ({
-      key,
-      direction: 
-        current.key === key 
-          ? current.direction === 'asc' 
-            ? 'desc' 
-            : current.direction === 'desc'
-              ? null
-              : 'asc'
-          : 'asc'
-    }));
-  };
-
-  const handleSelectAll = (checked: boolean) => {
-    const newSelection = checked ? filteredData : [];
-    setSelectedItems(newSelection);
-    onSelectionChange?.(newSelection);
-  };
-
-  const handleSelectItem = (item: T, checked: boolean) => {
-    const newSelection = checked
-      ? [...selectedItems, item]
-      : selectedItems.filter(i => i.id !== item.id);
-    setSelectedItems(newSelection);
-    onSelectionChange?.(newSelection);
-  };
-
-  const filteredData = useMemo(() => {
-    if (!searchTerm) return data;
+    const handleSort = (key: keyof T | 'actions') => {
+        if (!defaultColumns.find(col => col.key === key)?.sortable) return;
     
-    return data.filter(item =>
-      Object.entries(item).some(([key, value]) => {
-        if (typeof value === 'object' && value !== null) {
-          return Object.values(value).some(v => 
-            String(v).toLowerCase().includes(searchTerm.toLowerCase())
-          );
-        }
-        return String(value).toLowerCase().includes(searchTerm.toLowerCase());
-      })
-    );
-  }, [data, searchTerm]);
+        setSortConfig(current => ({
+          key,
+          direction: 
+            current.key === key 
+              ? current.direction === 'asc' 
+                ? 'desc' 
+                : current.direction === 'desc'
+                  ? null
+                  : 'asc'
+              : 'asc'
+        }));
+      };
 
-  const sortedData = useMemo(() => {
-    if (!sortConfig.direction) return filteredData;
+      const handleSelectAll = (checked: boolean) => {
+        const newSelection = checked ? filteredData : [];
+        setSelectedItems(newSelection);
+        onSelectionChange?.(newSelection);
+      };
 
+      const handleSelectItem = (item: T, checked: boolean) => {
+        const newSelection = checked
+          ? [...selectedItems, item]
+          : selectedItems.filter(i => i.id !== item.id);
+        setSelectedItems(newSelection);
+        onSelectionChange?.(newSelection);
+      };
+    
+      const handleEditClick = (item: T) => {
+        setSelectedForEdit(item);
+        setEditModalOpen(true);
+      };
+    
+      const handleDeleteClick = (items: T[]) => {
+        setItemsToDelete(items);
+        setDeleteModalOpen(true);
+      };
+    
+      const handleSaveEdit = (editedItem: T) => {
+        onEdit?.(editedItem);
+        setEditModalOpen(false);
+        setSelectedForEdit(null);
+      };
+    
+      const handleConfirmDelete = () => {
+        onDelete?.(itemsToDelete);
+        setDeleteModalOpen(false);
+        setItemsToDelete([]);
+        setSelectedItems([]);
+      };
+
+      
+
+      const filteredData = useMemo(() => {
+        if (!searchTerm) return data;
+        
+        const searchLower = searchTerm.toLowerCase();
+        return data.filter(item =>
+          Object.entries(item).some(([key, value]) => {
+            if (typeof value === 'object' && value !== null) {
+              // Search in nested objects (like customer details)
+              return Object.values(value).some(v => 
+                String(v).toLowerCase().includes(searchLower)
+              );
+            }
+            return String(value).toLowerCase().includes(searchLower);
+          })
+        );
+      }, [data, searchTerm]);
+
+     // Update the sortedData useMemo in DataTable.tsx
+const sortedData = useMemo(() => {
+    if (!sortConfig.direction || sortConfig.key === 'actions') return filteredData;
+  
     return [...filteredData].sort((a, b) => {
-      const aValue = sortConfig.key === 'actions' ? '' : a[sortConfig.key];
-      const bValue = sortConfig.key === 'actions' ? '' : b[sortConfig.key];
-
+      const aValue = sortConfig.key === 'actions' ? '' : a[sortConfig.key as keyof T];
+      const bValue = sortConfig.key === 'actions' ? '' : b[sortConfig.key as keyof T];
+  
       if (aValue === bValue) return 0;
       
       const modifier = sortConfig.direction === 'asc' ? 1 : -1;
+      
+      if (typeof aValue === 'object' && typeof bValue === 'object') {
+        // Handle nested objects (like customer)
+        if (aValue && bValue && 'name' in aValue && 'name' in bValue) {
+          return String(aValue.name).localeCompare(String(bValue.name)) * modifier;
+        }
+        return 0;
+      }
       
       if (typeof aValue === 'string' && typeof bValue === 'string') {
         return aValue.localeCompare(bValue) * modifier;
@@ -117,119 +161,154 @@ function DataTable<T extends { id: string | number }>({
     });
   }, [filteredData, sortConfig]);
 
-  return (
-    <div className={`${styles.container} ${className}`}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>{title}</h2>
-        
-        <div className={styles.controls}>
-          {showSearch && (
-            <div className={styles.searchWrapper}>
-              <Search className={styles.searchIcon} />
-              <input
-                type="text"
-                placeholder={searchPlaceholder}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={styles.searchInput}
-              />
-            </div>
-          )}
+      if (isLoading) {
+        return <TableSkeleton rows={5} columns={visibleColumns.length} />;
+      }
 
-          {showColumnToggle && (
-            <button className={styles.columnToggleButton}>
-              Columns
-              <ChevronDown size={16} />
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className={styles.tableWrapper}>
-        <table className={styles.table}>
-          <thead>
-            <tr className={styles.headerRow}>
-              {selectable && (
-                <th className={styles.checkboxCell}>
-                  <input
-                    type="checkbox"
-                    className={styles.checkbox}
-                    checked={selectedItems.length === filteredData.length}
-                    onChange={(e) => handleSelectAll(e.target.checked)}
-                  />
-                </th>
-              )}
-              {visibleColumns.map(column => (
-                <th
-                  key={String(column.key)}
-                  onClick={() => handleSort(column.key)}
-                  className={styles.headerCell}
-                  style={{ width: column.width }}
-                >
-                  {column.label}
-                  {column.sortable && (
-                    <ArrowUpDown
-                      size={14}
-                      className={`${styles.sortIcon} ${
-                        sortConfig.key === column.key ? 
-                          sortConfig.direction === 'asc' ? styles.ascending :
-                          sortConfig.direction === 'desc' ? styles.descending : ''
-                        : ''
-                      }`}
-                    />
+      return (
+        <div className={`${styles.container} ${className}`}>
+          <div className={styles.header}>
+            <h2 className={styles.title}>{title}</h2>
+            
+            {showSearch && (
+              <div className={styles.searchWrapper}>
+                <Search className={styles.searchIcon} />
+                <input
+                  type="text"
+                  placeholder={searchPlaceholder}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={styles.searchInput}
+                />
+              </div>
+            )}
+          </div>
+    
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead>
+                <tr className={styles.headerRow}>
+                  {selectable && (
+                    <th className={styles.checkboxCell}>
+                      <input
+                        type="checkbox"
+                        className={styles.checkbox}
+                        checked={selectedItems.length === filteredData.length}
+                        onChange={(e) => {
+                          const newSelection = e.target.checked ? filteredData : [];
+                          setSelectedItems(newSelection);
+                          onSelectionChange?.(newSelection);
+                        }}
+                      />
+                    </th>
                   )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedData.map(item => (
-              <tr key={item.id} className={styles.tableRow}>
-                {selectable && (
-                  <td className={styles.checkboxCell}>
-                    <input
-                      type="checkbox"
-                      className={styles.checkbox}
-                      checked={selectedItems.some(i => i.id === item.id)}
-                      onChange={(e) => handleSelectItem(item, e.target.checked)}
-                    />
-                  </td>
-                )}
-                {visibleColumns.map(column => (
-                  <td key={String(column.key)} className={styles.tableCell}>
-                    {column.key === 'actions' ? (
-                      <div className={styles.actions}>
-                        {onEdit && (
-                          <button
-                            onClick={() => onEdit(item)}
-                            className={`${styles.actionButton} ${styles.editButton}`}
-                          >
-                            <Pencil size={16} />
-                          </button>
-                        )}
-                        {onDelete && (
-                          <button
-                            onClick={() => onDelete([item])}
-                            className={`${styles.actionButton} ${styles.deleteButton}`}
-                          >
-                            <Trash2 size={16} />
-                          </button>
+                  {visibleColumns.map(column => (
+                    <th
+                      key={String(column.key)}
+                      onClick={() => column.sortable && handleSort(column.key)}
+                      className={`${styles.headerCell} ${column.sortable ? styles.sortable : ''}`}
+                      style={{ width: column.width }}
+                    >
+                      <div className={styles.headerContent}>
+                        {column.label}
+                        {column.sortable && (
+                          <ArrowUpDown
+                            size={14}
+                            className={`${styles.sortIcon} ${
+                              sortConfig.key === column.key ? 
+                                sortConfig.direction === 'asc' ? styles.ascending :
+                                sortConfig.direction === 'desc' ? styles.descending : ''
+                              : ''
+                            }`}
+                          />
                         )}
                       </div>
-                    ) : column.render ? (
-                      column.render(item[column.key], item)
-                    ) : (
-                      String(item[column.key])
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {sortedData.map(item => (
+                  <motion.tr
+                    key={item.id}
+                    className={styles.tableRow}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {selectable && (
+                      <td className={styles.checkboxCell}>
+                        <input
+                          type="checkbox"
+                          className={styles.checkbox}
+                          checked={selectedItems.some(i => i.id === item.id)}
+                          onChange={(e) => handleSelectItem(item, e.target.checked)}
+                        />
+                      </td>
                     )}
-                  </td>
+                    {visibleColumns.map(column => (
+                      <td 
+                        key={String(column.key)} 
+                        className={`${styles.tableCell} ${
+                          column.key === 'actions' ? styles.actionsCell : ''
+                        }`}
+                      >
+                        {column.key === 'actions' ? (
+                          <div className={styles.actions}>
+                            {onEdit && (
+                              <button
+                                onClick={() => handleEditClick(item)}
+                                className={`${styles.actionButton} ${styles.editButton}`}
+                              >
+                                <Pencil size={16} />
+                              </button>
+                            )}
+                            {onDelete && (
+                              <button
+                                onClick={() => handleDeleteClick([item])}
+                                className={`${styles.actionButton} ${styles.deleteButton}`}
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            )}
+                          </div>
+                        ) : column.render ? (
+                          column.render(item[column.key], item)
+                        ) : (
+                          String(item[column.key])
+                        )}
+                      </td>
+                    ))}
+                  </motion.tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-export default DataTable;
+              </tbody>
+            </table>
+          </div>
+    
+          {/* Modals */}
+          {selectedForEdit && (
+            <EditOrderModal
+              isOpen={editModalOpen}
+              onClose={() => {
+                setEditModalOpen(false);
+                setSelectedForEdit(null);
+              }}
+              order={selectedForEdit}
+              onSave={handleSaveEdit}
+            />
+          )}
+    
+          <DeleteConfirmationModal
+            isOpen={deleteModalOpen}
+            onClose={() => {
+              setDeleteModalOpen(false);
+              setItemsToDelete([]);
+            }}
+            onConfirm={handleConfirmDelete}
+            itemCount={itemsToDelete.length}
+          />
+        </div>
+      );
+    }
+    
+    export default DataTable;
