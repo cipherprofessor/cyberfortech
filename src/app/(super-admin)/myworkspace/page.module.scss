@@ -19,8 +19,8 @@
   
   .mainContent {
     flex: 1;
-    padding: 2rem;
-    margin-left: 240px; // Adjust based on your sidebar width
+    padding: 1rem 2rem;
+    margin-left: 190px; // Adjust based on your sidebar width
 
     // &:hover {
     //     border-color: #6366f1;
@@ -38,7 +38,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.6rem;
+    margin-bottom: 1.5rem;
     
     @media (max-width: 768px) {
       flex-direction: column;
@@ -49,7 +49,7 @@
   
   .title {
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 400;
     color: #111827;
     margin-bottom: 0.5rem;
     

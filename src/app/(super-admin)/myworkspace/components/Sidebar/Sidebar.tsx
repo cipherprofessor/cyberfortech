@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon } from 'lucide-react';
+import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import styles from './Sidebar.module.scss';
@@ -158,7 +158,10 @@ export function Sidebar() {
         exit={{ x: isMobile ? '-100%' : 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className={styles.logo}>MyWorkspace</div>
+        {/* <div className={styles.logo}> 
+            <LogsIcon size={24} />
+        </div> */}
+        
         <nav className={styles.nav}>
           {menuItems.map((item, index) => (
             <SidebarItem

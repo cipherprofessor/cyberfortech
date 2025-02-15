@@ -10,63 +10,6 @@ import { Sidebar } from './components/Sidebar/Sidebar';
 import KPICard from './components/ui/Card/KPICard';
 import { mockStats } from './components/lib/mockData';
 
-interface Stat {
-  id: number;
-  title: string;
-  value: string;
-  change: number;
-  icon: 'users' | 'revenue' | 'orders' | 'activity';
-}
-
-const stats: Stat[] = [
-  {
-    id: 1,
-    title: 'Total Users',
-    value: '12,345',
-    change: 12.5,
-    icon: 'users'
-  },
-  {
-    id: 2,
-    title: 'Revenue',
-    value: '$45,678',
-    change: -2.3,
-    icon: 'revenue'
-  },
-  {
-    id: 3,
-    title: 'Total Orders',
-    value: '1,234',
-    change: 8.1,
-    icon: 'orders'
-  },
-  {
-    id: 4,
-    title: 'Active Sessions',
-    value: '892',
-    change: 3.2,
-    icon: 'activity'
-  }
-];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1
-  }
-};
-
 export default function MyWorkspacePage() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);

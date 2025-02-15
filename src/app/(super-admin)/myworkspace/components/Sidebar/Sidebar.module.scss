@@ -1,173 +1,178 @@
+// Variables
+$light-bg: #ffffff;
+$dark-bg: rgb(25,25,28);
+$light-text: #202020;
+$dark-text: #cccccc;
+$border-light: #e0e0e0;
+$border-dark: #333333;
+$hover-light: rgba(0, 0, 0, 0.05);
+$hover-dark: rgba(255, 255, 255, 0.05);
+$mid-light: #494848;
+$mid-blue:rgb(32,41,71);
 
+// Base sidebar
 .sidebar {
-    width: 200px;
-    height: 100vh;
-    background: #ffffff; // Light mode background
-    border-right: 1px solid #e0e0e0; // Light mode border
-    padding: 1rem;
-    transition: all 0.3s ease;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 50;
-    overflow-y: auto;
+  width: 193px;
+  height: 100vh;
+  // background: #ffffffe6;
+  background-color:#ffffffe6 ;
+  border-right: 1px solid $border-light;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  overflow-y: auto;
+  margin-top: 18px;
 
-    &.dark {
-        // background: #1a1a1a; // Dark mode background
-        border-right-color: rgb(25,25,28);// Dark mode border
-        background: rgb(25,25,28);
+  &.dark {
+    background: $dark-bg;
+    border-right-color: $border-dark;
+  }
+
+  &.mobile {
+    z-index: 100;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $light-text;
+    margin-bottom: 2rem;
+
+    .dark & {
+      color: $dark-text;
     }
+  }
 
-    &.mobile {
-        z-index: 100; // Ensure sidebar is above overlay
-    }
-
-    .logo {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #333333; // Light mode text
-        margin-bottom: 2rem;
-
-        .dark & {
-            color: #ffffff; // Dark mode text
-        }
-    }
-
-    .nav {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin-top: 47px;
-    }
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 47px;
+  }
 }
 
+// Sidebar items
 .sidebarItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .mainItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.02);
+      background: $hover-light;
+      box-shadow: 0 2px 8px rgba(46, 222, 199, 0.16);
+    }
+
+    &.mainLabel {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: $border-dark;
+    }
+
+    .dark & {
+      color: $dark-text;
+      
+      &:hover {
+        background: $hover-dark;
+        color: white;
+      }
+    }
+
+    .icon {
+      display: flex;
+      align-items: center;
+    }
+
+    .chevron {
+      margin-left: auto;
+    }
+  }
+
+  .subItems {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    padding-left: 2rem;
 
-    .mainItem {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        color: #666666; // Light mode text
-        text-decoration: none;
-        size: 20px;
-
-        .dark & {
-            color: #cccccc; // Dark mode text
-        }
-
-        .icon {
-            display: flex;
-            align-items: center;
-        }
-
-        .chevron {
-            margin-left: auto;
-        }
-    }
-
-    .subItems {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-        padding-left: 2rem;
-
-        .subItem {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            color: #666666; // Light mode text
-            text-decoration: none;
-
-            .dark & {
-                color: #cccccc; // Dark mode text
-            }
-
-            .icon {
-                display: flex;
-                align-items: center;
-            }
-        }
-    }
-}
-
-// Update mainItem and subItem styles
-.sidebarItem {
-    .mainItem {
+    .subItem {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem;
+      padding: 0.5rem;
       border-radius: 0.5rem;
       text-decoration: none;
-      
-      // Add these specific selectors
-      &.mainLabel {
-        font-size: 0.9rem;
-        font-weight: 400;
-        color: #202020;
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: scale(1.02);
+        background: $hover-light;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        color: rgb(0, 0, 0);
+      }
+
+      &.subLabel {
+        font-size: 0.8rem;
+        color: $light-text;
+      }
+
+      .dark & {
+        color: $dark-text;
         
-        .dark & {
-          color: #fff;
+        &:hover {
+          background: $hover-dark;
+          color: white;
         }
       }
-      
+
       .icon {
         display: flex;
         align-items: center;
       }
     }
-  
-    .subItems {
-      .subItem {
-        &.subLabel {
-          font-size: 0.8rem;
-          color: #080808;
-          
-          .dark & {
-            color: #ccc;
-          }
-        }
-      }
-    }
   }
-  
+}
 
+// Mobile menu
 .mobileMenuButton {
-    display: none; // Hidden by default
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 1000; // Ensure it's above everything
-    background: #ffffff; // Light mode background
-    border: 1px solid #e0e0e0; // Light mode border
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    cursor: pointer;
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  background: $light-bg;
+  border: 1px solid $border-light;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
 
-    .dark & {
-        background: #1a1a1a; // Dark mode background
-        border-color: #333333; // Dark mode border
-    }
+  .dark & {
+    background: $dark-bg;
+    border-color: $border-dark;
+  }
 
-    @media (max-width: 768px) {
-        display: block; // Show on mobile
-    }
+  @media (max-width: 768px) {
+    display: block;
+  }
 }
 
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); // Semi-transparent black
-    z-index: 99; // Below sidebar but above main content
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
 }
-
