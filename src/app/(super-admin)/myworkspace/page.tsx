@@ -121,7 +121,7 @@ export default function MyWorkspacePage() {
           </motion.div>
 
 
-          <motion.div 
+          {/* <motion.div 
             className={`${styles.bentoItem} ${styles.categories}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -133,7 +133,7 @@ export default function MyWorkspacePage() {
               button={<ViewIcon />}
               onButtonClick={() => console.log('View all clicked')}
             />
-          </motion.div>
+          </motion.div> */}
   
           {/* Add more bento items here */}
         </div>
