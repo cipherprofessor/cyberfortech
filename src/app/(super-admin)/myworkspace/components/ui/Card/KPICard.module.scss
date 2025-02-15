@@ -9,25 +9,67 @@
   width: 60%;
   min-width: 200px;
   box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
-  // overflow: hidden;
   border: 1px solid rgba(59, 131, 246, 0.213);
   transition: all 0.6s;
 
   &:hover {
-    border: 1px solid  ;
+    border: 1px solid;
     border-color: #6366f1;
     box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1),
-                0 2px 4px -1px rgba(99, 102, 241, 0.06);
+      0 2px 4px -1px rgba(99, 102, 241, 0.06);
+    color: #000000;
+
+    .title {
+      color: black;
+    }
+
+    .footer {
+      color: black;
+    }
+
+    .label {
+      color: black;
+    }
+
+    .usersIcon {
+      color: #0077ff;
+    }
+
+    .revenueIcon {
+      color: #2ecd63;
+    }
+
+    .instructorsIcon {
+      color: #9b59b6;
+    }
+    .coursesIcon {
+      color: #e67e22;
+    }
+    .certificationsIcon {
+      color: #3498db;
+    }
+    .leadsIcon {
+      color: #e74c3c;
+    }
+
+    &.dark {
+      .title {
+        color: rgb(255, 255, 255);
+      }
+
+      .footer {
+        color: rgb(255, 255, 255);
+      }
+
+      .label {
+        color: rgb(255, 255, 255);
+      }
+    }
   }
 
   &.dark {
-    background-color: rgb(25,25,28);
+    background-color: rgb(25, 25, 28);
   }
-
-  // :hover {
-  //   transform: translateY(-5px);
-  //   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  // }
 }
 
 .iconWrapper {
@@ -40,18 +82,13 @@
   margin-bottom: 0.75rem;
   background-color: #000000;
 
-  // &.dark {
-  //   background-color: #fafafa;
-  // }
-
   .dark & {
-    color: #ffffff; // Dark mode text
-}
+    color: #ffffff;
+  }
 
   svg {
     width: 24px;
     height: 24px;
-    // color: #ffffff;
 
     &.dark {
       background-color: #ffffff;
@@ -61,7 +98,7 @@
 
 .title {
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: #000000ae;
   margin: 0 0 0.5rem 0;
   font-weight: 500;
 
@@ -70,8 +107,13 @@
   }
 
   .dark & {
-    color: #cccccc; // Dark mode text
+    color: #cccccc;
   }
+
+  // &:hover {
+
+  //   color: #000000;
+  // }
 }
 
 .value {
@@ -86,8 +128,8 @@
   }
 
   .dark & {
-    color: #cccccc; // Dark mode text
-}
+    color: #cccccc;
+  }
 }
 
 .footer {
@@ -101,6 +143,10 @@
 .label {
   font-size: 0.75rem;
   color: #94a3b8;
+
+  &:hover {
+    color: #000000;
+  }
 }
 
 .change {
@@ -108,14 +154,164 @@
   font-weight: 500;
   padding: 0.25rem 0.5rem;
   border-radius: 1rem;
-  
+
   &.positive {
     background-color: rgba(34, 197, 94, 0.2);
     color: #22c55e;
   }
-  
+
   &.negative {
     background-color: rgba(239, 68, 68, 0.2);
     color: #ef4444;
+  }
+}
+
+%icon-base {
+  transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+%icon-wrapper-base {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Users
+.usersIcon {
+  @extend %icon-base;
+  color: #4a90e2;
+}
+
+.usersWrapper {
+  @extend %icon-wrapper-base;
+  background: rgba(74, 144, 226, 0.1);
+}
+
+// Revenue
+.revenueIcon {
+  @extend %icon-base;
+  color: #50c878cc;
+}
+
+.revenueWrapper {
+  @extend %icon-wrapper-base;
+  background: rgba(80, 200, 120, 0.1);
+}
+
+// Instructors
+.instructorsIcon {
+  @extend %icon-base;
+  color: #9b59b6;
+}
+
+.instructorsWrapper {
+  @extend %icon-wrapper-base;
+  background: rgba(155, 89, 182, 0.1);
+}
+
+// Courses
+.coursesIcon {
+  @extend %icon-base;
+  color: #e67e22;
+}
+
+.coursesWrapper {
+  @extend %icon-wrapper-base;
+  background: rgba(230, 126, 34, 0.1);
+}
+
+// Certifications
+.certificationsIcon {
+  @extend %icon-base;
+  color: #3498db;
+}
+
+.certificationsWrapper {
+  @extend %icon-wrapper-base;
+  background: rgba(52, 152, 219, 0.1);
+}
+
+// Leads
+.leadsIcon {
+  @extend %icon-base;
+  color: #e74c3c;
+}
+
+.leadsWrapper {
+  @extend %icon-wrapper-base;
+  background: rgba(231, 76, 60, 0.1);
+}
+
+// Dark theme variations
+.dark {
+  .usersIcon {
+    color: lighten(#4a90e2, 10%);
+  }
+  .revenueIcon {
+    color: lighten(#50c87870, 10%);
+  }
+  .instructorsIcon {
+    color: lighten(#9b59b6, 10%);
+  }
+  .coursesIcon {
+    color: lighten(#e67e22, 10%);
+  }
+  .certificationsIcon {
+    color: lighten(#3498db, 10%);
+  }
+  .leadsIcon {
+    color: lighten(#e74c3c, 10%);
+  }
+
+  .iconWrapper {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate {
+  animation: pulse 2s infinite;
+}
+
+// Size variations
+.small {
+  width: 20px;
+  height: 20px;
+}
+
+.large {
+  width: 32px;
+  height: 32px;
+}
+
+// Additional effects
+.glow {
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+.rotate {
+  &:hover {
+    transform: rotate(15deg);
   }
 }

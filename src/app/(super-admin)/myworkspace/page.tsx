@@ -8,7 +8,8 @@ import { Users, ShoppingCart, DollarSign, Activity } from 'lucide-react';
 import styles from './page.module.scss';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import KPICard from './components/ui/Card/KPICard';
-import { mockStats } from './components/lib/mockData';
+import { courseCategories, mockStats } from './components/lib/mockData';
+import ListCourseCard from './components/ui/ListCard/ListCard';
 
 export default function MyWorkspacePage() {
   const { theme } = useTheme();
@@ -57,21 +58,39 @@ export default function MyWorkspacePage() {
         </div>
 
         <motion.div 
-          className={styles.statsGrid}>
-          {mockStats.map((stat) => (
-            <KPICard
-              key={stat.id}
-              title={stat.title}
-              value={stat.value}
-              change={stat.change}
-              icon={stat.icon}
-            />
-          ))}
-        </motion.div>
+  className={styles.statsGrid}
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.5, staggerChildren: 0.1 }}
+>
+  {mockStats.map((stat, index) => (
+    <motion.div
+      key={stat.id}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+    >
+       <KPICard
+        title={stat.title}
+        value={stat.value}
+        change={stat.change}
+        icon={stat.icon}
+        iconType={stat.iconType}
+        className={styles.card}
+      />
+    </motion.div>
+  ))}
+</motion.div>
 
         <div className={styles.additionalContent}>
-          {/* Placeholder for charts or additional content */}
-          <motion.div 
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+      {courseCategories.map(category => (
+        <ListCourseCard key={category.id} category={category} />
+      ))}
+    </div>
+         
+          {/* <motion.div 
             className={styles.chartSection}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -79,9 +98,9 @@ export default function MyWorkspacePage() {
           >
             <h2 className={styles.sectionTitle}>Performance Overview</h2>
             <div className={styles.chartPlaceholder}>
-              {/* Add your charts or additional content here */}
+              
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </main>
     </div>

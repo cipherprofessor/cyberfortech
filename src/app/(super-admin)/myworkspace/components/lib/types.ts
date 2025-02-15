@@ -14,6 +14,7 @@ export interface Stat {
   icon: ReactNode;
   change: string;
   color: string;
+  iconType: string;
 }
 
 export interface SubItem {
@@ -22,3 +23,24 @@ export interface SubItem {
   icon: ReactNode;
 }
 
+
+export type IconType = 'revenue' | 'users' | 'instructors' |'courses' | 'certifications' | 'leads' ;
+
+export interface KPICardProps {
+  title: string;
+  value: string | number;
+  change: number;
+  icon: React.ReactNode;
+  iconType: IconType;
+  className?: string;
+}
+
+
+export interface ListCardCategory {
+  id: string;
+  title: string;
+  courseCount: number;
+  price: number;
+  icon: string;
+  color: string;
+}

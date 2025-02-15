@@ -123,9 +123,9 @@ export default function Navbar() {
           {renderNavLink("/forum", "Forum", <MessageSquare className="h-4 w-4 mr-2" />)}
           {renderNavLink("/about", "About", <InfoIcon className="h-4 w-4 mr-2" />)}
           {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-4 w-4 mr-2" />)}
-          {/* {renderNavLink("/tabs", "My tabs", <PhoneCall className="h-4 w-4 mr-2" />)}
+          {renderNavLink("/tabs", "My tabs", <PhoneCall className="h-4 w-4 mr-2" />)}
           {renderNavLink("/apache-charts", "Charts", <ChartSplineIcon className="h-4 w-4 mr-2" />)}
-          {renderNavLink("/workspace", "My Workspace", <IconLayoutDashboardFilled className="h-4 w-4 mr-2" />)} */}
+          {/* {renderNavLink("/workspace", "My Workspace", <IconLayoutDashboardFilled className="h-4 w-4 mr-2" />)} */}
         </div>
 
         {/* Right Side Actions */}

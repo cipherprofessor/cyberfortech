@@ -1,3 +1,4 @@
+// KPICard.tsx
 import React from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
@@ -13,20 +14,16 @@ import {
   LucideIcon
 } from 'lucide-react';
 import styles from './KPICard.module.scss';
+import { KPICardProps } from '../../lib/types';
 
-interface KPICardProps {
-  title: string;
-  value: string | number;
-  change: number;
-  icon: React.ReactNode;
-  className?: string;
-}
+
 
 const KPICard: React.FC<KPICardProps> = ({ 
   title, 
   value, 
   change, 
   icon,
+  iconType,
   className = ''
 }) => {
   const { theme } = useTheme();
@@ -34,6 +31,8 @@ const KPICard: React.FC<KPICardProps> = ({
 
   const cardClass = `${styles.card} ${theme === 'dark' ? styles.dark : ''} ${className}`;
   const changeClass = `${styles.change} ${isPositive ? styles.positive : styles.negative}`;
+  const iconWrapperClass = `${styles.iconWrapper} ${styles[`${iconType}Wrapper`]}`;
+  const iconClass = `${styles.icon} ${styles[`${iconType}Icon`]}`;
 
   return (
     <motion.div
@@ -42,8 +41,10 @@ const KPICard: React.FC<KPICardProps> = ({
       transition={{ duration: 0.3 }}
       className={cardClass}
     >
-      <div className={styles.iconWrapper}>
-        {icon}
+      <div className={iconWrapperClass}>
+        <div className={iconClass}>
+          {icon}
+        </div>
       </div>
 
       <h3 className={styles.title}>{title}</h3>
