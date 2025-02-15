@@ -177,3 +177,184 @@ $mid-blue:rgb(32,41,71);
   background: rgba(0, 0, 0, 0.5);
   z-index: 99;
 }
+
+
+
+// Sidebar.module.scss - Add these new icon-specific styles
+
+// Icon base styles
+%icon-base {
+  transition: all 0.2s ease;
+  &:hover {
+    filter: brightness(1.2);
+  }
+}
+
+// Main menu icons
+.dashboardIcon {
+  @extend %icon-base;
+  color: #4A90E2;
+}
+
+.analyticsIcon {
+  @extend %icon-base;
+  color: #50C878;
+}
+
+.coursesIcon {
+  @extend %icon-base;
+  color: #F4A460;
+}
+
+.commicationIcon {
+  @extend %icon-base;
+  color: #9370DB;
+}
+
+.userIcon {
+  @extend %icon-base;
+  color: #20B2AA;
+}
+
+.settingIcon {
+  @extend %icon-base;
+  color: #166dc3;
+}
+
+.helpIcon {
+  @extend %icon-base;
+  color: #DB7093;
+}
+
+
+
+
+// Submenu icons
+.analyticsOverviewIcon {
+  @extend %icon-base;
+  color: #4f46b4;
+}
+
+.analyticsUserGrowthIcon {
+  @extend %icon-base;
+  color: #b33c62;
+}
+
+.analyticsRevenueIcon {
+  @extend %icon-base;
+  color: #ba66cd;
+}
+
+.coursesIconDashboard {
+  @extend %icon-base;
+  color: #7094db;
+}
+
+.coursesIconManagement {
+  @extend %icon-base;
+  color: #57d355;
+}
+
+.coursesIconReviews {
+  @extend %icon-base;
+  color: #8A2BE2;
+}
+
+.commicationInboxIcon {
+  @extend %icon-base;
+  color: #48D1CC;
+}
+
+.commicationForumIcon{
+  @extend %icon-base;
+  color: #e141bc;
+}
+
+.commicationGrowthIcon {
+  @extend %icon-base;
+  color: #1E90FF;
+}
+
+.userAllusersIcon {
+  @extend %icon-base;
+  color: #dc143c9a;
+}
+
+.userAdminsIcon {
+  @extend %icon-base;
+  color: #69d2ff;
+}
+
+.userStudentsIcon {
+  @extend %icon-base;
+  color: #dda0dc;
+}
+
+.userInstructorsIcon {
+  @extend %icon-base;
+  color: #a3bc32;
+}
+
+
+
+.settingGeneralIcon {
+  @extend %icon-base;
+  color: #b45546;
+}
+
+.settingSecurityIcon {
+  @extend %icon-base;
+  color: #3CB371;
+}
+
+.settingNotificationsIcon {
+  @extend %icon-base;
+  color: #6677cd;
+}
+
+.helpFaqIcon {
+  @extend %icon-base;
+  color: #9370DB;
+}
+
+.helpSupportIcon {
+  @extend %icon-base;
+  color: #BA55D3;
+}
+
+.helpContactIcon {
+  @extend %icon-base;
+  color: #3CB371;
+}
+
+
+
+
+// Dark theme overrides
+.dark {
+  .dashboardIcon,
+  .analyticsIcon,
+  .coursesIcon,
+  .communicationIcon,
+  .usersIcon,
+  .settingsIcon,
+  .helpIcon,
+  .pieChartIcon,
+  .barChartIcon,
+  .dollarIcon,
+  .mailIcon,
+  .forumIcon,
+  .draftsIcon,
+  .contactIcon,
+  .adminIcon,
+  .studentIcon,
+  .securityIcon,
+  .notificationIcon,
+  .faqIcon,
+  .supportIcon {
+    filter: brightness(0.9);
+    opacity: 0.9;
+  }
+}
+
+// Keep all existing styles...
