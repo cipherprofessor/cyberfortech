@@ -1,22 +1,30 @@
-// components/KanbanBoard/index.tsx
+// src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/index.tsx
+"use client";
 import React, { useState } from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { KanbanColumn } from './KanbanColumn';
 
 import styles from './KanbanBoard.module.scss';
-import { motion } from 'framer-motion';
-import { KanbanBoardProps } from './types';
-import { SearchBar } from './SearchBar';
-import { KanbanColumn } from './KanbanColumn';
+import { useTheme } from 'next-themes';
+import { Column, Task } from './types';
+
+export interface KanbanBoardProps {
+  columns: Column[];
+  onTaskMove: (taskId: string, sourceColumn: string, targetColumn: string) => void;
+  onTaskUpdate: (task: Task) => void;
+  onTaskDelete: (taskId: string) => void;
+  onAddTask: (columnId: string, task: Partial<Task>) => void;
+}
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   columns,
   onTaskMove,
   onTaskUpdate,
+  onTaskDelete,
   onAddTask,
-  className,
-  theme = 'dark'
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const { theme = 'light' } = useTheme();
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -26,36 +34,35 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     const taskId = result.draggableId;
 
     if (sourceColumn !== targetColumn) {
-      onTaskMove?.(taskId, sourceColumn, targetColumn);
+      onTaskMove(taskId, sourceColumn, targetColumn);
     }
   };
 
+  const handleEditTask = (task: Task) => {
+    setSelectedTask(task);
+    // Add your edit modal logic here
+  };
+
+  const handleDelete = (task: Task) => {
+    onTaskDelete(task.id);
+  };
+
   return (
-    <motion.div 
-      className={`${styles.kanbanBoard} ${styles[theme]} ${className}`}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      <SearchBar 
-        value={searchQuery}
-        onChange={setSearchQuery}
-        theme={theme}
-      />
-      
-      <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className={`${styles.kanbanBoard} ${styles[theme as 'light' | 'dark']}`}>
         <div className={styles.columnsContainer}>
           {columns.map((column) => (
             <KanbanColumn
               key={column.id}
               column={column}
-              onAddTask={() => onAddTask?.(column.id)}
+              onAddTask={() => onAddTask(column.id, { status: column.title as Task['status'] })}
               onTaskUpdate={onTaskUpdate}
-              theme={theme}
+              onEdit={handleEditTask}
+              onDelete={handleDelete}
             />
           ))}
         </div>
-      </DragDropContext>
-    </motion.div>
+      </div>
+    </DragDropContext>
   );
 };

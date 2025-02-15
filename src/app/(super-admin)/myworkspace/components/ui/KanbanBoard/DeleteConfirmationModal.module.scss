@@ -1,0 +1,143 @@
+// DeleteConfirmationModal.module.scss
+.modal {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden;
+  
+    &[data-theme='light'] {
+      .panel {
+        @apply bg-white;
+        .title {
+          @apply text-gray-900;
+        }
+        .message {
+          @apply text-gray-600;
+        }
+      }
+    }
+  
+    &[data-theme='dark'] {
+      .panel {
+        @apply bg-gray-800;
+        .title {
+          @apply text-gray-100;
+        }
+        .message {
+          @apply text-gray-300;
+        }
+      }
+    }
+  }
+  
+  .backdrop {
+    @apply fixed inset-0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+  
+  .container {
+    @apply relative w-full max-w-md mx-auto;
+  }
+  
+  .panel {
+    @apply relative rounded-lg p-6 shadow-xl;
+    max-height: calc(100vh - 2rem);
+    transition: all 0.3s ease;
+  
+    &.deletePanel {
+      @apply max-w-md transform overflow-hidden text-left align-middle shadow-xl transition-all;
+    }
+  }
+  
+  .title {
+    @apply text-lg font-medium leading-6 mb-4;
+  }
+  
+  .message {
+    @apply mt-2 mb-6;
+  }
+  
+  .actions {
+    @apply mt-6 flex justify-end gap-3;
+  }
+  
+  .button {
+    @apply px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+  
+    &:hover {
+      @apply transform -translate-y-0.5;
+    }
+  
+    &:active {
+      @apply transform translate-y-0;
+    }
+  }
+  
+  .cancelButton {
+    @extend .button;
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+    
+    [data-theme='dark'] & {
+      @apply bg-gray-700 text-gray-200 hover:bg-gray-600;
+    }
+  }
+  
+  .deleteButton {
+    @extend .button;
+    @apply bg-red-600 text-white hover:bg-red-700 
+           focus:ring-red-500;
+  
+    &:hover {
+      @apply bg-red-700;
+    }
+  }
+  
+  // Animation classes
+  .enter {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .leave {
+    animation: fadeOut 0.2s ease-in;
+  }
+  
+  .enterFrom {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  
+  .enterTo {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .leaveFrom {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .leaveTo {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }

@@ -4,7 +4,7 @@
 
 
   
-  export interface KanbanBoardProps {
+  export interface KanbanBoardProps extends ThemeProps {
     columns: Column[];
     onTaskMove?: (taskId: string, sourceColumn: string, targetColumn: string) => void;
     onTaskUpdate?: (task: Task) => void;
@@ -78,4 +78,7 @@ export interface KanbanData {
   columns: Column[];
 }
 
+export interface ThemeProps {
+    theme?: 'light' | 'dark';
+  }
   

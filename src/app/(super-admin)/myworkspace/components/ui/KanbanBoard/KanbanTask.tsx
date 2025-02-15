@@ -1,134 +1,53 @@
 // src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/KanbanTask.tsx
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
 import styles from './KanbanTask.module.scss';
-import { MoreVertical, Heart, MessageCircle, Edit, Trash } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { MoreVertical, Heart, MessageCircle } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { Task } from './types';
-import Avatar from '../DataTable/Avatar';
-
 
 interface KanbanTaskProps {
   task: Task;
   index: number;
-  onEdit?: (task: Task) => void;
-  onDelete?: (taskId: string) => void;
-  theme: 'light' | 'dark';
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
 export const KanbanTask: React.FC<KanbanTaskProps> = ({
   task,
   index,
   onEdit,
-  onDelete,
-  theme
+  onDelete
 }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-
-  const handleEdit = () => {
-    if (onEdit) {
-      onEdit(task);
-      setIsMenuOpen(false);
-    }
-  };
-
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(task.id);
-      setIsMenuOpen(false);
-    }
-  };
-
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-  };
-
-  const getPriorityColor = (priority: Task['priority']) => {
-    switch (priority) {
-      case 'High':
-        return '#FF4D4F';
-      case 'Medium':
-        return '#FAAD14';
-      case 'Low':
-        return '#52C41A';
-      default:
-        return '#BFBFBF';
-    }
-  };
+  const { theme = 'light' } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
-        <motion.div
+        <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`${styles.task} ${styles[theme]} ${snapshot.isDragging ? styles.dragging : ''}`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{
-            type: "spring",
-            stiffness: 500,
-            damping: 30
-          }}
-          whileHover={{ scale: 1.02 }}
-          style={{
-            ...provided.draggableProps.style,
-            transform: snapshot.isDragging 
-              ? `${provided.draggableProps.style?.transform} rotate(1deg)` 
-              : provided.draggableProps.style?.transform
-          }}
+          className={`${styles.task} ${styles[theme as 'light' | 'dark']} ${snapshot.isDragging ? styles.dragging : ''}`}
         >
           <div className={styles.header}>
-            <div className={styles.headerLeft}>
-              <span className={styles.taskNumber}>{task.taskNumber}</span>
-              <span 
-                className={styles.priorityBadge}
-                style={{ backgroundColor: getPriorityColor(task.priority) }}
-              >
-                {task.priority}
-              </span>
-            </div>
-            
+            <span className={styles.taskNumber}>{task.taskNumber}</span>
             <div className={styles.menuContainer}>
               <button 
                 className={styles.menuButton}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                aria-label="Task menu"
               >
                 <MoreVertical size={16} />
               </button>
-              
-              <AnimatePresence>
-                {isMenuOpen && (
-                  <motion.div
-                    className={styles.menu}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    <button 
-                      className={styles.menuItem}
-                      onClick={handleEdit}
-                    >
-                      <Edit size={14} />
-                      <span>Edit</span>
-                    </button>
-                    <button 
-                      className={`${styles.menuItem} ${styles.deleteItem}`}
-                      onClick={handleDelete}
-                    >
-                      <Trash size={14} />
-                      <span>Delete</span>
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {isMenuOpen && (
+                <div className={styles.menu}>
+                  <button onClick={onEdit}>Edit</button>
+                  <button onClick={onDelete}>Delete</button>
+                </div>
+              )}
             </div>
           </div>
           
@@ -137,57 +56,40 @@ export const KanbanTask: React.FC<KanbanTaskProps> = ({
           
           <div className={styles.tags}>
             {task.tags.map((tag) => (
-              <motion.span
+              <span
                 key={tag.id}
                 className={styles.tag}
                 style={{ backgroundColor: tag.color }}
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 {tag.name}
-              </motion.span>
+              </span>
             ))}
           </div>
           
           <div className={styles.footer}>
             <div className={styles.assignees}>
-              {task.assignees.map((user, i) => (
-                <div 
-                  key={user.id} 
-                  className={styles.avatarWrapper}
-                  style={{ zIndex: task.assignees.length - i }}
-                >
-                  <Avatar
-                    src={user.avatar}
-                    name={user.name}
-                    size="sm"
-                    className={styles.avatar}
-                  />
-                </div>
+              {task.assignees.map((user) => (
+                <img
+                  key={user.id}
+                  src={user.avatar}
+                  alt={user.name}
+                  className={styles.avatar}
+                />
               ))}
             </div>
             
             <div className={styles.metrics}>
-              <motion.button 
-                className={`${styles.metric} ${isLiked ? styles.liked : ''}`}
-                onClick={handleLike}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <span className={styles.metric}>
                 <Heart size={14} />
-                <span>{isLiked ? task.likes + 1 : task.likes}</span>
-              </motion.button>
-              <motion.button 
-                className={styles.metric}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
+                {task.likes}
+              </span>
+              <span className={styles.metric}>
                 <MessageCircle size={14} />
-                <span>{task.comments}</span>
-              </motion.button>
+                {task.comments}
+              </span>
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
     </Draggable>
   );

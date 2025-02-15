@@ -1,34 +1,33 @@
 // src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/KanbanColumn.tsx
-"use client"
+"use client";
 import React from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { KanbanTask } from './KanbanTask';
 
 import styles from './KanbanColumn.module.scss';
 import { Plus } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { Column, Task } from './types';
 
 interface KanbanColumnProps {
   column: Column;
   onAddTask: () => void;
-  onTaskUpdate?: (task: Task) => void;
-  theme: 'light' | 'dark';
+  onTaskUpdate: (task: Task) => void;
+  onEdit: (task: Task) => void;
+  onDelete: (task: Task) => void;
 }
 
 export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   column,
   onAddTask,
   onTaskUpdate,
-  theme
+  onEdit,
+  onDelete,
 }) => {
-  const handleTaskEdit = (task: Task) => {
-    if (onTaskUpdate) {
-      onTaskUpdate(task);
-    }
-  };
+  const { theme = 'light' } = useTheme();
 
   return (
-    <div className={`${styles.column} ${styles[theme]}`}>
+    <div className={`${styles.column} ${styles[theme as 'light' | 'dark']}`}>
       <div className={styles.header} style={{ backgroundColor: column.color }}>
         <h2>{column.title}</h2>
         <span className={styles.count}>{column.count}</span>
@@ -46,8 +45,8 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                 key={task.id}
                 task={task}
                 index={index}
-                onEdit={handleTaskEdit}
-                theme={theme}
+                onEdit={() => onEdit(task)}
+                onDelete={() => onDelete(task)}
               />
             ))}
             {provided.placeholder}

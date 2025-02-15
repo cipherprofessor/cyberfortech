@@ -3,10 +3,16 @@
 import { useState } from 'react';
 import { KanbanBoard } from './index';
 import { mockData } from './mockData';
-import { KanbanData, Task, TaskStatus } from './types';
+import { Column, KanbanData, Task, TaskStatus } from './types';
+import { useTheme } from 'next-themes';
+
+
 
 
 export default function KanbanPage() {
+    
+  
+    
   // Convert mockData to the correct type structure
   const initialData: KanbanData = {
     columns: mockData.columns.map(column => ({
@@ -20,6 +26,7 @@ export default function KanbanPage() {
   };
 
   const [boardData, setBoardData] = useState<KanbanData>(initialData);
+  const { theme = 'light' } = useTheme();
   
   const handleTaskMove = (taskId: string, sourceColumnId: string, targetColumnId: string) => {
     setBoardData(prevData => {
@@ -56,20 +63,56 @@ export default function KanbanPage() {
       }))
     }));
   };
-  
-  const handleAddTask = (columnId: string) => {
-    // Implement add task logic
-    console.log('Adding task to column:', columnId);
+
+  const handleTaskDelete = (taskId: string) => {
+    setBoardData(prevData => ({
+      columns: prevData.columns.map(column => ({
+        ...column,
+        tasks: column.tasks.filter(task => task.id !== taskId),
+        count: column.tasks.filter(task => task.id !== taskId).length
+      }))
+    }));
   };
+  
+   const handleAddTask = (columnId: string, taskData: Partial<Task>) => {
+    const newTask: Task = {
+      id: `task-${Date.now()}`,
+      taskNumber: `#TSK-${Date.now()}`,
+      title: taskData.title || '',
+      description: taskData.description || '',
+      priority: taskData.priority || 'Medium',
+      status: taskData.status || 'NEW',
+      tags: taskData.tags || [],
+      assignees: taskData.assignees || [],
+      likes: 0,
+      comments: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    setBoardData(prevData => ({
+        columns: prevData.columns.map(column => {
+          if (column.id === columnId) {
+            return {
+              ...column,
+              tasks: [...column.tasks, newTask],
+              count: column.tasks.length + 1
+            };
+          }
+          return column;
+        })
+      }));
+    };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
-      <KanbanBoard
+     <KanbanBoard
         columns={boardData.columns}
         onTaskMove={handleTaskMove}
         onTaskUpdate={handleTaskUpdate}
+        onTaskDelete={handleTaskDelete}
         onAddTask={handleAddTask}
-        theme="dark"
       />
     </div>
   );

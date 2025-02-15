@@ -1,12 +1,15 @@
-// src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/TaskModal.tsx
-"use client"
+// src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/modals/TaskModal.tsx
 import React, { useState, useEffect } from 'react';
-import { Dialog } from '@headlessui/react';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 
-import styles from './TaskModal.module.scss';
+import styles from '../styles/Modals.module.scss';
 import { X } from 'lucide-react';
-import { Task, TaskStatus, User } from './types';
+
+import { useTheme } from 'next-themes';
+import { Task, TaskPriority, TaskStatus, User } from './types';
 import Avatar from '../DataTable/Avatar';
+
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -27,6 +30,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
   availableUsers,
   columnId
 }) => {
+    const { theme = 'light' } = useTheme();
   const [formData, setFormData] = useState<Partial<Task>>({
     title: '',
     description: '',
@@ -38,136 +42,136 @@ export const TaskModal: React.FC<TaskModalProps> = ({
 
   useEffect(() => {
     if (task && mode === 'edit') {
-      setFormData({
-        ...task,
-        status: task.status || 'NEW'
-      });
+      setFormData(task);
     } else {
       setFormData({
         title: '',
         description: '',
         priority: 'Medium',
-        status: 'NEW',
+        status: columnId as TaskStatus,
         assignees: [],
         tags: []
       });
     }
-  }, [task, mode]);
-
-  ////// Khud theek kiya hai yeh wala code
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const submittedData: Partial<Task> = {
-      ...formData,
-      status: mode === 'create' ? (columnId as TaskStatus) : formData.status
-    };
-    onSubmit(submittedData);
-    onClose();
-  };
+  }, [task, mode, columnId]);
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
-      className={styles.modal}
-    >
-      <div className={styles.backdrop} aria-hidden="true" />
-      <div className={styles.container}>
-        <Dialog.Panel className={styles.panel}>
-          <div className={styles.modalHeader}>
-            <Dialog.Title className={styles.title}>
-              {mode === 'create' ? 'Create New Task' : 'Edit Task'}
-            </Dialog.Title>
-            <button onClick={onClose} className={styles.closeButton}>
-              <X size={20} />
-            </button>
-          </div>
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog 
+        as="div"
+        className={`${styles.modal} ${styles[theme as 'light' | 'dark']}`}
+        onClose={onClose}
+      >
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className={styles.backdrop} />
+        </Transition.Child>
 
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formGroup}>
-              <label htmlFor="title">Title</label>
-              <input
-                id="title"
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                required
-                placeholder="Enter task title"
-              />
-            </div>
+        <div className={styles.container}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            <Dialog.Panel className={styles.panel}>
+              <Dialog.Title className={styles.title}>
+                {mode === 'create' ? 'Create New Task' : 'Edit Task'}
+              </Dialog.Title>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                required
-                placeholder="Enter task description"
-                rows={4}
-              />
-            </div>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                onSubmit(formData);
+                onClose();
+              }}>
+                <div className={styles.formGroup}>
+                  <label>Title</label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    required
+                  />
+                </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="priority">Priority</label>
-              <select
-                id="priority"
-                value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value as Task['priority'] })}
-              >
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
-            </div>
+                <div className={styles.formGroup}>
+                  <label>Description</label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    required
+                    rows={4}
+                  />
+                </div>
 
-            <div className={styles.formGroup}>
-              <label>Assignees</label>
-              <div className={styles.assigneesList}>
-                {availableUsers.map(user => (
-                  <div key={user.id} className={styles.assigneeItem}>
-                    <Avatar
-                      src={user.avatar}
-                      name={user.name}
-                      size="sm"
-                    />
-                    <span>{user.name}</span>
-                    <input
-                      type="checkbox"
-                      checked={formData.assignees?.some(a => a.id === user.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setFormData({
-                            ...formData,
-                            assignees: [...(formData.assignees || []), user]
-                          });
-                        } else {
-                          setFormData({
-                            ...formData,
-                            assignees: formData.assignees?.filter(a => a.id !== user.id) || []
-                          });
-                        }
-                      }}
-                    />
+                <div className={styles.formGroup}>
+                  <label>Priority</label>
+                  <select
+                    value={formData.priority}
+                    onChange={(e) => setFormData({ ...formData, priority: e.target.value as TaskPriority })}
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Assignees</label>
+                  <div className={styles.assigneesList}>
+                    {availableUsers.map(user => (
+                      <div key={user.id} className={styles.assigneeItem}>
+                        <Avatar
+                          src={user.avatar}
+                          name={user.name}
+                          size="sm"
+                        />
+                        <span>{user.name}</span>
+                        <input
+                          type="checkbox"
+                          checked={formData.assignees?.some(a => a.id === user.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData({
+                                ...formData,
+                                assignees: [...(formData.assignees || []), user]
+                              });
+                            } else {
+                              setFormData({
+                                ...formData,
+                                assignees: formData.assignees?.filter(a => a.id !== user.id) || []
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
 
-            <div className={styles.formActions}>
-              <button type="button" onClick={onClose} className={styles.cancelButton}>
-                Cancel
-              </button>
-              <button type="submit" className={styles.submitButton}>
-                {mode === 'create' ? 'Create Task' : 'Update Task'}
-              </button>
-            </div>
-          </form>
-        </Dialog.Panel>
-      </div>
-    </Dialog>
+                <div className={styles.actions}>
+                  <button type="button" onClick={onClose} className={styles.cancelButton}>
+                    Cancel
+                  </button>
+                  <button type="submit" className={styles.submitButton}>
+                    {mode === 'create' ? 'Create Task' : 'Update Task'}
+                  </button>
+                </div>
+              </form>
+            </Dialog.Panel>
+          </Transition.Child>
+        </div>
+      </Dialog>
+    </Transition>
   );
 };
-
-export default TaskModal;
