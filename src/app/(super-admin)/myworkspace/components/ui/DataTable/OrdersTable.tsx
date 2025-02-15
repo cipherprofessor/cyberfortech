@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 
 import styles from './OrdersTable.module.scss';
 import { formatCurrency, formatDate } from '@/utils/formattingData';
+import Avatar from './Avatar';
 
 interface Customer {
   id: string;
@@ -23,9 +24,7 @@ interface Order {
   dateOrdered: string;
 }
 
-const OrdersTable = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { theme } = useTheme();
+
 
   const columns: Column<Order>[] = [
     {
@@ -35,9 +34,12 @@ const OrdersTable = () => {
       visible: true,
       render: (customer: Customer) => (
         <div className={styles.customerCell}>
-          <div className={styles.avatar}>
-            <img src={customer.avatar} alt={customer.name} />
-          </div>
+          <Avatar
+            src={customer.avatar}
+            name={customer.name}
+            size="md"
+            className={styles.avatar}
+          />
           <div className={styles.customerInfo}>
             <span className={styles.customerName}>{customer.name}</span>
             <span className={styles.customerEmail}>{customer.email}</span>
@@ -49,14 +51,18 @@ const OrdersTable = () => {
       key: 'product',
       label: 'Product',
       sortable: true,
-      visible: true
+      visible: true,
+      width: '200px'
     },
     {
       key: 'quantity',
       label: 'Quantity',
       sortable: true,
       visible: true,
-      width: '100px'
+      width: '100px',
+      render: (quantity: number) => (
+        <span className={styles.quantityCell}>{quantity}</span>
+      )
     },
     {
       key: 'amount',
@@ -82,7 +88,8 @@ const OrdersTable = () => {
           pending: 'Pending',
           success: 'Success'
         };
-
+    
+  
         return (
           <span className={`${styles.status} ${styles[status]}`}>
             {statusText[status]}
@@ -105,6 +112,7 @@ const OrdersTable = () => {
       width: '100px'
     }
   ];
+  
 
   const mockOrders: Order[] = [
     {
@@ -113,7 +121,7 @@ const OrdersTable = () => {
         id: '101',
         name: 'Elena Smith',
         email: 'elenasmith387@gmail.com',
-        avatar: '/avatars/elena.jpg'
+        avatar: '/team/mohsin.jpg'
       },
       product: 'All-Purpose Cleaner',
       quantity: 3,
@@ -179,50 +187,56 @@ const OrdersTable = () => {
     }
   ];
 
-  const handleEdit = async (order: Order) => {
-    try {
-      setIsLoading(true);
-      // API call to edit order
-      console.log('Editing order:', order);
-      // await updateOrder(order);
-    } catch (error) {
-      console.error('Error updating order:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const handleDelete = async (orders: Order[]) => {
-    try {
-      setIsLoading(true);
-      // API call to delete orders
-      console.log('Deleting orders:', orders);
-      // await deleteOrders(orders.map(order => order.id));
-    } catch (error) {
-      console.error('Error deleting orders:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const handleSelectionChange = (selectedOrders: Order[]) => {
-    console.log('Selected orders:', selectedOrders);
-  };
+  const OrdersTable = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedOrders, setSelectedOrders] = useState<Order[]>([]);
+  
+    const handleEdit = async (order: Order) => {
+      try {
+        setIsLoading(true);
+        // API call logic here
+        console.log('Editing order:', order);
+      } catch (error) {
+        console.error('Error editing order:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    const handleDelete = async (orders: Order[]) => {
+      try {
+        setIsLoading(true);
+        // API call logic here
+        console.log('Deleting orders:', orders);
+      } catch (error) {
+        console.error('Error deleting orders:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    const handleSelectionChange = (orders: Order[]) => {
+      setSelectedOrders(orders);
+    };
+  
 
-  return (
-    <div className={styles.pageContainer}>
-      <DataTable
-        data={mockOrders}
-        columns={columns}
-        isLoading={isLoading}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onSelectionChange={handleSelectionChange}
-        showSearch={true}
-        searchPlaceholder="Search orders..."
-      />
-    </div>
-  );
-};
+    return (
+        <div className={styles.pageContainer}>
+          <DataTable
+            data={mockOrders}
+            columns={columns}
+            isLoading={isLoading}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onSelectionChange={handleSelectionChange}
+            showSearch={true}
+            searchPlaceholder="Search orders..."
+            className={styles.ordersTable}
+          />
+        </div>
+      );
+    };
 
-export default OrdersTable;
+    export default OrdersTable;

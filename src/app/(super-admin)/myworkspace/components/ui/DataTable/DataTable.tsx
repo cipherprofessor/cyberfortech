@@ -1,13 +1,19 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Search, ArrowUpDown, Pencil, Trash2, ChevronDown } from 'lucide-react';
+import { Search, ArrowUpDown, Pencil, Trash2, ChevronDown, ChevronRight, ChevronLeft, Trash } from 'lucide-react';
 import styles from './DataTable.module.scss';
 import TableSkeleton from './TableSkeleton';
 import { DeleteConfirmationModal, EditOrderModal } from './OrderModals';
 
 export type SortDirection = 'asc' | 'desc' | null;
 export type DataType = 'text' | 'number' | 'date' | 'status' | 'actions';
+
+interface PaginationState {
+    page: number;
+    pageSize: number;
+  }
+  
 
 export interface Column<T> {
   key: keyof T | 'actions';
@@ -52,11 +58,15 @@ export interface TableProps<T> {
       key: keyof T | 'actions';
       direction: SortDirection;
     }>({ key: 'id', direction: null });
-
+    const [pagination, setPagination] = useState<PaginationState>({
+      page: 1,
+      pageSize: 5
+    });
+  
     const [editModalOpen, setEditModalOpen] = useState(false);
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [selectedForEdit, setSelectedForEdit] = useState<T | null>(null);
-    const [itemsToDelete, setItemsToDelete] = useState<T[]>([]);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedForEdit, setSelectedForEdit] = useState<T | null>(null);
+  const [itemsToDelete, setItemsToDelete] = useState<T[]>([]);
   
     const visibleColumns = defaultColumns.filter(col => col.visible !== false);
   
@@ -68,11 +78,9 @@ export interface TableProps<T> {
           key,
           direction: 
             current.key === key 
-              ? current.direction === 'asc' 
-                ? 'desc' 
-                : current.direction === 'desc'
-                  ? null
-                  : 'asc'
+              ? current.direction === 'asc'
+                ? 'desc'
+                : null
               : 'asc'
         }));
       };
@@ -123,7 +131,6 @@ export interface TableProps<T> {
         return data.filter(item =>
           Object.entries(item).some(([key, value]) => {
             if (typeof value === 'object' && value !== null) {
-              // Search in nested objects (like customer details)
               return Object.values(value).some(v => 
                 String(v).toLowerCase().includes(searchLower)
               );
@@ -134,54 +141,117 @@ export interface TableProps<T> {
       }, [data, searchTerm]);
 
      // Update the sortedData useMemo in DataTable.tsx
-const sortedData = useMemo(() => {
-    if (!sortConfig.direction || sortConfig.key === 'actions') return filteredData;
-  
-    return [...filteredData].sort((a, b) => {
-      const aValue = sortConfig.key === 'actions' ? '' : a[sortConfig.key as keyof T];
-      const bValue = sortConfig.key === 'actions' ? '' : b[sortConfig.key as keyof T];
-  
-      if (aValue === bValue) return 0;
+     const sortedData = useMemo(() => {
+        if (!sortConfig.direction || sortConfig.key === 'actions') return filteredData;
       
-      const modifier = sortConfig.direction === 'asc' ? 1 : -1;
+        return [...filteredData].sort((a, b) => {
+          const aValue = sortConfig.key === 'actions' ? null : a[sortConfig.key as keyof T];
+          const bValue = sortConfig.key === 'actions' ? null : b[sortConfig.key as keyof T];
       
-      if (typeof aValue === 'object' && typeof bValue === 'object') {
-        // Handle nested objects (like customer)
-        if (aValue && bValue && 'name' in aValue && 'name' in bValue) {
-          return String(aValue.name).localeCompare(String(bValue.name)) * modifier;
-        }
-        return 0;
-      }
+          // Handle null or undefined values
+          if (aValue == null && bValue == null) return 0;
+          if (aValue == null) return 1;
+          if (bValue == null) return -1;
       
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return aValue.localeCompare(bValue) * modifier;
-      }
+          const modifier = sortConfig.direction === 'asc' ? 1 : -1;
       
-      return ((aValue < bValue ? -1 : 1) * modifier);
-    });
-  }, [filteredData, sortConfig]);
+          // Handle objects (like customer details)
+          if (typeof aValue === 'object' && typeof bValue === 'object') {
+            // Safely check if object has name property and it's a string
+            const aName = aValue && 'name' in aValue && typeof aValue.name === 'string' ? aValue.name : '';
+            const bName = bValue && 'name' in bValue && typeof bValue.name === 'string' ? bValue.name : '';
+            return aName.localeCompare(bName) * modifier;
+          }
+      
+          // Handle numbers
+          if (typeof aValue === 'number' && typeof bValue === 'number') {
+            return (aValue - bValue) * modifier;
+          }
+      
+          // Handle dates
+          if (aValue instanceof Date && bValue instanceof Date) {
+            return (aValue.getTime() - bValue.getTime()) * modifier;
+          }
+      
+          // Convert to string for comparison
+          const aString = String(aValue);
+          const bString = String(bValue);
+          
+          return aString.localeCompare(bString) * modifier;
+        });
+      }, [filteredData, sortConfig]);
+      
+
+      const paginatedData = useMemo(() => {
+        const start = (pagination.page - 1) * pagination.pageSize;
+        const end = start + pagination.pageSize;
+        return sortedData.slice(start, end);
+      }, [sortedData, pagination]);
+    
+      const totalPages = Math.ceil(sortedData.length / pagination.pageSize);
+    
+      const handlePageChange = (newPage: number) => {
+        setPagination(prev => ({ ...prev, page: newPage }));
+      };
+
 
       if (isLoading) {
         return <TableSkeleton rows={5} columns={visibleColumns.length} />;
       }
-
+      
       return (
         <div className={`${styles.container} ${className}`}>
           <div className={styles.header}>
-            <h2 className={styles.title}>{title}</h2>
+            <div className={styles.headerLeft}>
+              <h2 className={styles.title}>{title}</h2>
+              {selectedItems.length > 0 && (
+                <motion.button
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className={styles.bulkDeleteButton}
+                  onClick={() => handleDeleteClick(selectedItems)}
+                >
+                  <Trash size={16} />
+                  Delete Selected ({selectedItems.length})
+                </motion.button>
+              )}
+            </div>
             
-            {showSearch && (
-              <div className={styles.searchWrapper}>
-                <Search className={styles.searchIcon} />
-                <input
-                  type="text"
-                  placeholder={searchPlaceholder}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className={styles.searchInput}
-                />
+            <div className={styles.headerRight}>
+              {showSearch && (
+                <div className={styles.searchWrapper}>
+                  <Search className={styles.searchIcon} />
+                  <input
+                    type="text"
+                    placeholder={searchPlaceholder}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className={styles.searchInput}
+                  />
+                </div>
+              )}
+    
+              <div className={styles.pagination}>
+                <button
+                  className={styles.paginationButton}
+                  onClick={() => handlePageChange(pagination.page - 1)}
+                  disabled={pagination.page === 1}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <span className={styles.paginationInfo}>
+                  Page {pagination.page} of {totalPages}
+                </span>
+                <button
+                  className={styles.paginationButton}
+                  onClick={() => handlePageChange(pagination.page + 1)}
+                  disabled={pagination.page === totalPages}
+                >
+                  <ChevronRight size={16} />
+                </button>
               </div>
-            )}
+            </div>
           </div>
     
           <div className={styles.tableWrapper}>
@@ -193,16 +263,16 @@ const sortedData = useMemo(() => {
                       <input
                         type="checkbox"
                         className={styles.checkbox}
-                        checked={selectedItems.length === filteredData.length}
+                        checked={paginatedData.length > 0 && selectedItems.length === paginatedData.length}
                         onChange={(e) => {
-                          const newSelection = e.target.checked ? filteredData : [];
+                          const newSelection = e.target.checked ? paginatedData : [];
                           setSelectedItems(newSelection);
                           onSelectionChange?.(newSelection);
                         }}
                       />
                     </th>
                   )}
-                  {visibleColumns.map(column => (
+                  {defaultColumns.filter(col => col.visible !== false).map(column => (
                     <th
                       key={String(column.key)}
                       onClick={() => column.sortable && handleSort(column.key)}
@@ -228,7 +298,7 @@ const sortedData = useMemo(() => {
                 </tr>
               </thead>
               <tbody>
-                {sortedData.map(item => (
+                {paginatedData.map(item => (
                   <motion.tr
                     key={item.id}
                     className={styles.tableRow}
@@ -246,7 +316,7 @@ const sortedData = useMemo(() => {
                         />
                       </td>
                     )}
-                    {visibleColumns.map(column => (
+                    {defaultColumns.filter(col => col.visible !== false).map(column => (
                       <td 
                         key={String(column.key)} 
                         className={`${styles.tableCell} ${
