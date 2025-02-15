@@ -49,3 +49,11 @@ export interface ListCardCategory {
   icon: React.ReactNode;
   color: string;
 }
+
+export interface ListCardContainerProps {
+  categories: ListCardCategory[];
+  className?: string;
+  title?: string;
+  button?: React.ReactNode;
+  onButtonClick?: () => void;
+}

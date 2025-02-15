@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
-import { Users, ShoppingCart, DollarSign, Activity } from 'lucide-react';
+import { Users, ShoppingCart, DollarSign, Activity, ViewIcon } from 'lucide-react';
 
 import styles from './page.module.scss';
 import { Sidebar } from './components/Sidebar/Sidebar';
@@ -86,7 +86,10 @@ export default function MyWorkspacePage() {
         {/* <div className={styles.additionalContent}>
 
         <div className=""> */}
-        <ListCardContainer categories={courseCategories} />
+        <ListCardContainer categories={courseCategories} 
+        title="Course Categories"
+        button={<ViewIcon />}
+        onButtonClick={() => console.log('View all clicked')}/>
       {/* {courseCategories.map(category => (
         <ListCardContainer key={category.id} categories={courseCategories} />
       ))} */}
