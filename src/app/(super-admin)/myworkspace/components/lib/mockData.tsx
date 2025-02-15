@@ -1,5 +1,6 @@
 import { IconCertificate } from '@tabler/icons-react';
 import { DollarSign, Users, GraduationCap, BookOpen, ChartColumnDecreasingIcon, LucideSquareDashed, LucidePanelTopClose } from 'lucide-react';
+import styles from './mockData.module.scss';
 
 export const mockStats = [
   {
@@ -7,7 +8,7 @@ export const mockStats = [
     title: 'Total Revenue',
     value: '$25,378',
     change: 5.35,
-    icon: <DollarSign className="text-blue-500" />
+    icon: <DollarSign className={styles.revenueIcon} />
   },
   {
     id: 2,
