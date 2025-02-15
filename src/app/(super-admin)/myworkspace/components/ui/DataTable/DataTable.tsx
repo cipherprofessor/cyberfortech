@@ -73,16 +73,19 @@ export interface TableProps<T> {
 
     const handleSort = (key: keyof T | 'actions') => {
         if (!defaultColumns.find(col => col.key === key)?.sortable) return;
-    
-        setSortConfig(current => ({
-          key,
-          direction: 
-            current.key === key 
-              ? current.direction === 'asc'
-                ? 'desc'
-                : null
-              : 'asc'
-        }));
+      
+        setSortConfig(current => {
+          // If clicking on a different column, start with ascending sort
+          if (current.key !== key) {
+            return { key, direction: 'asc' };
+          }
+      
+          // Cycle through: asc -> desc -> asc -> desc...
+          return {
+            key,
+            direction: current.direction === 'asc' ? 'desc' : 'asc'
+          };
+        });
       };
 
       const handleSelectAll = (checked: boolean) => {
@@ -145,22 +148,25 @@ export interface TableProps<T> {
         if (!sortConfig.direction || sortConfig.key === 'actions') return filteredData;
       
         return [...filteredData].sort((a, b) => {
-          const aValue = sortConfig.key === 'actions' ? null : a[sortConfig.key as keyof T];
-          const bValue = sortConfig.key === 'actions' ? null : b[sortConfig.key as keyof T];
+          const aValue = a[sortConfig.key as keyof T];
+          const bValue = b[sortConfig.key as keyof T];
       
-          // Handle null or undefined values
+          // Handle null/undefined values
           if (aValue == null && bValue == null) return 0;
-          if (aValue == null) return 1;
-          if (bValue == null) return -1;
+          if (aValue == null) return sortConfig.direction === 'asc' ? 1 : -1;
+          if (bValue == null) return sortConfig.direction === 'asc' ? -1 : 1;
       
           const modifier = sortConfig.direction === 'asc' ? 1 : -1;
       
           // Handle objects (like customer details)
           if (typeof aValue === 'object' && typeof bValue === 'object') {
-            // Safely check if object has name property and it's a string
-            const aName = aValue && 'name' in aValue && typeof aValue.name === 'string' ? aValue.name : '';
-            const bName = bValue && 'name' in bValue && typeof bValue.name === 'string' ? bValue.name : '';
-            return aName.localeCompare(bName) * modifier;
+            // Handle customer objects
+            if ('name' in aValue && 'name' in bValue) {
+              const aName = String(aValue.name).toLowerCase();
+              const bName = String(bValue.name).toLowerCase();
+              return aName.localeCompare(bName) * modifier;
+            }
+            return 0;
           }
       
           // Handle numbers
@@ -173,14 +179,15 @@ export interface TableProps<T> {
             return (aValue.getTime() - bValue.getTime()) * modifier;
           }
       
-          // Convert to string for comparison
-          const aString = String(aValue);
-          const bString = String(bValue);
+          // Convert to strings for comparison
+          const aString = String(aValue).toLowerCase();
+          const bString = String(bValue).toLowerCase();
           
           return aString.localeCompare(bString) * modifier;
         });
       }, [filteredData, sortConfig]);
       
+
 
       const paginatedData = useMemo(() => {
         const start = (pagination.page - 1) * pagination.pageSize;
