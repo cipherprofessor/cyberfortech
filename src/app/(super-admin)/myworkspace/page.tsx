@@ -3,14 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
-import { Users, ShoppingCart, DollarSign, Activity, ViewIcon } from 'lucide-react';
+import { ViewIcon } from 'lucide-react';
 
 import styles from './page.module.scss';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import KPICard from './components/ui/Card/KPICard';
 import { courseCategories, mockStats } from './components/lib/mockData';
-import ListCourseCard from './components/ui/ListCard/ListCard';
 import ListCardContainer from './components/ui/ListCard/ListCardContainer';
+import ApacheRadarChart from '@/components/charts/Apache-ECharts/ApacheRadarChart/ApacheRadarChart';
+import ApacheAreaChart from '@/components/charts/Apache-ECharts/ApacheAreaChart/ApacheAreaChart';
 
 export default function MyWorkspacePage() {
   const { theme } = useTheme();
@@ -29,7 +30,7 @@ export default function MyWorkspacePage() {
   return (
     <div className={`${styles.container} ${isDark ? styles.dark : ''}`}>
       <Sidebar />
-
+      
       <main className={styles.mainContent}>
         <div className={styles.headerSection}>
           <motion.div
@@ -38,11 +39,8 @@ export default function MyWorkspacePage() {
             transition={{ duration: 0.5 }}
           >
             <h1 className={styles.title}>Welcome to MyWorkspace</h1>
-            {/* <p className={styles.subtitle}>
-              Monitor your key performance indicators and platform metrics
-            </p> */}
           </motion.div>
-
+  
           <motion.div 
             className={styles.dateSelector}
             initial={{ opacity: 0, x: 20 }}
@@ -57,44 +55,88 @@ export default function MyWorkspacePage() {
             </select>
           </motion.div>
         </div>
+  
+        <div className={styles.bentoGrid}>
+          {/* Stats Section */}
+          <motion.div 
+            className={`${styles.bentoItem} ${styles.stats}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className={styles.statsGrid}>
+              {mockStats.map((stat, index) => (
+                <motion.div
+                  key={stat.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <KPICard
+                    title={stat.title}
+                    value={stat.value}
+                    change={stat.change}
+                    icon={stat.icon}
+                    iconType={stat.iconType}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+  
+          {/* Radar Chart */}
+          <motion.div 
+            className={`${styles.bentoItem} ${styles.radar}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <ApacheRadarChart />
+          </motion.div>
 
-        <motion.div 
-  className={styles.statsGrid}
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ duration: 0.5, staggerChildren: 0.1 }}
->
-  {mockStats.map((stat, index) => (
-    <motion.div
-      key={stat.id}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.1 }}
-    >
-       <KPICard
-        title={stat.title}
-        value={stat.value}
-        change={stat.change}
-        icon={stat.icon}
-        iconType={stat.iconType}
-        className={styles.card}
-      />
-    </motion.div>
-  ))}
-</motion.div>
+          <motion.div
+          className={`${styles.bentoItem} ${styles.apacheAreaChart}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
 
-        {/* <div className={styles.additionalContent}>
+          <ApacheAreaChart />
 
-        <div className=""> */}
-        <ListCardContainer categories={courseCategories} 
-        title="Course Categories"
-        button={<ViewIcon />}
-        onButtonClick={() => console.log('View all clicked')}/>
-      {/* {courseCategories.map(category => (
-        <ListCardContainer key={category.id} categories={courseCategories} />
-      ))} */}
-    {/* </div>
-        </div> */}
+          </motion.div>
+  
+          {/* Categories */}
+          <motion.div 
+            className={`${styles.bentoItem} ${styles.categoriesList}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <ListCardContainer 
+              categories={courseCategories} 
+              title="Course Categories"
+              button={<ViewIcon />}
+              onButtonClick={() => console.log('View all clicked')}
+            />
+          </motion.div>
+
+
+          <motion.div 
+            className={`${styles.bentoItem} ${styles.categories}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <ListCardContainer 
+              categories={courseCategories} 
+              title="Course Categories"
+              button={<ViewIcon />}
+              onButtonClick={() => console.log('View all clicked')}
+            />
+          </motion.div>
+  
+          {/* Add more bento items here */}
+        </div>
       </main>
     </div>
   );
