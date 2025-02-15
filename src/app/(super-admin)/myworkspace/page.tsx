@@ -7,12 +7,13 @@ import { ViewIcon } from "lucide-react";
 
 import styles from "./page.module.scss";
 import { Sidebar } from "./components/Sidebar/Sidebar";
-import KPICard from "./components/ui/Card/KPICard";
+import KPICard from "./components/ui/KPICard/KPICard";
 import { courseCategories, mockCategories, mockStats } from "./components/lib/mockData";
 import ListCardContainer from "./components/ui/ListCard/ListCardContainer";
 import ApacheRadarChart from "@/components/charts/Apache-ECharts/ApacheRadarChart/ApacheRadarChart";
 import ApacheAreaChart from "@/components/charts/Apache-ECharts/ApacheAreaChart/ApacheAreaChart";
 import TopSellingCategories from "./components/ui/ListCardCategories/ListCardCategories";
+import OrdersTable from "./components/ui/DataTable/OrdersTable";
 
 export default function MyWorkspacePage() {
   const { theme } = useTheme();
@@ -136,8 +137,21 @@ export default function MyWorkspacePage() {
             </div>
           </motion.div>
 
+        
           {/* Add more bento items here */}
         </div>
+
+        <motion.div
+            className={`${styles.bentoItem} ${styles.dataTable}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className="p-6">
+            <OrdersTable />
+            </div>
+          </motion.div>
+
       </main>
     </div>
   );

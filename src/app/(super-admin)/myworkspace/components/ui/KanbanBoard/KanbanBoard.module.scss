@@ -1,0 +1,28 @@
+// KanbanBoard.module.scss
+.kanbanBoard {
+    padding: 1.5rem;
+    width: 100%;
+    min-height: 100vh;
+    transition: background-color 0.3s ease;
+    
+    &.light {
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    
+    &.dark {
+      background-color: #1a1a1a;
+      color: #fff;
+    }
+  }
+  
+  .columnsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
