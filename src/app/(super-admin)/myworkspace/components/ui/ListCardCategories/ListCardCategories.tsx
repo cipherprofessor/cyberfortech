@@ -9,9 +9,26 @@ import {
   Package 
 } from 'lucide-react';
 import styles from './ListCardCategories.module.scss';
-import { CategoryType, TopSellingCategoriesProps } from '../../lib/types';
 
+export type CategoryType = 'clothing' | 'electronics' | 'grocery' | 'automobiles' | 'others';
 
+export interface CategoryData {
+  id: string;
+  name: string;
+  sales: number;
+  grossPercentage: number;
+  changePercentage: number;
+  type: CategoryType;
+}
+
+interface TopSellingCategoriesProps {
+  data: CategoryData[];
+  title?: string;
+  className?: string;
+  showIcons?: boolean;
+  animated?: boolean;
+  sortable?: boolean;
+}
 
 const getCategoryIcon = (type: CategoryType) => {
   const icons = {
@@ -23,7 +40,7 @@ const getCategoryIcon = (type: CategoryType) => {
   };
   
   const Icon = icons[type];
-  return <Icon className={styles[`${type}Icon`]} />;
+  return <Icon size={20} />;
 };
 
 const TopSellingCategories: React.FC<TopSellingCategoriesProps> = ({
@@ -84,26 +101,35 @@ const TopSellingCategories: React.FC<TopSellingCategoriesProps> = ({
         )}
       </div>
 
-      <div className={styles.statsOverview}>
-        <span className={styles.totalSales}>
-          Overall Sales
+      <div className={styles.statsBar}>
+        {Array.from({ length: data.length }).map((_, index) => (
+          <div 
+            key={index}
+            className={`${styles.barSegment} ${styles[`segment${index + 1}`]}`}
+          />
+        ))}
+      </div>
+
+      <div className={styles.overallStats}>
+        <div className={styles.overallSales}>
+          <span>Overall Sales</span>
+          <span className={styles.totalValue}>{totalSales.toLocaleString()}</span>
           <motion.span 
             className={`${styles.change} ${overallChange >= 0 ? styles.positive : styles.negative}`}
           >
             {overallChange >= 0 ? '+' : ''}{overallChange.toFixed(2)}%
           </motion.span>
-        </span>
-        <span className={styles.totalValue}>
-          {totalSales.toLocaleString()}
-        </span>
+        </div>
+        
       </div>
 
       <div className={styles.categoriesList}>
-        {data.map((category) => (
+        {data.map((category, index) => (
           <motion.div
             key={category.id}
             className={styles.categoryItem}
             variants={itemVariants}
+            custom={index}
           >
             {showIcons && (
               <div className={`${styles.iconWrapper} ${styles[`${category.type}Wrapper`]}`}>
@@ -111,20 +137,19 @@ const TopSellingCategories: React.FC<TopSellingCategoriesProps> = ({
               </div>
             )}
             
-            <div className={styles.categoryInfo}>
-              <span className={styles.categoryName}>{category.name}</span>
-              <span className={styles.categorySales}>{category.sales.toLocaleString()}</span>
+            <div className={styles.categoryName}>{category.name}</div>
+            
+            <div className={styles.categoryStats}>
+              <span className={styles.sales}>{category.sales.toLocaleString()}</span>
+              <span className={styles.gross}>{category.grossPercentage}% Gross</span>
             </div>
 
-            <div className={styles.categoryStats}>
-              <span className={styles.grossPercentage}>{category.grossPercentage}% Gross</span>
-              <motion.span 
-                className={`${styles.changePercentage} ${category.changePercentage >= 0 ? styles.positive : styles.negative}`}
-                whileHover={{ scale: 1.1 }}
-              >
-                {category.changePercentage >= 0 ? '+' : ''}{category.changePercentage}%
-              </motion.span>
-            </div>
+            <motion.div 
+              className={`${styles.changeLabel} ${category.changePercentage >= 0 ? styles.positive : styles.negative}`}
+              whileHover={{ scale: 1.05 }}
+            >
+              {category.changePercentage >= 0 ? '+' : ''}{category.changePercentage}%
+            </motion.div>
           </motion.div>
         ))}
       </div>

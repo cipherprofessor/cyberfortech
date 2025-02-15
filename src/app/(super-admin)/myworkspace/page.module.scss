@@ -188,4 +188,10 @@
       grid-row: span 4;
       order: 4;
     }
+
+    &.cardCategories{
+        grid-column: span 5;
+        grid-row: span 4;
+        order: 5;
+    }
   }

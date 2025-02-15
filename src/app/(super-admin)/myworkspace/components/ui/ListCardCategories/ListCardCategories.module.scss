@@ -1,20 +1,20 @@
 .container {
-    background: #fff;
-    border-radius: 1rem;
-    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    padding: 1rem;
     width: 100%;
-    max-width: 900px;
+    max-width: 600px;
     margin: 0 auto;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+    border: 1px solid rgba(59, 131, 246, 0.213);
     transition: all 0.3s ease;
   
     &.dark {
-      background: #1a1a1a;
-      color: #fff;
+      background: #19191c;
+      color: #ffffff;
     }
   
-    @media (max-width: 768px) {
+    @media (max-width: 640px) {
       padding: 1rem;
     }
   }
@@ -23,21 +23,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-  
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 1rem;
-    }
+    margin-bottom: 1rem;
   }
   
   .title {
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #1a1a1a;
   
     .dark & {
-      color: #fff;
+      color: #ffffff;
     }
   }
   
@@ -45,53 +40,64 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     background: rgba(0, 0, 0, 0.05);
     border-radius: 0.5rem;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-  
-    &:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
+    font-size: 0.875rem;
   
     .dark & {
       background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-  
-      &:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
+      color: #ffffff;
     }
   }
   
-  .statsOverview {
+  .statsBar {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
   }
   
-  .totalSales {
+  .barSegment {
+    height: 100%;
+    flex: 1;
+  
+    &.segment1 { background: #818cf8; }
+    &.segment2 { background: #f472b6; }
+    &.segment3 { background: #fb7185; }
+    &.segment4 { background: #fb923c; }
+    &.segment5 { background: #a78bfa; }
+  }
+  
+  .overallStats {
+    margin-bottom: 1.5rem;
+  }
+  
+  .overallSales {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    font-size: 1.125rem;
-    color: #666;
+    color: #6b7280;
+    font-size: 0.875rem;
+    // margin-bottom: 0.5rem;
+    margin:  0rem 1rem 0rem 0rem;
   
     .dark & {
-      color: #ccc;
+      color: #9ca3af;
     }
   }
   
   .totalValue {
-    font-size: 2rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: #1a1a1a;
+    color: #111827;
   
     .dark & {
-      color: #fff;
+      color: #ffffff;
     }
   }
   
@@ -102,16 +108,16 @@
   }
   
   .categoryItem {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
     align-items: center;
     gap: 1rem;
-    padding: 1rem;
+    padding: 0.75rem;
     background: rgba(0, 0, 0, 0.02);
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
     transition: all 0.3s ease;
   
     &:hover {
-      transform: translateX(8px);
       background: rgba(0, 0, 0, 0.04);
     }
   
@@ -119,101 +125,109 @@
       background: rgba(255, 255, 255, 0.05);
   
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
       }
-    }
-  
-    @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: flex-start;
     }
   }
   
   .iconWrapper {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
   }
   
-  // Category-specific styles
+  // Category-specific styles with adjusted colors to match design
   @mixin category-style($color) {
     &Wrapper {
       background: rgba($color, 0.1);
-    }
-  
-    &Icon {
-      color: $color;
-    }
-  }
-  
-  .clothing { @include category-style(#4f46e5); }
-  .electronics { @include category-style(#f59e0b); }
-  .grocery { @include category-style(#10b981); }
-  .automobiles { @include category-style(#ef4444); }
-  .others { @include category-style(#8b5cf6); }
-  
-  .categoryInfo {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-  
-    @media (max-width: 768px) {
-      width: 100%;
+      svg {
+        color: $color;
+      }
     }
   }
+  
+  .clothing { @include category-style(#818cf8); }
+  .electronics { @include category-style(#f472b6); }
+  .grocery { @include category-style(#fb7185); }
+  .automobiles { @include category-style(#fb923c); }
+  .others { @include category-style(#a78bfa); }
   
   .categoryName {
     font-weight: 500;
-    color: #1a1a1a;
+    color: #111827;
   
     .dark & {
-      color: #fff;
-    }
-  }
-  
-  .categorySales {
-    font-weight: 600;
-    color: #1a1a1a;
-  
-    .dark & {
-      color: #fff;
+      color: #ffffff;
     }
   }
   
   .categoryStats {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-  
-    @media (max-width: 768px) {
-      width: 100%;
-      justify-content: space-between;
-    }
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 5.25rem;
   }
   
-  .grossPercentage {
-    color: #666;
-    font-size: 0.875rem;
+  .sales {
+    font-weight: 600;
+    color: #111827;
   
     .dark & {
-      color: #ccc;
+      color: #ffffff;
     }
   }
   
-  .changePercentage {
+  .gross {
+    font-size: 0.75rem;
+    color: #6b7280;
+  
+    .dark & {
+      color: #9ca3af;
+    }
+  }
+  
+  .changeLabel {
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.3s ease;
   
     &.positive {
-      background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+  
+    &.negative {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+  
+    .dark & {
+      &.positive {
+        background: rgba(34, 197, 94, 0.3);
+      }
+  
+      &.negative {
+        background: rgba(239, 68, 68, 0.3);
+      }
+    }
+  }
+  
+  .change {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+  
+    &.positive {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
     }
   
     &.negative {
@@ -223,7 +237,7 @@
   
     .dark & {
       &.positive {
-        background: rgba(16, 185, 129, 0.2);
+        background: rgba(34, 197, 94, 0.2);
       }
   
       &.negative {
