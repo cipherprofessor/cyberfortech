@@ -86,3 +86,26 @@ export interface TopSellingCategoriesProps {
   animated?: boolean;
   sortable?: boolean;
 }
+
+
+// Data Table
+
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+}
+
+export interface Order {
+  id: string;
+  customer: Customer;
+  product: string;
+  quantity: number;
+  amount: number;
+  status: 'inProgress' | 'pending' | 'success' | 'failed';
+  dateOrdered: string;
+}
+
+export type OrderStatus = Order['status'];
+

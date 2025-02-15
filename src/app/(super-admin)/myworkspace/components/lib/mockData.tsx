@@ -169,3 +169,82 @@ export const mockCategories: CategoryData[] = [
     type: 'others'
   }
 ];
+
+
+
+/// Data Table 
+
+import { Order } from './types';
+
+export const mockOrders: Order[] = [
+  {
+    id: '1',
+    customer: {
+      id: '101',
+      name: 'Elena Smith',
+      email: 'elenasmith387@gmail.com',
+      avatar: '/avatars/elena.jpg'
+    },
+    product: 'All-Purpose Cleaner',
+    quantity: 3,
+    amount: 9.99,
+    status: 'inProgress',
+    dateOrdered: '2024-09-03'
+  },
+  {
+    id: '2',
+    customer: {
+      id: '102',
+      name: 'Nelson Gold',
+      email: 'noahrussell556@gmail.com',
+      avatar: '/avatars/nelson.jpg'
+    },
+    product: 'Kitchen Knife Set',
+    quantity: 4,
+    amount: 49.99,
+    status: 'pending',
+    dateOrdered: '2024-07-26'
+  },
+  {
+    id: '3',
+    customer: {
+      id: '103',
+      name: 'Grace Mitchell',
+      email: 'gracemitchell79@gmail.com',
+      avatar: '/avatars/grace.jpg'
+    },
+    product: 'Velvet Throw Blanket',
+    quantity: 2,
+    amount: 29.99,
+    status: 'success',
+    dateOrdered: '2024-05-12'
+  },
+  {
+    id: '4',
+    customer: {
+      id: '104',
+      name: 'Spencer Robin',
+      email: 'leophillips124@gmail.com',
+      avatar: '/avatars/spencer.jpg'
+    },
+    product: 'Aromatherapy Diffuser',
+    quantity: 4,
+    amount: 19.99,
+    status: 'success',
+    dateOrdered: '2024-08-15'
+  },
+  {
+    id: '5',
+    customer: {
+      id: '105',
+      name: 'Chloe Lewis',
+      email: 'chloelewis67@gmail.com',
+      avatar: '/avatars/chloe.jpg'
+    },
+    product: 'Insulated Water Bottle',
+    quantity: 2,
+    amount: 14.99,
+    status: 'pending',
+    dateOrdered: '2024-10-11'
+  }
+];

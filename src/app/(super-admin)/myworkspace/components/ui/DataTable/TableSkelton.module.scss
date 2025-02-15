@@ -1,0 +1,146 @@
+@keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  
+  .skeleton {
+    background: var(--bg-primary);
+    border-radius: 1rem;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+  
+    // Light mode variables
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --border-color: #e5e7eb;
+    --shimmer-color: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  
+    // Dark mode
+    :global(.dark) & {
+      --bg-primary: #1a1b1e;
+      --bg-secondary: #25262b;
+      --border-color: #2c2e33;
+      --shimmer-color: linear-gradient(90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%);
+    }
+  }
+  
+  .shimmerBg {
+    animation: shimmer 2s infinite linear;
+    background: var(--bg-secondary);
+    background-image: var(--shimmer-color);
+    background-repeat: no-repeat;
+    background-size: 1000px 100%;
+  }
+  
+  .header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .titleSkeleton {
+    @extend .shimmerBg;
+    width: 150px;
+    height: 24px;
+    border-radius: 0.375rem;
+  }
+  
+  .controlsSkeleton {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .searchSkeleton {
+    @extend .shimmerBg;
+    width: 250px;
+    height: 38px;
+    border-radius: 0.5rem;
+  }
+  
+  .tableHeader {
+    display: flex;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .headerCell {
+    @extend .shimmerBg;
+    height: 20px;
+    flex: 1;
+    margin-right: 1rem;
+    border-radius: 0.25rem;
+  
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  
+  .tableRow {
+    display: flex;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .tableCell {
+    flex: 1;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+  
+    &:last-child {
+      margin-right: 0;
+    }
+  
+    &:not(.customerCell) {
+      @extend .shimmerBg;
+      height: 20px;
+      border-radius: 0.25rem;
+    }
+  }
+  
+  .customerCell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .avatar {
+    @extend .shimmerBg;
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+  }
+  
+  .customerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    flex: 1;
+  }
+  
+  .nameSkeleton {
+    @extend .shimmerBg;
+    width: 120px;
+    height: 16px;
+    border-radius: 0.25rem;
+  }
+  
+  .emailSkeleton {
+    @extend .shimmerBg;
+    width: 150px;
+    height: 14px;
+    border-radius: 0.25rem;
+  }

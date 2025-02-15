@@ -1,0 +1,331 @@
+.container {
+    background: var(--bg-primary);
+    border-radius: 1rem;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+  
+    // Light mode variables
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --hover-bg: #f3f4f6;
+    --edit-color: #3b82f6;
+    --edit-hover: #2563eb;
+    --delete-color: #ef4444;
+    --delete-hover: #dc2626;
+  
+    // Dark mode
+    :global(.dark) & {
+      --bg-primary: #1a1b1e;
+      --bg-secondary: #25262b;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --border-color: #2c2e33;
+      --hover-bg: rgba(255, 255, 255, 0.05);
+      --edit-color: #60a5fa;
+      --edit-hover: #3b82f6;
+      --delete-color: #f87171;
+      --delete-hover: #ef4444;
+    }
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .title {
+    color: var(--text-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  
+  .controls {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  
+  .searchWrapper {
+    position: relative;
+    width: 300px;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 0.625rem 1rem 0.625rem 2.5rem;
+    border-radius: 0.5rem;
+    background: #25262B;
+    border: 1px solid #2C2E33;
+    color: #ffffff;
+    font-size: 0.875rem;
+  
+    &::placeholder {
+      color: #686B6F;
+    }
+  
+    &:focus {
+      outline: none;
+      border-color: #3662E3;
+    }
+  }
+  
+  .searchIcon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #686B6F;
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .columnToggle {
+    position: relative;
+  }
+  
+  .columnToggleButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: #25262B;
+    border: 1px solid #2C2E33;
+    color: #ffffff;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  
+    &:hover {
+      background: #2C2E33;
+    }
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .headerRow {
+    background: #1A1B1E;
+    border-bottom: 1px solid #2C2E33;
+  }
+  
+  .headerCell {
+    padding: 0.75rem 1.25rem;
+    text-align: left;
+    font-weight: 500;
+    color: #686B6F;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+  
+    &:first-child {
+      padding-left: 1.25rem;
+    }
+  
+    .sortIcon {
+      margin-left: 0.25rem;
+      opacity: 0.5;
+      transition: transform 0.2s;
+  
+      &.ascending {
+        transform: rotate(180deg);
+        opacity: 1;
+      }
+  
+      &.descending {
+        opacity: 1;
+      }
+    }
+  }
+  
+  .tableRow {
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: var(--hover-bg);
+  
+      .customerName {
+        color: var(--edit-color);
+      }
+  
+      .actionButton {
+        opacity: 1;
+      }
+    }
+  }
+  
+  .tableCell {
+    padding: 1rem 1.25rem;
+    color: #ffffff;
+    font-size: 0.875rem;
+  
+    &:first-child {
+      padding-left: 1.25rem;
+    }
+  }
+  
+  .customerCell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  .customerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  
+  .customerName {
+    color: #ffffff;
+    font-weight: 500;
+  }
+  
+  .customerEmail {
+    color: #686B6F;
+    font-size: 0.75rem;
+  }
+  
+  .status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  
+    &.inProgress {
+      background: rgba(59, 98, 227, 0.1);
+      color: #3B62E3;
+    }
+  
+    &.pending {
+      background: rgba(234, 179, 8, 0.1);
+      color: #EAB308;
+    }
+  
+    &.success {
+      background: rgba(236, 72, 153, 0.1);
+      color: #EC4899;
+    }
+  }
+  
+  .checkbox {
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 0.25rem;
+    border: 1px solid #2C2E33;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+    position: relative;
+  
+    &:checked {
+      background: #3B62E3;
+      border-color: #3B62E3;
+  
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0.75rem;
+        height: 0.75rem;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+    }
+  }
+  
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+  
+ 
+.actionButton {
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+  
+    &.editButton {
+      color: var(--edit-color);
+      
+      &:hover {
+        color: var(--edit-hover);
+        background: rgba(59, 130, 246, 0.1);
+      }
+    }
+  
+    &.deleteButton {
+      color: var(--delete-color);
+      
+      &:hover {
+        color: var(--delete-hover);
+        background: rgba(239, 68, 68, 0.1);
+      }
+    }
+  }
+  
+  .status {
+    // ... existing status styles ...
+    white-space: nowrap;
+    
+    &.inProgress {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+    }
+}
+  
+  .checkboxCell {
+    width: 1rem;
+    padding-right: 0;
+  }
+
+
+  .tableCell {
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 1px;
+      background: var(--border-color);
+    }
+  
+    &:last-child::after {
+      display: none;
+    }
+  }
