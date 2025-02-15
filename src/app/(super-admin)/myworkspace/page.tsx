@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
-import { motion } from 'framer-motion';
-import { ViewIcon } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
+import { ViewIcon } from "lucide-react";
 
-import styles from './page.module.scss';
-import { Sidebar } from './components/Sidebar/Sidebar';
-import KPICard from './components/ui/Card/KPICard';
-import { courseCategories, mockStats } from './components/lib/mockData';
-import ListCardContainer from './components/ui/ListCard/ListCardContainer';
-import ApacheRadarChart from '@/components/charts/Apache-ECharts/ApacheRadarChart/ApacheRadarChart';
-import ApacheAreaChart from '@/components/charts/Apache-ECharts/ApacheAreaChart/ApacheAreaChart';
+import styles from "./page.module.scss";
+import { Sidebar } from "./components/Sidebar/Sidebar";
+import KPICard from "./components/ui/Card/KPICard";
+import { courseCategories, mockCategories, mockStats } from "./components/lib/mockData";
+import ListCardContainer from "./components/ui/ListCard/ListCardContainer";
+import ApacheRadarChart from "@/components/charts/Apache-ECharts/ApacheRadarChart/ApacheRadarChart";
+import ApacheAreaChart from "@/components/charts/Apache-ECharts/ApacheAreaChart/ApacheAreaChart";
+import TopSellingCategories from "./components/ui/ListCardCategories/ListCardCategories";
 
 export default function MyWorkspacePage() {
   const { theme } = useTheme();
@@ -25,12 +26,12 @@ export default function MyWorkspacePage() {
     return null;
   }
 
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
 
   return (
-    <div className={`${styles.container} ${isDark ? styles.dark : ''}`}>
+    <div className={`${styles.container} ${isDark ? styles.dark : ""}`}>
       <Sidebar />
-      
+
       <main className={styles.mainContent}>
         <div className={styles.headerSection}>
           <motion.div
@@ -40,8 +41,8 @@ export default function MyWorkspacePage() {
           >
             <h1 className={styles.title}>Welcome to MyWorkspace</h1>
           </motion.div>
-  
-          <motion.div 
+
+          <motion.div
             className={styles.dateSelector}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -55,10 +56,10 @@ export default function MyWorkspacePage() {
             </select>
           </motion.div>
         </div>
-  
+
         <div className={styles.bentoGrid}>
           {/* Stats Section */}
-          <motion.div 
+          <motion.div
             className={`${styles.bentoItem} ${styles.stats}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -83,9 +84,9 @@ export default function MyWorkspacePage() {
               ))}
             </div>
           </motion.div>
-  
+
           {/* Radar Chart */}
-          <motion.div 
+          <motion.div
             className={`${styles.bentoItem} ${styles.radar}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -95,46 +96,46 @@ export default function MyWorkspacePage() {
           </motion.div>
 
           <motion.div
-          className={`${styles.bentoItem} ${styles.apacheAreaChart}`}
+            className={`${styles.bentoItem} ${styles.apacheAreaChart}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-
-          <ApacheAreaChart />
-
+            <ApacheAreaChart />
           </motion.div>
-  
+
           {/* Categories */}
-          <motion.div 
+          <motion.div
             className={`${styles.bentoItem} ${styles.categoriesList}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <ListCardContainer 
-              categories={courseCategories} 
+            <ListCardContainer
+              categories={courseCategories}
               title="Course Categories"
               button={<ViewIcon />}
-              onButtonClick={() => console.log('View all clicked')}
+              onButtonClick={() => console.log("View all clicked")}
             />
           </motion.div>
 
-
-          {/* <motion.div 
+          <motion.div
             className={`${styles.bentoItem} ${styles.categories}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <ListCardContainer 
-              categories={courseCategories} 
-              title="Course Categories"
-              button={<ViewIcon />}
-              onButtonClick={() => console.log('View all clicked')}
-            />
-          </motion.div> */}
-  
+            <div className="p-6">
+              <TopSellingCategories
+                data={mockCategories}
+                title="Top Selling Categories"
+                showIcons={true}
+                animated={true}
+                sortable={true}
+              />
+            </div>
+          </motion.div>
+
           {/* Add more bento items here */}
         </div>
       </main>

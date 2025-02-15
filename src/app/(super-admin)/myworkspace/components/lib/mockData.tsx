@@ -13,7 +13,7 @@ import {
   Database
 } from 'lucide-react';
 import styles from './mockData.module.scss';
-import { IconType, ListCardCategory } from './types';
+import { CategoryData, IconType, ListCardCategory } from './types';
 
 export const mockStats = [
   {
@@ -120,5 +120,52 @@ export const courseCategories: ListCardCategory[] = [
     icon: <Database size={18}/>,
     color: '#5BC9FF',
     iconType: "fullstack"
+  }
+];
+
+
+
+/// List card category
+
+export const mockCategories: CategoryData[] = [
+  {
+    id: '1',
+    name: 'Clothing',
+    sales: 31245,
+    grossPercentage: 25,
+    changePercentage: 0.45,
+    type: 'clothing'
+  },
+  {
+    id: '2',
+    name: 'Electronics',
+    sales: 29553,
+    grossPercentage: 16,
+    changePercentage: 0.27,
+    type: 'electronics'
+  },
+  {
+    id: '3',
+    name: 'Grocery',
+    sales: 24577,
+    grossPercentage: 22,
+    changePercentage: 0.63,
+    type: 'grocery'
+  },
+  {
+    id: '4',
+    name: 'Automobiles',
+    sales: 19278,
+    grossPercentage: 18,
+    changePercentage: -1.14,
+    type: 'automobiles'
+  },
+  {
+    id: '5',
+    name: 'Others',
+    sales: 15934,
+    grossPercentage: 15,
+    changePercentage: 3.87,
+    type: 'others'
   }
 ];

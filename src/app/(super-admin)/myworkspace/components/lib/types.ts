@@ -61,3 +61,28 @@ export interface ListCardContainerProps {
   button?: React.ReactNode;
   onButtonClick?: () => void;
 }
+
+
+
+///List card category
+
+
+export type CategoryType = 'clothing' | 'electronics' | 'grocery' | 'automobiles' | 'others';
+
+export interface CategoryData {
+  id: string;
+  name: string;
+  sales: number;
+  grossPercentage: number;
+  changePercentage: number;
+  type: CategoryType;
+}
+
+export interface TopSellingCategoriesProps {
+  data: CategoryData[];
+  title?: string;
+  className?: string;
+  showIcons?: boolean;
+  animated?: boolean;
+  sortable?: boolean;
+}
