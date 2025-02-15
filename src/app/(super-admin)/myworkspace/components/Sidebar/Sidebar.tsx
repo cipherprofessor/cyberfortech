@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon } from 'lucide-react';
+import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon, DollarSignIcon, NotebookTabs, SquareKanban, ScanEye, Contact, BookUser, Quote } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import styles from './Sidebar.module.scss';
@@ -58,13 +58,13 @@ export function Sidebar() {
       labelClassName: styles.mainLabel 
     },
     {
-      label: 'Users',
-      icon: <UsersIcon size={18} />,
+      label: 'Analytics',
+      icon: <BarChart size={18} />,
       labelClassName: styles.mainLabel,
       subItems: [
-        { label: 'All Users', href: '/myworkspace/menus/users/all', icon: <User size={16}  />,  labelClassName: styles.subLabel },
-        { label: 'Admins', href: '/myworkspace/menus/users/admins', icon: <User size={16} />, labelClassName: styles.subLabel},
-        { label: 'Students', href: '/myworkspace/menus/users/students', icon: <User size={16} />, labelClassName: styles.subLabel},
+        { label: 'Overview', href: '/myworkspace/menus/analytics/overview', icon: <PieChartIcon size={16} />,labelClassName: styles.subLabel },
+        { label: 'User Growth', href: '/myworkspace/menus/analytics/reports', icon: <BarChart size={16} />,labelClassName: styles.subLabel },
+        { label: 'Revenue', href: '/myworkspace/menus/analytics/insights', icon: <DollarSignIcon size={16} />,labelClassName: styles.subLabel },
       ],
     },
     {
@@ -72,9 +72,29 @@ export function Sidebar() {
       icon: <BookOpen size={18} />,
       labelClassName: styles.mainLabel,
       subItems: [
-        { label: 'All Courses', href: '/myworkspace/menus/courses/all', icon: <Book size={16} /> ,labelClassName: styles.subLabel},
-        { label: 'Active Courses', href: '/myworkspace/menus/courses/active', icon: <Book size={16} />, labelClassName: styles.subLabel},
-        { label: 'Archived Courses', href: '/myworkspace/menus/courses/archived', icon: <Book size={16} />,labelClassName: styles.subLabel},
+        { label: 'Course Dashboard', href: '/myworkspace/menus/courses/all', icon: <NotebookTabs size={16} /> ,labelClassName: styles.subLabel},
+        { label: 'Course Management', href: '/myworkspace/menus/courses/active', icon: <SquareKanban size={16} />, labelClassName: styles.subLabel},
+        { label: 'Course Reviews', href: '/myworkspace/menus/courses/archived', icon: <ScanEye size={16} />,labelClassName: styles.subLabel},
+      ],
+    },
+    {
+      label: 'Communication',
+      icon: <MessageCircle size={18} />,
+      labelClassName: styles.mainLabel,
+      subItems: [
+        { label: 'Inbox', href: '/myworkspace/menus/messages/inbox', icon: <MailIcon size={16} />,labelClassName: styles.subLabel },
+        { label: 'Forum', href: '/myworkspace/menus/messages/sent', icon: <Quote size={16} /> ,labelClassName: styles.subLabel},
+        { label: 'Drafts', href: '/myworkspace/menus/messages/drafts', icon: <MailboxIcon size={16} />,labelClassName: styles.subLabel },
+      ],
+    },
+    {
+      label: 'Users',
+      icon: <UsersIcon size={18} />,
+      labelClassName: styles.mainLabel,
+      subItems: [
+        { label: 'All Users', href: '/myworkspace/menus/users/all', icon: <Contact size={16}  />,  labelClassName: styles.subLabel },
+        { label: 'Admins', href: '/myworkspace/menus/users/admins', icon: <User size={16} />, labelClassName: styles.subLabel},
+        { label: 'Students', href: '/myworkspace/menus/users/students', icon: <BookUser size={16} />, labelClassName: styles.subLabel},
       ],
     },
     {
@@ -85,26 +105,6 @@ export function Sidebar() {
         { label: 'General', href: '/myworkspace/menus/settings/general', icon: <Settings size={16} />,labelClassName: styles.subLabel },
         { label: 'Security', href: '/myworkspace/menus/settings/security', icon: <LockIcon size={16} />, labelClassName: styles.subLabel},
         { label: 'Notifications', href: '/myworkspace/menus/settings/notifications', icon: <Bell size={16} />,labelClassName: styles.subLabel },
-      ],
-    },
-    {
-      label: 'Analytics',
-      icon: <BarChart size={18} />,
-      labelClassName: styles.mainLabel,
-      subItems: [
-        { label: 'Overview', href: '/myworkspace/menus/analytics/overview', icon: <PieChartIcon size={16} />,labelClassName: styles.subLabel },
-        { label: 'Reports', href: '/myworkspace/menus/analytics/reports', icon: <BarChart size={16} />,labelClassName: styles.subLabel },
-        { label: 'Insights', href: '/myworkspace/menus/analytics/insights', icon: <BarChart size={16} />,labelClassName: styles.subLabel },
-      ],
-    },
-    {
-      label: 'Messages',
-      icon: <MessageCircle size={18} />,
-      labelClassName: styles.mainLabel,
-      subItems: [
-        { label: 'Inbox', href: '/myworkspace/menus/messages/inbox', icon: <MailIcon size={16} />,labelClassName: styles.subLabel },
-        { label: 'Sent', href: '/myworkspace/menus/messages/sent', icon: <MailsIcon size={16} /> ,labelClassName: styles.subLabel},
-        { label: 'Drafts', href: '/myworkspace/menus/messages/drafts', icon: <MailboxIcon size={16} />,labelClassName: styles.subLabel },
       ],
     },
     {
@@ -161,7 +161,7 @@ export function Sidebar() {
         {/* <div className={styles.logo}> 
             <LogsIcon size={24} />
         </div> */}
-        
+
         <nav className={styles.nav}>
           {menuItems.map((item, index) => (
             <SidebarItem
