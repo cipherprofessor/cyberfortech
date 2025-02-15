@@ -72,8 +72,9 @@ export const courseCategories: ListCardCategory[] = [
     title: 'UI / UX Design',
     courseCount: 10000,
     price: 199.99,
-    icon: <LayoutGrid size={18}  className={styles.leadsIcon}/>,
-    color: '#5B5FFF'
+    icon: <LayoutGrid size={18} />,
+    color: '#5B5FFF',
+    iconType: "design"
   },
   {
     id: '2',
@@ -81,7 +82,8 @@ export const courseCategories: ListCardCategory[] = [
     courseCount: 90,
     price: 599.99,
     icon: <Megaphone size={18}/>,
-    color: '#FF5BCD'
+    color: '#FF5BCD',
+    iconType: "marketing"
   },
   {
     id: '3',
@@ -89,7 +91,8 @@ export const courseCategories: ListCardCategory[] = [
     courseCount: 250,
     price: 299.99,
     icon: <Code2 size={18}/>,
-    color: '#FF5B8F'
+    color: '#FF5B8F',
+    iconType: "development"
   },
   {
     id: '4',
@@ -97,7 +100,8 @@ export const courseCategories: ListCardCategory[] = [
     courseCount: 100,
     price: 999.99,
     icon: <BarChart2 size={18}/>,
-    color: '#FF8F5B'
+    color: '#FF8F5B',
+    iconType: "trading"
   },
   {
     id: '5',
@@ -105,7 +109,8 @@ export const courseCategories: ListCardCategory[] = [
     courseCount: 300,
     price: 399.99,
     icon: <CircleDot size={18}/>,
-    color: '#845BFF'
+    color: '#845BFF',
+    iconType: "angular"
   },
   {
     id: '6',
@@ -113,6 +118,7 @@ export const courseCategories: ListCardCategory[] = [
     courseCount: 500,
     price: 199.99,
     icon: <Database size={18}/>,
-    color: '#5BC9FF'
+    color: '#5BC9FF',
+    iconType: "fullstack"
   }
 ];

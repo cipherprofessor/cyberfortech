@@ -41,6 +41,9 @@ export interface ListCardProps {
   className?: string;
 }
 
+// types.ts
+export type ListIconType = "design" | "marketing" | "development" | "trading" | "angular" | "fullstack";
+
 export interface ListCardCategory {
   id: string;
   title: string;
@@ -48,6 +51,7 @@ export interface ListCardCategory {
   price: number;
   icon: React.ReactNode;
   color: string;
+  iconType: ListIconType;
 }
 
 export interface ListCardContainerProps {

@@ -1,6 +1,6 @@
 // ListCard.module.scss
 .card {
-  --accent-color: #5b5fff;
+  --accent-color: #5b5eff08;
 
   display: flex;
   flex-direction: row;
@@ -23,34 +23,6 @@
   }
 }
 
-.iconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 1px;
-  background-color: var(--accent-color);
-  color: rgb(255, 255, 255);
-  transition: all 0.3s ease;
-
-  @media (max-width: 768px) {
-    width: 40px;
-    height: 40px;
-  }
-
-  svg {
-    transition: transform 0.3s ease;
-  }
-
-  .card:hover & {
-    filter: brightness(1.1);
-
-    svg {
-      transform: scale(1.1);
-    }
-  }
-}
 
 .content {
   flex: 1;
@@ -94,3 +66,127 @@
     font-size: 1.25rem;
   }
 }
+
+
+// ListCard.module.scss
+// First add the base icon styles
+%icon-base {
+    transition: all 0.3s ease;
+    width: 18px;
+    height: 18px;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  
+  %icon-wrapper-base {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  
+  // Individual icon styles
+  .designIcon {
+    @extend %icon-base;
+    color: #ffffff;
+  }
+  
+  .marketingIcon {
+    @extend %icon-base;
+    color: #ffffff;
+  }
+  
+  .developmentIcon {
+    @extend %icon-base;
+    color: #ffffff;
+  }
+  
+  .tradingIcon {
+    @extend %icon-base;
+    color: #ffffff;
+  }
+  
+  .angularIcon {
+    @extend %icon-base;
+    color: #ffffff;
+  }
+  
+  .fullstackIcon {
+    @extend %icon-base;
+    color: #ffffff;
+  }
+  
+  // Icon wrapper styles
+  .designWrapper {
+    @extend %icon-wrapper-base;
+    background: rgba(91, 94, 255, 0);
+  }
+  
+  .marketingWrapper {
+    @extend %icon-wrapper-base;
+    background: rgba(255, 91, 205, 0.1);
+  }
+  
+  .developmentWrapper {
+    @extend %icon-wrapper-base;
+    background: rgba(255, 91, 143, 0.1);
+  }
+  
+  .tradingWrapper {
+    @extend %icon-wrapper-base;
+    background: rgba(255, 143, 91, 0.1);
+  }
+  
+  .angularWrapper {
+    @extend %icon-wrapper-base;
+    background: rgba(132, 91, 255, 0.1);
+  }
+  
+  .fullstackWrapper {
+    @extend %icon-wrapper-base;
+    background: rgba(91, 201, 255, 0.1);
+  }
+  
+  // Dark mode variations
+  .dark {
+    .designIcon { color: lighten(#5b5efffb, 80%); }
+    .marketingIcon { color: lighten(#FF5BCD, 90%); }
+    .developmentIcon { color: lighten(#FF5B8F, 90%); }
+    .tradingIcon { color: lighten(#FF8F5B, 90%); }
+    .angularIcon { color: lighten(#845BFF, 90%); }
+    .fullstackIcon { color: lighten(#5BC9FF, 90%); }
+  
+    // .iconWrapper {
+    //   background: rgb(254, 8, 8);
+    // }
+  }
+  
+  // Update existing iconWrapper class
+  .iconWrapper {
+    @extend %icon-wrapper-base;
+    background-color: var(--accent-color);
+    color: rgb(255, 255, 255);
+  
+    @media (max-width: 768px) {
+      width: 40px;
+      height: 40px;
+    }
+  
+    svg {
+      transition: transform 0.3s ease;
+    }
+  
+    .card:hover & {
+      filter: brightness(1.1);
+  
+      svg {
+        transform: scale(1.1);
+      }
+    }
+  }
