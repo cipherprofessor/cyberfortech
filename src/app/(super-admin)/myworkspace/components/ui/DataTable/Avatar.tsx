@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// Avatar.tsx
+import React, { useState, useEffect } from 'react';
 import styles from './Avatar.module.scss';
 
 interface AvatarProps {
@@ -29,7 +30,6 @@ const getRandomColor = (name: string): string => {
     '#F472B6', // pink
   ];
   
-  // Use the name to generate a consistent color
   const index = name.split('').reduce((acc, char) => {
     return acc + char.charCodeAt(0);
   }, 0) % colors.length;
@@ -44,8 +44,35 @@ const Avatar: React.FC<AvatarProps> = ({
   className = ''
 }) => {
   const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const initials = getInitials(name);
   const backgroundColor = getRandomColor(name);
+
+  useEffect(() => {
+    if (!src) {
+      setImageError(true);
+      setIsLoading(false);
+      return;
+    }
+
+    const img = new Image();
+    img.src = src;
+    
+    img.onload = () => {
+      setImageError(false);
+      setIsLoading(false);
+    };
+    
+    img.onerror = () => {
+      setImageError(true);
+      setIsLoading(false);
+    };
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [src]);
 
   const sizeClasses = {
     sm: styles.small,
@@ -53,25 +80,29 @@ const Avatar: React.FC<AvatarProps> = ({
     lg: styles.large
   };
 
-  if (!imageError && src) {
+  if (imageError || !src) {
     return (
-      <div className={`${styles.avatar} ${sizeClasses[size]} ${className}`}>
+      <div 
+        className={`${styles.avatar} ${sizeClasses[size]} ${className}`}
+        style={{ backgroundColor }}
+      >
+        <span className={styles.initials}>{initials}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${styles.avatar} ${sizeClasses[size]} ${className}`}>
+      {isLoading ? (
+        <div className={styles.placeholder} style={{ backgroundColor }} />
+      ) : (
         <img
           src={src}
           alt={name}
           onError={() => setImageError(true)}
           className={styles.image}
         />
-      </div>
-    );
-  }
-
-  return (
-    <div 
-      className={`${styles.avatar} ${sizeClasses[size]} ${className}`}
-      style={{ backgroundColor }}
-    >
-      <span className={styles.initials}>{initials}</span>
+      )}
     </div>
   );
 };
