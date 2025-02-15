@@ -1,110 +1,96 @@
 // ListCard.module.scss
 .card {
-    --accent-color: #5B5FFF;
-    
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.1rem;
-    border-radius: 1rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    
-    // background-color: rgba(255, 255, 255, 0.8);
-    // border: 1px solid rgba(59, 131, 246, 0.213);
-    // box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
-    
-    &.dark {
-        // background-color: rgb(25, 25, 28);
-        // border: 1px solid rgba(255, 255, 255, 0.1);
-        // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        
-        .title {
-            color: #ffffff;
-        }
-        
-        .price {
-            color: #ffffff;
-        }
-        
-        // .courseCount {
-        //     color: #ff0303;
-        // }
+  --accent-color: #5b5fff;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.1rem;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+
+  &.dark {
+    .title {
+      color: #ffffff;
     }
+
+    .price {
+      color: #ffffff;
+    }
+  }
 }
 
 .iconWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 1px;
-    background-color: var(--accent-color);
-    color: rgb(255, 255, 255);
-    transition: all 0.3s ease;
-    
-    
-    @media (max-width: 768px) {
-        width: 40px;
-        height: 40px;
-    }
-    
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 1px;
+  background-color: var(--accent-color);
+  color: rgb(255, 255, 255);
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
+
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover & {
+    filter: brightness(1.1);
+
     svg {
-        transition: transform 0.3s ease;
+      transform: scale(1.1);
     }
-    
-    .card:hover & {
-        filter: brightness(1.1);
-        
-        svg {
-            transform: scale(1.1);
-        }
-    }
+  }
 }
 
 .content {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .title {
-    margin: 0;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #000000;
-    transition: color 0.3s ease;
-    
-    .card:hover & {
-        color: var(--accent-color);
-    }
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #000000;
+  transition: color 0.3s ease;
+
+  .card:hover & {
+    color: var(--accent-color);
+  }
 }
 
 .courseCount {
-    margin: 0.25rem 0 0;
-    font-size: 0.675rem;
-    color: #4d4d4d;
-    
-    .dark & {
-        color: #959191;
-    }
+  margin: 0.25rem 0 0;
+  font-size: 0.675rem;
+  color: #4d4d4d;
 
+  .dark & {
+    color: #959191;
+  }
 }
 
 .price {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #000000;
-    transition: all 0.3s ease;
-    
-    .card:hover & {
-        color: var(--accent-color);
-        transform: scale(1.05);
-    }
-    
-    @media (max-width: 768px) {
-        font-size: 1.25rem;
-    }
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #000000;
+  transition: all 0.3s ease;
+
+  .card:hover & {
+    color: var(--accent-color);
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
 }
