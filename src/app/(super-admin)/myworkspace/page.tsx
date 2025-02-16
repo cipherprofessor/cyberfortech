@@ -16,6 +16,8 @@ import TopSellingCategories from "./components/ui/ListCardCategories/ListCardCat
 import OrdersTable from "./components/ui/DataTable/OrdersTable";
 import ActivityTimeline from "./components/ui/ActivityTimeline/ActivityTimeline";
 import { mockActivities } from "./components/ui/ActivityTimeline/data";
+import LandingPagesStats from "./components/ui/LandingPagesStats/LandingPagesStats";
+import { mockLandingPages } from "./components/ui/LandingPagesStats/mockData";
 
 
 export default function MyWorkspacePage() {
@@ -175,7 +177,24 @@ export default function MyWorkspacePage() {
             </div>
           </motion.div>
 
+          <motion.div
+            className={`${styles.bentoItem} ${styles.activityTimeLine}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className="p-6">
+            <LandingPagesStats 
+        data={mockLandingPages}
+        showIcons={true}
+        animated={true}
+      />
+      
+            </div>
+          </motion.div>
 
+
+          
 
 
       </main>
