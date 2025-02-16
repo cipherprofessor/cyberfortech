@@ -253,3 +253,37 @@
   :global(.recharts-tooltip-wrapper) {
     transition: transform 0.2s ease !important;
   }
+
+
+  .chartSection {
+    flex: 1;
+    min-width: 0;
+    padding: 0.5rem;
+    position: relative;
+    height: 220px; // Add fixed height to match ResponsiveContainer
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .totalCount {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1; // Add this to ensure it's above the chart
+  }
+  
+  .totalValue {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  
+  .totalLabel {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }

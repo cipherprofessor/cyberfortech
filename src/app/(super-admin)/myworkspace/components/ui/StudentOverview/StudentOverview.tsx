@@ -137,36 +137,49 @@ const StudentOverview: React.FC<StudentOverviewProps> = ({
       </div>
 
       <div className={styles.content}>
-        <div className={styles.chartSection}>
-          <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
-              <Pie
-                data={chartData}
-                innerRadius={50}
-                outerRadius={70}
-                paddingAngle={2}
-                dataKey="value"
-                startAngle={90}
-                endAngle={450}
-                animationBegin={0}
-                animationDuration={1000}
-              >
-                {chartData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.color}
-                    stroke="transparent"
-                  />
-                ))}
-              </Pie>
-              <Tooltip 
-                content={<CustomTooltip />}
-                position={{ y: 10 }}
-                cursor={false}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+      <div className={styles.chartSection}>
+  <ResponsiveContainer width="100%" height={220}>
+    <PieChart>
+      <Pie
+        data={chartData}
+        innerRadius={50}
+        outerRadius={70}
+        paddingAngle={2}
+        dataKey="value"
+        startAngle={90}
+        endAngle={450}
+        animationBegin={0}
+        animationDuration={1000}
+      >
+        {chartData.map((entry, index) => (
+          <Cell 
+            key={`cell-${index}`} 
+            fill={entry.color}
+            stroke="transparent"
+          />
+        ))}
+      </Pie>
+      <Tooltip 
+        content={<CustomTooltip />}
+        position={{ y: 10 }}
+        cursor={false}
+      />
+    </PieChart>
+  </ResponsiveContainer>
+  
+  <div className={styles.totalCount}>
+    <motion.div 
+      key={total}
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className={styles.totalValue}
+    >
+      {total.toLocaleString()}
+    </motion.div>
+    <div className={styles.totalLabel}>Total</div>
+  </div>
+</div>
+ 
 
         <div className={styles.statsSection}>
           {[
