@@ -34,21 +34,17 @@ const CustomTooltip = ({ active, payload }: any) => {
     const data = payload[0].payload;
     return (
       <div className={styles.tooltip}>
-        <div className={styles.tooltipHeader}>
-          <div 
-            className={styles.tooltipColor} 
-            style={{ backgroundColor: data.color }} 
-          />
-          <span>{data.name}</span>
-        </div>
         <div className={styles.tooltipContent}>
           <div className={styles.tooltipRow}>
-            <span>Students:</span>
+            <div 
+              className={styles.tooltipColor} 
+              style={{ backgroundColor: data.color }} 
+            />
+            <span className={styles.tooltipLabel}>{data.name}</span>
             <span>{data.value.toLocaleString()}</span>
           </div>
-          <div className={styles.tooltipRow}>
-            <span>Percentage:</span>
-            <span>{((data.value / data.total) * 100).toFixed(1)}%</span>
+          <div className={styles.tooltipPercentage}>
+            {((data.value / data.total) * 100).toFixed(1)}% of total
           </div>
         </div>
       </div>
@@ -66,9 +62,9 @@ const StudentOverview: React.FC<StudentOverviewProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const timeRangeLabels: Record<TimeRange, string> = {
-    week: 'This Week',
-    month: 'This Month',
-    year: 'This Year'
+    week: 'Week',
+    month: 'Month',
+    year: 'Year'
   };
 
   const currentData = data[selectedRange];
@@ -94,12 +90,6 @@ const StudentOverview: React.FC<StudentOverviewProps> = ({
       total
     }
   ];
-
-  const formatChange = (change: number) => (
-    <span className={`${styles.change} ${change >= 0 ? styles.positive : styles.negative}`}>
-      {change >= 0 ? '+' : ''}{change.toFixed(2)}%
-    </span>
-  );
 
   return (
     <div className={`${styles.container} ${className}`}>
@@ -147,13 +137,13 @@ const StudentOverview: React.FC<StudentOverviewProps> = ({
       </div>
 
       <div className={styles.content}>
-        {/* <div className={styles.chartSection}> */}
-          <ResponsiveContainer width="100%" height={280}>
+        <div className={styles.chartSection}>
+          <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie
                 data={chartData}
-                innerRadius={60}
-                outerRadius={80}
+                innerRadius={50}
+                outerRadius={70}
                 paddingAngle={2}
                 dataKey="value"
                 startAngle={90}
@@ -171,29 +161,18 @@ const StudentOverview: React.FC<StudentOverviewProps> = ({
               </Pie>
               <Tooltip 
                 content={<CustomTooltip />}
-                position={{ y: 0 }}
+                position={{ y: 10 }}
                 cursor={false}
               />
             </PieChart>
           </ResponsiveContainer>
-          <div className={styles.totalCount}>
-            <div className={styles.totalLabel}>Total</div>
-            <motion.div 
-              key={total}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className={styles.totalValue}
-            >
-              {total.toLocaleString()}
-            </motion.div>
-          </div>
-        {/* </div> */}
+        </div>
 
         <div className={styles.statsSection}>
           {[
             { key: 'male', label: 'Male', icon: '♂', color: '#818CF8' },
             { key: 'female', label: 'Female', icon: '♀', color: '#F472B6' },
-            { key: 'others', label: 'Others', icon: '⚪', color: '#A78BFA' }
+            { key: 'others', label: 'Others', icon: '⚦', color: '#A78BFA' }
           ].map(({ key, label, icon, color }) => (
             <div key={key} className={styles.statCard}>
               <div 
@@ -209,13 +188,18 @@ const StudentOverview: React.FC<StudentOverviewProps> = ({
                 <div className={styles.label}>{label}</div>
                 <motion.div 
                   key={`${key}-${currentData[key as keyof GenderStats].count}`}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   className={styles.value}
                 >
                   {currentData[key as keyof GenderStats].count.toLocaleString()}
                 </motion.div>
-                {formatChange(currentData[key as keyof GenderStats].change)}
+                <motion.div 
+                  className={`${styles.change} ${currentData[key as keyof GenderStats].change >= 0 ? styles.positive : styles.negative}`}
+                >
+                  {currentData[key as keyof GenderStats].change >= 0 ? '+' : ''}
+                  {currentData[key as keyof GenderStats].change.toFixed(2)}%
+                </motion.div>
               </div>
             </div>
           ))}

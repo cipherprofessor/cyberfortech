@@ -12,7 +12,7 @@ export const mockStudentStats: Record<TimeRange, GenderStats> = {
         change: -2.15
       },
       others: {
-        count: 43,
+        count: 243,
         change: 1.8
       }
     },
