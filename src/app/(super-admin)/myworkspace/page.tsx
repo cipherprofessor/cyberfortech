@@ -18,6 +18,8 @@ import ActivityTimeline from "./components/ui/ActivityTimeline/ActivityTimeline"
 import { mockActivities } from "./components/ui/ActivityTimeline/data";
 import LandingPagesStats from "./components/ui/LandingPagesStats/LandingPagesStats";
 import { mockLandingPages } from "./components/ui/LandingPagesStats/mockData";
+import ProfessorList from "./components/ui/ProfessorList/ProfessorList";
+import { mockProfessors } from "./components/ui/ProfessorList/mockData";
 
 
 export default function MyWorkspacePage() {
@@ -27,6 +29,13 @@ export default function MyWorkspacePage() {
     // Handle view all click
     console.log('View all clicked');
   };
+
+  
+    const handleProfessorClick = (professor) => {
+      console.log('Clicked professor:', professor);
+      // Handle navigation or modal opening
+    };
+  
 
   useEffect(() => {
     setMounted(true);
@@ -194,7 +203,23 @@ export default function MyWorkspacePage() {
           </motion.div>
 
 
+         
           
+
+          <motion.div
+            className={`${styles.bentoItem} ${styles.activityTimeLine}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className="p-6">
+            <ProfessorList 
+        data={mockProfessors}
+        onProfessorClick={handleProfessorClick}
+      />
+      
+            </div>
+          </motion.div>
 
 
       </main>

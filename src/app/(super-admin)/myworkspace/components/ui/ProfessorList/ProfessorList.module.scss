@@ -1,0 +1,152 @@
+.container {
+    background: var(--bg-primary);
+    border-radius: 1rem;
+    padding: 1rem;
+    width: 25%;
+    transition: all 0.2s ease;
+  
+    // Light mode
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-tertiary: #80858d;
+    --border-color: #e5e7eb;
+    --hover-bg: #f3f4f6;
+  
+    // Dark mode
+    :global(.dark) & {
+      --bg-primary: #1a1b1e;
+      --bg-secondary: #25262b;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --text-tertiary: #6b7280;
+      --border-color: #2c2e33;
+      --hover-bg: rgba(255, 255, 255, 0.05);
+    }
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .title {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .viewAll {
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: var(--hover-bg);
+      color: var(--text-primary);
+    }
+  }
+  
+  .professorsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .professorItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    @media (max-width: 640px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+  
+    &:hover {
+      background: var(--hover-bg);
+  
+      .name {
+        color: #3b82f6; // Always blue on hover for emphasis
+      }
+  
+      .classCount {
+        transform: scale(1.05);
+      }
+    }
+  }
+  
+  .professorInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .name {
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 0;
+    transition: color 0.2s ease;
+  }
+  
+  .degree {
+    color: var(--text-tertiary);
+    font-size: 0.875rem;
+  }
+  
+  .classInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  
+    @media (max-width: 640px) {
+      align-items: flex-start;
+      margin-left: 3.5rem;
+    }
+  }
+  
+  .classCount {
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+  }
+  
+  .specialization {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-align: right;
+  
+    @media (max-width: 640px) {
+      text-align: left;
+    }
+  }
