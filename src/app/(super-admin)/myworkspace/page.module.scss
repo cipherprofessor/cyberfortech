@@ -207,4 +207,30 @@
         order: 6;
 
     }
+
+    .landingPagesStats{
+      grid-column: span 5;
+        grid-row: span 4;
+        order: 7;
+    }
+
+    .professorList{
+      grid-column: span 5;
+        grid-row: span 4;
+        order: 8;
+    }
+
+    .studentOverview {
+      grid-column: span 7;
+        grid-row: span 4;
+        order: 9;
+    }
+
+    .welcomeBanner{
+      grid-column: span 12;
+        grid-row: span 4;
+        order: 10;
+    }
+
+
   }

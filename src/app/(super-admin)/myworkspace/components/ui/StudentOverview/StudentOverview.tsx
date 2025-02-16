@@ -86,7 +86,7 @@ const StudentOverview: React.FC<StudentOverviewProps> = ({
     { 
       name: 'Others', 
       value: currentData.others.count, 
-      color: '#A78BFA',
+      color: '#FAA0A0',
       total
     }
   ];

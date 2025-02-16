@@ -22,6 +22,7 @@ import ProfessorList from "./components/ui/ProfessorList/ProfessorList";
 import { mockProfessors } from "./components/ui/ProfessorList/mockData";
 import StudentOverview from "./components/ui/StudentOverview/StudentOverview";
 import { mockStudentStats } from "./components/ui/StudentOverview/mockData";
+import WelcomeBanner from "./components/ui/WelcomeBanner/WelcomeBanner";
 
 
 export default function MyWorkspacePage() {
@@ -36,6 +37,11 @@ export default function MyWorkspacePage() {
     const handleProfessorClick = (professor) => {
       console.log('Clicked professor:', professor);
       // Handle navigation or modal opening
+    };
+
+    const handleViewCourses = () => {
+      // Handle navigation or modal open
+      console.log('View courses clicked');
     };
   
 
@@ -189,7 +195,7 @@ export default function MyWorkspacePage() {
           </motion.div>
 
           <motion.div
-            className={`${styles.bentoItem} ${styles.activityTimeLine}`}
+            className={`${styles.bentoItem} ${styles.landingPagesStats}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -209,7 +215,7 @@ export default function MyWorkspacePage() {
           
 
           <motion.div
-            className={`${styles.bentoItem} ${styles.activityTimeLine}`}
+            className={`${styles.bentoItem} ${styles.professorList}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -227,7 +233,7 @@ export default function MyWorkspacePage() {
 
 
           <motion.div
-            className={`${styles.bentoItem} ${styles.activityTimeLine}`}
+            className={`${styles.bentoItem} ${styles.studentOverview }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -240,7 +246,31 @@ export default function MyWorkspacePage() {
       
             </div>
           </motion.div>
+
+
+
+          <motion.div
+            className={`${styles.bentoItem} ${styles.welcomeBanner }`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className="p-6">
+             <WelcomeBanner 
+        userName="Henry"
+        progress={90}
+        message="Keep going and boost your skills with courses."
+        ctaText="View Courses"
+        onCtaClick={handleViewCourses}
+      />
+      
+            </div>
+          </motion.div>
         
+        
+
+
+
 
 
       </main>
