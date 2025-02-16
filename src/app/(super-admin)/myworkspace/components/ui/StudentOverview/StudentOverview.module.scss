@@ -1,0 +1,485 @@
+.container {
+    background: var(--bg-primary);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    width: 35%;
+    transition: all 0.2s ease;
+  
+    // Light mode
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --hover-bg: #f3f4f6;
+    --male-color: #818CF8;
+    --female-color: #F472B6;
+    --others-color: #A78BFA;
+    --positive-bg: rgba(16, 185, 129, 0.1);
+    --positive-color: #10b981;
+    --negative-bg: rgba(239, 68, 68, 0.1);
+    --negative-color: #ef4444;
+    --tooltip-bg: #1f2937;
+    --tooltip-border: #374151;
+    --tooltip-text: #ffffff;
+  
+    // Dark mode
+    :global(.dark) & {
+      --bg-primary: #1a1b1e;
+      --bg-secondary: #25262b;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --border-color: #2c2e33;
+      --hover-bg: rgba(255, 255, 255, 0.05);
+      --tooltip-bg: #000000;
+      --tooltip-border: #1f2937;
+      --tooltip-text: #ffffff;
+    }
+  }
+  .header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .title {
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0rem 5rem 0rem 0rem;
+  }
+  
+  .dropdown {
+    position: relative;
+  }
+  
+  .dropdownTrigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: var(--hover-bg);
+    }
+  }
+  
+  .chevron {
+    transition: transform 0.2s ease;
+    
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    min-width: 150px;
+    z-index: 10;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dropdownItem {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    text-align: left;
+    background: transparent;
+    border: none;
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: var(--hover-bg);
+    }
+  
+    &.active {
+      background: var(--hover-bg);
+      font-weight: 500;
+    }
+  }
+  
+  .statsGrid {
+    display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  }
+  
+  .statCard {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    max-width: 9rem;
+  
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+  
+  .genderIcon {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(129, 140, 248, 0.1);
+    border-radius: 50%;
+    font-size: 0.875rem;
+  
+    .statCard:first-child & {
+      color: var(--male-color);
+      background: rgba(129, 140, 248, 0.1);
+    }
+  
+    .statCard:last-child & {
+      color: var(--female-color);
+      background: rgba(244, 114, 182, 0.1);
+    }
+  }
+  
+  .statInfo {
+    flex: 1;
+  }
+  
+  .label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .value {
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  
+  .change {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  
+    &.positive {
+      background: var(--positive-bg);
+      color: var(--positive-color);
+    }
+  
+    &.negative {
+      background: var(--negative-bg);
+      color: var(--negative-color);
+    }
+  }
+  
+  .chartContainer {
+    position: relative;
+    margin: 0 auto;
+    max-width: 400px;
+  }
+  
+  .totalCount {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  
+  .totalLabel {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .totalValue {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  
+  .tooltip {
+    background: var(--tooltip-bg);
+    border: 1px solid var(--tooltip-border);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  }
+  
+  .tooltipHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--tooltip-border);
+    color: var(--tooltip-text);
+    font-weight: 500;
+  }
+  
+  .tooltipColor {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+  }
+  
+  .tooltipContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .tooltipRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--tooltip-text);
+    font-size: 0.75rem;
+  
+    span:first-child {
+      color: var(--text-secondary);
+    }
+  
+    span:last-child {
+      font-weight: 500;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      width: 100%;
+    }
+  
+    .statsGrid {
+      grid-template-columns: 1fr;
+    }
+  
+    .chartContainer {
+      margin-top: 1.5rem;
+    }
+  
+    .tooltip {
+      max-width: 200px;
+    }
+  }
+  
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+      width: 45%;
+    }
+  }
+  
+  // Smooth animations for chart
+  :global(.recharts-sector) {
+    transition: all 0.3s ease;
+  
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+  
+  // Better tooltip positioning
+  :global(.recharts-tooltip-wrapper) {
+    pointer-events: none;
+    
+    .tooltip {
+      transform: translateY(-100%);
+      margin-top: -10px;
+    }
+  }
+
+
+  .content {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+  }
+  
+  .chartSection {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+  }
+  
+  .statsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 58%;
+    min-width: 200px;
+  
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+  
+  .statCard {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      transform: translateX(4px);
+      background: var(--hover-bg);
+    }
+  }
+  
+  .genderIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+  }
+  
+  .statInfo {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .value {
+    color: var(--text-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .change {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  
+    &.positive {
+      background: var(--positive-bg);
+      color: var(--positive-color);
+    }
+  
+    &.negative {
+      background: var(--negative-bg);
+      color: var(--negative-color);
+    }
+  }
+  
+  .chartContainer {
+    position: relative;
+    margin: 0 auto;
+    height: 100%;
+    min-height: 200px;
+  }
+  
+  .totalCount {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  
+  .totalLabel {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .totalValue {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  
+  .tooltip {
+    background: var(--tooltip-bg);
+    border: 1px solid var(--tooltip-border);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tooltipHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--tooltip-border);
+    color: var(--tooltip-text);
+    font-weight: 500;
+  }
+  
+  .tooltipColor {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+  }
+  
+  .tooltipContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .tooltipRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--tooltip-text);
+    font-size: 0.75rem;
+  
+    span:first-child {
+      color: var(--text-secondary);
+    }
+  
+    span:last-child {
+      font-weight: 500;
+    }
+  }
+  
+  // Chart tooltip positioning
+  :global(.recharts-tooltip-wrapper) {
+    transition: transform 0.2s ease !important;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      width: 100%;
+    }
+  }

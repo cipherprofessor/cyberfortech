@@ -20,6 +20,8 @@ import LandingPagesStats from "./components/ui/LandingPagesStats/LandingPagesSta
 import { mockLandingPages } from "./components/ui/LandingPagesStats/mockData";
 import ProfessorList from "./components/ui/ProfessorList/ProfessorList";
 import { mockProfessors } from "./components/ui/ProfessorList/mockData";
+import StudentOverview from "./components/ui/StudentOverview/StudentOverview";
+import { mockStudentStats } from "./components/ui/StudentOverview/mockData";
 
 
 export default function MyWorkspacePage() {
@@ -220,6 +222,25 @@ export default function MyWorkspacePage() {
       
             </div>
           </motion.div>
+
+
+
+
+          <motion.div
+            className={`${styles.bentoItem} ${styles.activityTimeLine}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className="p-6">
+            <StudentOverview 
+        data={mockStudentStats}
+        title="Students Overview"
+      />
+      
+            </div>
+          </motion.div>
+        
 
 
       </main>
