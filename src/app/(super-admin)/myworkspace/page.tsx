@@ -23,6 +23,10 @@ import { mockProfessors } from "./components/ui/ProfessorList/mockData";
 import StudentOverview from "./components/ui/StudentOverview/StudentOverview";
 import { mockStudentStats } from "./components/ui/StudentOverview/mockData";
 import WelcomeBanner from "./components/ui/WelcomeBanner/WelcomeBanner";
+import ExamResults from "./components/ui/ExamResults/ExamResults";
+import { examResults } from "./components/ui/ExamResults/mockdata";
+import { teachersList } from "./components/ui/TeachersList/mockData";
+import TeachersList from "./components/ui/TeachersList/TeachersList";
 
 
 export default function MyWorkspacePage() {
@@ -42,6 +46,14 @@ export default function MyWorkspacePage() {
     const handleViewCourses = () => {
       // Handle navigation or modal open
       console.log('View courses clicked');
+    };
+
+    const handleViewAllResults = () => {
+      console.log('View all clicked');
+    };
+
+    const handleTeacherClick = (teacher) => {
+      console.log('Teacher clicked:', teacher);
     };
   
 
@@ -268,6 +280,44 @@ export default function MyWorkspacePage() {
           </motion.div>
         
         
+          
+
+
+<motion.div
+            className={`${styles.bentoItem} ${styles.welcomeBanner }`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className="p-6">
+            <ExamResults 
+        data={examResults}
+        onViewAll={handleViewAll}
+      />
+      
+            </div>
+          </motion.div>
+
+
+
+          <motion.div
+            className={`${styles.bentoItem} ${styles.welcomeBanner }`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className="p-6">
+            <TeachersList 
+        data={teachersList}
+        itemsPerPage={5}
+        // onTeacherClick={handleTeacherClick}
+        onTeacherUpdate={() => console.log('Teacher updated')}
+      onTeacherDelete={() => console.log('Teacher deleted')}
+      />
+      
+            </div>
+          </motion.div>
+
 
 
 
