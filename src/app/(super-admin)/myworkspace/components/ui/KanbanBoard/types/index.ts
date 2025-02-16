@@ -26,7 +26,10 @@ export interface KanbanColumnProps {
   onEdit: (task: Task) => void;
   onDelete: (task: Task) => void;
   onTaskUpdate: (task: Task) => void;
-  isDraggingOver?: boolean;
+}
+
+export interface DroppableColumnProps extends KanbanColumnProps {
+  isDraggingOver: boolean;
 }
 
 

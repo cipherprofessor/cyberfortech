@@ -20,35 +20,27 @@ export const KanbanTask = memo(function KanbanTask({
   task,
   index,
   onEdit,
-  onDelete
+  onDelete,
 }: KanbanTaskProps) {
-  const { resolvedTheme } = useTheme();
+  const { theme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <Draggable 
-      draggableId={task.id} 
-      index={index}
-      isDragDisabled={false}
-      disableInteractiveElementBlocking={true}
-      shouldRespectForcePress={false}
-    >
+    <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`${styles.task} ${styles[resolvedTheme || 'light']} ${
+          className={`${styles.task} ${styles[theme || 'light']} ${
             snapshot.isDragging ? styles.dragging : ''
           }`}
-          data-dragging={snapshot.isDragging}
         >
+          {/* Task content */}
           <div className={styles.header}>
             <div className={styles.taskIdentifier}>
               <span className={styles.taskNumber}>{task.taskNumber}</span>
-            </div>
-            <div className={styles.menuContainer}>
-              <button 
+              <button
                 type="button"
                 className={styles.menuButton}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -66,7 +58,7 @@ export const KanbanTask = memo(function KanbanTask({
                   >
                     Edit
                   </button>
-                  <button 
+                  <button
                     type="button"
                     className={styles.deleteButton}
                     onClick={() => {
@@ -84,6 +76,7 @@ export const KanbanTask = memo(function KanbanTask({
           <h3 className={styles.title}>{task.title}</h3>
           <p className={styles.description}>{task.description}</p>
 
+          {/* Tags */}
           <div className={styles.tags}>
             {task.tags.map((tag) => (
               <span
@@ -96,19 +89,16 @@ export const KanbanTask = memo(function KanbanTask({
             ))}
           </div>
 
+          {/* Footer */}
           <div className={styles.footer}>
             <div className={styles.assignees}>
               {task.assignees.map((user, idx) => (
-                <div 
-                  key={user.id} 
+                <div
+                  key={user.id}
                   className={styles.avatarWrapper}
                   style={{ zIndex: task.assignees.length - idx }}
                 >
-                  <Avatar
-                    src={user.avatar}
-                    name={user.name}
-                    size="sm"
-                  />
+                  <Avatar src={user.avatar} name={user.name} size="sm" />
                 </div>
               ))}
             </div>

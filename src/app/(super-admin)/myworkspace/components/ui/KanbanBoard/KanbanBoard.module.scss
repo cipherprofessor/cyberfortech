@@ -1,107 +1,152 @@
-// styles/KanbanBoard.module.scss
+// KanbanBoard.module.scss
 .kanbanBoard {
-    padding: 1.5rem;
-    min-height: 100vh;
-    transition: background-color 0.3s ease;
-    
-    &.light {
-      --bg-board: #f3f4f6;
-      --bg-column: #ffffff;
-      --bg-card: #ffffff;
-      --bg-dragging: #f8fafc;
-      --text-primary: #1a1a1a;
-      --text-secondary: #4b5563;
-      --border-color: #e5e7eb;
-      --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.05);
-      --shadow-dragging: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-    
-    &.dark {
-      --bg-board: #111827;
-      --bg-column: #1f2937;
-      --bg-card: #374151;
-      --bg-dragging: #4b5563;
-      --text-primary: #f3f4f6;
-      --text-secondary: #9ca3af;
-      --border-color: #374151;
-      --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.2);
-      --shadow-dragging: 0 8px 16px rgba(0, 0, 0, 0.3);
-    }
-  
-    background-color: var(--bg-board);
+  padding: 1rem;
+  min-height: 100vh;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.columnsContainer {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.column {
+  min-width: 300px;
+  background: var(--column-bg);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &.draggingOver {
+    background: var(--column-bg-drag);
   }
-  
-  .columnsContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
-    overflow-x: auto;
-    min-height: calc(100vh - 100px);
-  
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-    }
-  }
-  
-  .column {
-    background-color: var(--bg-column);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-height: 500px;
-    border: 1px solid var(--border-color);
-    transition: box-shadow 0.3s ease;
-  
-    &:hover {
-      box-shadow: var(--shadow-card);
-    }
-  }
-  
-  .card {
-    background-color: var(--bg-card);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    box-shadow: var(--shadow-card);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: grab;
-  
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-dragging);
-    }
-  
-    &.dragging {
-      cursor: grabbing;
-      transform: rotate(2deg) scale(1.02);
-      box-shadow: var(--shadow-dragging);
-    }
+}
+
+.columnHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.5rem;
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
   }
 
+  .count {
+    background: var(--count-bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+  }
+}
 
-  .kanbanBoard {
-    &[data-is-dragging="true"] {
-      @apply cursor-grabbing;
-      
-      .task {
-        transition: transform 0.2s ease-in-out;
-      }
-    }
+.taskList {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task {
+  background: var(--task-bg);
+  border-radius: 6px;
+  padding: 1rem;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &.dragging {
+    transform: rotate(2deg) scale(1.02);
+    box-shadow: var(--task-shadow-drag);
   }
-  
-  .task {
-    &[data-dragging="true"] {
-      @apply shadow-lg scale-105 rotate-2;
-      z-index: 50;
-    }
+
+  &:hover {
+    box-shadow: var(--task-shadow-hover);
   }
-  
-  .taskList {
-    &[data-droppable-over="true"] {
-      @apply bg-blue-500/10 dark:bg-blue-400/10;
-      transition: background-color 0.2s ease-in-out;
-    }
+}
+
+.taskContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.taskNumber {
+  color: var(--primary-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.taskTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.taskDescription {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.addTaskButton {
+  padding: 0.75rem;
+  background: var(--button-bg);
+  border: none;
+  border-radius: 6px;
+  color: var(--button-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: var(--button-bg-hover);
   }
+}
+
+:root {
+  // Light theme
+  [data-theme='light'] {
+    --bg-color: #f5f5f5;
+    --text-color: #333;
+    --text-secondary: #666;
+    --column-bg: #fff;
+    --column-bg-drag: rgba(0, 0, 0, 0.05);
+    --task-bg: #fff;
+    --task-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --task-shadow-drag: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --primary-color: #6366f1;
+    --count-bg: rgba(0, 0, 0, 0.1);
+    --button-bg: #f3f4f6;
+    --button-bg-hover: #e5e7eb;
+    --button-text: #374151;
+  }
+
+  // Dark theme
+  [data-theme='dark'] {
+    --bg-color: #1a1a1a;
+    --text-color: #fff;
+    --text-secondary: #a0aec0;
+    --column-bg: #2d2d2d;
+    --column-bg-drag: rgba(255, 255, 255, 0.05);
+    --task-bg: #333;
+    --task-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --task-shadow-drag: 0 8px 16px rgba(0, 0, 0, 0.3);
+    --primary-color: #818cf8;
+    --count-bg: rgba(255, 255, 255, 0.1);
+    --button-bg: #374151;
+    --button-bg-hover: #4b5563;
+    --button-text: #e5e7eb;
+  }
+}

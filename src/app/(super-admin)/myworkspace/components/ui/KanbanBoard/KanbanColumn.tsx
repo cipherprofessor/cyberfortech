@@ -1,70 +1,40 @@
 'use client';
 
-// KanbanColumn.tsx
-import React, { memo, useEffect, useState } from 'react';
-
-
+// src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/KanbanColumn.tsx
+import React from 'react';
+import { Droppable } from 'react-beautiful-dnd';
+import { KanbanTask } from './KanbanTask';
+import { KanbanColumnProps, Task } from './types';
 import styles from './KanbanColumn.module.scss';
 import { Plus } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Column, KanbanBoardProps, Task } from './types';
-import { 
-  DragDropContext, 
-  Droppable, 
-  Draggable, 
-  DropResult, 
-  DroppableProvided, 
-  DraggableProvided,
-  DroppableStateSnapshot,
-  DraggableStateSnapshot
-} from 'react-beautiful-dnd';
-import { KanbanTask } from './KanbanTask';
 
-interface KanbanColumnProps {
-  column: Column;
-  onAddTask: (task: Partial<Task>) => void;
-  onTaskUpdate: (task: Task) => void;
-  onEdit: (task: Task) => void;
-  onDelete: (task: Task) => void;
-  isDraggingOver: boolean;
-}
-
-// KanbanColumn.tsx
 export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   column,
   onAddTask,
   onEdit,
   onDelete,
-  isDraggingOver,
+  onTaskUpdate,
 }) => {
-  const { resolvedTheme } = useTheme();
+  const { theme } = useTheme();
 
   return (
-    <div 
-      className={`${styles.column} ${styles[resolvedTheme || 'light']}`}
-      data-dragging={isDraggingOver}
-    >
+    <div className={`${styles.column} ${styles[theme || 'light']}`}>
       <div className={styles.columnHeader}>
         <div className={styles.titleBar}>
           <h2>{column.title}</h2>
           <span className={styles.count}>{column.count}</span>
         </div>
       </div>
-      
-      <Droppable 
-        droppableId={column.id}
-        type="TASK"
-        mode="standard"
-        isCombineEnabled={false}
-        isDropDisabled={false}
-        ignoreContainerClipping={false}
-        renderClone={null}
-      >
+
+      <Droppable droppableId={column.id}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`${styles.taskList} ${snapshot.isDraggingOver ? styles.draggingOver : ''}`}
+            className={`${styles.taskList} ${
+              snapshot.isDraggingOver ? styles.draggingOver : ''
+            }`}
           >
             {column.tasks.map((task, index) => (
               <KanbanTask
@@ -81,10 +51,10 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
       </Droppable>
 
       <div className={styles.columnFooter}>
-        <button 
+        <button
           type="button"
-          className={styles.addButton} 
-          onClick={() => onAddTask?.({ status: column.title as Task['status'] })}
+          className={styles.addButton}
+          onClick={() => onAddTask({ status: column.title as Task['status'] })}
         >
           <Plus size={16} />
           <span>Add Task</span>
