@@ -41,28 +41,28 @@ export const mockProfessors: Professor[] = [
     specialization: 'Web Development',
     totalClasses: 124
   },
-  {
-    id: '6',
-    name: 'Roman Killon',
-    avatar: '/avatars/roman.jpg',
-    degree: 'M.Tech',
-    specialization: 'UI / UX Designing',
-    totalClasses: 1263
-  },
-  {
-    id: '7',
-    name: 'Suzika Stallone',
-    avatar: '/avatars/suzika.jpg',
-    degree: 'Phd',
-    specialization: 'Machine Learning',
-    totalClasses: 110
-  },
-  {
-    id: '8',
-    name: 'Robert Lewis',
-    avatar: '/avatars/robert.jpg',
-    degree: 'Phd',
-    specialization: 'Java Development',
-    totalClasses: 150
-  }
+//   {
+//     id: '6',
+//     name: 'Roman Killon',
+//     avatar: '/avatars/roman.jpg',
+//     degree: 'M.Tech',
+//     specialization: 'UI / UX Designing',
+//     totalClasses: 1263
+//   },
+//   {
+//     id: '7',
+//     name: 'Suzika Stallone',
+//     avatar: '/avatars/suzika.jpg',
+//     degree: 'Phd',
+//     specialization: 'Machine Learning',
+//     totalClasses: 110
+//   },
+//   {
+//     id: '8',
+//     name: 'Robert Lewis',
+//     avatar: '/avatars/robert.jpg',
+//     degree: 'Phd',
+//     specialization: 'Java Development',
+//     totalClasses: 150
+//   }
 ];
