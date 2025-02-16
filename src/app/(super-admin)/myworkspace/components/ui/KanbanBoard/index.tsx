@@ -1,20 +1,13 @@
-// src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/index.tsx
-"use client";
-import React, { useState } from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
-import { KanbanColumn } from './KanbanColumn';
+'use client';
 
+// KanbanBoard/index.tsx
+import React, { useState, useEffect } from 'react';
+import { DropResult } from 'react-beautiful-dnd';
+import { KanbanColumn } from './KanbanColumn';
+import { DragDropContext } from './DragDropContext';
+import { KanbanBoardProps } from './types';
 import styles from './KanbanBoard.module.scss';
 import { useTheme } from 'next-themes';
-import { Column, Task } from './types';
-
-export interface KanbanBoardProps {
-  columns: Column[];
-  onTaskMove: (taskId: string, sourceColumn: string, targetColumn: string) => void;
-  onTaskUpdate: (task: Task) => void;
-  onTaskDelete: (taskId: string) => void;
-  onAddTask: (columnId: string, task: Partial<Task>) => void;
-}
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   columns,
@@ -23,42 +16,45 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   onTaskDelete,
   onAddTask,
 }) => {
-  const { theme = 'light' } = useTheme();
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
 
-  const handleDragEnd = (result: any) => {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  const handleDragEnd = (result: DropResult) => {
+    setIsDraggingOver(false);
+    
     if (!result.destination) return;
     
     const sourceColumn = result.source.droppableId;
     const targetColumn = result.destination.droppableId;
     const taskId = result.draggableId;
 
-    if (sourceColumn !== targetColumn) {
+    if (sourceColumn !== targetColumn && onTaskMove) {
       onTaskMove(taskId, sourceColumn, targetColumn);
     }
   };
 
-  const handleEditTask = (task: Task) => {
-    setSelectedTask(task);
-    // Add your edit modal logic here
-  };
-
-  const handleDelete = (task: Task) => {
-    onTaskDelete(task.id);
-  };
-
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className={`${styles.kanbanBoard} ${styles[theme as 'light' | 'dark']}`}>
+      <div className={`${styles.kanbanBoard} ${styles[resolvedTheme || 'light']}`}>
         <div className={styles.columnsContainer}>
           {columns.map((column) => (
             <KanbanColumn
               key={column.id}
               column={column}
-              onAddTask={() => onAddTask(column.id, { status: column.title as Task['status'] })}
+              onAddTask={(task) => onAddTask?.(column.id, task)}
               onTaskUpdate={onTaskUpdate}
-              onEdit={handleEditTask}
-              onDelete={handleDelete}
+              onEdit={(task) => onTaskUpdate?.(task)}
+              onDelete={(task) => onTaskDelete?.(task.id)}
+              isDraggingOver={isDraggingOver}
             />
           ))}
         </div>

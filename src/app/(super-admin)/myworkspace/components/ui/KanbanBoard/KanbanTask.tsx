@@ -1,12 +1,13 @@
-// src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/KanbanTask.tsx
-"use client";
-import React from 'react';
-import { Draggable } from 'react-beautiful-dnd';
+'use client';
 
+// KanbanTask.tsx
+import React, { useState, memo } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
 import styles from './KanbanTask.module.scss';
-import { MoreVertical, Heart, MessageCircle } from 'lucide-react';
+import { MoreVertical, Heart, MessageSquare } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Task } from './types';
+import Avatar from '../DataTable/Avatar';
 
 interface KanbanTaskProps {
   task: Task;
@@ -15,28 +16,40 @@ interface KanbanTaskProps {
   onDelete: () => void;
 }
 
-export const KanbanTask: React.FC<KanbanTaskProps> = ({
+export const KanbanTask = memo(function KanbanTask({
   task,
   index,
   onEdit,
   onDelete
-}) => {
-  const { theme = 'light' } = useTheme();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+}: KanbanTaskProps) {
+  const { resolvedTheme } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <Draggable draggableId={task.id} index={index}>
+    <Draggable 
+      draggableId={task.id} 
+      index={index}
+      isDragDisabled={false}
+      disableInteractiveElementBlocking={true}
+      shouldRespectForcePress={false}
+    >
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`${styles.task} ${styles[theme as 'light' | 'dark']} ${snapshot.isDragging ? styles.dragging : ''}`}
+          className={`${styles.task} ${styles[resolvedTheme || 'light']} ${
+            snapshot.isDragging ? styles.dragging : ''
+          }`}
+          data-dragging={snapshot.isDragging}
         >
           <div className={styles.header}>
-            <span className={styles.taskNumber}>{task.taskNumber}</span>
+            <div className={styles.taskIdentifier}>
+              <span className={styles.taskNumber}>{task.taskNumber}</span>
+            </div>
             <div className={styles.menuContainer}>
               <button 
+                type="button"
                 className={styles.menuButton}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
@@ -44,16 +57,33 @@ export const KanbanTask: React.FC<KanbanTaskProps> = ({
               </button>
               {isMenuOpen && (
                 <div className={styles.menu}>
-                  <button onClick={onEdit}>Edit</button>
-                  <button onClick={onDelete}>Delete</button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onEdit();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    type="button"
+                    className={styles.deleteButton}
+                    onClick={() => {
+                      onDelete();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    Delete
+                  </button>
                 </div>
               )}
             </div>
           </div>
-          
+
           <h3 className={styles.title}>{task.title}</h3>
           <p className={styles.description}>{task.description}</p>
-          
+
           <div className={styles.tags}>
             {task.tags.map((tag) => (
               <span
@@ -65,32 +95,37 @@ export const KanbanTask: React.FC<KanbanTaskProps> = ({
               </span>
             ))}
           </div>
-          
+
           <div className={styles.footer}>
             <div className={styles.assignees}>
-              {task.assignees.map((user) => (
-                <img
-                  key={user.id}
-                  src={user.avatar}
-                  alt={user.name}
-                  className={styles.avatar}
-                />
+              {task.assignees.map((user, idx) => (
+                <div 
+                  key={user.id} 
+                  className={styles.avatarWrapper}
+                  style={{ zIndex: task.assignees.length - idx }}
+                >
+                  <Avatar
+                    src={user.avatar}
+                    name={user.name}
+                    size="sm"
+                  />
+                </div>
               ))}
             </div>
-            
+
             <div className={styles.metrics}>
-              <span className={styles.metric}>
+              <div className={styles.metric}>
                 <Heart size={14} />
-                {task.likes}
-              </span>
-              <span className={styles.metric}>
-                <MessageCircle size={14} />
-                {task.comments}
-              </span>
+                <span>{task.likes}</span>
+              </div>
+              <div className={styles.metric}>
+                <MessageSquare size={14} />
+                <span>{task.comments}</span>
+              </div>
             </div>
           </div>
         </div>
       )}
     </Draggable>
   );
-};
+});

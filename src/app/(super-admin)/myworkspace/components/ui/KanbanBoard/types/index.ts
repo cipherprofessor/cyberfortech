@@ -4,14 +4,22 @@
 
 
   
-  export interface KanbanBoardProps extends ThemeProps {
-    columns: Column[];
-    onTaskMove?: (taskId: string, sourceColumn: string, targetColumn: string) => void;
-    onTaskUpdate?: (task: Task) => void;
-    onAddTask?: (columnId: string) => void;
-    className?: string;
-    theme?: 'light' | 'dark';
-  }
+export interface KanbanBoardProps {
+  columns: Column[];
+  onTaskMove: (taskId: string, sourceColumn: string, targetColumn: string) => void;
+  onTaskUpdate: (task: Task) => void;
+  onTaskDelete: (taskId: string) => void;
+  onAddTask: (columnId: string, task: Partial<Task>) => void;
+}
+
+export interface KanbanColumnProps {
+  column: Column;
+  onAddTask: (task: Partial<Task>) => void;
+  onTaskUpdate: (task: Task) => void;
+  onEdit: (task: Task) => void;
+  onDelete: (task: Task) => void;
+  isDraggingOver: boolean;
+}
 
   export interface Task {
     id: string;
@@ -36,6 +44,7 @@
     updatedAt: string;
   }
   
+  
 export type TaskPriority = 'Low' | 'Medium' | 'High';
 export type TaskStatus = 'NEW' | 'TODO' | 'ON GOING' | 'IN REVIEW' | 'COMPLETED';
 
@@ -49,21 +58,6 @@ export interface User {
   id: string;
   name: string;
   avatar: string;
-}
-
-export interface Task {
-  id: string;
-  taskNumber: string;
-  title: string;
-  description: string;
-  priority: TaskPriority;
-  status: TaskStatus;
-  tags: Tag[];
-  assignees: User[];
-  likes: number;
-  comments: number;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Column {
