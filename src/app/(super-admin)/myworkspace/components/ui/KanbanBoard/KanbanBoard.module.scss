@@ -80,3 +80,28 @@
       box-shadow: var(--shadow-dragging);
     }
   }
+
+
+  .kanbanBoard {
+    &[data-is-dragging="true"] {
+      @apply cursor-grabbing;
+      
+      .task {
+        transition: transform 0.2s ease-in-out;
+      }
+    }
+  }
+  
+  .task {
+    &[data-dragging="true"] {
+      @apply shadow-lg scale-105 rotate-2;
+      z-index: 50;
+    }
+  }
+  
+  .taskList {
+    &[data-droppable-over="true"] {
+      @apply bg-blue-500/10 dark:bg-blue-400/10;
+      transition: background-color 0.2s ease-in-out;
+    }
+  }

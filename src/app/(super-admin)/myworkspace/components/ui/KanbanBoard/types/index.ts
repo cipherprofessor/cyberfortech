@@ -1,6 +1,14 @@
 
+export interface TaskModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  task?: Task | null;
+  mode: 'create' | 'edit';
+  onSubmit: (task: Partial<Task>) => void;
+  availableUsers: User[];
+  columnId: string;
+}
 
-  
 
 
   
@@ -15,35 +23,35 @@ export interface KanbanBoardProps {
 export interface KanbanColumnProps {
   column: Column;
   onAddTask: (task: Partial<Task>) => void;
-  onTaskUpdate: (task: Task) => void;
   onEdit: (task: Task) => void;
   onDelete: (task: Task) => void;
-  isDraggingOver: boolean;
+  onTaskUpdate: (task: Task) => void;
+  isDraggingOver?: boolean;
 }
 
-  export interface Task {
+
+export interface Task {
+  id: string;
+  taskNumber: string;
+  title: string;
+  description: string;
+  priority: 'Low' | 'Medium' | 'High';
+  status: 'NEW' | 'TODO' | 'ON GOING' | 'IN REVIEW' | 'COMPLETED';
+  tags: {
     id: string;
-    taskNumber: string;
-    title: string;
-    description: string;
-    priority: 'Low' | 'Medium' | 'High';
-    status: 'NEW' | 'TODO' | 'ON GOING' | 'IN REVIEW' | 'COMPLETED';
-    tags: {
-      id: string;
-      name: string;
-      color: string;
-    }[];
-    assignees: {
-      id: string;
-      name: string;
-      avatar: string;
-    }[];
-    likes: number;
-    comments: number;
-    createdAt: string;
-    updatedAt: string;
-  }
-  
+    name: string;
+    color: string;
+  }[];
+  assignees: {
+    id: string;
+    name: string;
+    avatar: string;
+  }[];
+  likes: number;
+  comments: number;
+  createdAt: string;
+  updatedAt: string;
+} 
   
 export type TaskPriority = 'Low' | 'Medium' | 'High';
 export type TaskStatus = 'NEW' | 'TODO' | 'ON GOING' | 'IN REVIEW' | 'COMPLETED';
@@ -58,6 +66,7 @@ export interface User {
   id: string;
   name: string;
   avatar: string;
+  role?: string;
 }
 
 export interface Column {
@@ -68,11 +77,19 @@ export interface Column {
   tasks: Task[];
 }
 
+
+
 export interface KanbanData {
   columns: Column[];
 }
 
 export interface ThemeProps {
     theme?: 'light' | 'dark';
+  }
+  
+
+  export interface DraggingState {
+    isDragging: boolean;
+    draggingId?: string;
   }
   

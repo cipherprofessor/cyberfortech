@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
-import styles from '../styles/Modals.module.scss';
+import styles from './Modals.module.scss';
 import { X } from 'lucide-react';
 
 import { useTheme } from 'next-themes';
@@ -30,15 +30,16 @@ export const TaskModal: React.FC<TaskModalProps> = ({
   availableUsers,
   columnId
 }) => {
-    const { theme = 'light' } = useTheme();
   const [formData, setFormData] = useState<Partial<Task>>({
-    title: '',
-    description: '',
-    priority: 'Medium',
-    status: 'NEW',
-    assignees: [],
-    tags: []
+    title: task?.title || '',
+    description: task?.description || '',
+    priority: task?.priority || 'Medium',
+    status: task?.status || columnId as Task['status'],
+    assignees: task?.assignees || [],
+    tags: task?.tags || []
   });
+  const { theme = 'light' } = useTheme();
+
 
   useEffect(() => {
     if (task && mode === 'edit') {
@@ -54,6 +55,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       });
     }
   }, [task, mode, columnId]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const submittedData: Partial<Task> = {
+      ...formData,
+      id: task?.id, // Include id if editing
+      status: columnId as Task['status']
+    };
+    onSubmit(submittedData);
+    onClose();
+  };
 
   return (
     <Transition appear show={isOpen} as={Fragment}>

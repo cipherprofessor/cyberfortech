@@ -1,76 +1,85 @@
+'use client';
 
-import { Dialog, Transition } from "@headlessui/react";
+// modals/DeleteConfirmationModal.tsx
+import React from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import styles from './Modals.module.scss';
 
-import { useTheme } from "next-themes";
-import { Fragment } from "react";
-import styles from "./DeleteConfirmationModal.module.scss";
+interface DeleteConfirmationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  taskName: string;
+}
 
-// src/app/(super-admin)/myworkspace/components/ui/KanbanBoard/modals/DeleteConfirmationModal.tsx
-export const DeleteConfirmationModal: React.FC<{
-    isOpen: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
-    itemName: string;
-  }> = ({ isOpen, onClose, onConfirm, itemName }) => {
-    const { theme = 'light' } = useTheme();
-  
-    return (
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog 
-          as="div"
-          className={`${styles.modal} ${styles[theme]}`}
-          onClose={onClose}
+export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  taskName,
+}) => {
+  return (
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog as="div" className={styles.modalOverlay} onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
+          <div className={styles.backdrop} />
+        </Transition.Child>
+
+        <div className={styles.modalWrapper}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
             leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
           >
-            <div className={styles.backdrop} />
-          </Transition.Child>
-  
-          <div className={styles.container}>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel className={`${styles.panel} ${styles.deletePanel}`}>
-                <Dialog.Title className={styles.title}>
-                  Delete {itemName}
-                </Dialog.Title>
-  
-                <p className={styles.deleteMessage}>
-                  Are you sure you want to delete this {itemName.toLowerCase()}? This action cannot be undone.
+            <Dialog.Panel className={styles.deleteModal}>
+              <div className={styles.deleteIconWrapper}>
+                <AlertTriangle className={styles.deleteIcon} size={24} />
+              </div>
+
+              <Dialog.Title as="h3" className={styles.deleteTitle}>
+                Delete Task
+              </Dialog.Title>
+
+              <div className={styles.deleteContent}>
+                <p>
+                  Are you sure you want to delete <strong>{taskName}</strong>? This action cannot be undone.
                 </p>
-  
-                <div className={styles.actions}>
-                  <button type="button" onClick={onClose} className={styles.cancelButton}>
-                    Cancel
-                  </button>
-                  <button 
-                    type="button" 
-                    onClick={() => {
-                      onConfirm();
-                      onClose();
-                    }} 
-                    className={styles.deleteButton}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </Dialog>
-      </Transition>
-    );
-  };
+              </div>
+
+              <div className={styles.deleteActions}>
+                <button
+                  type="button"
+                  className={styles.cancelButton}
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className={styles.deleteButton}
+                  onClick={onConfirm}
+                >
+                  Delete Task
+                </button>
+              </div>
+            </Dialog.Panel>
+          </Transition.Child>
+        </div>
+      </Dialog>
+    </Transition>
+  );
+};
