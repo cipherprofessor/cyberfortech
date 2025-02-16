@@ -14,10 +14,17 @@ import ApacheRadarChart from "@/components/charts/Apache-ECharts/ApacheRadarChar
 import ApacheAreaChart from "@/components/charts/Apache-ECharts/ApacheAreaChart/ApacheAreaChart";
 import TopSellingCategories from "./components/ui/ListCardCategories/ListCardCategories";
 import OrdersTable from "./components/ui/DataTable/OrdersTable";
+import ActivityTimeline from "./components/ui/ActivityTimeline/ActivityTimeline";
+import { mockActivities } from "./components/ui/ActivityTimeline/data";
+
 
 export default function MyWorkspacePage() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const handleViewAll = () => {
+    // Handle view all click
+    console.log('View all clicked');
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -151,6 +158,25 @@ export default function MyWorkspacePage() {
             <OrdersTable />
             </div>
           </motion.div>
+
+
+          <motion.div
+            className={`${styles.bentoItem} ${styles.activityTimeLine}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className="p-6">
+            <ActivityTimeline 
+        activities={mockActivities} 
+        onViewAll={handleViewAll}
+      />
+      
+            </div>
+          </motion.div>
+
+
+
 
       </main>
     </div>
