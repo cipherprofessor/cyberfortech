@@ -1,72 +1,121 @@
-// src/app/api/instructors/route.ts
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
-export async function GET() {
-    try {
-      const result = await db.execute({
-        sql: `
-          SELECT 
-            id,
-            name,
-            email,
-            profile_image_url,
-            specialization,
-            rating,
-            years_of_experience,
-            total_courses,
-            total_students,
-            status
-          FROM instructors
-          WHERE status = 'active'
-          ORDER BY name ASC
-        `,
-        args: []
-      });
-  
-      return NextResponse.json(result.rows);
-    } catch (error) {
-      console.error('Error fetching instructors:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch instructors' },
-        { status: 500 }
-      );
-    }
+// Validation schema
+const instructorSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  bio: z.string().optional(),
+  contact_number: z.string().optional(),
+  address: z.string().optional(),
+  profile_image_url: z.string().url().optional(),
+  specialization: z.string(),
+  qualification: z.string(),
+  years_of_experience: z.number().min(0),
+  social_links: z.record(z.string()).optional(),
+  status: z.enum(['active', 'inactive', 'suspended']).default('active')
+});
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const search = searchParams.get('search') || '';
+    const offset = (page - 1) * limit;
+
+    // Get total count for pagination
+    const countResult = await db.execute({
+      sql: `
+        SELECT COUNT(*) as total FROM instructors 
+        WHERE status = 'active' 
+        AND (name LIKE ? OR email LIKE ? OR specialization LIKE ?)
+      `,
+      args: [`%${search}%`, `%${search}%`, `%${search}%`]
+    });
+
+    // Get paginated results
+    const result = await db.execute({
+      sql: `
+        SELECT 
+          id,
+          name,
+          email,
+          profile_image_url,
+          specialization,
+          qualification,
+          rating,
+          years_of_experience,
+          total_courses,
+          total_students,
+          status,
+          created_at,
+          updated_at
+        FROM instructors
+        WHERE status = 'active'
+        AND (name LIKE ? OR email LIKE ? OR specialization LIKE ?)
+        ORDER BY name ASC
+        LIMIT ? OFFSET ?
+      `,
+      args: [`%${search}%`, `%${search}%`, `%${search}%`, limit, offset]
+    });
+
+    return NextResponse.json({
+      instructors: result.rows,
+      total: (countResult.rows[0] as any).total,
+      page,
+      totalPages: Math.ceil((countResult.rows[0] as any).total / limit)
+    });
+  } catch (error) {
+    console.error('Error fetching instructors:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch instructors' },
+      { status: 500 }
+    );
   }
+}
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    
+    const validated = instructorSchema.parse(data);
+
     const result = await db.execute({
       sql: `
         INSERT INTO instructors (
-          id, name, email, bio, contact_number, address,
+          name, email, bio, contact_number, address,
           profile_image_url, specialization, qualification,
           years_of_experience, social_links, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        RETURNING id
       `,
       args: [
-        data.id,
-        data.name,
-        data.email,
-        data.bio,
-        data.contact_number,
-        data.address,
-        data.profile_image_url,
-        data.specialization,
-        data.qualification,
-        data.years_of_experience,
-        JSON.stringify(data.social_links),
-        data.status || 'active'
+        validated.name,
+        validated.email,
+        validated.bio,
+        validated.contact_number,
+        validated.address,
+        validated.profile_image_url,
+        validated.specialization,
+        validated.qualification,
+        validated.years_of_experience,
+        JSON.stringify(validated.social_links || {}),
+        validated.status
       ]
     });
 
     return NextResponse.json({
       message: 'Instructor created successfully',
-      instructorId: result.lastInsertRowid
+      instructor: result.rows[0]
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: error.errors },
+        { status: 400 }
+      );
+    }
     console.error('Error creating instructor:', error);
     return NextResponse.json(
       { error: 'Failed to create instructor' },

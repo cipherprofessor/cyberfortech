@@ -10,6 +10,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { extractRouterConfig } from "uploadthing/server";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { ourFileRouter } from "./api/uploadthing/core";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +40,7 @@ export default function RootLayout({
             <main className="mt-16 light text-foreground bg-background">{children}
             <SpeedInsights/>
             <Analytics />
+            <Toaster />
             </main>
             {/* <Footer /> */}
           </Providers>

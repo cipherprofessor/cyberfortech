@@ -3,14 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { X } from 'lucide-react';
 import styles from './TeacherModals.module.scss';
-import { Teacher } from './TeachersList';
+import { ModalProps, Teacher } from './types';
 
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  teacher: Teacher | null;
-}
 
 export const ViewTeacherModal: React.FC<ModalProps> = ({ isOpen, onClose, teacher }) => {
   if (!teacher) return null;

@@ -1,6 +1,20 @@
-// src/app/api/instructors/[instructorId]/route.ts
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
+const updateSchema = z.object({
+  name: z.string().min(2).optional(),
+  email: z.string().email().optional(),
+  bio: z.string().optional(),
+  contact_number: z.string().optional(),
+  address: z.string().optional(),
+  profile_image_url: z.string().url().optional(),
+  specialization: z.string().optional(),
+  qualification: z.string().optional(),
+  years_of_experience: z.number().min(0).optional(),
+  social_links: z.record(z.string()).optional(),
+  status: z.enum(['active', 'inactive', 'suspended']).optional()
+});
 
 export async function GET(
   request: Request,
@@ -9,7 +23,13 @@ export async function GET(
   try {
     const result = await db.execute({
       sql: `
-        SELECT * FROM instructors
+        SELECT 
+          id, name, email, bio, contact_number, address,
+          profile_image_url, specialization, qualification,
+          years_of_experience, rating, total_students,
+          total_courses, social_links, status,
+          created_at, updated_at
+        FROM instructors
         WHERE id = ?
       `,
       args: [params.instructorId]
@@ -32,48 +52,53 @@ export async function GET(
   }
 }
 
-export async function PUT(
+export async function PATCH(
   request: Request,
   { params }: { params: { instructorId: string } }
 ) {
   try {
     const data = await request.json();
-    
-    await db.execute({
+    const validated = updateSchema.parse(data);
+
+    // Build dynamic update query
+    const updates = Object.keys(validated).map(key => `${key} = ?`);
+    const values = Object.values(validated);
+
+    if (updates.length === 0) {
+      return NextResponse.json(
+        { error: 'No fields to update' },
+        { status: 400 }
+      );
+    }
+
+    const result = await db.execute({
       sql: `
         UPDATE instructors
-        SET 
-          name = ?,
-          email = ?,
-          bio = ?,
-          contact_number = ?,
-          address = ?,
-          profile_image_url = ?,
-          specialization = ?,
-          qualification = ?,
-          years_of_experience = ?,
-          social_links = ?,
-          status = ?
+        SET ${updates.join(', ')}
         WHERE id = ?
+        RETURNING *
       `,
-      args: [
-        data.name,
-        data.email,
-        data.bio,
-        data.contact_number,
-        data.address,
-        data.profile_image_url,
-        data.specialization,
-        data.qualification,
-        data.years_of_experience,
-        JSON.stringify(data.social_links),
-        data.status,
-        params.instructorId
-      ]
+      args: [...values, params.instructorId]
     });
 
-    return NextResponse.json({ message: 'Instructor updated successfully' });
+    if (!result.rows.length) {
+      return NextResponse.json(
+        { error: 'Instructor not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      message: 'Instructor updated successfully',
+      instructor: result.rows[0]
+    });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: error.errors },
+        { status: 400 }
+      );
+    }
     console.error('Error updating instructor:', error);
     return NextResponse.json(
       { error: 'Failed to update instructor' },
@@ -87,12 +112,28 @@ export async function DELETE(
   { params }: { params: { instructorId: string } }
 ) {
   try {
-    await db.execute({
-      sql: 'DELETE FROM instructors WHERE id = ?',
+    // Soft delete by updating status
+    const result = await db.execute({
+      sql: `
+        UPDATE instructors 
+        SET status = 'inactive' 
+        WHERE id = ?
+        RETURNING id
+      `,
       args: [params.instructorId]
     });
 
-    return NextResponse.json({ message: 'Instructor deleted successfully' });
+    if (!result.rows.length) {
+      return NextResponse.json(
+        { error: 'Instructor not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ 
+      message: 'Instructor deleted successfully',
+      id: result.rows[0].id
+    });
   } catch (error) {
     console.error('Error deleting instructor:', error);
     return NextResponse.json(

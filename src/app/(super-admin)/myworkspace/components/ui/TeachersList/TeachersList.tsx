@@ -15,27 +15,8 @@ import {
 } from 'lucide-react';
 import { ViewTeacherModal, EditTeacherModal, DeleteTeacherModal } from './TeacherModals';
 import styles from './TeachersList.module.scss';
+import { TeachersListProps, Teacher } from './types';
 
-export interface Teacher {
-  id: string;
-  name: string;
-  avatar: string;
-  qualification: string;
-  subject: {
-    name: string;
-    color: string;
-  };
-}
-
-interface TeachersListProps {
-  data: Teacher[];
-  title?: string;
-  className?: string;
-  onViewAll?: () => void;
-  itemsPerPage?: number;
-  onTeacherUpdate?: (teacher: Teacher) => void;
-  onTeacherDelete?: (teacherId: string) => void;
-}
 
 const getSubjectIcon = (subjectName: string) => {
   const iconProps = { size: 16 };
