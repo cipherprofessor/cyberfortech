@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon, DollarSignIcon, NotebookTabs, SquareKanban, ScanEye, Contact, BookUser, Quote, GraduationCap, Cog, Wrench, MessageCircleQuestion, TableOfContents } from 'lucide-react';
+import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon, DollarSignIcon, NotebookTabs, SquareKanban, ScanEye, Contact, BookUser, Quote, GraduationCap, Cog, Wrench, MessageCircleQuestion, TableOfContents, DollarSign } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import styles from './Sidebar.module.scss';
@@ -109,13 +109,17 @@ export function Sidebar() {
       ],
     },
     {
-      label: 'Help',
-      icon: <HelpCircle size={18} className={styles.helpIcon}/>,
+      label: 'Finance',
+      icon: <DollarSign size={18} className={styles.helpIcon}/>,
       labelClassName: styles.mainLabel,
       subItems: [
-        { label: 'FAQ', href: '/myworkspace/menus/help/faq', icon: <TableOfContents size={16} className={styles.helpFaqIcon} />,labelClassName: styles.subLabel  },
-        { label: 'Support', href: '/myworkspace/menus/help/support', icon: <HelpingHandIcon size={16} className={styles.helpSupportIcon} />,labelClassName: styles.subLabel   },
-        { label: 'Contact', href: '/myworkspace/menus/help/contact', icon: <BadgeHelpIcon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        { label: 'Overview', href: '/myworkspace/menus/help/faq', icon: <TableOfContents size={16} className={styles.helpFaqIcon} />,labelClassName: styles.subLabel  },
+        { label: 'Transactions', href: '/myworkspace/menus/help/support', icon: <HelpingHandIcon size={16} className={styles.helpSupportIcon} />,labelClassName: styles.subLabel   },
+        { label: 'Invoices', href: '/myworkspace/menus/help/contact', icon: <BadgeHelpIcon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        { label: 'Reconcillation', href: '/myworkspace/menus/help/contact', icon: <BadgeHelpIcon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        { label: 'Report', href: '/myworkspace/menus/help/contact', icon: <BadgeHelpIcon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        { label: 'Settings', href: '/myworkspace/menus/help/contact', icon: <BadgeHelpIcon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        { label: 'Tax', href: '/myworkspace/menus/help/contact', icon: <BadgeHelpIcon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
       ],
     },
   ];
