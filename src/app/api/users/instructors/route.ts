@@ -2,6 +2,7 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { v4 as uuidv4 } from 'uuid';
 
 // Validation schema
 const instructorSchema = z.object({
@@ -77,33 +78,36 @@ export async function GET(request: Request) {
   }
 }
 
+
+// api/users/instructors/route.ts
 export async function POST(request: Request) {
   try {
     const data = await request.json();
     const validated = instructorSchema.parse(data);
+    const id = uuidv4();
 
     const result = await db.execute({
       sql: `
         INSERT INTO instructors (
-          name, email, bio, contact_number, address,
-          profile_image_url, specialization, qualification,
-          years_of_experience, social_links, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        RETURNING id
+          id, name, email, bio, description, contact_number, 
+          address, profile_image_url, specialization, 
+          qualification, years_of_experience, social_links, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
+        id,
         validated.name,
         validated.email,
-        validated.bio ?? null,
-        validated.contact_number ?? null,
-        validated.address ?? null,
-        validated.profile_image_url ?? null,
-        validated.specialization,
-        validated.qualification,
-        validated.years_of_experience,
+        validated.bio || null,
+        validated.contact_number || null,
+        validated.address || null,
+        validated.profile_image_url || null,
+        validated.specialization || null,
+        validated.qualification || null,
+        validated.years_of_experience || null,
         validated.social_links ? JSON.stringify(validated.social_links) : null,
         validated.status
-      ] as const
+      ]
     });
 
     return NextResponse.json({
@@ -111,15 +115,11 @@ export async function POST(request: Request) {
       instructor: result.rows[0]
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
-        { status: 400 }
-      );
-    }
     console.error('Error creating instructor:', error);
     return NextResponse.json(
-      { error: 'Failed to create instructor' },
+      { 
+        error: error instanceof Error ? error.message : 'Failed to create instructor'
+      },
       { status: 500 }
     );
   }

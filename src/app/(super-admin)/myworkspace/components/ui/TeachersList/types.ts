@@ -13,42 +13,64 @@
     };
   }
 
-
-// types/teacher.ts
-
-// This is the base API response type
-export interface TeacherAPI {
+  // types.ts
+export interface Teacher {
     id: string;
     name: string;
     email: string;
-    bio?: string;
-    contact_number?: string;
-    address?: string;
+    avatar: string;
+    qualification: string;
+    subject: {
+      name: string;
+      color: string;
+    };
+  }
+  
+  export interface TeacherAPI {
+    id: string;
+    name: string;
+    email: string;
+    bio: string | null;
+    description: string | null;
+    contact_number: string | null;
+    address: string | null;
+    profile_image_url: string | null;
+    specialization: string | null;
+    qualification: string | null;
+    years_of_experience: number | null;
+    rating: number;
+    total_students: number;
+    total_courses: number;
+    social_links: string | null;
+    status: 'active' | 'inactive' | 'suspended';
+    created_at: string;
+    updated_at: string;
+  }
+  
+  export interface TeacherFormData {
+    id?: string;
+    name: string;
+    email: string;
+    bio: string;
+    // description: string;
+    contact_number: string;
+    address: string;
     profile_image_url: string;
     specialization: string;
     qualification: string;
     years_of_experience: number;
-    rating?: number;
-    total_students?: number;
-    total_courses?: number;
-    social_links?: Record<string, string>;
-    status: string;
-    created_at?: string;
-    updated_at?: string;
-}
+    social_links: {
+      linkedin?: string;
+      twitter?: string;
+      website?: string;
+    };
+    status: 'active' | 'inactive' | 'suspended';
+  }
+
+
 
 // This is the type used in the UI components
-export interface Teacher {
-    id: string;
-    name: string;
-    email: string;  // Added email
-    avatar: string;
-    qualification: string;
-    subject: {
-        name: string;
-        color: string;
-    };
-}
+
 
 // Props types
 export interface TeachersListProps {
@@ -63,7 +85,8 @@ export interface TeachersListProps {
     onSearch?: (term: string) => void;
     onTeacherClick?: (teacher: Teacher) => void;
     onEdit?: (teacher: Teacher) => void;         // Changed from onTeacherUpdate
-    onDelete?: (teacher: Teacher) => void;       // Changed from onTeacherDelete
+    onDelete?: (teacher: Teacher) => void; 
+    onCreateClick?: () => void;      // Changed from onTeacherDelete
 }
 
 export interface ModalProps {

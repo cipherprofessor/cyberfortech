@@ -6,9 +6,10 @@ import { toast } from 'sonner';
 import TeachersListSkeleton from './TableSkeleton';
 import { ViewTeacherModal, EditTeacherModal, DeleteTeacherModal } from './TeacherModals';
 import TeachersList from './TeachersList';
-import { TeacherDisplay, Teacher, TeacherAPI } from './types';
+import { TeacherDisplay, Teacher, TeacherAPI, TeacherFormData } from './types';
 import { Plus } from 'lucide-react';
 import CreateTeacherModal from './CreateTeacherModal';
+import TeacherForm from './TeacherForm';
 
 
 // Map subject names to colors
@@ -27,72 +28,162 @@ const TeachersPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
     const [modalState, setModalState] = useState({
         view: false,
         edit: false,
         delete: false
     });
 
-    const transformTeacher = (apiTeacher: TeacherAPI): Teacher => ({
-        id: apiTeacher.id,
-        name: apiTeacher.name,
-        email: apiTeacher.email,
-        avatar: apiTeacher.profile_image_url || '/placeholders/teacher-avatar.png',
-        qualification: apiTeacher.qualification,
-        subject: {
-            name: apiTeacher.specialization,
-            color: subjectColors[apiTeacher.specialization] || '#6b7280'
+    const transformTeacherToFormData = (teacher: Teacher | null): TeacherFormData => {
+        if (!teacher) {
+          // Return default values if no teacher is provided
+          return {
+            name: '',
+            email: '',
+            bio: '',
+            // description: '',
+            contact_number: '',
+            address: '',
+            profile_image_url: '',
+            specialization: '',
+            qualification: '',
+            years_of_experience: 0,
+            social_links: {},
+            status: 'active'
+          };
         }
-    });
+      
+        // Use optional chaining and provide fallback values
+        return {
+          id: teacher.id,
+          name: teacher.name || '',
+          email: teacher.email || '',
+          bio: '',
+        //   description: '',
+          contact_number: '',
+          address: '',
+          profile_image_url: teacher.avatar || '',
+          specialization: teacher.subject?.name || '',
+          qualification: teacher.qualification || '',
+          years_of_experience: 0,
+          social_links: {},
+          status: 'active'
+        };
+      };
 
-  const fetchTeachers = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `/api/users/instructors?page=${currentPage}&search=${searchTerm}&limit=5`
-      );
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error);
-
-      setTeachers(data.instructors.map(transformTeacher));
-      setTotalPages(data.totalPages);
-    } catch (error) {
-      toast.error('Failed to fetch teachers');
-      console.error('Error fetching teachers:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const fetchTeachers = async () => {
+        try {
+          setLoading(true);
+          const response = await fetch(
+            `/api/users/instructors?page=${currentPage}&search=${searchTerm}&limit=5`
+          );
+          const data = await response.json();
+      
+          if (!response.ok) throw new Error(data.error);
+      
+          setTeachers(data.instructors.map((apiTeacher: TeacherAPI) => ({
+            id: apiTeacher.id,
+            name: apiTeacher.name || '',
+            email: apiTeacher.email || '',
+            avatar: apiTeacher.profile_image_url || '/placeholders/teacher-avatar.png',
+            qualification: apiTeacher.qualification || '',
+            subject: {
+              name: apiTeacher.specialization || '',
+              color: apiTeacher.specialization ? subjectColors[apiTeacher.specialization] : '#6b7280'
+            }
+          })));
+          setTotalPages(data.totalPages);
+        } catch (error) {
+          toast.error('Failed to fetch teachers');
+          console.error('Error fetching teachers:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
   useEffect(() => {
     fetchTeachers();
   }, [currentPage, searchTerm]);
 
-  const handleEditTeacher = async (teacher: Teacher) => {
+  const handleEditTeacher = async (data: TeacherFormData) => {
     try {
-      const response = await fetch(`/api/users/instructors/${teacher.id}`, {
+      const response = await fetch(`/api/users/instructors/${data.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: teacher.name,
-          email: teacher.email,
-          qualification: teacher.qualification,
-          specialization: teacher.subject.name
+          name: data.name,
+          email: data.email,
+          bio: data.bio || null,
+        //   description: data.description || null,
+          contact_number: data.contact_number || null,
+          address: data.address || null,
+          profile_image_url: data.profile_image_url || null,
+          specialization: data.specialization || null,
+          qualification: data.qualification || null,
+          years_of_experience: data.years_of_experience || null,
+          social_links: data.social_links ? JSON.stringify(data.social_links) : null,
+          status: data.status
         })
       });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
-
+  
+      const responseData = await response.json();
+  
+      if (!response.ok) {
+        // Handle specific error messages from the API
+        const errorMessage = responseData.error || 'Failed to update teacher';
+        throw new Error(errorMessage);
+      }
+  
+      await fetchTeachers(); // Refresh the list
+      setShowForm(false);
       toast.success('Teacher updated successfully');
-      fetchTeachers();
-      setModalState(prev => ({ ...prev, edit: false }));
     } catch (error) {
-      toast.error('Failed to update teacher');
       console.error('Error updating teacher:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to update teacher');
+      throw error; // Re-throw for form error handling
+    }
+  };
+  
+  const handleCreateTeacher = async (data: TeacherFormData) => {
+    try {
+      const response = await fetch('/api/users/instructors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          bio: data.bio || null,
+        //   description: data.description || null,
+          contact_number: data.contact_number || null,
+          address: data.address || null,
+          profile_image_url: data.profile_image_url || null,
+          specialization: data.specialization || null,
+          qualification: data.qualification || null,
+          years_of_experience: data.years_of_experience || null,
+          social_links: data.social_links ? JSON.stringify(data.social_links) : null,
+          status: data.status
+        })
+      });
+  
+      const responseData = await response.json();
+  
+      if (!response.ok) {
+        // Handle specific error messages from the API
+        const errorMessage = responseData.error || 'Failed to create teacher';
+        throw new Error(errorMessage);
+      }
+  
+      await fetchTeachers(); // Refresh the list
+      setShowForm(false);
+      toast.success('Teacher created successfully');
+    } catch (error) {
+      console.error('Error creating teacher:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to create teacher');
+      throw error; // Re-throw for form error handling
     }
   };
 
@@ -115,24 +206,6 @@ const TeachersPage = () => {
   };
 
 
-  const handleCreateTeacher = async (data: any) => {
-    try {
-      const response = await fetch('/api/users/instructors', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      if (!response.ok) throw new Error('Failed to create teacher');
-
-      toast.success('Teacher created successfully');
-      fetchTeachers();
-      setShowCreateModal(false);
-    } catch (error) {
-      toast.error('Failed to create teacher');
-      console.error('Error creating teacher:', error);
-    }
-  };
 
   if (loading) {
     return <TeachersListSkeleton />;
@@ -140,15 +213,6 @@ const TeachersPage = () => {
 
   return (
      <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-        >
-          <Plus size={16} />
-          Add Teacher
-        </button>
-      </div>
       <TeachersList
         data={teachers}
         title="Teachers List"
@@ -162,21 +226,37 @@ const TeachersPage = () => {
           setSelectedTeacher(teacher);
           setModalState(prev => ({ ...prev, view: true }));
         }}
-        onEdit={(teacher) => {
-          setSelectedTeacher(teacher);
-          setModalState(prev => ({ ...prev, edit: true }));
-        }}
+        onCreateClick={() => {
+            setFormMode('create');
+            setSelectedTeacher(null);
+            setShowForm(true);
+          }}
+          onEdit={(teacher) => {
+            setFormMode('edit');
+            setSelectedTeacher(teacher);
+            setShowForm(true);
+          }}
         onDelete={(teacher) => {
           setSelectedTeacher(teacher);
           setModalState(prev => ({ ...prev, delete: true }));
         }}
       />
+
+
+{showForm && (
+  <TeacherForm
+    mode={formMode}
+    initialData={transformTeacherToFormData(selectedTeacher)}
+    onSubmit={formMode === 'create' ? handleCreateTeacher : handleEditTeacher}
+    onClose={() => setShowForm(false)}
+  />
+)}
       
-        <CreateTeacherModal
+        {/* <CreateTeacherModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onSubmit={handleCreateTeacher}
-      />
+      /> */}
 
       {selectedTeacher && (
         <>
@@ -186,12 +266,12 @@ const TeachersPage = () => {
             teacher={selectedTeacher}
           />
 
-<EditTeacherModal
+        {/* <EditTeacherModal
             isOpen={modalState.edit}
             onClose={() => setModalState(prev => ({ ...prev, edit: false }))}
             teacher={selectedTeacher}
             onSave={handleEditTeacher}
-          />
+          /> */}
 
           <DeleteTeacherModal
             isOpen={modalState.delete}

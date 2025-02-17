@@ -11,11 +11,13 @@ import {
   Code,
   BookOpen,
   Atom,
-  GraduationCap
+  GraduationCap,
+  Plus
 } from 'lucide-react';
 import { ViewTeacherModal, EditTeacherModal, DeleteTeacherModal } from './TeacherModals';
 import styles from './TeachersList.module.scss';
 import { TeachersListProps, Teacher } from './types';
+import { toast } from 'sonner';
 
 
 const getSubjectIcon = (subjectName: string) => {
@@ -42,11 +44,13 @@ const TeachersList: React.FC<TeachersListProps> = ({
     onPageChange,
     onSearch,
     onEdit,
-    onDelete
+    onDelete,
+    onCreateClick
   }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [modalState, setModalState] = useState<{
     view: boolean;
     edit: boolean;
@@ -77,12 +81,17 @@ const TeachersList: React.FC<TeachersListProps> = ({
     setModalState(prev => ({ ...prev, [action]: true }));
   };
 
+
+
   return (
     <div className={`${styles.container} ${className}`}>
       <div className={styles.header}>
         <h2 className={styles.title}>{title}</h2>
         
         <div className={styles.headerControls}>
+
+
+       
           <div className={styles.searchWrapper}>
             <Search size={14} className={styles.searchIcon} />
             <input
@@ -93,6 +102,14 @@ const TeachersList: React.FC<TeachersListProps> = ({
               className={styles.searchInput}
             />
           </div>
+
+          <button
+    onClick={() => onCreateClick?.()}
+    className={styles.actionButton}
+  >
+    <Plus size={16} />
+    Add Teacher
+  </button>
 
           <div className={styles.pagination}>
             <button
