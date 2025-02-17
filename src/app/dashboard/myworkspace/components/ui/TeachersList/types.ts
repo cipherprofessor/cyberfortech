@@ -54,11 +54,14 @@ export interface Teacher {
     bio: string;
     // description: string;
     contact_number: string;
+    rating: number;
+    total_students: number;
+    total_courses: number;
     address: string;
     profile_image_url: string;
     specialization: string;
     qualification: string;
-    years_of_experience: number;
+    experience: number;
     social_links: {
       linkedin?: string;
       twitter?: string;

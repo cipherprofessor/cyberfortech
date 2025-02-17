@@ -550,3 +550,215 @@
     height: 16px;
   }
 }
+
+.columnSelector {
+  position: relative;
+  display: inline-block;
+
+  .columnSelectorButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: var(--bg-hover);
+    }
+  }
+
+  .columnDropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    min-width: 200px;
+  }
+
+  .columnOption {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--bg-hover);
+    }
+
+    input[type="checkbox"] {
+      margin: 0;
+    }
+  }
+}
+
+.instructorInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .instructorDetails {
+    display: flex;
+    flex-direction: column;
+
+    .instructorName {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .instructorEmail {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+  }
+}
+
+.socialLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .socialLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+    background-color: var(--bg-light);
+    color: var(--text-secondary);
+    
+    &:hover {
+      color: var(--primary-color);
+      background-color: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    &[title="LinkedIn"]:hover {
+      color: #0077B5;
+      background-color: rgba(0, 119, 181, 0.1);
+    }
+
+    &[title="Twitter"]:hover {
+      color: #1DA1F2;
+      background-color: rgba(29, 161, 242, 0.1);
+    }
+
+    &[title="Website"]:hover {
+      color: #2563EB;
+      background-color: rgba(37, 99, 235, 0.1);
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .tableWrapper {
+    overflow-x: auto;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    
+    table {
+      min-width: 900px;
+    }
+  }
+
+  .columnSelector {
+    .columnDropdown {
+      right: -1rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .headerControls {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+
+    .searchWrapper {
+      width: 100%;
+    }
+
+    .columnSelector {
+      width: 100%;
+      
+      .columnSelectorButton {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .instructorInfo {
+    .instructorDetails {
+      .instructorName {
+        font-size: 0.813rem;
+      }
+      .instructorEmail {
+        font-size: 0.688rem;
+      }
+    }
+  }
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  .starIcon {
+    color: #fbbf24;
+  }
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+
+  small {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+  }
+}
+
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+
+  &.active {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  &.inactive {
+    background-color: #f3f4f6;
+    color: #4b5563;
+  }
+
+  &.suspended {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+.bioCell {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

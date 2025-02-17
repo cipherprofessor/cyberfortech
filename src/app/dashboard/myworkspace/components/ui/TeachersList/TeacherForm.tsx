@@ -1,4 +1,5 @@
-// components/TeacherForm.tsx
+// src/app/dashboard/myworkspace/components/ui/TeachersList/TeacherForm.tsx
+"use client";
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X, Upload } from 'lucide-react';
@@ -204,12 +205,6 @@ const TeacherForm: React.FC<TeacherFormProps> = ({
               </div>
               <div className={styles.field}>
                 <label>Description</label>
-                {/* <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  rows={4}
-                /> */}
               </div>
             </div>
           </div>

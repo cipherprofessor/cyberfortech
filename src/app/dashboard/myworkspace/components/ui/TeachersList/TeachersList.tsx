@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+//src/app/dashboard/myworkspace/components/ui/TeachersList/TeachersList.tsx
+"use client";
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { 
@@ -8,16 +10,21 @@ import {
   Eye,
   Pencil,
   Trash2,
-  Code,
+  Settings,
+  Linkedin,
+  Twitter,
+  Globe,
+  Star,
   BookOpen,
+  Users,
+  Code,
   Atom,
   GraduationCap,
   Plus
 } from 'lucide-react';
-import { ViewTeacherModal, EditTeacherModal, DeleteTeacherModal } from './TeacherModals';
 import styles from './TeachersList.module.scss';
-import { TeachersListProps, Teacher } from './types';
-import { toast } from 'sonner';
+import { ViewTeacherModal, EditTeacherModal, DeleteTeacherModal } from './TeacherModals';
+import { Teacher, TeachersListProps } from './types';
 
 
 const getSubjectIcon = (subjectName: string) => {
@@ -33,33 +40,140 @@ const getSubjectIcon = (subjectName: string) => {
   return subjectMap[subjectName as keyof typeof subjectMap] || <BookOpen {...iconProps} />;
 };
 
-const TeachersList: React.FC<TeachersListProps> = ({
-    data,
-    title = "Teachers List",
-    className = "",
-    onViewAll,
-    itemsPerPage = 5,
-    // currentPage,
-    // totalPages,
-    onPageChange,
-    onSearch,
-    onEdit,
-    onDelete,
-    onCreateClick
-  }) => {
+const AVAILABLE_COLUMNS = {
+  instructor: { label: 'Instructor', default: true },
+  specialization: { label: 'Specialization', default: true },
+  bio: { label: 'Bio', default: true },
+  contact: { label: 'Contact Number', default: true },
+  rating: { label: 'Rating', default: true },
+  total_courses: { label: 'Total Courses', default: true },
+  total_students: { label: 'Total Students', default: true },
+  social_links: { label: 'Social Links', default: true },
+  qualification: { label: 'Qualification', default: false },
+  address: { label: 'Address', default: false },
+  years_of_experience: { label: 'Experience', default: false },
+  status: { label: 'Status', default: false },
+  created_at: { label: 'Created At', default: false },
+  updated_at: { label: 'Updated At', default: false }
+};
+
+
+const TeachersList = ({ data, title = "Instructors List", className = "", onViewAll, itemsPerPage = 5, onPageChange, onSearch, onEdit, onDelete, onCreateClick }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [modalState, setModalState] = useState<{
-    view: boolean;
-    edit: boolean;
-    delete: boolean;
-  }>({
+  const [showColumnSelector, setShowColumnSelector] = useState(false);
+  const [selectedColumns, setSelectedColumns] = useState(() => 
+    Object.entries(AVAILABLE_COLUMNS)
+      .filter(([_, config]) => config.default)
+      .map(([key]) => key)
+  );
+
+   // Persist column selection
+   useEffect(() => {
+    try {
+      localStorage.setItem('teacherListColumns', JSON.stringify(selectedColumns));
+    } catch (error) {
+      console.error('Error saving columns:', error);
+    }
+  }, [selectedColumns]);
+
+  const [modalState, setModalState] = useState({
     view: false,
     edit: false,
     delete: false
   });
+
+  const ColumnSelector = () => (
+    <div className={styles.columnSelector}>
+      <button 
+        onClick={() => setShowColumnSelector(!showColumnSelector)}
+        className={styles.columnSelectorButton}
+      >
+        <Settings size={16} />
+        Customize Columns
+      </button>
+      
+      {showColumnSelector && (
+        <div className={styles.columnDropdown}>
+          {Object.entries(AVAILABLE_COLUMNS).map(([key, config]) => (
+            <label key={key} className={styles.columnOption}>
+              <input
+                type="checkbox"
+                checked={selectedColumns.includes(key)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedColumns([...selectedColumns, key]);
+                  } else {
+                    setSelectedColumns(selectedColumns.filter(col => col !== key));
+                  }
+                }}
+              />
+              {config.label}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+
+  // Social Links Component
+  const SocialLinks = ({ links }) => {
+    const parsedLinks = useMemo(() => {
+      try {
+        return typeof links === 'string' ? JSON.parse(links) : links;
+      } catch (error) {
+        console.error('Error parsing social links:', error);
+        return {};
+      }
+    }, [links]);
+
+    const socialPlatforms = [
+      { key: 'linkedin', Icon: Linkedin, label: 'LinkedIn' },
+      { key: 'twitter', Icon: Twitter, label: 'Twitter' },
+      { key: 'website', Icon: Globe, label: 'Website' }
+    ];
+
+    return (
+      <div className={styles.socialLinks}>
+        {socialPlatforms.map(({ key, Icon, label }) => (
+          parsedLinks?.[key] && (
+            <a 
+              key={key}
+              href={parsedLinks[key]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.socialLink}
+              title={label}
+            >
+              <Icon size={16} />
+            </a>
+          )
+        ))}
+      </div>
+    );
+  };
+
+
+   // Rating Component
+   const Rating = ({ value }) => (
+    <div className={styles.rating}>
+      <Star size={16} className={styles.starIcon} />
+      <span>{value?.toFixed(1) || '0.0'}</span>
+    </div>
+  );
+
+  // Stats Component
+  const Stats = ({ icon: Icon, value, label }) => (
+    <div className={styles.stat}>
+      <Icon size={16} />
+      <span>{value}</span>
+      <small>{label}</small>
+    </div>
+  );
+
+
 
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
@@ -75,6 +189,7 @@ const TeachersList: React.FC<TeachersListProps> = ({
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  console.log("Dataaaaaa tecaher",paginatedData);
 
   const handleAction = (teacher: Teacher, action: 'view' | 'edit' | 'delete') => {
     setSelectedTeacher(teacher);
@@ -102,14 +217,15 @@ const TeachersList: React.FC<TeachersListProps> = ({
               className={styles.searchInput}
             />
           </div>
+          <ColumnSelector />
 
           <button
-    onClick={() => onCreateClick?.()}
-    className={styles.actionButton}
-  >
-    <Plus size={16} />
-    Add Teacher
-  </button>
+       onClick={() => onCreateClick?.()}
+         className={styles.actionButton}
+       >
+           <Plus size={16} />
+           Add Teacher
+        </button>
 
           <div className={styles.pagination}>
             <button
@@ -141,14 +257,15 @@ const TeachersList: React.FC<TeachersListProps> = ({
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Teacher</th>
-              <th>Qualification</th>
-              <th>Subject</th>
+              {selectedColumns.map(column => (
+                <th key={column}>{AVAILABLE_COLUMNS[column].label}</th>
+              ))}
               <th className={styles.actionsHeader}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {paginatedData.map((teacher, index) => (
+              console.log("Teacher",teacher),
               <motion.tr
                 key={teacher.id}
                 initial={{ opacity: 0, y: 10 }}
@@ -156,32 +273,91 @@ const TeachersList: React.FC<TeachersListProps> = ({
                 transition={{ duration: 0.2, delay: index * 0.05 }}
                 className={styles.row}
               >
-                <td>
-                  <div className={styles.teacherInfo}>
-                    <div className={styles.avatar}>
-                      <Image
-                        src={teacher.avatar}
-                        alt={teacher.name}
-                        width={36}
-                        height={36}
-                        className={styles.avatarImg}
-                      />
+                {selectedColumns.includes('instructor') && (
+                  <td>
+                    <div className={styles.instructorInfo}>
+                      <div className={styles.avatar}>
+                        <Image
+                          src={teacher.avatar}
+                          alt={teacher.name}
+                          width={36}
+                          height={36}
+                          className={styles.avatarImg}
+                        />
+                      </div>
+                      <div className={styles.instructorDetails}>
+                        <span className={styles.instructorName}>{teacher.name}</span>
+                        <span className={styles.instructorEmail}>{teacher.email}</span>
+                      </div>
                     </div>
-                    <span className={styles.teacherName}>{teacher.name}</span>
-                  </div>
-                </td>
-                <td className={styles.qualification}>{teacher.qualification}</td>
-                <td>
-                  <div 
-                    className={styles.subjectChip}
-                    style={{ 
-                      '--subject-color': teacher.subject.color 
-                    } as React.CSSProperties}
-                  >
-                    {getSubjectIcon(teacher.subject.name)}
-                    <span>{teacher.subject.name}</span>
-                  </div>
-                </td>
+                  </td>
+                )}
+
+                {selectedColumns.includes('specialization') && (
+                  <td>{teacher.specialization}</td>
+                )}
+
+                {selectedColumns.includes('bio') && (
+                  <td className={styles.bioCell}>{teacher.bio}</td>
+                )}
+
+                {selectedColumns.includes('contact') && (
+                  <td>{teacher.contact_number}</td>
+                )}
+
+                {selectedColumns.includes('rating') && (
+                  <td>
+                    <Rating value={teacher.rating} />
+                  </td>
+                )}
+
+                {selectedColumns.includes('total_courses') && (
+                  <td>
+                    <Stats icon={BookOpen} value={teacher.total_courses} label="Courses" />
+                  </td>
+                )}
+
+                {selectedColumns.includes('total_students') && (
+                  <td>
+                    <Stats icon={Users} value={teacher.total_students} label="Students" />
+                  </td>
+                )}
+
+                {selectedColumns.includes('social_links') && (
+                  <td>
+                    <SocialLinks links={teacher.social_links} />
+                  </td>
+                )}
+
+                {/* Optional columns based on selection */}
+                {selectedColumns.includes('qualification') && (
+                  <td>{teacher.qualification}</td>
+                )}
+
+                {selectedColumns.includes('address') && (
+                  <td>{teacher.address}</td>
+                )}
+
+                {selectedColumns.includes('years_of_experience') && (
+                  <td>{teacher.years_of_experience} years</td>
+                )}
+
+                {selectedColumns.includes('status') && (
+                  <td>
+                    <span className={`${styles.status} ${styles[teacher.status]}`}>
+                      {teacher.status}
+                    </span>
+                  </td>
+                )}
+
+                {selectedColumns.includes('created_at') && (
+                  <td>{new Date(teacher.created_at).toLocaleDateString()}</td>
+                )}
+
+                {selectedColumns.includes('updated_at') && (
+                  <td>{new Date(teacher.updated_at).toLocaleDateString()}</td>
+                )}
+
                 <td>
                   <div className={styles.actions}>
                     <button 
@@ -213,6 +389,7 @@ const TeachersList: React.FC<TeachersListProps> = ({
         </table>
       </div>
 
+
       {paginatedData.length === 0 && (
         <div className={styles.noResults}>
           No teachers found
@@ -241,7 +418,7 @@ const TeachersList: React.FC<TeachersListProps> = ({
             teacher={selectedTeacher}
             onConfirm={() => {
               if (selectedTeacher) {
-                onDelete?.(selectedTeacher);  // Using new prop name and passing full teacher object
+                onDelete?.(selectedTeacher);  
                 setModalState(prev => ({ ...prev, delete: false }));
               }
             }}

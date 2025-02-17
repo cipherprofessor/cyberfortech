@@ -1,3 +1,5 @@
+//src/app/dashboard/myworkspace/components/ui/TeachersList/TeacherModals.tsx
+"use client";
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';

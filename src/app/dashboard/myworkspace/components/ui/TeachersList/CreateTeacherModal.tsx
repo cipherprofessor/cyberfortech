@@ -1,3 +1,5 @@
+//src/app/dashboard/myworkspace/components/ui/TeachersList/CreateTeacherModal.tsx
+"use client";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Link as LinkIcon } from 'lucide-react';

@@ -1,3 +1,5 @@
+//src/app/dashboard/myworkspace/components/ui/TeachersList/TableSkeleton.tsx
+"use client";
 import React from 'react';
 import styles from './TeachersList.module.scss';
 
