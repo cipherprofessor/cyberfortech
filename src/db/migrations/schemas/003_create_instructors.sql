@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS instructors (
     status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'suspended')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_by TEXT,
     user_id TEXT UNIQUE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );

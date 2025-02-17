@@ -48,6 +48,9 @@ export async function GET(request: Request) {
           id,
           name,
           email,
+          bio,
+          contact_number,
+          address,
           profile_image_url,
           specialization,
           qualification,
@@ -55,6 +58,7 @@ export async function GET(request: Request) {
           years_of_experience,
           total_courses,
           total_students,
+          social_links,
           status,
           created_at,
           updated_at
