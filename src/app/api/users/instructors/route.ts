@@ -15,7 +15,11 @@ const instructorSchema = z.object({
   specialization: z.string(),
   qualification: z.string(),
   years_of_experience: z.number().min(0),
-  social_links: z.record(z.string()).nullable().optional(),
+  social_links: z
+  .record(z.string())
+  .nullable()
+  .optional()
+  .transform((val) => (val ? JSON.stringify(val) : null)),
   status: z.enum(['active', 'inactive', 'suspended']).default('active')
 });
 
@@ -89,10 +93,10 @@ export async function POST(request: Request) {
     const result = await db.execute({
       sql: `
         INSERT INTO instructors (
-          id, name, email, bio, description, contact_number, 
+          id, name, email, bio, contact_number, 
           address, profile_image_url, specialization, 
           qualification, years_of_experience, social_links, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         id,
@@ -105,7 +109,7 @@ export async function POST(request: Request) {
         validated.specialization || null,
         validated.qualification || null,
         validated.years_of_experience || null,
-        validated.social_links ? JSON.stringify(validated.social_links) : null,
+        validated.social_links || null,
         validated.status
       ]
     });

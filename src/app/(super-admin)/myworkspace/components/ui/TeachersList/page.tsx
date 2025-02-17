@@ -125,7 +125,7 @@ const TeachersPage = () => {
           specialization: data.specialization || null,
           qualification: data.qualification || null,
           years_of_experience: data.years_of_experience || null,
-          social_links: data.social_links ? JSON.stringify(data.social_links) : null,
+          social_links: data.social_links || null,
           status: data.status
         })
       });
@@ -157,14 +157,13 @@ const TeachersPage = () => {
           name: data.name,
           email: data.email,
           bio: data.bio || null,
-        //   description: data.description || null,
           contact_number: data.contact_number || null,
           address: data.address || null,
           profile_image_url: data.profile_image_url || null,
           specialization: data.specialization || null,
           qualification: data.qualification || null,
           years_of_experience: data.years_of_experience || null,
-          social_links: data.social_links ? JSON.stringify(data.social_links) : null,
+          social_links: data.social_links || null, // Remove JSON.stringify()
           status: data.status
         })
       });
@@ -172,18 +171,17 @@ const TeachersPage = () => {
       const responseData = await response.json();
   
       if (!response.ok) {
-        // Handle specific error messages from the API
         const errorMessage = responseData.error || 'Failed to create teacher';
         throw new Error(errorMessage);
       }
   
-      await fetchTeachers(); // Refresh the list
+      await fetchTeachers();
       setShowForm(false);
       toast.success('Teacher created successfully');
     } catch (error) {
       console.error('Error creating teacher:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to create teacher');
-      throw error; // Re-throw for form error handling
+      throw error;
     }
   };
 
