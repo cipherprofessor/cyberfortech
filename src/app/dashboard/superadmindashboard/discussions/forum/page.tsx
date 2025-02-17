@@ -1,3 +1,5 @@
+"use client";
+// Alpha Centauri
 import { ForumManagement } from '@/components/ForumCategories/ForumManagement/ForumManagement';
 import React from 'react'
 

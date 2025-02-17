@@ -1,10 +1,9 @@
 // src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/DeleteConfirmation.tsx
+//Alpha Centauri
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
 import styles from './DeleteConfirmation.module.scss';
 
-// src/components/ui/DeleteConfirmation.tsx
-// DeleteConfirmDialog.tsx
 interface DeleteConfirmDialogProps {
     show: boolean;
     courseName: string;

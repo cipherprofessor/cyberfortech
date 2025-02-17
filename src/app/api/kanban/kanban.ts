@@ -1,5 +1,5 @@
 // api/kanban.ts
-import { Task } from '@/app/(super-admin)/myworkspace/components/ui/KanbanBoard/types';
+import { Task } from '@/app/dashboard/myworkspace/components/ui/KanbanBoard/types';
 import axios from 'axios';
 
 

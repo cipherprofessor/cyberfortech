@@ -16,7 +16,7 @@ export default function DashboardPage() {
 
   // Redirect based on role
   if (isSuperAdmin) {
-    redirect('/dashboard/superadmindashboard/analytics');
+    redirect('/dashboard/myworkspace');
   } else if (isAdmin) {
     redirect('/dashboard/admin-dashboard');
   } else if (isStudent) {

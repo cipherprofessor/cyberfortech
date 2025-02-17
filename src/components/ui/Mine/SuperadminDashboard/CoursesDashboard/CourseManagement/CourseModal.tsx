@@ -1,6 +1,6 @@
 // src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/CourseModal.tsx
 'use client';
-
+//Alpha Centauri
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 

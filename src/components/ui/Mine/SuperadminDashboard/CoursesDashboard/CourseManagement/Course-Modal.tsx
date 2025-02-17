@@ -1,4 +1,5 @@
 // src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/CourseModal.tsx
+//Alpha Centauri
 'use client';
 
 import { useState, useEffect } from 'react';
