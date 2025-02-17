@@ -1,3 +1,4 @@
+//src/app/api/users/instructors/route.ts
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -6,14 +7,14 @@ import { z } from 'zod';
 const instructorSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
-  bio: z.string().optional(),
-  contact_number: z.string().optional(),
-  address: z.string().optional(),
-  profile_image_url: z.string().url().optional(),
+  bio: z.string().nullable().optional(),
+  contact_number: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  profile_image_url: z.string().url().nullable().optional(),
   specialization: z.string(),
   qualification: z.string(),
   years_of_experience: z.number().min(0),
-  social_links: z.record(z.string()).optional(),
+  social_links: z.record(z.string()).nullable().optional(),
   status: z.enum(['active', 'inactive', 'suspended']).default('active')
 });
 
@@ -93,16 +94,16 @@ export async function POST(request: Request) {
       args: [
         validated.name,
         validated.email,
-        validated.bio,
-        validated.contact_number,
-        validated.address,
-        validated.profile_image_url,
+        validated.bio ?? null,
+        validated.contact_number ?? null,
+        validated.address ?? null,
+        validated.profile_image_url ?? null,
         validated.specialization,
         validated.qualification,
         validated.years_of_experience,
-        JSON.stringify(validated.social_links || {}),
+        validated.social_links ? JSON.stringify(validated.social_links) : null,
         validated.status
-      ]
+      ] as const
     });
 
     return NextResponse.json({

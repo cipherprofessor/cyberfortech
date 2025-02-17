@@ -1,5 +1,23 @@
 // types/teacher.ts
-export interface Teacher {
+
+  
+  export interface TeacherDisplay {
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    qualification: string;
+    subject: {
+      name: string;
+      color: string;
+    };
+  }
+
+
+// types/teacher.ts
+
+// This is the base API response type
+export interface TeacherAPI {
     id: string;
     name: string;
     email: string;
@@ -17,46 +35,58 @@ export interface Teacher {
     status: string;
     created_at?: string;
     updated_at?: string;
-  }
-  
-  export interface TeacherDisplay {
+}
+
+// This is the type used in the UI components
+export interface Teacher {
     id: string;
     name: string;
-    email: string;
+    email: string;  // Added email
     avatar: string;
     qualification: string;
     subject: {
-      name: string;
-      color: string;
+        name: string;
+        color: string;
     };
-  }
-
-
-  export interface Teacher {
-  id: string;
-  name: string;
-  avatar: string;
-  qualification: string;
-  subject: {
-    name: string;
-    color: string;
-  };
 }
 
+// Props types
 export interface TeachersListProps {
-  data: Teacher[];
-  title?: string;
-  className?: string;
-  onViewAll?: () => void;
-  itemsPerPage?: number;
-  onTeacherUpdate?: (teacher: Teacher) => void;
-  onTeacherDelete?: (teacherId: string) => void;
+    data: Teacher[];
+    title?: string;
+    className?: string;
+    onViewAll?: () => void;
+    itemsPerPage?: number;
+    currentPage?: number;
+    totalPages?: number;
+    onPageChange?: (page: number) => void;
+    onSearch?: (term: string) => void;
+    onTeacherClick?: (teacher: Teacher) => void;
+    onEdit?: (teacher: Teacher) => void;         // Changed from onTeacherUpdate
+    onDelete?: (teacher: Teacher) => void;       // Changed from onTeacherDelete
 }
-
 
 export interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     teacher: Teacher | null;
-  }
-  
+}
+
+export interface EditModalProps extends ModalProps {
+    onSave: (teacher: Teacher) => void;
+}
+
+export interface DeleteModalProps extends ModalProps {
+    onConfirm: () => void;
+}
+
+
+
+export const subjectColors: Record<string, string> = {
+    'Full Stack Development': '#818cf8',
+    'English': '#a78bfa',
+    'Physics': '#ef4444',
+    'Mathematics': '#10b981',
+    'Chemistry': '#f59e0b',
+    'Biology': '#3b82f6'
+  };

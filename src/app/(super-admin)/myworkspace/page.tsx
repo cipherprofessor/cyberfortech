@@ -307,13 +307,13 @@ export default function MyWorkspacePage() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <div className="p-6">
-            <TeachersList 
+            {/* <TeachersList 
         data={teachersList}
         itemsPerPage={5}
         // onTeacherClick={handleTeacherClick}
         onTeacherUpdate={() => console.log('Teacher updated')}
       onTeacherDelete={() => console.log('Teacher deleted')}
-      />
+      /> */}
       
             </div>
           </motion.div>

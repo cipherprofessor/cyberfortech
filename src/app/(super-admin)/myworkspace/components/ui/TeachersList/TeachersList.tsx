@@ -32,14 +32,18 @@ const getSubjectIcon = (subjectName: string) => {
 };
 
 const TeachersList: React.FC<TeachersListProps> = ({
-  data,
-  title = "Teachers List",
-  className = "",
-  onViewAll,
-  itemsPerPage = 5,
-  onTeacherUpdate,
-  onTeacherDelete
-}) => {
+    data,
+    title = "Teachers List",
+    className = "",
+    onViewAll,
+    itemsPerPage = 5,
+    // currentPage,
+    // totalPages,
+    onPageChange,
+    onSearch,
+    onEdit,
+    onDelete
+  }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
@@ -204,27 +208,27 @@ const TeachersList: React.FC<TeachersListProps> = ({
         teacher={selectedTeacher}
       />
 
-      <EditTeacherModal
-        isOpen={modalState.edit}
-        onClose={() => setModalState(prev => ({ ...prev, edit: false }))}
-        teacher={selectedTeacher}
-        onSave={(updatedTeacher) => {
-          onTeacherUpdate?.(updatedTeacher);
-          setModalState(prev => ({ ...prev, edit: false }));
-        }}
-      />
+<EditTeacherModal
+            isOpen={modalState.edit}
+            onClose={() => setModalState(prev => ({ ...prev, edit: false }))}
+            teacher={selectedTeacher}
+            onSave={(updatedTeacher) => {
+              onEdit?.(updatedTeacher);  // Using new prop name
+              setModalState(prev => ({ ...prev, edit: false }));
+            }}
+          />
 
-      <DeleteTeacherModal
-        isOpen={modalState.delete}
-        onClose={() => setModalState(prev => ({ ...prev, delete: false }))}
-        teacher={selectedTeacher}
-        onConfirm={() => {
-          if (selectedTeacher) {
-            onTeacherDelete?.(selectedTeacher.id);
-            setModalState(prev => ({ ...prev, delete: false }));
-          }
-        }}
-      />
+          <DeleteTeacherModal
+            isOpen={modalState.delete}
+            onClose={() => setModalState(prev => ({ ...prev, delete: false }))}
+            teacher={selectedTeacher}
+            onConfirm={() => {
+              if (selectedTeacher) {
+                onDelete?.(selectedTeacher);  // Using new prop name and passing full teacher object
+                setModalState(prev => ({ ...prev, delete: false }));
+              }
+            }}
+          />
     </div>
   );
 };

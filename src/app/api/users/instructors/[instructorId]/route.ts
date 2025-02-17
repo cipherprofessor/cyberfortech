@@ -1,3 +1,4 @@
+//src/app/api/users/instructors/[instructorId]/route.ts
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -5,14 +6,14 @@ import { z } from 'zod';
 const updateSchema = z.object({
   name: z.string().min(2).optional(),
   email: z.string().email().optional(),
-  bio: z.string().optional(),
-  contact_number: z.string().optional(),
-  address: z.string().optional(),
-  profile_image_url: z.string().url().optional(),
+  bio: z.string().nullable().optional(),
+  contact_number: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  profile_image_url: z.string().url().nullable().optional(),
   specialization: z.string().optional(),
   qualification: z.string().optional(),
   years_of_experience: z.number().min(0).optional(),
-  social_links: z.record(z.string()).optional(),
+  social_links: z.record(z.string()).nullable().optional(),
   status: z.enum(['active', 'inactive', 'suspended']).optional()
 });
 
@@ -60,9 +61,16 @@ export async function PATCH(
     const data = await request.json();
     const validated = updateSchema.parse(data);
 
-    // Build dynamic update query
-    const updates = Object.keys(validated).map(key => `${key} = ?`);
-    const values = Object.values(validated);
+    // Filter out undefined values and build update query
+    const updates: string[] = [];
+    const values: any[] = [];
+
+    Object.entries(validated).forEach(([key, value]) => {
+      if (value !== undefined) {
+        updates.push(`${key} = ?`);
+        values.push(value === null ? null : value);
+      }
+    });
 
     if (updates.length === 0) {
       return NextResponse.json(
@@ -78,7 +86,7 @@ export async function PATCH(
         WHERE id = ?
         RETURNING *
       `,
-      args: [...values, params.instructorId]
+      args: [...values, params.instructorId] as const
     });
 
     if (!result.rows.length) {
@@ -106,6 +114,8 @@ export async function PATCH(
     );
   }
 }
+
+
 
 export async function DELETE(
   request: Request,

@@ -246,6 +246,7 @@
   .qualification {
     color: var(--text-secondary);
     font-size: 0.875rem;
+    font-weight: 500;
     transition: all 0.2s ease;
   
     &:hover {
@@ -278,6 +279,23 @@
       svg {
         transform: scale(1.1);
       }
+    }
+  }
+
+  .subject {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: color-mix(in srgb, var(--subject-color) 10%, transparent);
+    color: var(--subject-color);
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background: color-mix(in srgb, var(--subject-color) 15%, transparent);
     }
   }
   

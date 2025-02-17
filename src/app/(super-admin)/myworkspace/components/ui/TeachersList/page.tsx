@@ -6,49 +6,52 @@ import { toast } from 'sonner';
 import TeachersListSkeleton from './TableSkeleton';
 import { ViewTeacherModal, EditTeacherModal, DeleteTeacherModal } from './TeacherModals';
 import TeachersList from './TeachersList';
-import { TeacherDisplay, Teacher } from './types';
+import { TeacherDisplay, Teacher, TeacherAPI } from './types';
+import { Plus } from 'lucide-react';
+import CreateTeacherModal from './CreateTeacherModal';
 
 
 // Map subject names to colors
-const subjectColors: Record<string, string> = {
-  'Full Stack Development': '#818cf8',
-  'English': '#a78bfa',
-  'Physics': '#ef4444',
-  'Mathematics': '#10b981',
-  'Chemistry': '#f59e0b',
-  'Biology': '#3b82f6'
-};
+export const subjectColors: Record<string, string> = {
+    'Full Stack Development': '#818cf8',
+    'English': '#a78bfa',
+    'Physics': '#ef4444',
+    'Mathematics': '#10b981',
+    'Chemistry': '#f59e0b',
+    'Biology': '#3b82f6'
+  };
 
 const TeachersPage = () => {
-  const [teachers, setTeachers] = useState<TeacherDisplay[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTeacher, setSelectedTeacher] = useState<TeacherDisplay | null>(null);
-  const [modalState, setModalState] = useState({
-    view: false,
-    edit: false,
-    delete: false
-  });
+    const [teachers, setTeachers] = useState<Teacher[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [modalState, setModalState] = useState({
+        view: false,
+        edit: false,
+        delete: false
+    });
 
-  const transformTeacher = (teacher: Teacher): TeacherDisplay => ({
-    id: teacher.id,
-    name: teacher.name,
-    email: teacher.email,
-    avatar: teacher.profile_image_url || '/placeholders/teacher-avatar.png',
-    qualification: teacher.qualification,
-    subject: {
-      name: teacher.specialization,
-      color: subjectColors[teacher.specialization] || '#6b7280'
-    }
-  });
+    const transformTeacher = (apiTeacher: TeacherAPI): Teacher => ({
+        id: apiTeacher.id,
+        name: apiTeacher.name,
+        email: apiTeacher.email,
+        avatar: apiTeacher.profile_image_url || '/placeholders/teacher-avatar.png',
+        qualification: apiTeacher.qualification,
+        subject: {
+            name: apiTeacher.specialization,
+            color: subjectColors[apiTeacher.specialization] || '#6b7280'
+        }
+    });
 
   const fetchTeachers = async () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/instructors?page=${currentPage}&search=${searchTerm}&limit=5`
+        `/api/users/instructors?page=${currentPage}&search=${searchTerm}&limit=5`
       );
       const data = await response.json();
 
@@ -68,16 +71,16 @@ const TeachersPage = () => {
     fetchTeachers();
   }, [currentPage, searchTerm]);
 
-  const handleEditTeacher = async (teacherDisplay: TeacherDisplay) => {
+  const handleEditTeacher = async (teacher: Teacher) => {
     try {
-      const response = await fetch(`/api/instructors/${teacherDisplay.id}`, {
+      const response = await fetch(`/api/users/instructors/${teacher.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: teacherDisplay.name,
-          email: teacherDisplay.email,
-          qualification: teacherDisplay.qualification,
-          specialization: teacherDisplay.subject.name
+          name: teacher.name,
+          email: teacher.email,
+          qualification: teacher.qualification,
+          specialization: teacher.subject.name
         })
       });
 
@@ -95,7 +98,7 @@ const TeachersPage = () => {
 
   const handleDeleteTeacher = async (teacherId: string) => {
     try {
-      const response = await fetch(`/api/instructors/${teacherId}`, {
+      const response = await fetch(`/api/users/instructors/${teacherId}`, {
         method: 'DELETE'
       });
 
@@ -111,12 +114,41 @@ const TeachersPage = () => {
     }
   };
 
+
+  const handleCreateTeacher = async (data: any) => {
+    try {
+      const response = await fetch('/api/users/instructors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) throw new Error('Failed to create teacher');
+
+      toast.success('Teacher created successfully');
+      fetchTeachers();
+      setShowCreateModal(false);
+    } catch (error) {
+      toast.error('Failed to create teacher');
+      console.error('Error creating teacher:', error);
+    }
+  };
+
   if (loading) {
     return <TeachersListSkeleton />;
   }
 
   return (
-    <>
+     <div className="p-4">
+      <div className="flex justify-between items-center mb-4">
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+        >
+          <Plus size={16} />
+          Add Teacher
+        </button>
+      </div>
       <TeachersList
         data={teachers}
         title="Teachers List"
@@ -139,6 +171,12 @@ const TeachersPage = () => {
           setModalState(prev => ({ ...prev, delete: true }));
         }}
       />
+      
+        <CreateTeacherModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={handleCreateTeacher}
+      />
 
       {selectedTeacher && (
         <>
@@ -148,7 +186,7 @@ const TeachersPage = () => {
             teacher={selectedTeacher}
           />
 
-          <EditTeacherModal
+<EditTeacherModal
             isOpen={modalState.edit}
             onClose={() => setModalState(prev => ({ ...prev, edit: false }))}
             teacher={selectedTeacher}
@@ -163,7 +201,7 @@ const TeachersPage = () => {
           />
         </>
       )}
-    </>
+  </div>
   );
 };
 
