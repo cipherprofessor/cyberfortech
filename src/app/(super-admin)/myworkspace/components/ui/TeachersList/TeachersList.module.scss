@@ -335,12 +335,39 @@
   }
   
   // Add tooltip styles
-  [title] {
+//   [title] {
+//     position: relative;
+//   }
+  
+//   [title]:hover::after {
+//     content: attr(title);
+//     position: absolute;
+//     bottom: 100%;
+//     left: 50%;
+//     transform: translateX(-50%);
+//     padding: 0.25rem 0.5rem;
+//     border-radius: 0.25rem;
+//     background: var(--bg-primary);
+//     color: var(--text-primary);
+//     font-size: 0.75rem;
+//     white-space: nowrap;
+//     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+//     z-index: 10;
+//     margin-bottom: 0.5rem;
+//   }
+
+
+// Remove the generic [title] selectors and replace with scoped classes
+.tooltipWrapper {
     position: relative;
+    
+    &:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
   }
   
-  [title]:hover::after {
-    content: attr(title);
+  .tooltip {
     position: absolute;
     bottom: 100%;
     left: 50%;
@@ -354,4 +381,7 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     z-index: 10;
     margin-bottom: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
   }
