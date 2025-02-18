@@ -61,6 +61,8 @@ const TeacherForm: React.FC<TeacherFormProps> = ({
     status: 'active'
   });
 
+  console.log('formData', formData);
+
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {

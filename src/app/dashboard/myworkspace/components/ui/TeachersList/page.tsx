@@ -58,6 +58,8 @@ const TeachersPage = () => {
     updated_at: apiTeacher.updated_at
   });
 
+  console.log('teachers', teachers);
+
   const transformTeacherToFormData = (teacher: Teacher | null): TeacherFormData => {
     if (!teacher) {
       return {
@@ -136,6 +138,8 @@ const TeachersPage = () => {
           status: data.status
         })
       });
+
+      console.log('response', response);
 
       const responseData = await response.json();
 

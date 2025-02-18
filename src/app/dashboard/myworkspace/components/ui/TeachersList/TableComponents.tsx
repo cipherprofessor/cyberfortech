@@ -56,11 +56,13 @@ export const Chip: React.FC<ChipProps> = ({
   </div>
 );
 
-export const ColumnIconMap = {
+// Not used, but have to use
+
+ const ColumnIconMap = {
   instructor: { icon: Briefcase, label: 'Instructor' },
   specialization: { icon: Award, label: 'Specialization' },
   bio: { icon: Activity, label: 'Bio' },
-  contact: { icon: Phone, label: 'Contact' },
+  contact_number: { icon: Phone, label: 'Contactsss' },
   email: { icon: Mail, label: 'Email' },
   address: { icon: MapPin, label: 'Address' },
   rating: { icon: Star, label: 'Rating' },

@@ -9,7 +9,7 @@ export interface TeacherAPI {
   name: string;
   email: string;
   bio: string | null;
-  contact_number: string | null;
+  contact_number?: string | null;
   address: string | null;
   profile_image_url: string | null;
   specialization: string | null;
@@ -142,7 +142,7 @@ export const DEFAULT_COLUMNS: Record<string, ColumnConfig> = {
   instructor: { label: 'Instructor', default: true },
   specialization: { label: 'Specialization', default: true },
   bio: { label: 'Bio', default: true },
-  contact: { label: 'Contact Number', default: true },
+  contact_number: { label: 'Contact Number', default: true },
   rating: { label: 'Rating', default: true },
   total_courses: { label: 'Total Courses', default: true },
   total_students: { label: 'Total Students', default: true },
