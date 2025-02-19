@@ -1,6 +1,6 @@
 // src/app/(routes)/courses/[courseId]/page.tsx
 import { Suspense } from 'react';
-import { CourseDetailClient } from './CourseDetailClient';
+import { CourseDetailClient } from './CourseDetailsPage';
 
 export default async function CourseDetailPage({ 
   params 

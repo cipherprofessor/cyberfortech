@@ -111,7 +111,6 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
       >
         <div className={styles.header}>
           <motion.div 
-            className={styles.courseHeader}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -122,7 +121,6 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
         
         <div className={styles.courseContent}>
           <motion.main 
-            className={styles.mainContent}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -131,7 +129,6 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
           </motion.main>
           
           <motion.aside 
-            className={styles.sidebar}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}

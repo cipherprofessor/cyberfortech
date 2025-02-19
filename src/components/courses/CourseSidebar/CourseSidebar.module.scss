@@ -1,154 +1,242 @@
 // src/components/courses/CourseSidebar/CourseSidebar.module.scss
 
-:root {
-  --sidebar-bg-light: #ffffff;
-  --sidebar-bg-dark: #1a1a1a;
-  --text-primary-light: #1a1a1a;
-  --text-primary-dark: #ffffff;
-  --text-secondary-light: #666666;
-  --text-secondary-dark: #a0a0a0;
-  --border-light: #e5e7eb;
-  --border-dark: #2d2d2d;
+// Base theme class with variables
+.themeWrapper {
+  // Light theme (default)
   --primary-color: #3b83f6;
   --primary-hover: #2563eb;
   --error-color: #ef4444;
+  --sidebar-bg: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --border-color: #e5e7eb;
+  --button-bg: #f3f4f6;
+  --button-hover: #e5e7eb;
+  --button-text: #1a1a1a;
+  --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-.sidebar {
-  @apply relative rounded-xl p-6 shadow-lg transition-all duration-300;
-  background: var(--sidebar-bg-light);
-  border: 1px solid var(--border-light);
+// Dark theme modifier
+.dark {
+  --sidebar-bg: rgb(25, 25, 28);
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border-color: #2d2d2d;
+  --button-bg: #2d2d2d;
+  --button-hover: #404040;
+  --button-text: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
 
-  @media (prefers-color-scheme: dark) {
-    background: var(--sidebar-bg-dark);
-    border-color: var(--border-dark);
-  }
-
+// Mixins
+@mixin mobile {
   @media (max-width: 768px) {
-    @apply p-4;
+    @content;
   }
 }
+
+@mixin tablet {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
+// Component Styles
+.sidebar {
+  composes: themeWrapper;
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  background-color: var(--sidebar-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  transition: all 0.3s ease;
+
+  @include mobile {
+    padding: 1rem;
+  }
+}
+
+// Rest of your existing styles remain the same...
 
 .preview {
-  @apply relative mb-6 overflow-hidden rounded-lg;
+  position: relative;
+  margin-bottom: 1.5rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
   aspect-ratio: 16/9;
 
   &Image {
-    @apply h-full w-full object-cover transition-transform duration-300;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+
     &:hover {
       transform: scale(1.05);
     }
   }
 
   .playIcon {
-    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer text-white opacity-80 transition-opacity duration-300;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    opacity: 0.8;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
     &:hover {
-      @apply opacity-100;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
     }
   }
 }
 
 .pricing {
-  @apply mb-6 text-center;
+  margin-bottom: 1.5rem;
+  text-align: center;
 
   .price {
-    @apply text-2xl font-bold;
-    color: var(--text-primary-light);
-
-    @media (prefers-color-scheme: dark) {
-      color: var(--text-primary-dark);
-    }
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-primary);
   }
 }
 
 .actions {
-  @apply space-y-4;
+  margin-bottom: 1.5rem;
 
   .enrollButton {
-    @apply flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-white transition-all duration-300;
-    
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+
     &:hover:not(:disabled) {
-      @apply bg-primary-700;
+      background-color: var(--primary-hover);
     }
 
     &:disabled {
-      @apply cursor-not-allowed opacity-50;
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 
   .error {
-    @apply mt-2 text-sm text-red-500;
+    margin-top: 0.5rem;
+    color: var(--error-color);
+    font-size: 0.875rem;
   }
 }
 
 .secondaryActions {
-  @apply grid grid-cols-2 gap-4;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
 
   .actionButton {
-    @apply flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 transition-all duration-300;
-    
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
     &:hover {
-      @apply border-primary-600 bg-primary-50;
+      background-color: var(--button-hover);
+      border-color: var(--primary-color);
     }
 
-    @media (prefers-color-scheme: dark) {
-      @apply border-gray-700;
-      
-      &:hover {
-        @apply border-primary-400 bg-primary-900;
-      }
+    .icon {
+      width: 1.25rem;
+      height: 1.25rem;
     }
   }
 }
 
 .info {
-  @apply mt-6 space-y-4 border-t border-gray-200 pt-6;
-
-  @media (prefers-color-scheme: dark) {
-    @apply border-gray-700;
-  }
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
 
   .infoItem {
-    @apply flex items-center justify-between;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     .label {
-      @apply text-sm;
-      color: var(--text-secondary-light);
-
-      @media (prefers-color-scheme: dark) {
-        color: var(--text-secondary-dark);
-      }
+      color: var(--text-secondary);
+      font-size: 0.875rem;
     }
 
     .value {
-      @apply font-medium;
-      color: var(--text-primary-light);
-
-      @media (prefers-color-scheme: dark) {
-        color: var(--text-primary-dark);
-      }
+      color: var(--text-primary);
+      font-weight: 500;
     }
   }
 }
 
 .guarantee {
-  @apply mt-6 space-y-2 border-t border-gray-200 pt-6 text-center text-sm;
-
-  @media (prefers-color-scheme: dark) {
-    @apply border-gray-700;
-  }
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
 
   p {
-    color: var(--text-secondary-light);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
 
-    @media (prefers-color-scheme: dark) {
-      color: var(--text-secondary-dark);
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }
 
+// RTL Support
 [dir="rtl"] {
   .icon {
-    @apply rotate-180;
+    transform: rotate(180deg);
+  }
+
+  .secondaryActions {
+    .actionButton {
+      flex-direction: row-reverse;
+    }
+  }
+}
+
+// Animation classes
+.fadeIn {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

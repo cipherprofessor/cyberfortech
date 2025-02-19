@@ -4,7 +4,6 @@
   margin: 0 auto;
   padding: 2rem;
   min-height: 100vh;
-  background: var(--background);
   transition: all 0.3s ease;
   position: relative;
 
@@ -20,7 +19,7 @@
   }
 
   &.dark {
-    --background: #0f172a;
+    --background: rgb(25, 25, 28);
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
     --card-bg: #1e293b;

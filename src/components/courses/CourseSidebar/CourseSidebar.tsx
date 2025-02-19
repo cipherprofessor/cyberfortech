@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { ShoppingCart, Share2, Heart, PlayCircle } from 'lucide-react';
-import cn from 'classnames';
 import styles from './CourseSidebar.module.scss';
 import { Button } from '@/components/ui/button';
 import { CourseSidebarProps } from '../types';
@@ -23,8 +22,14 @@ export function CourseSidebar({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const { theme, setTheme } = useTheme();
+
+  // Combine classes
+  const sidebarClasses = [
+    styles.sidebar,
+    className,
+    theme === 'dark' ? styles.dark : '',
+  ].filter(Boolean).join(' ');
 
   const handleEnroll = async () => {
     if (!onEnroll) {
@@ -74,16 +79,17 @@ export function CourseSidebar({
 
   return (
     <motion.div 
-      className={cn(styles.sidebar, className, {
-        [styles.dark]: isDark
-      })}
+      className={sidebarClasses}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      style={customTheme ? {
-        '--primary-color': customTheme.primary,
-        '--primary-hover': customTheme.secondary,
-      } as React.CSSProperties : {}}
+      data-theme={theme}
+      style={
+        customTheme ? {
+          '--primary-color': customTheme.primary,
+          '--primary-hover': customTheme.secondary,
+        } as React.CSSProperties : {}
+      }
     >
       <div className={styles.preview}>
         <img 
