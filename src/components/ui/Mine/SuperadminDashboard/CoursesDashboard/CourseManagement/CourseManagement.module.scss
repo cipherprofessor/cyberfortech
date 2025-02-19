@@ -1,11 +1,11 @@
 // src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/CourseManagement.module.scss
 //Alpha Centauri
 .container {
-  width: 100%;
+  // width: 100%;
   min-height: 100vh;
   padding: 2rem;
-  background: var(--background);
   transition: all 0.3s ease;
+  
 
   &.dark {
     --background: #0f172a;

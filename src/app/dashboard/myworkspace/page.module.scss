@@ -1,11 +1,11 @@
 .container {
     display: flex;
     min-height: 100vh;
-    background-color: #f9fafb;
+    // background-color: #f9fafb;
     transition: background-color 0.3s ease;
   
     &.dark {
-      background-color: rgb(45,45,48);
+      // background-color: rgb(45,45,48);
     }
 
     

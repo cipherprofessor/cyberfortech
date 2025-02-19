@@ -56,7 +56,7 @@ export function Sidebar() {
     {
       label: 'Dashboard',
       icon: <LayoutDashboard size={18} className={styles.dashboardIcon}/>,
-      href: '/dashboard/myworkspace/dashboard',
+      href: '/dashboard/myworkspace/menus/dashboard',
       labelClassName: styles.mainLabel 
     },
     {
@@ -80,7 +80,7 @@ export function Sidebar() {
       ],
     },
     {
-      label: 'Communications',
+      label: 'Messages',
       icon: <MessageCircle size={18} className={styles.commicationIcon} />,
       labelClassName: styles.mainLabel,
       subItems: [
