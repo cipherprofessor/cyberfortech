@@ -85,7 +85,7 @@ export function Sidebar() {
       labelClassName: styles.mainLabel,
       subItems: [
         { label: 'Inbox', href: '/dashboard/myworkspace/menus/messages/inbox', icon: <MailIcon size={16} className={styles.commicationInboxIcon}  />,labelClassName: styles.subLabel },
-        { label: 'Forum', href: '/dashboard/myworkspace/menus/messages/sent', icon: <Quote size={16} className={styles.commicationForumIcon} /> ,labelClassName: styles.subLabel},
+        { label: 'Forum', href: '/dashboard/myworkspace/menus/messages/forum', icon: <Quote size={16} className={styles.commicationForumIcon} /> ,labelClassName: styles.subLabel},
         { label: 'Drafts', href: '/dashboard/myworkspace/menus/messages/drafts', icon: <MailboxIcon size={16} className={styles.commicationGrowthIcon} />,labelClassName: styles.subLabel },
       ],
     },
