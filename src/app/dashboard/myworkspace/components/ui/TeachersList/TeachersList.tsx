@@ -10,7 +10,8 @@ import {
   Eye,
   Pencil,
   Trash2,
-  Plus
+  Plus,
+  Contact2
 } from 'lucide-react';
 import { ViewTeacherModal, EditTeacherModal, DeleteTeacherModal } from './TeacherModals';
 // At the top of TeachersList.tsx
@@ -119,14 +120,14 @@ const renderCellContent = (teacher: Teacher, column: string): React.ReactNode =>
         </div>
       );
 
-    case 'specialization':
-      return (
-        <Chip 
-          label={teacher.subject.name}
-          icon={getColumnIcon('specialization')}
-          color={teacher.subject.color}
-        />
-      );
+    // case 'specialization':
+    //   return (
+    //     <Chip 
+    //       label={teacher.subject.name}
+    //       icon={getColumnIcon('specialization')}
+    //       color={teacher.subject.color}
+    //     />
+    //   );
 
     case 'rating':
       return <Rating value={teacher.rating} />;

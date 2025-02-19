@@ -1,81 +1,70 @@
 // src/components/courses/CourseHeader/CourseHeader.module.scss
-.header {
-  position: relative;
-  padding: 3rem 0;
-  background: var(--background);
-  border-bottom: 1px solid var(--border-color);
-  transition: all 0.3s ease;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 200px;
-    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-    opacity: 0.1;
-    z-index: 0;
+.header {
+  width: 100%;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 1rem;
+
+  @media (min-width: 768px) {
+    padding: 3rem 2rem;
   }
 
   &.dark {
-    --background: #1a1a1a;
     --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
-    --border-color: #404040;
-    
-    &::before {
-      opacity: 0.05;
-    }
+    --text-secondary: #a0aec0;
+    --border: #2d3748;
+    --background: #1a202c;
+    --stat-bg: #2d3748;
   }
+
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --border: #e2e8f0;
+  --background: #ffffff;
+  --stat-bg: #f7fafc;
 }
 
 .content {
-  position: relative;
-  z-index: 1;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+}
+
+.breadcrumbs {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+
+  .separator {
+    color: var(--text-secondary);
+  }
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 1rem;
-  line-height: 1.2;
-  
-  @media (max-width: 768px) {
-    font-size: 2rem;
+
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
   }
 }
 
 .description {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: var(--text-secondary);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   line-height: 1.6;
-  
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
 }
 
 .instructorInfo {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: var(--card-bg);
-  border-radius: 1rem;
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
+  margin-bottom: 1.5rem;
 }
 
 .avatar {
@@ -83,7 +72,6 @@
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #3b82f6;
 }
 
 .instructorDetails {
@@ -94,7 +82,6 @@
 .instructorLabel {
   font-size: 0.875rem;
   color: var(--text-secondary);
-  margin-bottom: 0.25rem;
 }
 
 .instructorName {
@@ -105,9 +92,13 @@
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .statItem {
@@ -115,25 +106,17 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--card-bg);
+  background: var(--stat-bg);
   border-radius: 0.75rem;
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-  cursor: pointer;
+  transition: transform 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    .icon {
-      color: #3b82f6;
-    }
   }
 }
 
 .icon {
   color: var(--text-secondary);
-  transition: color 0.3s ease;
 }
 
 .statContent {
@@ -148,37 +131,6 @@
 }
 
 .statLabel {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-}
-
-.breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   font-size: 0.875rem;
   color: var(--text-secondary);
-
-  .separator {
-    color: var(--border-color);
-  }
-
-  span:last-child {
-    color: #3b82f6;
-    font-weight: 500;
-  }
-}
-
-@media (max-width: 640px) {
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .statItem {
-    padding: 0.75rem;
-  }
-
-  .statValue {
-    font-size: 1rem;
-  }
 }

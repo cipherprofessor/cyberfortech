@@ -14,11 +14,11 @@ function safeNumber(value: unknown): number {
 
 export async function GET(
   request: Request,
-  { params }: { params: { courseId: string | Promise<string> } }
+  { params }: { params: { courseId: string } }
 ) {
   try {
-    // Resolve the courseId
-    const courseId = await Promise.resolve(params.courseId);
+    // Await the params object itself
+    const { courseId } = await params;
     
     if (!courseId) {
       return NextResponse.json(

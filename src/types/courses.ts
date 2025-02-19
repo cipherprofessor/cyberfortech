@@ -127,11 +127,11 @@ export interface CourseLesson {
     order_index: number;
 }
 
-export interface CourseContentProps {
-  course: {
-    sections: Section[];
-  };
-}
+// export interface CourseContentProps {
+//   course: {
+//     sections: Section[];
+//   };
+// }
 
 export interface CourseModalProps {
     isOpen: boolean;

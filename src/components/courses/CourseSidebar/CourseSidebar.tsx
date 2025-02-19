@@ -2,36 +2,32 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import { useAuth } from '@/hooks/useAuth';
-
-import { ShoppingCart, Share2, Heart, PlayCircle } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { ShoppingCart, Share2, Heart, PlayCircle } from 'lucide-react';
+import cn from 'classnames';
 import styles from './CourseSidebar.module.scss';
-import { Button } from '@heroui/button';
+import { Button } from '@/components/ui/button';
+import { CourseSidebarProps } from '../types';
 
-interface CourseSidebarProps {
-  course: {
-    id: string;
-    price: number;
-    total_students: number;
-    duration: string;
-    level: string;
-  };
-}
 
-export function CourseSidebar({ course }: CourseSidebarProps) {
+export function CourseSidebar({
+  course,
+  className,
+  onEnroll,
+  onWishlist,
+  onShare,
+  customTheme
+}: CourseSidebarProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { user } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const handleEnroll = async () => {
-    if (!user) {
+    if (!onEnroll) {
       router.push('/login');
       return;
     }
@@ -40,14 +36,32 @@ export function CourseSidebar({ course }: CourseSidebarProps) {
     setError(null);
 
     try {
-      await axios.post('/api/courses/enroll', {
-        courseId: course.id
-      });
+      await onEnroll(course.id);
       router.push(`/dashboard/courses/${course.id}`);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to enroll in course');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to enroll in course');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleWishlist = async () => {
+    if (onWishlist) {
+      try {
+        await onWishlist(course.id);
+      } catch (err) {
+        console.error('Failed to add to wishlist:', err);
+      }
+    }
+  };
+
+  const handleShare = async () => {
+    if (onShare) {
+      try {
+        await onShare(course.id);
+      } catch (err) {
+        console.error('Failed to share course:', err);
+      }
     }
   };
 
@@ -60,21 +74,37 @@ export function CourseSidebar({ course }: CourseSidebarProps) {
 
   return (
     <motion.div 
-      className={`${styles.sidebar} ${isDark ? styles.dark : ''}`}
+      className={cn(styles.sidebar, className, {
+        [styles.dark]: isDark
+      })}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.3 }}
+      style={customTheme ? {
+        '--primary-color': customTheme.primary,
+        '--primary-hover': customTheme.secondary,
+      } as React.CSSProperties : {}}
     >
       <div className={styles.preview}>
         <img 
-          src="/api/placeholder/350/200" 
-          alt="Course Preview" 
+          src={course.image_url || "/api/placeholder/350/200"}
+          alt={`Preview for ${course.id}`}
           className={styles.previewImage}
+          loading="lazy"
         />
-        <PlayCircle className={styles.playIcon} size={48} />
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          {/* <PlayCircle 
+            className={styles.playIcon} 
+            size={48} 
+            aria-label="Play preview"
+          /> */}
+        </motion.div>
       </div>
 
-      <div className={styles.pricing}>
+      <div className={styles.pricing} aria-label="Course pricing">
         <span className={styles.price}>{formatPrice(course.price)}</span>
       </div>
 
@@ -83,35 +113,58 @@ export function CourseSidebar({ course }: CourseSidebarProps) {
           onClick={handleEnroll}
           className={styles.enrollButton}
           disabled={loading}
+          aria-busy={loading}
         >
-          <ShoppingCart className={styles.icon} size={20} />
+          <ShoppingCart className={styles.icon} size={20} aria-hidden="true" />
           {loading ? 'Enrolling...' : 'Enroll Now'}
         </Button>
 
-        {error && <p className={styles.error}>{error}</p>}
+        <AnimatePresence>
+          {error && (
+            <motion.p
+              className={styles.error}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              role="alert"
+            >
+              {error}
+            </motion.p>
+          )}
+        </AnimatePresence>
 
         <div className={styles.secondaryActions}>
-          <Button variant="flat" className={styles.actionButton}>
-            <Heart className={styles.icon} size={20} />
+          <Button 
+            variant="outline" 
+            className={styles.actionButton}
+            onClick={handleWishlist}
+            aria-label="Add to wishlist"
+          >
+            <Heart className={styles.icon} size={20} aria-hidden="true" />
             Wishlist
           </Button>
-          <Button variant="flat" className={styles.actionButton}>
-            <Share2 className={styles.icon} size={20} />
+          <Button 
+            variant="outline" 
+            className={styles.actionButton}
+            onClick={handleShare}
+            aria-label="Share course"
+          >
+            <Share2 className={styles.icon} size={20} aria-hidden="true" />
             Share
           </Button>
         </div>
       </div>
 
-      <div className={styles.info}>
-        <div className={styles.infoItem}>
+      <div className={styles.info} role="list">
+        <div className={styles.infoItem} role="listitem">
           <span className={styles.label}>Students</span>
-          <span className={styles.value}>{course.total_students}</span>
+          <span className={styles.value}>{course.total_students.toLocaleString()}</span>
         </div>
-        <div className={styles.infoItem}>
+        <div className={styles.infoItem} role="listitem">
           <span className={styles.label}>Duration</span>
           <span className={styles.value}>{course.duration}</span>
         </div>
-        <div className={styles.infoItem}>
+        <div className={styles.infoItem} role="listitem">
           <span className={styles.label}>Level</span>
           <span className={styles.value}>{course.level}</span>
         </div>

@@ -2,16 +2,16 @@
 import { Suspense } from 'react';
 import { CourseDetailClient } from './CourseDetailClient';
 
-interface CourseDetailPageProps {
-  params: {
-    courseId: string;
-  };
-}
+export default async function CourseDetailPage({ 
+  params 
+}: { 
+  params: { courseId: string } 
+}) {
+  const { courseId } = await params;
 
-export default async function CourseDetailPage({ params }: CourseDetailPageProps) {
   return (
     <Suspense fallback={<LoadingSkeleton />}>
-      <CourseDetailClient courseId={params.courseId} />
+      <CourseDetailClient courseId={courseId} />
     </Suspense>
   );
 }

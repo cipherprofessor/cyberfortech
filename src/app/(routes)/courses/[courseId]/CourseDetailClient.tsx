@@ -1,4 +1,3 @@
-// src/app/(routes)/courses/[courseId]/CourseDetailClient.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -11,11 +10,7 @@ import { useTheme } from 'next-themes';
 import { 
   Loader2, 
   AlertTriangle,
-  RefreshCw,
-  Book,
-  Users,
-  Clock,
-  Trophy
+  RefreshCw
 } from 'lucide-react';
 import styles from './course-detail.module.scss';
 import { Course } from '@/types/courses';
@@ -36,8 +31,8 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
 
     try {
       setLoading(true);
-      const response = await axios.get(`/api/courses/${courseId}`);
-      setCourse(response.data);
+      const { data } = await axios.get<Course>(`/api/courses/${courseId}`);
+      setCourse(data);
       setError(null);
     } catch (err) {
       setError('Failed to load course details');
@@ -106,13 +101,6 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
     );
   }
 
-  const stats = [
-    { icon: Clock, label: 'Duration', value: course.duration },
-    { icon: Users, label: 'Enrolled', value: `${course.total_students} students` },
-    { icon: Trophy, label: 'Level', value: course.level },
-    { icon: Book, label: 'Lessons', value: `${course.sections?.length || 0} sections` }
-  ];
-
   return (
     <AnimatePresence>
       <motion.div 
@@ -127,24 +115,8 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
+            {/* Course Deatils Page header */}
             <CourseHeader course={course} />
-            <div className={styles.statsGrid}>
-              {stats.map((stat, index) => (
-                <motion.div 
-                  key={stat.label}
-                  className={styles.statCard}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * index }}
-                >
-                  <stat.icon className={styles.statIcon} />
-                  <div className={styles.statInfo}>
-                    <span className={styles.statLabel}>{stat.label}</span>
-                    <span className={styles.statValue}>{stat.value}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         </div>
         
@@ -155,7 +127,7 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <CourseContent course={course} />
+            <CourseContent course={{ ...course, duration: course?.duration || '', level: course?.level || 'Beginner' }} />
           </motion.main>
           
           <motion.aside 
@@ -164,7 +136,7 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <CourseSidebar course={course} />
+            <CourseSidebar course={{ ...course, duration: course?.duration || '', level: course?.level || 'Beginner' }} />
           </motion.aside>
         </div>
       </motion.div>

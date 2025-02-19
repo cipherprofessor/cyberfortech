@@ -40,7 +40,7 @@ const TeachersPage = () => {
     email: apiTeacher.email,
     avatar: apiTeacher.profile_image_url || '/placeholders/teacher-avatar.png',
     bio: apiTeacher.bio || '',
-    contact_number: apiTeacher.contact_number || '',
+    contact_number: apiTeacher.contact_number || '99999',
     address: apiTeacher.address || '',
     qualification: apiTeacher.qualification || '',
     subject: {
@@ -52,7 +52,10 @@ const TeachersPage = () => {
     total_courses: apiTeacher.total_courses || 0,
     total_students: apiTeacher.total_students || 0,
     years_of_experience: apiTeacher.years_of_experience || 0,
-    social_links: apiTeacher.social_links || '{}',
+    // social_links: apiTeacher.social_links || '{}',
+    social_links: typeof apiTeacher.social_links === 'string' 
+    ? JSON.parse(apiTeacher.social_links)
+    : apiTeacher.social_links || {},
     status: apiTeacher.status || 'active',
     created_at: apiTeacher.created_at,
     updated_at: apiTeacher.updated_at
