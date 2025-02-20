@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
-import { Sidebar, ViewIcon } from "lucide-react";
+import { ViewIcon } from "lucide-react";
 
 import styles from "./analyticsoverviewpage.module.scss";
-import { courseCategories, mockStats } from "../../../components/lib/mockData";
+import { courseCategories } from "../../../components/lib/mockData";
 import ApacheAreaChart from "@/components/charts/Apache-ECharts/ApacheAreaChart/ApacheAreaChart";
 import ApacheRadarChart from "@/components/charts/Apache-ECharts/ApacheRadarChart/ApacheRadarChart";
 import ActivityTimeline from "../../../components/ui/ActivityTimeline/ActivityTimeline";
@@ -25,35 +25,21 @@ import StudentOverview from "../../../components/ui/StudentOverview/StudentOverv
 import WelcomeBanner from "../../../components/ui/WelcomeBanner/WelcomeBanner";
 import { AnalyticsOverviewMockStatsKPI } from "../analyticsmock";
 
-
-
 export default function MyWorkspacePage() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
   const handleViewAll = () => {
-    // Handle view all click
     console.log('View all clicked');
   };
 
-  
-    const handleProfessorClick = (professor) => {
-      console.log('Clicked professor:', professor);
-      // Handle navigation or modal opening
-    };
+  const handleProfessorClick = (professor) => {
+    console.log('Clicked professor:', professor);
+  };
 
-    const handleViewCourses = () => {
-      // Handle navigation or modal open
-      console.log('View courses clicked');
-    };
-
-    const handleViewAllResults = () => {
-      console.log('View all clicked');
-    };
-
-    const handleTeacherClick = (teacher) => {
-      console.log('Teacher clicked:', teacher);
-    };
-  
+  const handleViewCourses = () => {
+    console.log('View courses clicked');
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -67,7 +53,6 @@ export default function MyWorkspacePage() {
 
   return (
     <div className={`${styles.container} ${isDark ? styles.dark : ""}`}>
-
       <main className={styles.mainContent}>
         <div className={styles.headerSection}>
           <motion.div
@@ -78,7 +63,7 @@ export default function MyWorkspacePage() {
             <h1 className={styles.title}>Welcome to MyWorkspace</h1>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             className={styles.dateSelector}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -90,235 +75,107 @@ export default function MyWorkspacePage() {
               <option value="month">This Month</option>
               <option value="year">This Year</option>
             </select>
-          </motion.div>
+          </motion.div> */}
         </div>
 
-        <div className={styles.bentoGrid}>
+        
           {/* Stats Section */}
-          <motion.div
-            className={`${styles.bentoItem} ${styles.stats}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.div className={`${styles.bentoItem} ${styles.stats}`}>
             <div className={styles.statsGrid}>
-              {AnalyticsOverviewMockStatsKPI.map((stat, index) => (
-                <motion.div
+              {AnalyticsOverviewMockStatsKPI.map((stat) => (
+                <KPICard
                   key={stat.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
-                  <KPICard
-                    title={stat.title}
-                    value={stat.value}
-                    change={stat.change}
-                    icon={stat.icon}
-                    iconType={stat.iconType}
-                  />
-                </motion.div>
-
-
-
+                  title={stat.title}
+                  value={stat.value}
+                  change={stat.change}
+                  icon={stat.icon}
+                  iconType={stat.iconType}
+                />
               ))}
-
-<motion.div
-            className={`${styles.bentoItem} ${styles.welcomeBanner }`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            
-             <WelcomeBanner 
-        userName="Henry"
-        progress={90}
-        message="Keep going and boost your skills with courses."
-        ctaText="View Courses"
-        onCtaClick={handleViewCourses}
-      />
-      
-            
-          </motion.div>
+              {/* <WelcomeBanner 
+              userName="Henry"
+              progress={90}
+              message="Keep going and boost your skills with courses."
+              ctaText="View Courses"
+              onCtaClick={handleViewCourses}
+            /> */}
             </div>
           </motion.div>
 
-          {/* Radar Chart */}
-          <motion.div
-            className={`${styles.bentoItem} ${styles.radar}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
+          {/* Welcome Banner */}
+          {/* <motion.div className={`${styles.bentoItem} ${styles.welcomeBanner}`}>
+            <WelcomeBanner 
+              userName="Henry"
+              progress={90}
+              message="Keep going and boost your skills with courses."
+              ctaText="View Courses"
+              onCtaClick={handleViewCourses}
+            />
+          </motion.div> */}
+
+          {/* <div className={styles.bentoGrid}>   */}
+          {/* Charts Section */}
+          <motion.div className={`${styles.bentoItem} ${styles.radar}`}>
             <ApacheRadarChart />
           </motion.div>
-
-          <motion.div
-            className={`${styles.bentoItem} ${styles.apacheAreaChart}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
+{/* 
+          <motion.div className={`${styles.bentoItem} ${styles.apacheAreaChart}`}>
             <ApacheAreaChart />
-          </motion.div>
+          </motion.div> */}
 
-          {/* Categories */}
-          <motion.div
-            className={`${styles.bentoItem} ${styles.categoriesList}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
+          {/* <motion.div className={`${styles.bentoItem} ${styles.categoriesList}`}>
             <ListCardContainer
               categories={courseCategories}
               title="Course Categories"
               button={<ViewIcon />}
               onButtonClick={() => console.log("View all clicked")}
             />
-          </motion.div>
+          </motion.div> */}
 
-          <motion.div
-            className={`${styles.bentoItem} ${styles.cardCategories}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            {/* <div className="p-6">
-              <TopSellingCategories
-                data={mockCategories}
-                title="Top Selling Categories"
-                showIcons={true}
-                animated={true}
-                sortable={true}
-              />
-            </div> */}
-          </motion.div>
-
-        
-          {/* Add more bento items here */}
-        </div>
-
-        <motion.div
-            className={`${styles.bentoItem} ${styles.dataTable}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <div className="p-6">
-            <OrdersTable />
-            </div>
-          </motion.div>
-
-
-          <motion.div
-            className={`${styles.bentoItem} ${styles.activityTimeLine}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <div className="p-6">
+          {/* Activity Section */}
+          {/* <motion.div className={`${styles.bentoItem} ${styles.activityTimeLine}`}>
             <ActivityTimeline 
-        activities={mockActivities} 
-        onViewAll={handleViewAll}
-      />
-      
-            </div>
-          </motion.div>
+              activities={mockActivities} 
+              onViewAll={handleViewAll}
+            />
+          </motion.div> */}
 
-          <motion.div
-            className={`${styles.bentoItem} ${styles.landingPagesStats}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <div className="p-6">
+          {/* <motion.div className={`${styles.bentoItem} ${styles.landingPagesStats}`}>
             <LandingPagesStats 
-        data={mockLandingPages}
-        showIcons={true}
-        animated={true}
-      />
-      
-            </div>
-          </motion.div>
+              data={mockLandingPages}
+              showIcons={true}
+              animated={true}
+            />
+          </motion.div> */}
 
-
-         
-          
-
-          <motion.div
-            className={`${styles.bentoItem} ${styles.professorList}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <div className="p-6">
+          {/* Users Section */}
+          {/* <motion.div className={`${styles.bentoItem} ${styles.professorList}`}>
             <ProfessorList 
-        data={mockProfessors}
-        onProfessorClick={handleProfessorClick}
-      />
-      
-            </div>
-          </motion.div>
+              data={mockProfessors}
+              onProfessorClick={handleProfessorClick}
+            />
+          </motion.div> */}
 
-
-
-
-          <motion.div
-            className={`${styles.bentoItem} ${styles.studentOverview }`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <div className="p-6">
+          {/* <motion.div className={`${styles.bentoItem} ${styles.studentOverview}`}>
             <StudentOverview 
-        data={mockStudentStats}
-        title="Students Overview"
-      />
-      
-            </div>
-          </motion.div>
+              data={mockStudentStats}
+              title="Students Overview"
+            />
+          </motion.div> */}
 
+          {/* Data Table */}
+          {/* <motion.div className={`${styles.bentoItem} ${styles.dataTable}`}>
+            <OrdersTable />
+          </motion.div> */}
 
-
-         
-        
-        
-          
-
-
-<motion.div
-            className={`${styles.bentoItem} ${styles.welcomeBanner }`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <div className="p-6">
+          {/* Exam Results */}
+          <motion.div className={`${styles.bentoItem} ${styles.examResults}`}>
             <ExamResults 
-        data={examResults}
-        onViewAll={handleViewAll}
-      />
-      
-            </div>
+              data={examResults}
+              onViewAll={handleViewAll}
+            />
           </motion.div>
-
-
-
-          <motion.div
-            className={`${styles.bentoItem} ${styles.welcomeBanner }`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <div className="p-6">
-            
-      
-            </div>
-          </motion.div>
-
-
-
-
-
-
+        {/* </div> */}
       </main>
     </div>
   );

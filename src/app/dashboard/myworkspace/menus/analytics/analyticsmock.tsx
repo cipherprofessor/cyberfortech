@@ -48,22 +48,30 @@ export const AnalyticsOverviewMockStatsKPI = [
     icon: <ChartColumnDecreasing className={styles.courcesIcon} />,
     iconType: "courses" as IconType
   },
-  // {
-  //   id: 5,
-  //   title: 'Certifications',
-  //   value: '2,4670',
-  //   change: 16.1,
-  //   icon: <IconCertificate className={styles.certificationsIcon} />,
-  //   iconType: "certifications" as IconType
-  // },
-  // {
-  //   id: 6,
-  //   title: 'Total Leads',
-  //   value: '2,467',
-  //   change: -16.1,
-  //   icon: <PanelTopClose className={styles.leadsIcon} />,
-  //   iconType: "leads" as IconType
-  // }
+  {
+    id: 5,
+    title: 'Certifications',
+    value: '2,4670',
+    change: 16.1,
+    icon: <IconCertificate className={styles.certificationsIcon} />,
+    iconType: "certifications" as IconType
+  },
+  {
+    id: 6,
+    title: 'Total Leads',
+    value: '2,467',
+    change: -16.1,
+    icon: <PanelTopClose className={styles.leadsIcon} />,
+    iconType: "leads" as IconType
+  },
+  {
+    id: 7,
+    title: 'Total Revenue',
+    value: '$25,378',
+    change: 5.35,
+    icon: <DollarSign className={styles.revenueIcon} />,
+    iconType: "revenue" as IconType
+  }
 ];
 
 export const courseCategories: ListCardCategory[] = [
