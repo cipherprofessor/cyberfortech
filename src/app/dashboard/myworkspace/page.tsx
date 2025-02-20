@@ -8,7 +8,7 @@ import { ViewIcon } from "lucide-react";
 import styles from "./page.module.scss";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import KPICard from "./components/ui/KPICard/KPICard";
-import { courseCategories, mockCategories, mockStats } from "./components/lib/mockData";
+import { courseCategories, mockStats } from "./components/lib/mockData";
 import ListCardContainer from "./components/ui/ListCard/ListCardContainer";
 import ApacheRadarChart from "@/components/charts/Apache-ECharts/ApacheRadarChart/ApacheRadarChart";
 import ApacheAreaChart from "@/components/charts/Apache-ECharts/ApacheAreaChart/ApacheAreaChart";
@@ -164,7 +164,7 @@ export default function MyWorkspacePage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <div className="p-6">
+            {/* <div className="p-6">
               <TopSellingCategories
                 data={mockCategories}
                 title="Top Selling Categories"
@@ -172,7 +172,7 @@ export default function MyWorkspacePage() {
                 animated={true}
                 sortable={true}
               />
-            </div>
+            </div> */}
           </motion.div>
 
         
@@ -307,13 +307,7 @@ export default function MyWorkspacePage() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <div className="p-6">
-            {/* <TeachersList 
-        data={teachersList}
-        itemsPerPage={5}
-        // onTeacherClick={handleTeacherClick}
-        onTeacherUpdate={() => console.log('Teacher updated')}
-      onTeacherDelete={() => console.log('Teacher deleted')}
-      /> */}
+            
       
             </div>
           </motion.div>

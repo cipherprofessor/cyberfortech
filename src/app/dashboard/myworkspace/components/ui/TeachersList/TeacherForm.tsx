@@ -6,6 +6,7 @@ import { X, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import styles from './TeacherForm.module.scss';
+import { SocialLinksData } from './types';
 
 interface TeacherFormProps {
     mode: 'create' | 'edit';
@@ -30,14 +31,10 @@ interface TeacherFormData {
   rating?: number;
   total_students?: number;
   total_courses?: number;
-  social_links: {
-    linkedin?: string;
-    twitter?: string;
-    website?: string;
-  };
   status: 'active' | 'inactive' | 'suspended';
   created_at?: string;
   updated_at?: string;
+  social_links: SocialLinksData;
 }
 
 const TeacherForm: React.FC<TeacherFormProps> = ({

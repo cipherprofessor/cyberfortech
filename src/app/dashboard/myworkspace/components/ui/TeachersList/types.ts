@@ -66,7 +66,7 @@ export interface TeacherFormData {
   specialization: string;
   qualification: string;
   years_of_experience: number;
-  social_links: string | SocialLinksData;
+  social_links: SocialLinksData;
   status: 'active' | 'inactive' | 'suspended';
 }
 
@@ -105,9 +105,10 @@ export interface ColumnConfig {
 }
 
 export interface SocialLinksData {
-  linkedin?: string;
+  facebook?: string;
   twitter?: string;
-  website?: string;
+  linkedin?: string;
+  instagram?: string;
   [key: string]: string | undefined;
 }
 

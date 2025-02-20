@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import TeachersListSkeleton from './TableSkeleton';
 import { ViewTeacherModal, EditTeacherModal, DeleteTeacherModal } from './TeacherModals';
 import TeachersList from './TeachersList';
-import { Teacher, TeacherAPI, TeacherFormData } from './types';
+import { SocialLinksData, Teacher, TeacherAPI, TeacherFormData } from './types';
 import TeacherForm from './TeacherForm';
 
 // Map subject names to colors
@@ -18,7 +18,7 @@ export const subjectColors: Record<string, string> = {
   'Biology': '#3b82f6'
 };
 
-const TeachersPage = () => {
+const TeachersPageTable = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -55,7 +55,7 @@ const TeachersPage = () => {
     // social_links: apiTeacher.social_links || '{}',
     social_links: typeof apiTeacher.social_links === 'string' 
     ? JSON.parse(apiTeacher.social_links)
-    : apiTeacher.social_links || {},
+    : (apiTeacher.social_links ? (apiTeacher.social_links as SocialLinksData) : {}),
     status: apiTeacher.status || 'active',
     created_at: apiTeacher.created_at,
     updated_at: apiTeacher.updated_at
@@ -75,10 +75,15 @@ const TeachersPage = () => {
         specialization: '',
         qualification: '',
         years_of_experience: 0,
-        social_links: {},
+        social_links: {}, // This should be an empty SocialLinksData object
         status: 'active'
       };
     }
+
+    // Parse social_links before the return statement
+    const socialLinks: SocialLinksData = typeof teacher.social_links === 'string' 
+      ? JSON.parse(teacher.social_links) 
+      : teacher.social_links;
 
     return {
       id: teacher.id,
@@ -91,12 +96,10 @@ const TeachersPage = () => {
       specialization: teacher.subject.name,
       qualification: teacher.qualification,
       years_of_experience: teacher.years_of_experience,
-      social_links: typeof teacher.social_links === 'string' 
-        ? JSON.parse(teacher.social_links) 
-        : teacher.social_links,
+      social_links: socialLinks,
       status: teacher.status
     };
-  };
+  }
 
   const fetchTeachers = async () => {
     try {
@@ -275,4 +278,4 @@ const TeachersPage = () => {
   );
 };
 
-export default TeachersPage;
+export default TeachersPageTable ;

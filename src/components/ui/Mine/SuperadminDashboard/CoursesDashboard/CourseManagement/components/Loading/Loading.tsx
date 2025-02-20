@@ -12,7 +12,7 @@ export const Loading = () => {
       >
         <Book className={styles.loadingIcon} />
       </motion.div>
-      <p>Loading courses...</p>
+      <p>Loading Course Management Dashboard</p>
     </div>
   );
 };

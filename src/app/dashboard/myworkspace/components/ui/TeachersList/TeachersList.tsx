@@ -120,15 +120,6 @@ const renderCellContent = (teacher: Teacher, column: string): React.ReactNode =>
         </div>
       );
 
-    // case 'specialization':
-    //   return (
-    //     <Chip 
-    //       label={teacher.subject.name}
-    //       icon={getColumnIcon('specialization')}
-    //       color={teacher.subject.color}
-    //     />
-    //   );
-
     case 'rating':
       return <Rating value={teacher.rating} />;
 

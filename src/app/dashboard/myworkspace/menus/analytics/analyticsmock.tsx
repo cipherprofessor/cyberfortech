@@ -13,9 +13,9 @@ import {
   Database
 } from 'lucide-react';
 import styles from './mockData.module.scss';
-import { CategoryData, IconType, ListCardCategory } from './types';
 
-export const mockStats = [
+
+export const AnalyticsOverviewMockStatsKPI = [
   {
     id: 1,
     title: 'Total Revenue',
@@ -48,22 +48,22 @@ export const mockStats = [
     icon: <ChartColumnDecreasing className={styles.courcesIcon} />,
     iconType: "courses" as IconType
   },
-  {
-    id: 5,
-    title: 'Certifications',
-    value: '2,4670',
-    change: 16.1,
-    icon: <IconCertificate className={styles.certificationsIcon} />,
-    iconType: "certifications" as IconType
-  },
-  {
-    id: 6,
-    title: 'Total Leads',
-    value: '2,467',
-    change: -16.1,
-    icon: <PanelTopClose className={styles.leadsIcon} />,
-    iconType: "leads" as IconType
-  }
+  // {
+  //   id: 5,
+  //   title: 'Certifications',
+  //   value: '2,4670',
+  //   change: 16.1,
+  //   icon: <IconCertificate className={styles.certificationsIcon} />,
+  //   iconType: "certifications" as IconType
+  // },
+  // {
+  //   id: 6,
+  //   title: 'Total Leads',
+  //   value: '2,467',
+  //   change: -16.1,
+  //   icon: <PanelTopClose className={styles.leadsIcon} />,
+  //   iconType: "leads" as IconType
+  // }
 ];
 
 export const courseCategories: ListCardCategory[] = [
@@ -126,7 +126,8 @@ export const courseCategories: ListCardCategory[] = [
 
 /// Data Table 
 
-import { Order } from './types';
+
+import { IconType, ListCardCategory, Order } from '../../components/lib/types';
 
 export const mockOrders: Order[] = [
   {

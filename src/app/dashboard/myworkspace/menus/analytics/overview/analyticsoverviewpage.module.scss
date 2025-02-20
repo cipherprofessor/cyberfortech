@@ -1,0 +1,225 @@
+.container {
+    display: flex;
+    min-height: 100vh;    
+  }
+  
+  .mainContent {
+    flex: 1;
+    padding: 1rem 1rem;
+
+  
+    @media (max-width: 1024px) {
+      margin-left: 0;
+      padding: 1rem;
+    }
+  }
+  
+  .headerSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // margin-bottom: 1.5rem;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+  
+  .title {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #111827;
+    margin-bottom: 0.5rem;
+    
+    .dark & {
+      color: #f9fafb;
+    }
+  
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    color: #6b7280;
+    max-width: 600px;
+    
+    .dark & {
+      color: #9ca3af;
+    }
+  }
+  
+  .dateSelector {
+    .select {
+      padding: 0.5rem 2rem 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e7eb;
+      background-color: white;
+      color: #374151;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        border-color: #6b7280;
+      }
+      
+      .dark & {
+        background-color: #1f2937;
+        border-color: #374151;
+        color: #e5e7eb;
+        
+        &:hover {
+          border-color: #9ca3af;
+        }
+      }
+    }
+  }
+  
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(6, 0.1fr);
+    
+    :hover {
+      border-color: #0062ff;
+      border: #0062ff;
+    }
+    
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+
+    
+  }
+  
+  .additionalContent {
+    margin-top: 3rem;
+  }
+  
+  .chartSection {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    .dark & {
+      background-color: #1f2937;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  .sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1rem;
+    
+    .dark & {
+      color: #f9fafb;
+    }
+  }
+  
+  .chartPlaceholder {
+    width: 100%;
+    height: 400px;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    
+    .dark & {
+      background-color: #374151;
+    }
+    
+    @media (max-width: 768px) {
+      height: 300px;
+    }
+  }
+
+// In page.module.scss
+.bentoGrid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+  
+  .bentoItem {
+    // Stats section - full width at top
+    &.stats {
+      grid-column: span 12;
+      grid-row: 1;
+      order: 1;
+    }
+    
+    // Radar chart - left side
+    &.radar {
+      grid-column: span 4;
+      grid-row: span 4;
+      order: 2;
+    }
+    
+    // Area chart - center
+    &.apacheAreaChart {
+      grid-column: span 5;
+      grid-row: span 4;
+      order: 3;
+    }
+    
+    // Categories list - right side
+    &.categoriesList {
+      grid-column: span 3;
+      grid-row: span 4;
+      order: 4;
+    }
+
+    &.cardCategories{
+        grid-column: span 5;
+        grid-row: span 4;
+        order: 5;
+    }
+
+    // .dataTable{
+    //     grid-column: span 18;
+    //     grid-row: span 4;
+    //     order: 6;
+    // }
+
+    .activityTimeLine{
+      grid-column: span 7;
+        grid-row: span 4;
+        order: 6;
+
+    }
+
+    .landingPagesStats{
+      grid-column: span 5;
+        grid-row: span 4;
+        order: 7;
+    }
+
+    .professorList{
+      grid-column: span 5;
+        grid-row: span 4;
+        order: 8;
+    }
+
+    .studentOverview {
+      grid-column: span 7;
+        grid-row: span 4;
+        order: 9;
+    }
+
+    .welcomeBanner{
+      grid-column: span 12;
+        grid-row: span 4;
+        order: 10;
+    }
+
+
+  }

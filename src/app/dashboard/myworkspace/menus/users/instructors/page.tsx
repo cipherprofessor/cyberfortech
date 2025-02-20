@@ -1,8 +1,14 @@
-// src/app/(routes)/under-construction/page.tsx
+"use client"
+import React from 'react'
+import TeachersPageTable from '../../../components/ui/TeachersList/page';
 
-import UnderConstruction from "@/components/ui/ConstructionPage/ConstructionPage";
+const ManageInstructors = () => {
+  return (
+    <>
+    <TeachersPageTable />
+    </>
 
-
-export default function UnderConstructionPage() {
-  return <UnderConstruction />;
+  )
 }
+
+export default ManageInstructors;
