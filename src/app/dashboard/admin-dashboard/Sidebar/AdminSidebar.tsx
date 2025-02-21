@@ -11,7 +11,7 @@ import { IconInvoice, IconReceiptRefund, IconTransactionBitcoin } from '@tabler/
 import { RiMoneyDollarBoxFill } from '@remixicon/react';
 
 
-export function SuperAdminSidebar() {
+export function AdminSidebar() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);

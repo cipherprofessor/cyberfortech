@@ -1,0 +1,12 @@
+// app/layout.module.scss
+.layoutContainer {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .mainContent {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    margin-left: 180px;
+  }

@@ -4,7 +4,7 @@
 import { ThemeProvider } from 'next-themes';
 
 import styles from './layout.module.scss';
-import { SuperAdminSidebar } from './components/Sidebar/Sidebar';
+import { StudentSidebar } from './Sidebar/Sidebar';
 
 export default function RootLayout({
   children,
@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <ThemeProvider attribute="class">
       <div className={styles.layoutContainer}>
-        <SuperAdminSidebar />
+       <StudentSidebar />
         <main className={styles.mainContent}>
           {children}
         </main>

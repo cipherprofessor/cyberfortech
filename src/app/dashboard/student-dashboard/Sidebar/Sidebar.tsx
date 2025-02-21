@@ -11,7 +11,7 @@ import { IconInvoice, IconReceiptRefund, IconTransactionBitcoin } from '@tabler/
 import { RiMoneyDollarBoxFill } from '@remixicon/react';
 
 
-export function SuperAdminSidebar() {
+export function StudentSidebar() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -59,23 +59,23 @@ export function SuperAdminSidebar() {
       href: '/dashboard/myworkspace/menus/dashboard',
       labelClassName: styles.mainLabel 
     },
-    {
-      label: 'Analytics',
-      icon: <BarChart size={18} className={styles.analyticsIcon}/>,
-      labelClassName: styles.mainLabel,
-      subItems: [
-        { label: 'Overview', href: '/dashboard/myworkspace/menus/analytics/overview', icon: <PieChartIcon size={16} className={styles.analyticsOverviewIcon}  />,labelClassName: styles.subLabel },
-        { label: 'User Growth', href: '/dashboard/myworkspace/menus/analytics/user_growth', icon: <Users size={16} className={styles.analyticsUserGrowthIcon} />,labelClassName: styles.subLabel },
-        { label: 'Revenue', href: '/dashboard/myworkspace/menus/analytics/revenue', icon: <DollarSignIcon size={16} className={styles.analyticsRevenueIcon} />,labelClassName: styles.subLabel },
-      ],
-    },
+    // {
+    //   label: 'Analytics',
+    //   icon: <BarChart size={18} className={styles.analyticsIcon}/>,
+    //   labelClassName: styles.mainLabel,
+    //   subItems: [
+    //     { label: 'Overview', href: '/dashboard/myworkspace/menus/analytics/overview', icon: <PieChartIcon size={16} className={styles.analyticsOverviewIcon}  />,labelClassName: styles.subLabel },
+    //     { label: 'User Growth', href: '/dashboard/myworkspace/menus/analytics/user_growth', icon: <Users size={16} className={styles.analyticsUserGrowthIcon} />,labelClassName: styles.subLabel },
+    //     { label: 'Revenue', href: '/dashboard/myworkspace/menus/analytics/revenue', icon: <DollarSignIcon size={16} className={styles.analyticsRevenueIcon} />,labelClassName: styles.subLabel },
+    //   ],
+    // },
     {
       label: 'Courses',
       icon: <BookOpen size={18} className={styles.coursesIcon}/>,
       labelClassName: styles.mainLabel,
       subItems: [
         { label: 'Course Dashboard', href: '/dashboard/myworkspace/menus/courses/course_dashboard', icon: <NotebookTabs size={16} className={styles.coursesIconDashboard} /> ,labelClassName: styles.subLabel},
-        { label: 'Course Management', href: '/dashboard/myworkspace/menus/courses/course_management', icon: <SquareKanban size={16} className={styles.coursesIconManagement} />, labelClassName: styles.subLabel},
+        // { label: 'Course Management', href: '/dashboard/myworkspace/menus/courses/course_management', icon: <SquareKanban size={16} className={styles.coursesIconManagement} />, labelClassName: styles.subLabel},
         { label: 'Course Reviews', href: '/dashboard/myworkspace/menus/courses/course_reviews', icon: <ScanEye size={16} className={styles.coursesIconReviews} />,labelClassName: styles.subLabel},
       ],
     },
@@ -89,17 +89,17 @@ export function SuperAdminSidebar() {
         { label: 'Drafts', href: '/dashboard/myworkspace/menus/messages/drafts', icon: <MailboxIcon size={16} className={styles.commicationGrowthIcon} />,labelClassName: styles.subLabel },
       ],
     },
-    {
-      label: 'Users',
-      icon: <UsersIcon size={18} className={styles.userIcon} />,
-      labelClassName: styles.mainLabel,
-      subItems: [
-        { label: 'All Users', href: '/dashboard/myworkspace/menus/users/all', icon: <Contact size={16} className={styles.userAllusersIcon} />,  labelClassName: styles.subLabel },
-        { label: 'Admins', href: '/dashboard/myworkspace/menus/users/admins', icon: <User size={16} className={styles.userAdminsIcon}/>, labelClassName: styles.subLabel},
-        { label: 'Students', href: '/dashboard/myworkspace/menus/users/students', icon: <BookUser size={16} className={styles.userStudentsIcon} />, labelClassName: styles.subLabel},
-        { label: 'Instructors', href: '/dashboard/myworkspace/menus/users/instructors', icon: <GraduationCap size={16} className={styles.userInstructorsIcon} />, labelClassName: styles.subLabel},
-      ],
-    },
+    // {
+    //   label: 'Users',
+    //   icon: <UsersIcon size={18} className={styles.userIcon} />,
+    //   labelClassName: styles.mainLabel,
+    //   subItems: [
+    //     { label: 'All Users', href: '/dashboard/myworkspace/menus/users/all', icon: <Contact size={16} className={styles.userAllusersIcon} />,  labelClassName: styles.subLabel },
+    //     { label: 'Admins', href: '/dashboard/myworkspace/menus/users/admins', icon: <User size={16} className={styles.userAdminsIcon}/>, labelClassName: styles.subLabel},
+    //     { label: 'Students', href: '/dashboard/myworkspace/menus/users/students', icon: <BookUser size={16} className={styles.userStudentsIcon} />, labelClassName: styles.subLabel},
+    //     { label: 'Instructors', href: '/dashboard/myworkspace/menus/users/instructors', icon: <GraduationCap size={16} className={styles.userInstructorsIcon} />, labelClassName: styles.subLabel},
+    //   ],
+    // },
     {
       label: 'Settings',
       icon: <Settings size={18} className={styles.settingIcon} />,
@@ -117,11 +117,11 @@ export function SuperAdminSidebar() {
       subItems: [
         { label: 'Overview', href: '/dashboard/myworkspace/menus/finance/overview', icon: <TableOfContents size={16} className={styles.helpFaqIcon} />,labelClassName: styles.subLabel  },
         { label: 'Transactions', href: '/dashboard/myworkspace/menus/finance/transactions', icon: <IconTransactionBitcoin size={16} className={styles.helpSupportIcon} />,labelClassName: styles.subLabel   },
-        { label: 'Invoices', href: '/dashboard/myworkspace/menus/finance/invoices', icon: <IconInvoice size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        // { label: 'Invoices', href: '/dashboard/myworkspace/menus/finance/invoices', icon: <IconInvoice size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
         { label: 'Refunds', href: '/dashboard/myworkspace/menus/finance/refunds', icon: <IconReceiptRefund size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
-        { label: 'Report', href: '/dashboard/myworkspace/menus/finance/report', icon: <ReceiptPoundSterlingIcon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
-        { label: 'Settings', href: '/dashboard/myworkspace/menus/finance/settings', icon: <Settings2Icon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
-        { label: 'Tax', href: '/dashboard/myworkspace/menus/finance/tax', icon: <RiMoneyDollarBoxFill size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        // { label: 'Report', href: '/dashboard/myworkspace/menus/finance/report', icon: <ReceiptPoundSterlingIcon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        // { label: 'Settings', href: '/dashboard/myworkspace/menus/finance/settings', icon: <Settings2Icon size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
+        // { label: 'Tax', href: '/dashboard/myworkspace/menus/finance/tax', icon: <RiMoneyDollarBoxFill size={16} className={styles.helpContactIcon} /> ,labelClassName: styles.subLabel  },
       ],
     },
   ];

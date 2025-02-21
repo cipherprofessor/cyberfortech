@@ -2,9 +2,8 @@
 'use client';
 
 import { ThemeProvider } from 'next-themes';
-
 import styles from './layout.module.scss';
-import { SuperAdminSidebar } from './components/Sidebar/Sidebar';
+import { AdminSidebar } from './Sidebar/AdminSidebar';
 
 export default function RootLayout({
   children,
@@ -14,7 +13,7 @@ export default function RootLayout({
   return (
     <ThemeProvider attribute="class">
       <div className={styles.layoutContainer}>
-        <SuperAdminSidebar />
+        <AdminSidebar />
         <main className={styles.mainContent}>
           {children}
         </main>

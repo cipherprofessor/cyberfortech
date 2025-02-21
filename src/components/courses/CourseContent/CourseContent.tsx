@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import styles from './CourseContent.module.scss';
+import { useTheme } from 'next-themes';
 
 interface Lesson {
   id: string;
@@ -25,6 +26,7 @@ interface Lesson {
 }
 
 interface Section {
+  is_free_preview: React.JSX.Element;
   id: string;
   title: string;
   description: string;
@@ -58,6 +60,7 @@ export const CourseContent: React.FC<CourseContentProps> = ({
   courseId,
   className = ''
 }) => {
+  const { theme } = useTheme();
   const [data, setData] = useState<CourseContentData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -136,22 +139,31 @@ export const CourseContent: React.FC<CourseContentProps> = ({
   console.log("responseee",data);
 
   return (
-    <div className={`${styles.courseContent} ${className}`}>
+    <div className={`${styles.courseContent} ${theme === 'dark' ? styles.dark : ''} ${className}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className={styles.overview}
       >
-        <h2>Course Content</h2>
-        {data?.courseContent?.course_demo_url && (
-          <div className={styles.demoVideo}>
-            <video
-              src={data.courseContent.course_demo_url}
-              controls
-              poster="/demo-thumbnail.jpg"
-            />
+        <h2 className={styles.title}>Course Content</h2>
+        
+        {data?.courseContent?.course_outline && (
+          <div className={styles.courseOverview}>
+            <h3>Course Overview</h3>
+            <p>{data.courseContent.course_outline}</p>
           </div>
         )}
+
+        <div className={styles.courseStats}>
+          <div className={styles.stat}>
+            <span>{data?.sections?.length || 0} sections</span>
+            <span>•</span>
+            <span>
+              {data?.sections?.reduce((total, section) => 
+                total + (section.lessons?.length || 0), 0) || 0} lessons
+            </span>
+          </div>
+        </div>
       </motion.div>
 
       <div className={styles.sections}>
@@ -164,14 +176,19 @@ export const CourseContent: React.FC<CourseContentProps> = ({
             className={styles.section}
           >
             <button
-              className={styles.sectionHeader}
+              className={`${styles.sectionHeader} ${expandedSections.includes(section.id) ? styles.expanded : ''}`}
               onClick={() => toggleSection(section.id)}
-            >
+              aria-expanded={expandedSections.includes(section.id)}
+            > 
               <div className={styles.sectionInfo}>
                 <h3>Section {index + 1}: {section.title}</h3>
-                <span className={styles.lessonCount}>
-                  {section.lessons.length} lessons
-                </span>
+                <p className={styles.sectionDescription}>{section.description}</p>
+                <div className={styles.sectionMeta}>
+                  <span>{section.lessons?.length || 0} lessons</span>
+                  {section.is_free_preview && (
+                    <span className={styles.freeTag}>Free Preview</span>
+                  )}
+                </div>
               </div>
               <motion.div
                 animate={{ rotate: expandedSections.includes(section.id) ? 180 : 0 }}
@@ -190,7 +207,7 @@ export const CourseContent: React.FC<CourseContentProps> = ({
                   transition={{ duration: 0.3 }}
                   className={styles.lessonList}
                 >
-                  {section.lessons.map((lesson, lessonIndex) => (
+                  {section.lessons?.map((lesson, lessonIndex) => (
                     <motion.div
                       key={lesson.id}
                       initial={{ opacity: 0, x: -20 }}
@@ -200,9 +217,10 @@ export const CourseContent: React.FC<CourseContentProps> = ({
                     >
                       <div className={styles.lessonInfo}>
                         {getContentIcon(lesson.contentType)}
-                        <span className={styles.lessonTitle}>
-                          {lesson.title}
-                        </span>
+                        <div className={styles.lessonDetails}>
+                          <span className={styles.lessonTitle}>{lesson.title}</span>
+                          <p className={styles.lessonDescription}>{lesson.description}</p>
+                        </div>
                         {lesson.progress === 'completed' && (
                           <CheckCircle className={styles.completedIcon} />
                         )}

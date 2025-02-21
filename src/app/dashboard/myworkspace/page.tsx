@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ViewIcon } from "lucide-react";
 
 import styles from "./page.module.scss";
-import { Sidebar } from "./components/Sidebar/Sidebar";
+
 import KPICard from "./components/ui/KPICard/KPICard";
 import { courseCategories, mockStats } from "./components/lib/mockData";
 import ListCardContainer from "./components/ui/ListCard/ListCardContainer";
@@ -27,6 +27,7 @@ import ExamResults from "./components/ui/ExamResults/ExamResults";
 import { examResults } from "./components/ui/ExamResults/mockdata";
 import { teachersList } from "./components/ui/TeachersList/mockData";
 import TeachersList from "./components/ui/TeachersList/TeachersList";
+import { SuperAdminSidebar } from "./components/Sidebar/Sidebar";
 
 
 export default function MyWorkspacePage() {
@@ -69,7 +70,7 @@ export default function MyWorkspacePage() {
 
   return (
     <div className={`${styles.container} ${isDark ? styles.dark : ""}`}>
-      <Sidebar />
+      <SuperAdminSidebar />
 
       <main className={styles.mainContent}>
         <div className={styles.headerSection}>
