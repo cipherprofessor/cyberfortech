@@ -1,3 +1,4 @@
+// src/app/(routes)/courses/[courseId]/CourseDetailsPage.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -26,8 +27,13 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  // Move fetchCourse inside the component
   const fetchCourse = async () => {
-    if (!courseId) return;
+    if (!courseId) {
+      setError('Course ID is required');
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
@@ -90,7 +96,7 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             className={styles.retryButton}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={fetchCourse}
+            onClick={() => fetchCourse()}
             aria-label="Retry loading course"
           >
             <RefreshCw size={16} aria-hidden="true" />
@@ -114,7 +120,6 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            {/* Course Deatils Page header */}
             <CourseHeader course={course} />
           </motion.div>
         </div>
@@ -125,7 +130,7 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <CourseContent course={{ ...course, duration: course?.duration || '', level: course?.level || 'Beginner' }} />
+            <CourseContent courseId={courseId} />
           </motion.main>
           
           <motion.aside 
@@ -133,7 +138,14 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <CourseSidebar course={{ ...course, duration: course?.duration || '', level: course?.level || 'Beginner' }} />
+            <CourseSidebar 
+  course={{
+    ...course,
+    duration: course?.duration || 'Not specified',  // Provide default value
+    level: course?.level || 'Beginner',  // Provide default value
+    total_students: course?.total_students || 0  // Provide default value
+  }} 
+/>
           </motion.aside>
         </div>
       </motion.div>

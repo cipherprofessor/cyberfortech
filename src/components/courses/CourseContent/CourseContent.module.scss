@@ -1,60 +1,63 @@
-// styles/CourseContent.module.scss
+// components/CourseContent/CourseContent.module.scss
 
-// CSS Custom Properties for theming
 :root {
   --course-bg-light: #ffffff;
-  --course-bg-dark: #1a1a1a;
-  --course-text-light: #2d3748;
-  --course-text-dark: #e2e8f0;
+  --course-text-light: #1a1a1a;
   --course-border-light: #e2e8f0;
-  --course-border-dark: #2d3748;
   --course-hover-light: #f7fafc;
-  --course-hover-dark: #2d3748;
   --course-accent-light: #3b82f6;
+  --course-shadow-light: rgba(0, 0, 0, 0.1);
+  --course-bg-dark: #1a1a1a;
+  --course-text-dark: #f7fafc;
+  --course-border-dark: #2d3748;
+  --course-hover-dark: #2d3748;
   --course-accent-dark: #60a5fa;
-  --course-icon-light: #4a5568;
-  --course-icon-dark: #a0aec0;
+  --course-shadow-dark: rgba(0, 0, 0, 0.3);
 }
 
 .courseContent {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 2rem;
+  background-color: var(--course-bg-light);
+  color: var(--course-text-light);
   
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+
   &.dark {
-    --course-bg: var(--course-bg-dark);
-    --course-text: var(--course-text-dark);
-    --course-border: var(--course-border-dark);
-    --course-hover: var(--course-hover-dark);
-    --course-accent: var(--course-accent-dark);
-    --course-icon: var(--course-icon-dark);
-  }
-
-  &.light {
-    --course-bg: var(--course-bg-light);
-    --course-text: var(--course-text-light);
-    --course-border: var(--course-border-light);
-    --course-hover: var(--course-hover-light);
-    --course-accent: var(--course-accent-light);
-    --course-icon: var(--course-icon-light);
+    background-color: var(--course-bg-dark);
+    color: var(--course-text-dark);
   }
 }
 
-.title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: var(--course-text);
+.overview {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
 }
 
-.stats {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  color: var(--course-text);
-  font-size: 0.875rem;
+.demoVideo {
+  width: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px var(--course-shadow-light);
+  margin-bottom: 2rem;
+
+  video {
+    width: 100%;
+    height: auto;
+  }
+
+  .dark & {
+    box-shadow: 0 4px 6px var(--course-shadow-dark);
+  }
 }
 
 .sections {
@@ -64,69 +67,86 @@
 }
 
 .section {
-  border: 1px solid var(--course-border);
+  border: 1px solid var(--course-border-light);
   border-radius: 0.75rem;
   overflow: hidden;
-  background-color: var(--course-bg);
-  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
   transition: all 0.3s ease;
-
+  background-color: var(--course-bg-light);
+  
   &:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--course-shadow-light);
+  }
+
+  .dark & {
+    border-color: var(--course-border-dark);
+    background-color: var(--course-bg-dark);
+
+    &:hover {
+      box-shadow: 0 4px 12px var(--course-shadow-dark);
+    }
   }
 }
 
 .sectionHeader {
   width: 100%;
-  padding: 1rem 1.5rem;
+  padding: 1.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--course-text);
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: var(--course-hover);
+    background-color: var(--course-hover-light);
+  }
+
+  .dark &:hover {
+    background-color: var(--course-hover-dark);
   }
 }
 
 .sectionInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  text-align: left;
-
   h3 {
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 600;
+    margin-bottom: 0.25rem;
   }
 }
 
 .lessonCount {
   font-size: 0.875rem;
-  color: var(--course-icon);
+  color: var(--course-text-light);
+  opacity: 0.7;
+
+  .dark & {
+    color: var(--course-text-dark);
+  }
 }
 
 .lessonList {
-  border-top: 1px solid var(--course-border);
-  overflow: hidden;
+  border-top: 1px solid var(--course-border-light);
+
+  .dark & {
+    border-top-color: var(--course-border-dark);
+  }
 }
 
 .lesson {
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: var(--course-hover);
+    background-color: var(--course-hover-light);
   }
 
-  &.locked {
-    opacity: 0.7;
+  .dark &:hover {
+    background-color: var(--course-hover-dark);
   }
 }
 
@@ -137,62 +157,87 @@
 }
 
 .lessonTitle {
-  font-size: 0.875rem;
-  color: var(--course-text);
-}
-
-.duration {
-  font-size: 0.75rem;
-  color: var(--course-icon);
+  font-size: 0.9375rem;
 }
 
 .icon {
   width: 1.25rem;
   height: 1.25rem;
-  color: var(--course-icon);
+  color: var(--course-accent-light);
+
+  .dark & {
+    color: var(--course-accent-dark);
+  }
 }
 
-// Responsive styles
-@media (max-width: 768px) {
-  .courseContent {
-    padding: 0.5rem;
-  }
+.completedIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #22c55e;
+}
 
+.lockIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--course-text-light);
+  opacity: 0.5;
+
+  .dark & {
+    color: var(--course-text-dark);
+  }
+}
+
+.duration {
+  font-size: 0.875rem;
+  color: var(--course-text-light);
+  opacity: 0.7;
+
+  .dark & {
+    color: var(--course-text-dark);
+  }
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.loadingSpinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid var(--course-border-light);
+  border-top-color: var(--course-accent-light);
+  border-radius: 50%;
+
+  .dark & {
+    border-color: var(--course-border-dark);
+    border-top-color: var(--course-accent-dark);
+  }
+}
+
+.errorContainer {
+  text-align: center;
+  padding: 2rem;
+  color: #ef4444;
+  font-size: 1rem;
+}
+
+@media (max-width: 640px) {
   .sectionHeader {
-    padding: 0.75rem 1rem;
+    padding: 1rem;
   }
 
   .lesson {
-    padding: 0.75rem 1rem;
-  }
-
-  .sectionInfo h3 {
-    font-size: 0.875rem;
-  }
-}
-
-// RTL Support
-[dir="rtl"] {
-  .sectionInfo {
-    text-align: right;
-  }
-
-  .lessonInfo {
-    flex-direction: row-reverse;
-  }
-}
-
-// Compact variant
-.compact {
-  .sectionHeader {
-    padding: 0.75rem 1rem;
-  }
-
-  .lesson {
-    padding: 0.5rem 1rem;
+    padding: 0.875rem 1rem;
   }
 
   .lessonTitle {
-    font-size: 0.813rem;
+    font-size: 0.875rem;
+  }
+
+  .sectionInfo h3 {
+    font-size: 1rem;
   }
 }

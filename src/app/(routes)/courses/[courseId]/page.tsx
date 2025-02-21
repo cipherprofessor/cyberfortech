@@ -7,7 +7,7 @@ export default async function CourseDetailPage({
 }: { 
   params: { courseId: string } 
 }) {
-  const { courseId } = await params;
+  const { courseId } = params;
 
   return (
     <Suspense fallback={<LoadingSkeleton />}>

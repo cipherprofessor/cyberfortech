@@ -72,9 +72,8 @@ export interface CourseSidebarProps {
   onWishlist?: (courseId: string) => Promise<void>;
   onShare?: (courseId: string) => Promise<void>;
   customTheme?: {
-    primary?: string;
-    secondary?: string;
-    accent?: string;
+    primary: string;
+    secondary: string;
   };
 }
 

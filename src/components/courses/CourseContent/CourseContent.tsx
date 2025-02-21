@@ -1,159 +1,224 @@
-// components/CourseContent/CourseContent.tsx
-
-import React, { useState, useCallback } from 'react';
+// src/components/courses/CourseContent/CourseContent.tsx
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, PlayCircle, Lock } from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { 
+  Book, 
+  Video, 
+  FileText, 
+  CheckCircle, 
+  Lock,
+  ChevronDown,
+  PlayCircle,
+  Award
+} from 'lucide-react';
+import axios from 'axios';
 import styles from './CourseContent.module.scss';
-import type { CourseContentProps, SectionItemProps, LessonItemProps } from '../types';
 
-const LessonItem: React.FC<LessonItemProps> = ({ 
-  lesson, 
-  index, 
-  showDuration, 
-  onClick 
-}) => {
-  const icon = lesson.isLocked ? (
-    <Lock className={styles.icon} aria-hidden="true" />
-  ) : (
-    <PlayCircle className={styles.icon} aria-hidden="true" />
-  );
+interface Lesson {
+  id: string;
+  title: string;
+  description: string;
+  contentType: 'video' | 'article' | 'quiz' | 'assignment';
+  duration: number;
+  isFreePreview: boolean;
+  progress: 'not_started' | 'in_progress' | 'completed';
+}
 
-  return (
-    <motion.div
-      initial={{ x: -20, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-      className={`${styles.lesson} ${lesson.isLocked ? styles.locked : ''}`}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      aria-label={`Lesson: ${lesson.title}`}
-    >
-      <div className={styles.lessonInfo}>
-        {icon}
-        <span className={styles.lessonTitle}>{lesson.title}</span>
-      </div>
-      {showDuration && <span className={styles.duration}>{lesson.duration}</span>}
-    </motion.div>
-  );
-};
+interface Section {
+  id: string;
+  title: string;
+  description: string;
+  lessons: Lesson[];
+}
 
-const SectionItem: React.FC<SectionItemProps> = ({
-  section,
-  index,
-  isExpanded,
-  onToggle,
-  showDuration,
-  variant
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.1 }}
-      className={`${styles.section} ${styles[variant]}`}
-    >
-      <button
-        className={styles.sectionHeader}
-        onClick={onToggle}
-        aria-expanded={isExpanded}
-        aria-controls={`section-${section.id}-content`}
-      >
-        <div className={styles.sectionInfo}>
-          <h3>Section {index + 1}: {section.title}</h3>
-          <span className={styles.lessonCount}>
-            {section.lessons.length} lessons
-          </span>
-        </div>
-        <motion.div
-          animate={{ rotate: isExpanded ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <ChevronDown className={styles.icon} aria-hidden="true" />
-        </motion.div>
-      </button>
+interface CourseContentData {
+  courseContent: {
+    course_demo_url: string;
+    course_outline: string;
+    learning_objectives: string[];
+    prerequisites: string[];
+    target_audience: string;
+    estimated_completion_time: string;
+    course_title: string;
+    course_description: string;
+    image_url: string;
+    level: string;
+    instructor_name: string;
+  };
+  sections: Section[];
+  lessonContent: Lesson[];
+}
 
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            id={`section-${section.id}-content`}
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className={styles.lessonList}
-          >
-            {section.lessons.map((lesson, lessonIndex) => (
-              <LessonItem
-                key={lesson.id}
-                lesson={lesson}
-                index={lessonIndex}
-                showDuration={showDuration}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
+interface CourseContentProps {
+  courseId: string;
+  className?: string;
+}
 
 export const CourseContent: React.FC<CourseContentProps> = ({
-  course,
-  className = '',
-  onLessonClick,
-  onSectionToggle,
-  initialExpandedSections = [],
-  showDuration = true,
-  variant = 'default',
-  theme: themeOverride
+  courseId,
+  className = ''
 }) => {
-  const { theme: systemTheme } = useTheme();
-  const [expandedSections, setExpandedSections] = useState<string[]>(initialExpandedSections);
+  const [data, setData] = useState<CourseContentData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
 
-  const currentTheme = themeOverride || systemTheme || 'light';
+  useEffect(() => {
+    const fetchCourseContent = async () => {
+      if (!courseId) {
+        setError('Course ID is missing');
+        setLoading(false);
+        return;
+      }
 
-  const toggleSection = useCallback((sectionId: string) => {
-    setExpandedSections(prev => {
-      const newSections = prev.includes(sectionId)
+      try {
+        setLoading(true);
+        const response = await axios.get(`/api/courses/${courseId}/content`, {
+          headers: {
+            'x-user-id': 'your-user-id' // Add user ID if needed
+          }
+        });
+        setData(response.data);
+      } catch (err) {
+        setError('Failed to load course content');
+        console.error('Error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourseContent();
+  }, [courseId]);
+
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev =>
+      prev.includes(sectionId)
         ? prev.filter(id => id !== sectionId)
-        : [...prev, sectionId];
-      
-      onSectionToggle?.(sectionId);
-      return newSections;
-    });
-  }, [onSectionToggle]);
+        : [...prev, sectionId]
+    );
+  };
+
+  const getContentIcon = (type: string) => {
+    switch (type) {
+      case 'video':
+        return <Video className={styles.icon} />;
+      case 'article':
+        return <FileText className={styles.icon} />;
+      case 'quiz':
+        return <Book className={styles.icon} />;
+      case 'assignment':
+        return <Award className={styles.icon} />;
+      default:
+        return <PlayCircle className={styles.icon} />;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className={styles.loadingSpinner}
+        />
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className={styles.errorContainer}>
+        <p>{error || 'Failed to load content'}</p>
+      </div>
+    );
+  }
+
+  console.log("responseee",data);
 
   return (
-    <div 
-      className={`${styles.courseContent} ${styles[currentTheme]} ${className}`}
-      role="region"
-      aria-label="Course content"
-    >
-      <h2 className={styles.title}>Course Content</h2>
-      
-      <div className={styles.stats}>
-        <span>{course.sections.length} sections</span>
-        <span>•</span>
-        <span>
-          {course.sections.reduce((total, section) => 
-            total + section.lessons.length, 0
-          )} lessons
-        </span>
-      </div>
+    <div className={`${styles.courseContent} ${className}`}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={styles.overview}
+      >
+        <h2>Course Content</h2>
+        {data?.courseContent?.course_demo_url && (
+          <div className={styles.demoVideo}>
+            <video
+              src={data.courseContent.course_demo_url}
+              controls
+              poster="/demo-thumbnail.jpg"
+            />
+          </div>
+        )}
+      </motion.div>
 
       <div className={styles.sections}>
-        {course.sections.map((section, index) => (
-          <SectionItem
+        {data?.sections?.map((section, index) => (
+          <motion.div
             key={section.id}
-            section={section}
-            index={index}
-            isExpanded={expandedSections.includes(section.id)}
-            onToggle={() => toggleSection(section.id)}
-            showDuration={showDuration}
-            variant={variant}
-          />
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className={styles.section}
+          >
+            <button
+              className={styles.sectionHeader}
+              onClick={() => toggleSection(section.id)}
+            >
+              <div className={styles.sectionInfo}>
+                <h3>Section {index + 1}: {section.title}</h3>
+                <span className={styles.lessonCount}>
+                  {section.lessons.length} lessons
+                </span>
+              </div>
+              <motion.div
+                animate={{ rotate: expandedSections.includes(section.id) ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className={styles.icon} />
+              </motion.div>
+            </button>
+
+            <AnimatePresence>
+              {expandedSections.includes(section.id) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className={styles.lessonList}
+                >
+                  {section.lessons.map((lesson, lessonIndex) => (
+                    <motion.div
+                      key={lesson.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: lessonIndex * 0.05 }}
+                      className={styles.lesson}
+                    >
+                      <div className={styles.lessonInfo}>
+                        {getContentIcon(lesson.contentType)}
+                        <span className={styles.lessonTitle}>
+                          {lesson.title}
+                        </span>
+                        {lesson.progress === 'completed' && (
+                          <CheckCircle className={styles.completedIcon} />
+                        )}
+                        {!lesson.isFreePreview && (
+                          <Lock className={styles.lockIcon} />
+                        )}
+                      </div>
+                      <span className={styles.duration}>
+                        {Math.floor(lesson.duration / 60)}min
+                      </span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         ))}
       </div>
     </div>

@@ -83,6 +83,60 @@ CREATE TABLE IF NOT EXISTS course_lessons (
     FOREIGN KEY (section_id) REFERENCES course_sections(id)
 );
 
+
+-- Create course_content table
+CREATE TABLE IF NOT EXISTS course_content (
+    id TEXT PRIMARY KEY,
+    course_id TEXT NOT NULL,
+    instructor_id TEXT NOT NULL,
+    course_demo_url TEXT,
+    course_outline TEXT,  -- JSON field for course outline/syllabus
+    learning_objectives TEXT[], -- Array of learning objectives
+    prerequisites TEXT[],  -- Array of prerequisites
+    target_audience TEXT,
+    estimated_completion_time TEXT,
+    course_materials TEXT, -- JSON field for downloadable materials
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id),
+    FOREIGN KEY (instructor_id) REFERENCES instructors(id)
+);
+
+-- Create lessons content table for structured lesson data
+CREATE TABLE IF NOT EXISTS course_lesson_content (
+    id TEXT PRIMARY KEY,
+    lesson_id TEXT NOT NULL,
+    content_type TEXT CHECK (content_type IN ('video', 'article', 'quiz', 'assignment')),
+    video_url TEXT,
+    article_content TEXT,
+    quiz_data TEXT, -- JSON field for quiz questions and answers
+    assignment_details TEXT, -- JSON field for assignment information
+    additional_resources TEXT[], -- Array of resource URLs
+    transcript TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (lesson_id) REFERENCES course_lessons(id)
+);
+
+-- Create progress tracking table (Fixed the status column reference)
+CREATE TABLE IF NOT EXISTS lesson_progress (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    lesson_id TEXT NOT NULL,
+    completion_status TEXT CHECK (completion_status IN ('not_started', 'in_progress', 'completed')),
+    time_spent INTEGER, -- in seconds
+    last_position INTEGER, -- for video content, last watched position
+    completed_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (lesson_id) REFERENCES course_lessons(id),
+    UNIQUE(user_id, lesson_id)
+);
+
+
+
+
 -- Create indexes
 CREATE INDEX IF NOT EXISTS idx_courses_instructor ON courses(instructor_id);
 CREATE INDEX IF NOT EXISTS idx_courses_category ON courses(category);
@@ -98,6 +152,13 @@ CREATE INDEX IF NOT EXISTS idx_sections_course ON course_sections(course_id);
 CREATE INDEX IF NOT EXISTS idx_sections_sequence ON course_sections(sequence_number);
 CREATE INDEX IF NOT EXISTS idx_lessons_section ON course_lessons(section_id);
 CREATE INDEX IF NOT EXISTS idx_lessons_sequence ON course_lessons(sequence_number);
+
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_course_content_course ON course_content(course_id);
+CREATE INDEX IF NOT EXISTS idx_course_content_instructor ON course_content(instructor_id);
+CREATE INDEX IF NOT EXISTS idx_lesson_content_lesson ON course_lesson_content(lesson_id);
+CREATE INDEX IF NOT EXISTS idx_lesson_progress_user ON lesson_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_lesson_progress_lesson ON lesson_progress(lesson_id); 
 
 -- Drop existing triggers
 DROP TRIGGER IF EXISTS trig_courses_updated_at;
@@ -148,6 +209,32 @@ FOR EACH ROW
 WHEN (NEW.updated_at <= OLD.updated_at OR NEW.updated_at IS NULL)
 BEGIN
   UPDATE course_lessons SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
+END;
+
+
+-- Create triggers for updated_at
+CREATE TRIGGER trig_course_content_updated_at
+AFTER UPDATE ON course_content
+FOR EACH ROW
+WHEN (NEW.updated_at <= OLD.updated_at)
+BEGIN
+    UPDATE course_content SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER trig_lesson_content_updated_at
+AFTER UPDATE ON course_lesson_content
+FOR EACH ROW
+WHEN (NEW.updated_at <= OLD.updated_at)
+BEGIN
+    UPDATE course_lesson_content SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER trig_lesson_progress_updated_at
+AFTER UPDATE ON lesson_progress
+FOR EACH ROW
+WHEN (NEW.updated_at <= OLD.updated_at)
+BEGIN
+    UPDATE lesson_progress SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
 END;
 
 -- Create business logic triggers
