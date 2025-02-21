@@ -20,9 +20,13 @@ import {
   PhoneCall,
   GraduationCap,
   Library,
-  ChartSplineIcon
+  ChartSplineIcon,
+  PodcastIcon,
+  Rss
 } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTheme } from 'next-themes';
+import { faBlog } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Navbar.module.scss';
 import { useAuth } from '@/hooks/useAuth';
@@ -120,11 +124,13 @@ export default function Navbar() {
           {renderNavLink("/", "Home", <Home className="h-4 w-4 mr-2" />)}
           {renderNavLink("/courses", "Courses", <BookOpen className="h-4 w-4 mr-2" />)}
           {renderRoleBasedLinks()}
+          {/* {renderNavLink("/blogs", "Blogs", <FontAwesomeIcon icon={faBlog} className="h-4 w-4 mr-2" />)} */}
+          {renderNavLink("/blogs", "Blogs", <Rss className="h-4 w-4 mr-2" />)}
           {renderNavLink("/forum", "Forum", <MessageSquare className="h-4 w-4 mr-2" />)}
           {renderNavLink("/about", "About", <InfoIcon className="h-4 w-4 mr-2" />)}
           {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-4 w-4 mr-2" />)}
-          {renderNavLink("/tabs", "My tabs", <PhoneCall className="h-4 w-4 mr-2" />)}
-          {renderNavLink("/apache-charts", "Charts", <ChartSplineIcon className="h-4 w-4 mr-2" />)}
+          {/* {renderNavLink("/tabs", "My tabs", <PhoneCall className="h-4 w-4 mr-2" />)}
+          {renderNavLink("/apache-charts", "Charts", <ChartSplineIcon className="h-4 w-4 mr-2" />)} */}
           {/* {renderNavLink("/workspace", "My Workspace", <IconLayoutDashboardFilled className="h-4 w-4 mr-2" />)} */}
         </div>
 
