@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { Calendar, User, Eye, Star, ChevronDown, ChevronUp } from 'lucide-react';
 import clsx from 'clsx';
 import styles from './BlogList.module.scss';
+import BlogSkeleton from './BlogSkeleton';
 
 const BlogList: React.FC<BlogListProps> = ({
   posts,
@@ -38,12 +39,7 @@ const BlogList: React.FC<BlogListProps> = ({
   }
 
   if (loading) {
-    return (
-      <div className={clsx(styles.loading, className)}>
-        <div className={styles.spinner} />
-        <p>Loading posts...</p>
-      </div>
-    );
+    return <BlogSkeleton className={className} />;
   }
 
   return (
