@@ -15,16 +15,16 @@
   
     width: 100%;
     padding: 2rem;
-    background-color: var(--bg-color);
+    // background-color: var(--bg-color);
   
     &.dark {
       --border-color: #334155;
       --text-color: #f1f5f9;
       --text-secondary: #cbd5e1;
       --bg-color: #0f172a;
-      --card-bg: #1e293b;
+      --card-bg: rgb(25, 25, 28);
       --chip-bg: #334155;
-      --hover-bg: #1e293b;
+      --hover-bg: rgb(25, 25, 28);
     }
   }
   

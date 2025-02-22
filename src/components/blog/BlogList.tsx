@@ -1,13 +1,14 @@
 // src/components/Blog/BlogList.tsx
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { BlogListProps } from '@/types/blog';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { Calendar, User, Eye, Star, ChevronDown, ChevronUp } from 'lucide-react';
+import clsx from 'clsx';
 import styles from './BlogList.module.scss';
 
 const BlogList: React.FC<BlogListProps> = ({
@@ -17,18 +18,28 @@ const BlogList: React.FC<BlogListProps> = ({
   currentPage = 1,
   totalPages = 1,
   onPageChange,
-  className = ''
+  className
 }) => {
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [expandedPost, setExpandedPost] = useState<string | null>(null);
+
+  // Handle mounting state to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleCardClick = (id: string) => {
     setExpandedPost(expandedPost === id ? null : id);
   };
 
+  if (!mounted) {
+    return null;
+  }
+
   if (loading) {
     return (
-      <div className={`${styles.loading} ${className}`}>
+      <div className={clsx(styles.loading, className)}>
         <div className={styles.spinner} />
         <p>Loading posts...</p>
       </div>
@@ -36,7 +47,11 @@ const BlogList: React.FC<BlogListProps> = ({
   }
 
   return (
-    <div className={`${styles.container} ${theme === 'dark' ? styles.dark : ''} ${className}`}>
+    <div className={clsx(
+      styles.container,
+      theme === 'dark' && styles.dark,
+      className
+    )}>
       <div className={styles.header}>
         <h1 className={styles.mainTitle}>Blog Posts</h1>
         <Link href="/blog/new" className={styles.createButton}>
@@ -53,7 +68,10 @@ const BlogList: React.FC<BlogListProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className={`${styles.postCard} ${expandedPost === post.id ? styles.expanded : ''}`}
+              className={clsx(
+                styles.postCard,
+                expandedPost === post.id && styles.expanded
+              )}
               onClick={() => handleCardClick(post.id)}
             >
               <div className={styles.postHeader}>
@@ -63,7 +81,7 @@ const BlogList: React.FC<BlogListProps> = ({
                   </h2>
                   <div className={styles.chips}>
                     {post.isFeatured && (
-                      <span className={`${styles.chip} ${styles.featured}`}>
+                      <span className={clsx(styles.chip, styles.featured)}>
                         <Star size={14} />
                         Featured
                       </span>
@@ -115,7 +133,7 @@ const BlogList: React.FC<BlogListProps> = ({
                               <Link
                                 key={category.id}
                                 href={`/blog/category/${category.slug}`}
-                                className={`${styles.tag} ${styles.categoryTag}`}
+                                className={clsx(styles.tag, styles.categoryTag)}
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 {category.name}
@@ -175,7 +193,10 @@ const BlogList: React.FC<BlogListProps> = ({
             <button
               key={page}
               onClick={() => onPageChange?.(page)}
-              className={`${styles.pageButton} ${page === currentPage ? styles.active : ''}`}
+              className={clsx(
+                styles.pageButton,
+                page === currentPage && styles.active
+              )}
             >
               {page}
             </button>
