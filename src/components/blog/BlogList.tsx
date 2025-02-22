@@ -7,7 +7,7 @@ import { useTheme } from 'next-themes';
 import { BlogListProps } from '@/types/blog';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { Calendar, User, Eye, Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { Calendar, User, Eye, Star, ChevronDown, ChevronUp, Tag, Clock } from 'lucide-react';
 import clsx from 'clsx';
 import styles from './BlogList.module.scss';
 import BlogSkeleton from './BlogSkeleton';
@@ -25,13 +25,18 @@ const BlogList: React.FC<BlogListProps> = ({
   const [mounted, setMounted] = useState(false);
   const [expandedPost, setExpandedPost] = useState<string | null>(null);
 
-  // Handle mounting state to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const handleCardClick = (id: string) => {
     setExpandedPost(expandedPost === id ? null : id);
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
   };
 
   if (!mounted) {
@@ -42,40 +47,68 @@ const BlogList: React.FC<BlogListProps> = ({
     return <BlogSkeleton className={className} />;
   }
 
+  if (error) {
+    return (
+      <div className={clsx(styles.error, className)} role="alert">
+        {error}
+      </div>
+    );
+  }
+
+  if (!posts.length) {
+    return (
+      <div className={clsx(styles.empty, className)}>
+        <h3>No blog posts found</h3>
+        <p>Get started by creating your first blog post!</p>
+        <Link href="/blog/new" className={styles.createButton}>
+          Create New Post
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className={clsx(
-      styles.container,
-      theme === 'dark' && styles.dark,
-      className
-    )}>
+    <div className={clsx(styles.container, theme === 'dark' && styles.dark, className)}>
       <div className={styles.header}>
-        <h1 className={styles.mainTitle}>Blog Posts</h1>
+        <div className={styles.headerLeft}>
+          <h1 className={styles.mainTitle}>Blog Posts</h1>
+          <p className={styles.subTitle}>Share your knowledge with the world</p>
+        </div>
         <Link href="/blog/new" className={styles.createButton}>
           Create New Post
         </Link>
       </div>
 
       <div className={styles.postList}>
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           {posts.map((post) => (
             <motion.div
               key={post.id}
+              layout
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className={clsx(
-                styles.postCard,
-                expandedPost === post.id && styles.expanded
-              )}
-              onClick={() => handleCardClick(post.id)}
+              className={clsx(styles.postCard, expandedPost === post.id && styles.expanded)}
             >
-              <div className={styles.postHeader}>
+              <motion.div 
+                layout="position" 
+                className={styles.postHeader}
+                onClick={() => handleCardClick(post.id)}
+              >
                 <div className={styles.titleSection}>
-                  <h2 className={styles.title}>
+                  <motion.h2 layout="position" className={styles.title}>
                     <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                  </h2>
-                  <div className={styles.chips}>
+                  </motion.h2>
+                  {!expandedPost && post.excerpt && (
+                    <motion.p 
+                      layout="position"
+                      className={styles.previewExcerpt}
+                    >
+                      {truncateText(post.excerpt, 150)}
+                    </motion.p>
+                  )}
+                  <motion.div layout="position" className={styles.chips}>
                     {post.isFeatured && (
                       <span className={clsx(styles.chip, styles.featured)}>
                         <Star size={14} />
@@ -83,47 +116,50 @@ const BlogList: React.FC<BlogListProps> = ({
                       </span>
                     )}
                     <span className={styles.chip}>
-                      <User size={14} />
-                      {post.author.fullName}
-                    </span>
-                    <span className={styles.chip}>
                       <Calendar size={14} />
                       {format(new Date(post.publishedAt || post.createdAt), 'MMM dd, yyyy')}
+                    </span>
+                    <span className={styles.chip}>
+                      <Clock size={14} />
+                      {format(new Date(post.publishedAt || post.createdAt), 'HH:mm')}
+                    </span>
+                    <span className={styles.chip}>
+                      <User size={14} />
+                      {post.author.fullName}
                     </span>
                     <span className={styles.chip}>
                       <Eye size={14} />
                       {post.viewCount} views
                     </span>
-                  </div>
+                  </motion.div>
                 </div>
                 <button 
                   className={styles.expandButton}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleCardClick(post.id);
-                  }}
+                  onClick={() => handleCardClick(post.id)}
+                  aria-expanded={expandedPost === post.id}
+                  aria-label={expandedPost === post.id ? "Collapse post" : "Expand post"}
                 >
                   {expandedPost === post.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </button>
-              </div>
+              </motion.div>
 
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {expandedPost === post.id && (
                   <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                     className={styles.expandedContent}
                   >
                     {post.excerpt && (
                       <p className={styles.excerpt}>{post.excerpt}</p>
                     )}
-                    
-                    <div className={styles.tagsSection}>
+
+                    <div className={styles.tagsContainer}>
                       {post.categories.length > 0 && (
                         <div className={styles.tagGroup}>
-                          <span className={styles.tagLabel}>Categories:</span>
+                          <span className={styles.tagLabel}>Categories</span>
                           <div className={styles.tags}>
                             {post.categories.map(category => (
                               <Link
@@ -141,7 +177,7 @@ const BlogList: React.FC<BlogListProps> = ({
 
                       {post.tags.length > 0 && (
                         <div className={styles.tagGroup}>
-                          <span className={styles.tagLabel}>Tags:</span>
+                          <span className={styles.tagLabel}>Tags</span>
                           <div className={styles.tags}>
                             {post.tags.map(tag => (
                               <Link
@@ -150,7 +186,8 @@ const BlogList: React.FC<BlogListProps> = ({
                                 className={styles.tag}
                                 onClick={(e) => e.stopPropagation()}
                               >
-                                #{tag.name}
+                                <Tag size={12} />
+                                <span>{tag.name}</span>
                               </Link>
                             ))}
                           </div>
@@ -164,7 +201,7 @@ const BlogList: React.FC<BlogListProps> = ({
                         className={styles.readMoreButton}
                         onClick={(e) => e.stopPropagation()}
                       >
-                        Read More
+                        Read Full Post
                       </Link>
                     </div>
                   </motion.div>
