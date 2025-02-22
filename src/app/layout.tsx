@@ -11,6 +11,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Toaster } from "@/components/ui/toaster";
+import Script from "next/script";
 // import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -32,6 +33,14 @@ export default function RootLayout({
         suppressHydrationWarning
         className="light"
       >
+        <head>
+        <Script
+          src={`https://cdn.tiny.cloud/1/${process.env.NEXT_PUBLIC_TINYMCE_API_KEY}/tinymce/6/tinymce.min.js`}
+          strategy="beforeInteractive"
+          referrerPolicy="origin"
+        />
+      </head>
+      
         <body 
           // className={`${inter.className} antialiased`}
           suppressHydrationWarning

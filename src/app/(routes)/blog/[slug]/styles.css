@@ -1,0 +1,95 @@
+/* src/app/(routes)/blog/[slug]/styles.css */
+
+.blog-content {
+    /* Defaults */
+    @apply text-gray-900 dark:text-gray-100;
+  
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      @apply font-bold text-gray-900 dark:text-white mt-8 mb-4;
+    }
+  
+    h1 { @apply text-4xl; }
+    h2 { @apply text-3xl; }
+    h3 { @apply text-2xl; }
+    h4 { @apply text-xl; }
+    h5 { @apply text-lg; }
+    h6 { @apply text-base; }
+  
+    /* Paragraphs and spacing */
+    p {
+      @apply mb-4 leading-relaxed;
+    }
+  
+    /* Links */
+    a {
+      @apply text-blue-600 dark:text-blue-400 hover:underline;
+    }
+  
+    /* Lists */
+    ul, ol {
+      @apply mb-4 pl-8;
+    }
+  
+    ul {
+      @apply list-disc;
+    }
+  
+    ol {
+      @apply list-decimal;
+    }
+  
+    li {
+      @apply mb-2;
+    }
+  
+    /* Blockquotes */
+    blockquote {
+      @apply pl-4 border-l-4 border-gray-300 dark:border-gray-700 italic my-4;
+    }
+  
+    /* Code blocks */
+    pre {
+      @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4;
+    }
+  
+    code {
+      @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded;
+    }
+  
+    pre code {
+      @apply bg-transparent p-0;
+    }
+  
+    /* Tables */
+    table {
+      @apply w-full border-collapse mb-4;
+    }
+  
+    th, td {
+      @apply border border-gray-300 dark:border-gray-700 px-4 py-2;
+    }
+  
+    th {
+      @apply bg-gray-100 dark:bg-gray-800 font-bold;
+    }
+  
+    /* Images */
+    img {
+      @apply max-w-full h-auto rounded-lg my-4;
+    }
+  
+    /* Horizontal rule */
+    hr {
+      @apply my-8 border-t border-gray-300 dark:border-gray-700;
+    }
+  
+    /* Figure and captions */
+    figure {
+      @apply my-8;
+    }
+  
+    figcaption {
+      @apply text-sm text-gray-600 dark:text-gray-400 text-center mt-2;
+    }
+  }

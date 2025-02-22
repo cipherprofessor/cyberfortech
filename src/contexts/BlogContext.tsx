@@ -1,14 +1,16 @@
 // src/contexts/BlogContext.tsx
-import React, { createContext, useContext, useReducer, useCallback } from 'react';
+"use client";
+
+import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 import axios from 'axios';
-import { BlogPost, BlogCategory, BlogTag } from '@/types/blog';
+import { BlogPost } from '@/types/blog';
 
 interface BlogState {
   posts: BlogPost[];
-  categories: BlogCategory[];
-  tags: BlogTag[];
+  categories: any[];
+  tags: any[];
   loading: boolean;
-  error: string | undefined;  // Changed from string | null
+  error: string | undefined;
   currentPage: number;
   totalPages: number;
   selectedCategories: string[];
@@ -18,8 +20,8 @@ interface BlogState {
 
 type BlogAction =
   | { type: 'SET_POSTS'; payload: { posts: BlogPost[]; totalPages: number } }
-  | { type: 'SET_CATEGORIES'; payload: BlogCategory[] }
-  | { type: 'SET_TAGS'; payload: BlogTag[] }
+  | { type: 'SET_CATEGORIES'; payload: any[] }
+  | { type: 'SET_TAGS'; payload: any[] }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | undefined }
   | { type: 'SET_PAGE'; payload: number }
@@ -43,7 +45,7 @@ const initialState: BlogState = {
   categories: [],
   tags: [],
   loading: false,
-  error: undefined,  // Changed from null
+  error: undefined,
   currentPage: 1,
   totalPages: 1,
   selectedCategories: [],
@@ -53,7 +55,7 @@ const initialState: BlogState = {
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
 
-const blogReducer = (state: BlogState, action: BlogAction): BlogState => {
+function blogReducer(state: BlogState, action: BlogAction): BlogState {
   switch (action.type) {
     case 'SET_POSTS':
       return {
@@ -104,16 +106,14 @@ const blogReducer = (state: BlogState, action: BlogAction): BlogState => {
     default:
       return state;
   }
-};
+}
 
-export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function BlogProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(blogReducer, initialState);
 
   const fetchPosts = useCallback(async (page = 1) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'SET_ERROR', payload: undefined });
-
       const params = new URLSearchParams({
         page: page.toString(),
         limit: '10'
@@ -142,7 +142,7 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       dispatch({
         type: 'SET_ERROR',
-        payload: 'Failed to fetch blog posts'
+        payload: 'Failed to fetch posts'
       });
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -152,16 +152,12 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const createPost = useCallback(async (post: Partial<BlogPost>): Promise<string> => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'SET_ERROR', payload: undefined });
-
       const response = await axios.post('/api/blog', post);
       await fetchPosts(1);
       return response.data.slug;
     } catch (error) {
-      dispatch({
-        type: 'SET_ERROR',
-        payload: 'Failed to create blog post'
-      });
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create post';
+      dispatch({ type: 'SET_ERROR', payload: errorMessage });
       throw error;
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -171,36 +167,26 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updatePost = useCallback(async (slug: string, post: Partial<BlogPost>): Promise<string> => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'SET_ERROR', payload: undefined });
-
       const response = await axios.put(`/api/blog/${slug}`, post);
       await fetchPosts(state.currentPage);
       return response.data.slug;
     } catch (error) {
-      dispatch({
-        type: 'SET_ERROR',
-        payload: 'Failed to update blog post'
-      });
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update post';
+      dispatch({ type: 'SET_ERROR', payload: errorMessage });
       throw error;
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
   }, [fetchPosts, state.currentPage]);
 
-  // src/contexts/BlogContext.tsx (continued)
-
   const deletePost = useCallback(async (slug: string): Promise<void> => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'SET_ERROR', payload: undefined });
-
       await axios.delete(`/api/blog/${slug}`);
       await fetchPosts(state.currentPage);
     } catch (error) {
-      dispatch({
-        type: 'SET_ERROR',
-        payload: 'Failed to delete blog post'
-      });
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete post';
+      dispatch({ type: 'SET_ERROR', payload: errorMessage });
       throw error;
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -214,24 +200,21 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const setSelectedCategories = useCallback((categories: string[]) => {
     dispatch({ type: 'SET_SELECTED_CATEGORIES', payload: categories });
-    dispatch({ type: 'SET_PAGE', payload: 1 });
     fetchPosts(1);
   }, [fetchPosts]);
 
   const setSelectedTags = useCallback((tags: string[]) => {
     dispatch({ type: 'SET_SELECTED_TAGS', payload: tags });
-    dispatch({ type: 'SET_PAGE', payload: 1 });
     fetchPosts(1);
   }, [fetchPosts]);
 
   const setSearchQuery = useCallback((query: string) => {
     dispatch({ type: 'SET_SEARCH_QUERY', payload: query });
-    dispatch({ type: 'SET_PAGE', payload: 1 });
     fetchPosts(1);
   }, [fetchPosts]);
 
-  // Fetch categories and tags on mount
-  React.useEffect(() => {
+  useEffect(() => {
+    // Fetch categories and tags on mount
     const fetchCategories = async () => {
       try {
         const response = await axios.get('/api/blog/categories');
@@ -271,14 +254,14 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </BlogContext.Provider>
   );
-};
-
-export const useBlog = () => {
-const context = useContext(BlogContext);
-if (context === undefined) {
-  throw new Error('useBlog must be used within a BlogProvider');
 }
-return context;
-};
+
+export function useBlog() {
+  const context = useContext(BlogContext);
+  if (context === undefined) {
+    throw new Error('useBlog must be used within a BlogProvider');
+  }
+  return context;
+}
 
 export default BlogProvider;

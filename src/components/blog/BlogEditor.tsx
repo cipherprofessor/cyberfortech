@@ -1,22 +1,29 @@
 // src/components/Blog/BlogEditor.tsx
-import React, { useState, useRef } from 'react';
+"use client";
+
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Editor } from '@tinymce/tinymce-react';
 import { useTheme } from 'next-themes';
 import { BlogEditorProps } from '@/types/blog';
 import styles from './BlogEditor.module.scss';
-
-// You can create a separate config file for environment variables
-const TINYMCE_API_KEY = process.env.NEXT_PUBLIC_TINYMCE_API_KEY;
+import clsx from 'clsx'; // Install using: npm install clsx
 
 const BlogEditor: React.FC<BlogEditorProps> = ({
   post,
   onSave,
   onCancel,
-  className = ''
+  className
 }) => {
-  const { theme } = useTheme();
+  const { theme, systemTheme } = useTheme();
   const editorRef = useRef<any>(null);
+  const [mounted, setMounted] = useState(false);
+  
+  // Fix hydration issues by waiting for mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [formData, setFormData] = useState({
     title: post?.title || '',
     content: post?.content || '',
@@ -30,12 +37,37 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Get the current theme
+  const currentTheme = theme === 'system' ? systemTheme : theme;
+
+  const editorConfig = {
+    height: 500,
+    menubar: true,
+    plugins: [
+      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+      'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount',
+      'codesample'
+    ],
+    toolbar: 'undo redo | blocks | ' +
+      'bold italic forecolor | alignleft aligncenter ' +
+      'alignright alignjustify | bullist numlist outdent indent | ' +
+      'removeformat | link image media codesample | help',
+    content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
+    skin: currentTheme === 'dark' ? 'oxide-dark' : 'oxide',
+    content_css: currentTheme === 'dark' ? 'dark' : 'default',
+    promotion: false,
+    branding: false,
+    relative_urls: false,
+    remove_script_host: true,
+    convert_urls: true
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setSaving(true);
       setError(null);
-      // Get the latest editor content
       const content = editorRef.current ? editorRef.current.getContent() : formData.content;
       await onSave({ ...formData, content });
     } catch (err) {
@@ -55,12 +87,23 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
     }));
   };
 
+  // Wait until mounted to avoid hydration issues
+  if (!mounted) {
+    return null;
+  }
+
+  const containerClass = clsx(
+    styles.editor,
+    currentTheme === 'dark' && styles.dark,
+    className
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className={`${styles.editor} ${className} ${theme === 'dark' ? styles.dark : ''}`}
+      className={containerClass}
     >
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.header}>
@@ -85,7 +128,6 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
             onChange={handleChange}
             required
             className={styles.input}
-            placeholder="Enter post title"
           />
         </div>
 
@@ -93,43 +135,9 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
           <label htmlFor="content">Content</label>
           <Editor
             id="content"
-            apiKey={TINYMCE_API_KEY}
             onInit={(evt, editor) => editorRef.current = editor}
             initialValue={formData.content}
-            init={{
-              height: 500,
-              menubar: true,
-              plugins: [
-                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount',
-                'codesample', 'emoticons', 'hr', 'pagebreak', 'quickbars', 'save'
-              ],
-              toolbar: 'undo redo | blocks | ' +
-                'bold italic forecolor | alignleft aligncenter ' +
-                'alignright alignjustify | bullist numlist outdent indent | ' +
-                'removeformat | image media link codesample | help',
-              content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
-              skin: theme === 'dark' ? 'oxide-dark' : 'oxide',
-              content_css: theme === 'dark' ? 'dark' : 'default',
-              images_upload_handler: async (blobInfo, progress) => {
-                // Implement your image upload logic here
-                // Return the URL of the uploaded image
-                return new Promise((resolve, reject) => {
-                  // Example:
-                  // const formData = new FormData();
-                  // formData.append('file', blobInfo.blob(), blobInfo.filename());
-                  // const response = await fetch('/api/upload', { method: 'POST', body: formData });
-                  // const data = await response.json();
-                  // resolve(data.url);
-                  reject('Image upload not implemented');
-                });
-              },
-              file_picker_types: 'image',
-              automatic_uploads: true,
-              promotion: false,
-              branding: false
-            }}
+            init={editorConfig}
           />
         </div>
 
@@ -142,7 +150,6 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
             onChange={handleChange}
             className={styles.textarea}
             rows={3}
-            placeholder="Enter a brief excerpt of your post"
           />
         </div>
 
@@ -185,7 +192,6 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
               value={formData.metaTitle}
               onChange={handleChange}
               className={styles.input}
-              placeholder="Enter SEO title"
             />
           </div>
 
@@ -198,7 +204,6 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
               onChange={handleChange}
               className={styles.textarea}
               rows={2}
-              placeholder="Enter SEO description"
             />
           </div>
         </div>

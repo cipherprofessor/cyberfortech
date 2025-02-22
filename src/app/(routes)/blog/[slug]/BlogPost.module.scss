@@ -1,0 +1,152 @@
+// src/app/(routes)/blog/[slug]/BlogPost.module.scss
+
+.container {
+    --text-color: #1f2937;
+    --bg-color: #ffffff;
+    --border-color: #e5e7eb;
+    
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  
+    &.dark {
+      --text-color: #f3f4f6;
+      --bg-color: #1f2937;
+      --border-color: #374151;
+    }
+  }
+  
+  .article {
+    width: 100%;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+  }
+  
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+  }
+  
+  .author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .date {
+    font-size: 0.875rem;
+  }
+  
+  .content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-color);
+  
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 2em;
+      margin-bottom: 1em;
+      font-weight: 600;
+    }
+  
+    p {
+      margin-bottom: 1.5em;
+    }
+  
+    a {
+      color: #3b82f6;
+      text-decoration: underline;
+      
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      margin: 2rem 0;
+    }
+  
+    pre {
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+  
+    code {
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 0.875em;
+    }
+  
+    blockquote {
+      border-left: 4px solid var(--border-color);
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+    }
+  
+    ul, ol {
+      margin: 1.5rem 0;
+      padding-left: 2rem;
+  
+      li {
+        margin-bottom: 0.5rem;
+      }
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+  
+      th, td {
+        border: 1px solid var(--border-color);
+        padding: 0.75rem;
+        text-align: left;
+      }
+  
+      th {
+        background-color: var(--bg-color);
+        font-weight: 600;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .title {
+      font-size: 2rem;
+    }
+  
+    .meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
