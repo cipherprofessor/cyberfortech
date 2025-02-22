@@ -125,7 +125,7 @@ export default function Navbar() {
           {renderNavLink("/courses", "Courses", <BookOpen className="h-4 w-4 mr-2" />)}
           {renderRoleBasedLinks()}
           {/* {renderNavLink("/blogs", "Blogs", <FontAwesomeIcon icon={faBlog} className="h-4 w-4 mr-2" />)} */}
-          {renderNavLink("/blogs", "Blogs", <Rss className="h-4 w-4 mr-2" />)}
+          {renderNavLink("/blog", "Blogs", <Rss className="h-4 w-4 mr-2" />)}
           {renderNavLink("/forum", "Forum", <MessageSquare className="h-4 w-4 mr-2" />)}
           {renderNavLink("/about", "About", <InfoIcon className="h-4 w-4 mr-2" />)}
           {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-4 w-4 mr-2" />)}

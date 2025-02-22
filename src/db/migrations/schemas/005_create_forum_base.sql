@@ -1,3 +1,4 @@
+-- src/db/migrations/schemas/005_create_forum_base.sql
 -- Description: Creates base forum structure including categories and subcategories
 -- Version: 5
 -- Depends on: 004_create_courses.sql

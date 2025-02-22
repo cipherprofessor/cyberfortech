@@ -78,7 +78,10 @@ export default {
   		animation: {
   			'meteor-effect': 'meteor 5s linear infinite',
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+			"slide-in-from-top-full": "slide-in-from-top-full 0.2s ease-out",
+			"slide-in-from-bottom-full": "slide-in-from-bottom-full 0.2s ease-out",
+			"slide-out-to-right-full": "slide-out-to-right-full 0.2s ease-out",
   		},
   		keyframes: {
   			meteor: {
@@ -109,7 +112,19 @@ export default {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+			"slide-in-from-top-full": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-in-from-bottom-full": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-out-to-right-full": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(100%)" },
+        },
   		}
   	}
   },

@@ -21,7 +21,8 @@ const SCHEMA_FILES = [
   '007_create_forum_features.sql',
   '008_create_forum_analytics.sql',
   '009_create_contacts.sql',
-  '010_create_triggers_utils.sql'
+  '010_create_triggers_utils.sql',
+  '011_create_blog.sql'
 ];
 
 function cleanSQLStatement(sql: string): string {
