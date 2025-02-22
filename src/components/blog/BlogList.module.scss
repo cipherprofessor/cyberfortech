@@ -1,154 +1,197 @@
 // src/components/Blog/BlogList.module.scss
 
 .container {
-    --primary-color: #3b82f6;
-    --border-color: #e5e7eb;
-    --text-color: #1f2937;
-    --text-secondary: #6b7280;
-    --bg-color: #ffffff;
-    --hover-bg: #f3f4f6;
-    --tag-bg: #f3f4f6;
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --border-color: #e2e8f0;
+    --text-color: #1e293b;
+    --text-secondary: #64748b;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --chip-bg: #f1f5f9;
+    --hover-bg: #f8fafc;
+    --featured-bg: #818cf8;
+    --featured-color: #ffffff;
   
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
     padding: 2rem;
+    background-color: var(--bg-color);
   
     &.dark {
-      --border-color: #374151;
-      --text-color: #f3f4f6;
-      --text-secondary: #9ca3af;
-      --bg-color: #1f2937;
-      --hover-bg: #374151;
-      --tag-bg: #374151;
+      --border-color: #334155;
+      --text-color: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --chip-bg: #334155;
+      --hover-bg: #1e293b;
     }
   }
   
-  .post {
+  .header {
     display: flex;
-    gap: 2rem;
-    padding: 2rem;
-    background-color: var(--bg-color);
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .mainTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+    background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .createButton {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
     border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  
+    &:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+  }
+  
+  .postList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .postCard {
+    background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
   
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+      border-color: var(--primary-color);
     }
   
-    @media (max-width: 768px) {
-      flex-direction: column;
-      padding: 1rem;
-    }
-  }
-  
-  .imageWrapper {
-    position: relative;
-    flex: 0 0 300px;
-    height: 200px;
-    overflow: hidden;
-    border-radius: 0.5rem;
-  
-    @media (max-width: 768px) {
-      flex: auto;
-      width: 100%;
+    &.expanded {
+      background-color: var(--hover-bg);
     }
   }
   
-  .image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+  .postHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
   
-    &:hover {
-      transform: scale(1.05);
+  .titleSection {
+    flex: 1;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 1rem 0;
+  
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.2s ease;
+  
+      &:hover {
+        color: var(--primary-color);
+      }
     }
   }
   
-  .featuredBadge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.25rem 0.75rem;
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background-color: var(--chip-bg);
+    color: var(--text-secondary);
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 500;
+    transition: all 0.2s ease;
+  
+    svg {
+      color: var(--text-secondary);
+    }
+  
+    &.featured {
+      background-color: var(--featured-bg);
+      color: var(--featured-color);
+  
+      svg {
+        color: var(--featured-color);
+      }
+    }
   }
   
-  .content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .meta {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.875rem;
+  .expandButton {
+    background: none;
+    border: none;
     color: var(--text-secondary);
-  }
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
   
-  .titleLink {
-    text-decoration: none;
-    color: inherit;
-  
-    &:hover .title {
+    &:hover {
+      background-color: var(--chip-bg);
       color: var(--primary-color);
     }
   }
   
-  .title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-color);
-    transition: color 0.2s ease;
-    margin: 0;
+  .expandedContent {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    overflow: hidden;
   }
   
   .excerpt {
     color: var(--text-secondary);
+    font-size: 0.875rem;
     line-height: 1.6;
-    margin: 0;
+    margin: 0 0 1.5rem 0;
   }
   
-  .footer {
+  .tagsSection {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 1rem;
-    margin-top: auto;
   }
   
-  .categories {
+  .tagGroup {
     display: flex;
+    align-items: center;
+    gap: 1rem;
     flex-wrap: wrap;
-    gap: 0.5rem;
   }
   
-// src/components/Blog/BlogList.module.scss (continued)
-
-.category {
-    padding: 0.25rem 0.75rem;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 9999px;
-    font-size: 0.75rem;
+  .tagLabel {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
     font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(59, 131, 246, 0.2);
-    }
   }
   
   .tags {
@@ -158,8 +201,8 @@
   }
   
   .tag {
-    padding: 0.25rem 0.75rem;
-    background-color: var(--tag-bg);
+    padding: 0.375rem 0.75rem;
+    background-color: var(--chip-bg);
     color: var(--text-secondary);
     border-radius: 9999px;
     font-size: 0.75rem;
@@ -168,31 +211,60 @@
     transition: all 0.2s ease;
   
     &:hover {
-      color: var(--primary-color);
-      background-color: var(--hover-bg);
+      background-color: var(--primary-color);
+      color: white;
+    }
+  
+    &.categoryTag {
+      background-color: var(--primary-color);
+      color: white;
+  
+      &:hover {
+        background-color: var(--primary-hover);
+      }
+    }
+  }
+  
+  .cardActions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+  
+  .readMoreButton {
+    padding: 0.625rem 1.25rem;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background-color: var(--primary-hover);
     }
   }
   
   .pagination {
+    margin-top: 2rem;
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin-top: 2rem;
   }
   
   .pageButton {
     padding: 0.5rem 1rem;
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
-    background-color: var(--bg-color);
+    background-color: var(--card-bg);
     color: var(--text-color);
     font-size: 0.875rem;
     cursor: pointer;
     transition: all 0.2s ease;
   
     &:hover:not(:disabled) {
-      background-color: var(--hover-bg);
       border-color: var(--primary-color);
+      color: var(--primary-color);
     }
   
     &:disabled {
@@ -207,85 +279,186 @@
     }
   }
   
-  .loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 2rem;
-    color: var(--text-secondary);
-  }
-  
-  .spinner {
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 2px solid var(--border-color);
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-  
-  .error {
-    padding: 1rem;
-    background-color: #fee2e2;
-    border: 1px solid #ef4444;
-    color: #b91c1c;
-    border-radius: 0.5rem;
-    text-align: center;
-  }
-  
-  .empty {
-    padding: 2rem;
-    text-align: center;
-    color: var(--text-secondary);
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 0.75rem;
-  }
-  
   @keyframes spin {
     to {
       transform: rotate(360deg);
     }
   }
   
-  // RTL Support
-  [dir="rtl"] {
-    .featuredBadge {
-      right: auto;
-      left: 1rem;
-    }
-  }
-  
-  // Responsive Design
-  @media (max-width: 640px) {
+// src/components/Blog/BlogList.module.scss (continued)
+
+@media (max-width: 768px) {
     .container {
       padding: 1rem;
     }
   
-    .meta {
+    .header {
       flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+  
+      .mainTitle {
+        font-size: 1.75rem;
+      }
+  
+      .createButton {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  
+    .postCard {
+      padding: 1rem;
+    }
+  
+    .postHeader {
+      flex-direction: column;
+      gap: 0.75rem;
+  
+      .expandButton {
+        align-self: flex-end;
+      }
+    }
+  
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       gap: 0.5rem;
     }
   
-    .footer {
+    .chip {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .tagGroup {
       flex-direction: column;
-    }
-  }
-  
-  // Print styles
-  @media print {
-    .container {
-      padding: 0;
+      align-items: flex-start;
+      gap: 0.5rem;
     }
   
-    .post {
-      break-inside: avoid;
-      border: none;
-      box-shadow: none;
+    .tags {
+      width: 100%;
+    }
+  
+    .tag {
+      flex: 1;
+      text-align: center;
     }
   
     .pagination {
-      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+  
+    .pageButton {
+      min-width: 2.5rem;
+      padding: 0.5rem;
+      text-align: center;
+    }
+  }
+  
+  // Loading state styles
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background-color: var(--card-bg);
+    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    gap: 1rem;
+  }
+  
+  .spinner {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 3px solid var(--chip-bg);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  // Error state styles
+  .error {
+    padding: 2rem;
+    background-color: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 1rem;
+    color: #dc2626;
+    text-align: center;
+  
+    .dark & {
+      background-color: #471818;
+      border-color: #7f1d1d;
+    }
+  }
+  
+  // Empty state styles
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem;
+    background-color: var(--card-bg);
+    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    color: var(--text-secondary);
+  }
+  
+  // Hover animations
+  .postCard {
+    &:hover {
+      .title a {
+        background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  }
+  
+  // Transition for expanded content
+  .expandedContent {
+    transition: all 0.3s ease;
+    transform-origin: top;
+  
+    &.entering {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+  
+    &.entered {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  
+    &.exiting {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+  }
+  
+  // RTL Support
+  [dir="rtl"] {
+    .postHeader {
+      flex-direction: row-reverse;
+    }
+  
+    .chips {
+      flex-direction: row-reverse;
+    }
+  
+    .chip svg {
+      margin-left: 0;
+      margin-right: 0.375rem;
+    }
+  
+    .expandButton {
+      transform: scaleX(-1);
     }
   }

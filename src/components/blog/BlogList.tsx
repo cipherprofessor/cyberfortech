@@ -1,119 +1,165 @@
 // src/components/Blog/BlogList.tsx
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { BlogListProps } from '@/types/blog';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import { Calendar, User, Eye, Star, ChevronDown, ChevronUp } from 'lucide-react';
 import styles from './BlogList.module.scss';
 
 const BlogList: React.FC<BlogListProps> = ({
   posts,
   loading,
   error,
-  onPageChange,
   currentPage = 1,
   totalPages = 1,
+  onPageChange,
   className = ''
 }) => {
   const { theme } = useTheme();
+  const [expandedPost, setExpandedPost] = useState<string | null>(null);
+
+  const handleCardClick = (id: string) => {
+    setExpandedPost(expandedPost === id ? null : id);
+  };
 
   if (loading) {
     return (
       <div className={`${styles.loading} ${className}`}>
         <div className={styles.spinner} />
-        Loading posts...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={`${styles.error} ${className}`} role="alert">
-        {error}
-      </div>
-    );
-  }
-
-  if (!posts.length) {
-    return (
-      <div className={`${styles.empty} ${className}`}>
-        No blog posts found.
+        <p>Loading posts...</p>
       </div>
     );
   }
 
   return (
     <div className={`${styles.container} ${theme === 'dark' ? styles.dark : ''} ${className}`}>
-      <AnimatePresence mode="popLayout">
-        {posts.map((post, index) => (
-          <motion.article
-            key={post.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-            className={styles.post}
-          >
-            {post.featuredImage && (
-              <div className={styles.imageWrapper}>
-                <img
-                  src={post.featuredImage}
-                  alt={post.title}
-                  className={styles.image}
-                  loading="lazy"
-                />
-                {post.isFeatured && (
-                  <span className={styles.featuredBadge}>Featured</span>
+      <div className={styles.header}>
+        <h1 className={styles.mainTitle}>Blog Posts</h1>
+        <Link href="/blog/new" className={styles.createButton}>
+          Create New Post
+        </Link>
+      </div>
+
+      <div className={styles.postList}>
+        <AnimatePresence mode="popLayout">
+          {posts.map((post) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className={`${styles.postCard} ${expandedPost === post.id ? styles.expanded : ''}`}
+              onClick={() => handleCardClick(post.id)}
+            >
+              <div className={styles.postHeader}>
+                <div className={styles.titleSection}>
+                  <h2 className={styles.title}>
+                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  </h2>
+                  <div className={styles.chips}>
+                    {post.isFeatured && (
+                      <span className={`${styles.chip} ${styles.featured}`}>
+                        <Star size={14} />
+                        Featured
+                      </span>
+                    )}
+                    <span className={styles.chip}>
+                      <User size={14} />
+                      {post.author.fullName}
+                    </span>
+                    <span className={styles.chip}>
+                      <Calendar size={14} />
+                      {format(new Date(post.publishedAt || post.createdAt), 'MMM dd, yyyy')}
+                    </span>
+                    <span className={styles.chip}>
+                      <Eye size={14} />
+                      {post.viewCount} views
+                    </span>
+                  </div>
+                </div>
+                <button 
+                  className={styles.expandButton}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCardClick(post.id);
+                  }}
+                >
+                  {expandedPost === post.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </button>
+              </div>
+
+              <AnimatePresence>
+                {expandedPost === post.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={styles.expandedContent}
+                  >
+                    {post.excerpt && (
+                      <p className={styles.excerpt}>{post.excerpt}</p>
+                    )}
+                    
+                    <div className={styles.tagsSection}>
+                      {post.categories.length > 0 && (
+                        <div className={styles.tagGroup}>
+                          <span className={styles.tagLabel}>Categories:</span>
+                          <div className={styles.tags}>
+                            {post.categories.map(category => (
+                              <Link
+                                key={category.id}
+                                href={`/blog/category/${category.slug}`}
+                                className={`${styles.tag} ${styles.categoryTag}`}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {category.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {post.tags.length > 0 && (
+                        <div className={styles.tagGroup}>
+                          <span className={styles.tagLabel}>Tags:</span>
+                          <div className={styles.tags}>
+                            {post.tags.map(tag => (
+                              <Link
+                                key={tag.id}
+                                href={`/blog/tag/${tag.slug}`}
+                                className={styles.tag}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                #{tag.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={styles.cardActions}>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className={styles.readMoreButton}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Read More
+                      </Link>
+                    </div>
+                  </motion.div>
                 )}
-              </div>
-            )}
-
-            <div className={styles.content}>
-              <div className={styles.meta}>
-                <span className={styles.date}>
-                  {format(new Date(post.publishedAt || post.createdAt), 'MMM dd, yyyy')}
-                </span>
-                <span className={styles.author}>
-                  by {post.author.fullName}
-                </span>
-              </div>
-
-              <Link href={`/blog/${post.slug}`} className={styles.titleLink}>
-                <h2 className={styles.title}>{post.title}</h2>
-              </Link>
-
-              <p className={styles.excerpt}>{post.excerpt}</p>
-
-              <div className={styles.footer}>
-                <div className={styles.categories}>
-                  {post.categories.map(category => (
-                    <Link
-                      key={category.id}
-                      href={`/blog/category/${category.slug}`}
-                      className={styles.category}
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-
-                <div className={styles.tags}>
-                  {post.tags.map(tag => (
-                    <Link
-                      key={tag.id}
-                      href={`/blog/tag/${tag.slug}`}
-                      className={styles.tag}
-                    >
-                      #{tag.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.article>
-        ))}
-      </AnimatePresence>
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
 
       {totalPages > 1 && (
         <div className={styles.pagination}>

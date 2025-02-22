@@ -7,42 +7,13 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { BlogPost } from '@/types/blog';
 
-// Initialize the database client
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL!,
   authToken: process.env.TURSO_AUTH_TOKEN!,
 });
 
 interface BlogPostPageProps {
-  params: {
-    slug: string;
-  };
-}
-
-// Generate metadata for the page
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getPost(params.slug);
-  
-  if (!post) {
-    return {
-      title: 'Post Not Found',
-      description: 'The requested blog post could not be found.'
-    };
-  }
-
-  return {
-    title: String(post.title),
-    description: post.metaDescription || post.excerpt || `Read ${post.title} on our blog.`,
-    openGraph: {
-      title: String(post.title),
-      description: post.metaDescription || post.excerpt || `Read ${post.title} on our blog.`,
-      images: post.featuredImage ? [{ url: post.featuredImage }] : undefined,
-      type: 'article',
-      authors: [post.author.fullName || ''],
-      publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
-      modifiedTime: new Date(post.updatedAt).toISOString(),
-    }
-  };
+  params: Promise<{ slug: string }>;
 }
 
 // Function to get post data
@@ -81,7 +52,6 @@ async function getPost(slug: string): Promise<BlogPost | null> {
         LEFT JOIN blog_tags bt ON bpt.tag_id = bt.id
         WHERE b.slug = ? 
         AND b.is_deleted = FALSE
-        AND b.status = 'published'
         GROUP BY b.id
       `,
       args: [slug]
@@ -146,16 +116,44 @@ async function getPost(slug: string): Promise<BlogPost | null> {
   }
 }
 
+// Generate metadata for the page
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const post = await getPost(resolvedParams.slug);
+  
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+      description: 'The requested blog post could not be found.'
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.metaDescription || post.excerpt || `Read ${post.title} on our blog.`,
+    openGraph: {
+      title: post.title,
+      description: post.metaDescription || post.excerpt || `Read ${post.title} on our blog.`,
+      images: post.featuredImage ? [{ url: post.featuredImage }] : undefined,
+      type: 'article',
+      authors: [post.author.fullName || ''],
+      publishedTime: post.publishedAt?.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+    }
+  };
+}
+
 // The main page component
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getPost(params.slug);
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const resolvedParams = await params;
+  const post = await getPost(resolvedParams.slug);
 
   if (!post) {
     notFound();
   }
 
   return (
-    <article className="prose lg:prose-xl dark:prose-invert mx-auto px-4 py-8">
+    <article className="max-w-4xl mx-auto px-4 py-8">
       {post.featuredImage && (
         <div className="relative w-full h-[400px] mb-8 rounded-lg overflow-hidden">
           <Image
@@ -169,7 +167,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       )}
 
       <header className="mb-8">
-        <h1 className="mb-4">{post.title}</h1>
+        <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
         
         <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400">
           <div className="flex items-center gap-2">
@@ -187,10 +185,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           <time dateTime={post.publishedAt?.toISOString() || post.createdAt.toISOString()}>
-            {format(
-              post.publishedAt || post.createdAt,
-              'MMMM d, yyyy'
-            )}
+            {format(post.publishedAt || post.createdAt, 'MMMM d, yyyy')}
           </time>
 
           <span>· {post.viewCount} views</span>
@@ -204,7 +199,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </header>
 
       <div 
-        className="blog-content"
+        className="prose prose-lg dark:prose-invert max-w-none"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
