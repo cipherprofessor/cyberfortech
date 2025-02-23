@@ -38,6 +38,26 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  webpack: (config) => {
+    const rules = config.module.rules
+      .find((rule) => typeof rule === 'object' && rule.oneOf)
+      ?.oneOf?.filter((rule) => 
+        rule?.sideEffects === false && 
+        rule?.use?.loader?.includes('css-loader') &&
+        rule?.use?.options?.modules
+      ) ?? [];
+
+    rules.forEach((rule) => {
+      if (rule?.use?.options?.modules) {
+        rule.use.options.modules = {
+          ...rule.use.options.modules,
+          mode: 'global'
+        };
+      }
+    });
+
+    return config;
+  }
 };
 
 export default nextConfig;
