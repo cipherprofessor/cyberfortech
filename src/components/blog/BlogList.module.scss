@@ -16,7 +16,7 @@
   
     width: 100%;
     padding: 2rem;
-    background-color: var(--bg-color);
+    // background-color: var(--bg-color);
     min-height: calc(100vh - 4rem);
   
     &.dark {
@@ -92,6 +92,7 @@
     padding: 1.5rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
   
     &:hover {
       transform: translateY(-2px);

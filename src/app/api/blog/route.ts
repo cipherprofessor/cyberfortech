@@ -6,6 +6,7 @@ import { ROLES } from '@/constants/auth';
 import slugify from 'slugify';
 import { Author, BlogCategory, BlogPaginationResponse, BlogPost, BlogTag } from '@/types/blog';
 
+
 interface BlogPostRow {
     id: string;
     title: string;
@@ -53,17 +54,75 @@ async function generateUniqueSlug(baseSlug: string): Promise<string> {
   }
 }
 
+// src/app/api/blog/route.ts
 export async function POST(request: Request) {
   let transaction: Transaction | undefined;
 
   try {
-    const { isAuthorized, user, error } = await validateUserAccess(request, [ROLES.ADMIN, ROLES.SUPERADMIN]);
+    const { isAuthorized, user, error } = await validateUserAccess(request, [ROLES.ADMIN, ROLES.SUPERADMIN, ROLES.STUDENT, ROLES.INSTRUCTOR]);
     
     if (!isAuthorized || !user) {
       return NextResponse.json(
         { error: error || 'Unauthorized' },
         { status: error === 'Unauthorized' ? 401 : 403 }
       );
+    }
+
+    // Ensure user exists in database
+    const userExists = await client.execute({
+      sql: 'SELECT id FROM users WHERE id = ?',
+      args: [user.id]
+    });
+
+    if (!userExists.rows.length) {
+      // Insert user with data from our clerk utility
+      await client.execute({
+        sql: `
+          INSERT INTO users (
+            id,
+            email,
+            first_name,
+            last_name,
+            full_name,
+            avatar_url,
+            role,
+            created_at,
+            updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `,
+        args: [
+          user.id,
+          user.email,
+          user.firstName,
+          user.lastName,
+          user.fullName,
+          user.imageUrl,
+          user.role
+        ]
+      });
+    } else {
+      // Update existing user data
+      await client.execute({
+        sql: `
+          UPDATE users 
+          SET 
+            email = ?,
+            first_name = ?,
+            last_name = ?,
+            full_name = ?,
+            avatar_url = ?,
+            updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `,
+        args: [
+          user.email,
+          user.firstName,
+          user.lastName,
+          user.fullName,
+          user.imageUrl,
+          user.id
+        ]
+      });
     }
 
     const body = await request.json();
@@ -94,91 +153,91 @@ export async function POST(request: Request) {
     // Begin transaction
     transaction = await client.transaction();
 
-    // Insert blog post
-    await transaction.execute({
-      sql: `
-        INSERT INTO blog_posts (
-          id, 
-          title, 
-          slug, 
-          content, 
-          excerpt, 
-          author_id,
-          status, 
-          is_featured, 
-          meta_title,
-          meta_description,
-          published_at,
-          created_at,
-          updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      `,
-      args: [
-        id,
-        title,
-        slug,
-        content,
-        excerpt || null,
-        user.id,
-        status,
-        isFeatured ? 1 : 0,
-        metaTitle || null,
-        metaDescription || null,
-        status === 'published' ? new Date().toISOString() : null
-      ]
-    });
+    try {
+      // Insert blog post
+      await transaction.execute({
+        sql: `
+          INSERT INTO blog_posts (
+            id, 
+            title, 
+            slug, 
+            content, 
+            excerpt, 
+            author_id,
+            status, 
+            is_featured, 
+            meta_title,
+            meta_description,
+            published_at,
+            created_at,
+            updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `,
+        args: [
+          id,
+          title,
+          slug,
+          content,
+          excerpt || null,
+          user.id,
+          status,
+          isFeatured ? 1 : 0,
+          metaTitle || null,
+          metaDescription || null,
+          status === 'published' ? new Date().toISOString() : null
+        ]
+      });
 
-    // Insert categories
-    if (categories.length > 0) {
-      for (const categoryId of categories) {
-        await transaction.execute({
-          sql: 'INSERT INTO blog_post_categories (post_id, category_id) VALUES (?, ?)',
-          args: [id, categoryId]
-        });
+      // Handle categories
+      if (categories.length > 0) {
+        for (const categoryId of categories) {
+          await transaction.execute({
+            sql: 'INSERT INTO blog_post_categories (post_id, category_id) VALUES (?, ?)',
+            args: [id, categoryId]
+          });
+        }
       }
-    }
 
-    // Handle tags
-    if (tags.length > 0) {
-      for (const tagName of tags) {
-        const tagSlug = slugify(tagName, { lower: true, strict: true });
-        const tagId = nanoid();
+      // Handle tags
+      if (tags.length > 0) {
+        for (const tagName of tags) {
+          const tagSlug = slugify(tagName, { lower: true, strict: true });
+          const tagId = nanoid();
 
-        // Insert or get existing tag
-        const tagResult = await transaction.execute({
-          sql: `
-            INSERT INTO blog_tags (id, name, slug)
-            VALUES (?, ?, ?)
-            ON CONFLICT (slug) DO UPDATE SET
-            name = EXCLUDED.name
-            RETURNING id
-          `,
-          args: [tagId, tagName, tagSlug]
-        });
+          // Insert or get existing tag
+          const tagResult = await transaction.execute({
+            sql: `
+              INSERT INTO blog_tags (id, name, slug)
+              VALUES (?, ?, ?)
+              ON CONFLICT (slug) DO UPDATE SET
+              name = EXCLUDED.name
+              RETURNING id
+            `,
+            args: [tagId, tagName, tagSlug]
+          });
 
-        // Link tag to post
-        await transaction.execute({
-          sql: 'INSERT INTO blog_post_tags (post_id, tag_id) VALUES (?, ?)',
-          args: [id, tagResult.rows[0].id]
-        });
+          // Link tag to post
+          await transaction.execute({
+            sql: 'INSERT INTO blog_post_tags (post_id, tag_id) VALUES (?, ?)',
+            args: [id, tagResult.rows[0].id]
+          });
+        }
       }
+
+      // Commit transaction
+      await transaction.commit();
+
+      return NextResponse.json({ id, slug });
+
+    } catch (error) {
+      // Rollback transaction if error occurs
+      if (transaction) {
+        await transaction.rollback();
+      }
+      throw error;
     }
-
-    // Commit the transaction
-    await transaction.commit();
-
-    return NextResponse.json({ id, slug });
 
   } catch (error) {
-    // Rollback transaction if exists
-    if (transaction) {
-      try {
-        await transaction.rollback();
-      } catch (rollbackError) {
-        console.error('Error rolling back transaction:', rollbackError);
-      }
-    }
-
     console.error('Error creating blog post:', error);
 
     if (error instanceof Error) {
