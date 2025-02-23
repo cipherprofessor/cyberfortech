@@ -1,0 +1,50 @@
+// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/CourseManagement.module.scss
+//Alpha Centauri
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem;
+    background: var(--background);
+    transition: all 0.3s ease;
+  
+    &.dark {
+      --background: #0f172a;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --hover-bg: #334155;
+      --button-bg: #3b82f6;
+      --button-hover: #2563eb;
+      --danger-color: #ef4444;
+      --success-color: #22c55e;
+    }
+  
+    --background: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --hover-bg: #f8fafc;
+    --button-bg: #3b82f6;
+    --button-hover: #2563eb;
+    --danger-color: #ef4444;
+    --success-color: #22c55e;
+  }
+  
+  .coursesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .coursesGrid {
+      grid-template-columns: 1fr;
+    }
+  }

@@ -1,0 +1,127 @@
+// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/components/FormFields/FormFields.module.scss
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  
+    &.fullWidth {
+      grid-column: span 2;
+  
+      @media (max-width: 640px) {
+        grid-column: span 1;
+      }
+    }
+  
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+  
+      .infoIcon {
+        color: var(--text-secondary);
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+  
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  
+    input,
+    textarea,
+    select {
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      background: var(--background);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+  
+      &:focus {
+        outline: none;
+        border-color: var(--button-bg);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+      }
+  
+      &::placeholder {
+        color: var(--text-secondary);
+      }
+    }
+  
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+  
+    .inputWithIcon {
+      position: relative;
+      display: flex;
+      align-items: center;
+  
+      input {
+        padding-left: 2.5rem;
+        width: 100%;
+      }
+  
+      svg {
+        position: absolute;
+        left: 0.75rem;
+        color: var(--text-secondary);
+      }
+    }
+  }
+  
+  .tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  
+    .infoIcon {
+      color: var(--text-secondary);
+      cursor: help;
+      transition: color 0.2s ease;
+  
+      &:hover {
+        color: var(--button-bg);
+      }
+    }
+  
+    .tooltipText {
+      visibility: hidden;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 100%;
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      font-size: 0.75rem;
+      font-weight: normal;
+      border-radius: 0.5rem;
+      white-space: nowrap;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-color);
+      width: max-content;
+      max-width: 200px;
+      z-index: 10;
+  
+      &::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: var(--border-color);
+      }
+    }
+  
+    &:hover .tooltipText {
+      visibility: visible;
+    }
+  }

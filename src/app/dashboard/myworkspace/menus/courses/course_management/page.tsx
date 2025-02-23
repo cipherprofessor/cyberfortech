@@ -1,5 +1,6 @@
 'use client';
-import { CourseManagement } from '@/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/CourseManagement';
+
+import { CourseManagement } from "../../../components/ui/CourseManagement/CourseManagement";
 import styles from "./page.module.scss";
 
 const SuperAdminCourseManagementPage = () => {
