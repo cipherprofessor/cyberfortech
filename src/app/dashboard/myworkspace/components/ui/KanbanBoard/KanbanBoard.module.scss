@@ -115,38 +115,38 @@
   }
 }
 
-:root {
-  // Light theme
-  [data-theme='light'] {
-    --bg-color: #f5f5f5;
-    --text-color: #333;
-    --text-secondary: #666;
-    --column-bg: #fff;
-    --column-bg-drag: rgba(0, 0, 0, 0.05);
-    --task-bg: #fff;
-    --task-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --task-shadow-drag: 0 8px 16px rgba(0, 0, 0, 0.1);
-    --primary-color: #6366f1;
-    --count-bg: rgba(0, 0, 0, 0.1);
-    --button-bg: #f3f4f6;
-    --button-bg-hover: #e5e7eb;
-    --button-text: #374151;
-  }
+// :root {
+//   // Light theme
+//    {
+//     --bg-color: #f5f5f5;
+//     --text-color: #333;
+//     --text-secondary: #666;
+//     --column-bg: #fff;
+//     --column-bg-drag: rgba(0, 0, 0, 0.05);
+//     --task-bg: #fff;
+//     --task-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.1);
+//     --task-shadow-drag: 0 8px 16px rgba(0, 0, 0, 0.1);
+//     --primary-color: #6366f1;
+//     --count-bg: rgba(0, 0, 0, 0.1);
+//     --button-bg: #f3f4f6;
+//     --button-bg-hover: #e5e7eb;
+//     --button-text: #374151;
+//   }
 
-  // Dark theme
-  [data-theme='dark'] {
-    --bg-color: #1a1a1a;
-    --text-color: #fff;
-    --text-secondary: #a0aec0;
-    --column-bg: #2d2d2d;
-    --column-bg-drag: rgba(255, 255, 255, 0.05);
-    --task-bg: #333;
-    --task-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.2);
-    --task-shadow-drag: 0 8px 16px rgba(0, 0, 0, 0.3);
-    --primary-color: #818cf8;
-    --count-bg: rgba(255, 255, 255, 0.1);
-    --button-bg: #374151;
-    --button-bg-hover: #4b5563;
-    --button-text: #e5e7eb;
-  }
-}
+//   // Dark theme
+//   [data-theme='dark'] {
+//     --bg-color: #1a1a1a;
+//     --text-color: #fff;
+//     --text-secondary: #a0aec0;
+//     --column-bg: #2d2d2d;
+//     --column-bg-drag: rgba(255, 255, 255, 0.05);
+//     --task-bg: #333;
+//     --task-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.2);
+//     --task-shadow-drag: 0 8px 16px rgba(0, 0, 0, 0.3);
+//     --primary-color: #818cf8;
+//     --count-bg: rgba(255, 255, 255, 0.1);
+//     --button-bg: #374151;
+//     --button-bg-hover: #4b5563;
+//     --button-text: #e5e7eb;
+//   }
+// }

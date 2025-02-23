@@ -13,10 +13,8 @@ const regexEqual = (x, y) => {
 };
 
 // Overrides for css-loader plugin
-function cssLoaderOptions(modules) {
-  const { getLocalIdent, ...others } = modules;
+function cssLoaderOptions(modules = {}) {
   return {
-    ...others,
     localIdentName: "[hash:base64:6]",
     exportLocalsConvention: "camelCaseOnly",
     mode: "global",
@@ -85,7 +83,7 @@ const nextConfig = {
           cssLoader.options = {
             ...cssLoader.options,
             modules: {
-              ...cssLoaderOptions(cssLoader.options.modules),
+              ...cssLoaderOptions(),
               generateScopedName: '[name]__[local]__[hash:base64:5]',
               exportOnlyLocals: false,
               globalModulePaths: [/global/, /node_modules/],

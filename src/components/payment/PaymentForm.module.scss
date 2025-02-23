@@ -1,7 +1,4 @@
-// src/components/payment/PaymentForm.module.scss
-
-// Variables
-:root {
+.variables {
     --payment-primary: #4f46e5;
     --payment-primary-hover: #4338ca;
     --payment-surface-light: #ffffff;
@@ -14,8 +11,8 @@
     --payment-text-secondary-dark: #94a3b8;
   }
   
-  // Main Container
   .container {
+    composes: variables;
     width: 100%;
     min-height: calc(100vh - 4rem);
     padding: 2rem;
