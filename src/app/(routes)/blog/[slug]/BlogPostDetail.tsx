@@ -1,7 +1,6 @@
-// src/app/(routes)/blog/[slug]/BlogPostDetail.tsx
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { 
@@ -27,6 +26,7 @@ import styles from './BlogPostDetail.module.scss';
 import { BlogPost } from '@/types/blog';
 import Comments from '@/app/api/blog/comments/Comments';
 
+
 interface BlogPostDetailProps {
   post: BlogPost;
   currentUserRole?: string;
@@ -38,13 +38,28 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
   currentUserRole,
   isAuthor
 }) => {
-  const { theme } = useTheme();
   const router = useRouter();
+  const { theme} = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [readingTime] = useState(
     Math.ceil(post.content.split(' ').length / 200)
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Don't render anything until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <article className={styles.container}>
+        <div className={styles.loading}>Loading...</div>
+      </article>
+    );
+  }
+
 
   const handleEdit = () => {
     router.push(`/blog/${post.slug}/edit`);
@@ -230,7 +245,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
                 <Link
                   key={category.id}
                   href={`/blog/category/${category.slug}`}
-                  className={styles.category}
+                  className={styles.categoryLink}
                 >
                   {category.name}
                 </Link>
@@ -247,7 +262,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
                 <Link
                   key={tag.id}
                   href={`/blog/tag/${tag.slug}`}
-                  className={styles.tag}
+                  className={styles.tagLink}
                 >
                   <Tag size={14} />
                   {tag.name}
@@ -259,37 +274,22 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
       </motion.div>
 
       {/* Comments Section */}
-      {/* <motion.div 
+      <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
         className={styles.comments}
-      > */}
-        {/* <h3>
-          <MessageCircle size={20} />
-          Comments
-        </h3> */}
-        
-        <motion.div 
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ delay: 0.5 }}
-  className={styles.comments}
->
-  <Comments
-    postId={post.id}
-    onCommentAdded={(comment) => {
-      // Optional: Handle new comment added
-      console.log('New comment added:', comment);
-    }}
-    onCommentDeleted={(commentId) => {
-      // Optional: Handle comment deleted
-      console.log('Comment deleted:', commentId);
-    }}
-  />
-</motion.div>
-
-   
+      >
+        <Comments
+          postId={post.id}
+          onCommentAdded={(comment) => {
+            console.log('New comment added:', comment);
+          }}
+          onCommentDeleted={(commentId) => {
+            console.log('Comment deleted:', commentId);
+          }}
+        />
+      </motion.div>
     </article>
   );
 };
