@@ -15,7 +15,7 @@ import {
   ExternalLink,
   Twitter
 } from 'lucide-react';
-import { Accordion, AccordionItem, Avatar, Tooltip } from "@heroui/react";
+import { Accordion, AccordionItem, Avatar, Badge, Tooltip } from "@heroui/react";
 import { ContactForm } from '@/app/(routes)/contact/ContactForm/ContactForm';
 import styles from './contact.module.scss';
 import { Calendar, FileCheck, BookOpen, Shield } from 'lucide-react';
@@ -275,6 +275,9 @@ export default function ContactPage() {
 
           <div className={styles.faqSection}>
             <h3>Frequently Asked Questions</h3>
+            {/* <Badge color="primary" content="5">
+      <Avatar radius="md" size="lg" src="https://i.pravatar.cc/300?u=a042581f4e29026709d" />
+    </Badge> */}
             <Accordion selectionMode="multiple">
               {faqData.map((faq) => (
                 <AccordionItem
