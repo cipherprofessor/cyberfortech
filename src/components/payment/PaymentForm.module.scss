@@ -1,0 +1,457 @@
+// src/components/payment/PaymentForm.module.scss
+
+// Variables
+:root {
+    --payment-primary: #4f46e5;
+    --payment-primary-hover: #4338ca;
+    --payment-surface-light: #ffffff;
+    --payment-surface-dark: rgb(25, 25, 28);
+    --payment-border-light: #e5e7eb;
+    --payment-border-dark: rgba(255, 255, 255, 0.1);
+    --payment-text-light: #1a1a1a;
+    --payment-text-dark: #ffffff;
+    --payment-text-secondary-light: #6b7280;
+    --payment-text-secondary-dark: #94a3b8;
+  }
+  
+  // Main Container
+  .container {
+    width: 100%;
+    min-height: calc(100vh - 4rem);
+    padding: 2rem;
+    background: var(--payment-surface-light);
+  
+    :global(.dark) & {
+      background: var(--payment-surface-dark);
+    }
+  }
+  
+  // Payment Grid Layout
+  .paymentGrid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  // Left Section - Course Details
+  .courseDetails {
+    padding: 2rem;
+    background: var(--payment-surface-light);
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  
+    :global(.dark) & {
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, var(--payment-primary), #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  
+    .description {
+      color: var(--payment-text-secondary-light);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+  
+      :global(.dark) & {
+        color: var(--payment-text-secondary-dark);
+      }
+    }
+  }
+  
+  // Payment Methods Section
+  .paymentMethods {
+    margin-bottom: 2rem;
+  
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--payment-text-light);
+  
+      :global(.dark) & {
+        color: var(--payment-text-dark);
+      }
+    }
+  
+    .methodsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+  
+    .methodCard {
+      padding: 1.5rem;
+      background: #f8fafc;
+      border: 2px solid var(--payment-border-light);
+      border-radius: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  
+      :global(.dark) & {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--payment-border-dark);
+      }
+  
+      &:hover {
+        transform: translateY(-2px);
+        border-color: var(--payment-primary);
+      }
+  
+      &.selected {
+        background: rgba(79, 70, 229, 0.1);
+        border-color: var(--payment-primary);
+      }
+  
+      .methodIcon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 1rem;
+        color: var(--payment-primary);
+      }
+  
+      h3 {
+        font-size: 1.125rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--payment-text-light);
+  
+        :global(.dark) & {
+          color: var(--payment-text-dark);
+        }
+      }
+  
+      p {
+        font-size: 0.875rem;
+        color: var(--payment-text-secondary-light);
+  
+        :global(.dark) & {
+          color: var(--payment-text-secondary-dark);
+        }
+      }
+    }
+  }
+  
+  // Card Form Section
+  .cardSection {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: var(--payment-surface-light);
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  
+    :global(.dark) & {
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  
+    .cardPreview {
+      margin-bottom: 2rem;
+    }
+  
+    .formGrid {
+      display: grid;
+      gap: 1.5rem;
+    }
+  
+    .inputGroup {
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--payment-text-secondary-light);
+  
+        :global(.dark) & {
+          color: var(--payment-text-secondary-dark);
+        }
+      }
+  
+      input {
+        width: 100%;
+        padding: 1rem;
+        background: #f8fafc;
+        border: 1px solid var(--payment-border-light);
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        color: var(--payment-text-light);
+        transition: all 0.3s ease;
+  
+        :global(.dark) & {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: var(--payment-border-dark);
+          color: var(--payment-text-dark);
+        }
+  
+        &:focus {
+          outline: none;
+          border-color: var(--payment-primary);
+          box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+  
+        &.error {
+          border-color: #ef4444;
+        }
+      }
+    }
+  
+    .cardInputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+  
+      @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+  
+  // Saved Cards Section
+  .savedCards {
+    margin-bottom: 2rem;
+  
+    .savedCard {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border: 1px solid var(--payment-border-light);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+  
+      :global(.dark) & {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--payment-border-dark);
+      }
+  
+      &:hover {
+        border-color: var(--payment-primary);
+      }
+  
+      &.selected {
+        background: rgba(79, 70, 229, 0.1);
+        border-color: var(--payment-primary);
+      }
+  
+      .cardLogo {
+        width: 48px;
+        height: 32px;
+        background: white;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+      }
+  
+      .cardInfo {
+        flex: 1;
+  
+        .cardNumber {
+          font-family: monospace;
+          font-size: 1rem;
+          color: var(--payment-text-light);
+          margin-bottom: 0.25rem;
+  
+          :global(.dark) & {
+            color: var(--payment-text-dark);
+          }
+        }
+  
+        .cardMeta {
+          font-size: 0.875rem;
+          color: var(--payment-text-secondary-light);
+  
+          :global(.dark) & {
+            color: var(--payment-text-secondary-dark);
+          }
+        }
+      }
+    }
+  }
+  
+  // UPI Section
+  .upiSection {
+    .upiApps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+  
+    .upiApp {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border: 1px solid var(--payment-border-light);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  
+      :global(.dark) & {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--payment-border-dark);
+      }
+  
+      &:hover {
+        transform: translateY(-2px);
+        border-color: var(--payment-primary);
+      }
+  
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+      }
+  
+      span {
+        font-size: 0.875rem;
+        color: var(--payment-text-light);
+  
+        :global(.dark) & {
+          color: var(--payment-text-dark);
+        }
+      }
+    }
+  }
+  
+  // Summary and Actions
+  .actionSection {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--payment-border-light);
+  
+    :global(.dark) & {
+      border-color: var(--payment-border-dark);
+    }
+  }
+  
+  // Pay Button
+  .payButton {
+    width: 100%;
+    padding: 1.25rem;
+    background: linear-gradient(45deg, var(--payment-primary), #3b82f6);
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+  
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+  
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  
+  // Security Info
+  .securePayment {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  
+    :global(.dark) & {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  
+    svg {
+      color: #10b981;
+    }
+  
+    p {
+      font-size: 0.875rem;
+      color: var(--payment-text-secondary-light);
+      line-height: 1.5;
+  
+      :global(.dark) & {
+        color: var(--payment-text-secondary-dark);
+      }
+    }
+  }
+  
+  // Error Messages
+  .error {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #ef4444;
+    font-size: 0.875rem;
+  
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  // Responsive Adjustments
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .paymentGrid {
+      gap: 1.5rem;
+    }
+  
+    .courseDetails {
+      padding: 1.5rem;
+  
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  
+    .cardSection {
+      padding: 1.5rem;
+    }
+  
+    .methodsGrid {
+      grid-template-columns: 1fr;
+    }
+  
+    .upiApps {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+  }

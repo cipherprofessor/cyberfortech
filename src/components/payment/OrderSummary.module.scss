@@ -1,0 +1,402 @@
+// src/components/payment/OrderSummary/OrderSummary.module.scss
+
+.container {
+    background: #fff;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  
+    :global(.dark) & {
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  
+    :global(.dark) & {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+  
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a1a1a;
+  
+      :global(.dark) & {
+        color: #fff;
+      }
+    }
+  }
+  
+  .content {
+    padding: 1.5rem;
+  }
+  
+  .courseInfo {
+    margin-bottom: 1.5rem;
+  
+    h4 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #1a1a1a;
+      margin-bottom: 0.5rem;
+  
+      :global(.dark) & {
+        color: #fff;
+      }
+    }
+  
+    .courseType {
+      font-size: 0.875rem;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+  
+      :global(.dark) & {
+        color: #94a3b8;
+      }
+  
+      &::before {
+        content: '';
+        display: block;
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        border-radius: 50%;
+      }
+    }
+  }
+  
+  .priceBreakdown {
+    margin-bottom: 1.5rem;
+  }
+  
+  .priceItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+  
+    :global(.dark) & {
+      color: #94a3b8;
+    }
+  
+    &:not(:last-child) {
+      border-bottom: 1px solid #e5e7eb;
+  
+      :global(.dark) & {
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+  
+  .promoCode {
+    margin-bottom: 1.5rem;
+  
+    .promoToggle {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #4f46e5;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+  
+      &:hover {
+        background: rgba(79, 70, 229, 0.05);
+      }
+  
+      .icon {
+        transition: transform 0.2s ease;
+  
+        &.rotated {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  
+    .promoInput {
+      padding: 1rem;
+      display: flex;
+      gap: 0.5rem;
+  
+      input {
+        flex: 1;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+  
+        :global(.dark) & {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.1);
+          color: #fff;
+        }
+  
+        &:focus {
+          outline: none;
+          border-color: #4f46e5;
+        }
+      }
+  
+      button {
+        padding: 0.5rem 1rem;
+        background: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+  
+        &:hover {
+          background: #4338ca;
+        }
+  
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+  
+  .total {
+    padding: 1.25rem 0;
+    margin: 1.5rem 0;
+    border-top: 2px solid #e5e7eb;
+    border-bottom: 2px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #1a1a1a;
+  
+    :global(.dark) & {
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+  }
+  
+  .features {
+    margin-top: 2rem;
+  
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 0.75rem;
+  
+      :global(.dark) & {
+        background: rgba(255, 255, 255, 0.03);
+      }
+  
+      .icon {
+        color: #10b981;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+      }
+  
+      .featureText {
+        span {
+          display: block;
+          font-weight: 500;
+          color: #1a1a1a;
+          margin-bottom: 0.25rem;
+  
+          :global(.dark) & {
+            color: #fff;
+          }
+        }
+  
+        p {
+          font-size: 0.875rem;
+          color: #6b7280;
+          line-height: 1.4;
+  
+          :global(.dark) & {
+            color: #94a3b8;
+          }
+        }
+      }
+    }
+  }
+  
+  .paymentSteps {
+    margin-top: 2rem;
+  
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      position: relative;
+  
+      &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 12px;
+        top: 40px;
+        bottom: 0;
+        width: 2px;
+        background: #e5e7eb;
+  
+        :global(.dark) & {
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+  
+      .stepIcon {
+        width: 24px;
+        height: 24px;
+        background: rgba(79, 70, 229, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #4f46e5;
+        flex-shrink: 0;
+      }
+  
+      .stepContent {
+        h4 {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #1a1a1a;
+          margin-bottom: 0.25rem;
+  
+          :global(.dark) & {
+            color: #fff;
+          }
+        }
+  
+        p {
+          font-size: 0.75rem;
+          color: #6b7280;
+  
+          :global(.dark) & {
+            color: #94a3b8;
+          }
+        }
+      }
+  
+      &.active {
+        .stepIcon {
+          background: #4f46e5;
+          color: white;
+        }
+  
+        .stepContent {
+          h4 {
+            color: #4f46e5;
+  
+            :global(.dark) & {
+              color: #818cf8;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .payButton {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: linear-gradient(45deg, #4f46e5, #3b82f6);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+  
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+  
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .securityInfo {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  
+    :global(.dark) & {
+      background: rgba(255, 255, 255, 0.03);
+    }
+  
+    .icon {
+      color: #10b981;
+    }
+  
+    p {
+      font-size: 0.875rem;
+      color: #6b7280;
+      line-height: 1.4;
+  
+      :global(.dark) & {
+        color: #94a3b8;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      margin-top: 2rem;
+    }
+  
+    .header {
+      padding: 1rem;
+    }
+  
+    .content {
+      padding: 1rem;
+    }
+  
+    .promoInput {
+      flex-direction: column;
+  
+      input {
+        width: 100%;
+      }
+  
+      button {
+        width: 100%;
+      }
+    }
+  }

@@ -1,0 +1,153 @@
+// src/components/payment/CreditCard/CreditCard.module.scss
+
+.cardWrapper {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  .card {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+  }
+  
+  .cardFace {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #0a0f1c 0%, #1f2937 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+    &.cardBack {
+      transform: rotateY(180deg);
+      background: linear-gradient(135deg, #1f2937 0%, #0a0f1c 100%);
+    }
+  }
+  
+  .cardLogo {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    height: 40px;
+  
+    span {
+      font-family: monospace;
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+    }
+  
+    .visa {
+      color: #fff;
+      background: linear-gradient(45deg, #1a1f71, #2557d6);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+  
+    .mastercard {
+      color: #fff;
+      background: linear-gradient(45deg, #eb001b, #f79e1b);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+  
+    .amex {
+      color: #fff;
+      background: linear-gradient(45deg, #2557d6, #1a1f71);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+  }
+  
+  .cardChip {
+    width: 50px;
+    height: 40px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+    border-radius: 0.5rem;
+    position: relative;
+    margin-bottom: 2rem;
+  
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+  
+    &::before {
+      top: 25%;
+    }
+  
+    &::after {
+      top: 50%;
+    }
+  }
+  
+  .cardNumber {
+    font-family: monospace;
+    font-size: 1.5rem;
+    color: #fff;
+    letter-spacing: 0.2em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+  }
+  
+  .cardDetails {
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+  
+    label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+  
+    div {
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .cardStrip {
+    width: 100%;
+    height: 40px;
+    background: #111;
+    margin: 1rem 0 2rem;
+  }
+  
+  .cardCvv {
+    width: 60px;
+    margin-left: auto;
+    text-align: right;
+  
+    label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+  
+    .cvvBand {
+      background: #fff;
+      border-radius: 0.25rem;
+      padding: 0.5rem;
+      font-family: monospace;
+      color: #111;
+      text-align: center;
+      font-size: 1rem;
+    }
+  }
