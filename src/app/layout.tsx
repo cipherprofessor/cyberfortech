@@ -18,7 +18,7 @@ import { ToastProvider } from "@/components/ui/toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "CyberForTech - Learn Cybersecurity and Technology",
+  title: "CyberFort - Learn Cybersecurity and Technology",
   description: "Expert-led cybersecurity and technology courses for all skill levels",
 };
 

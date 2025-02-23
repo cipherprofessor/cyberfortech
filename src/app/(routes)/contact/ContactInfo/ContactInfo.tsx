@@ -59,8 +59,8 @@ export function ContactInfo() {
       icon: <Mail />,
       title: "Email Support",
       details: [
-        "General: info@cyberfortech.com",
-        "Support: help@cyberfortech.com"
+        "General: info@CyberFort.com",
+        "Support: help@CyberFort.com"
       ],
       description: "24/7 email support with average response time of 2 hours",
       color: "blue"
@@ -120,21 +120,21 @@ export function ContactInfo() {
   const socialLinks = [
     {
       icon: <Linkedin />,
-      url: "https://linkedin.com/company/cyberfortech",
+      url: "https://linkedin.com/company/CyberFort",
       name: "LinkedIn",
       description: "Career updates & industry insights",
       color: "linkedin"
     },
     {
       icon: <Youtube />,
-      url: "https://youtube.com/cyberfortech",
+      url: "https://youtube.com/CyberFort",
       name: "YouTube",
       description: "Tutorial videos & tech talks",
       color: "youtube"
     },
     {
       icon: <Instagram />,
-      url: "https://instagram.com/cyberfortech",
+      url: "https://instagram.com/CyberFort",
       name: "Instagram",
       description: "Behind the scenes & community",
       color: "instagram"

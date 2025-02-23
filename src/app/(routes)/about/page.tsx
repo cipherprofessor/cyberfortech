@@ -39,15 +39,15 @@ const teamMembers = [
       "Business Strategy Specialist"
     ],
     contactInfo: {
-      email: "ayan@cyberfortech.com",
+      email: "ayan@CyberFort.com",
       skype: "ayan.skype"
     },
     socialLinks: {
-      linkedin: "https://www.linkedin.com/in/cyberfortech/",
+      linkedin: "https://www.linkedin.com/in/CyberFort/",
       twitter: "https://twitter.com/johndoe",
-      github: "https://github.com/cyberfortech",
-      website: "https://cyberfortech.com",
-      medium: "https://medium.com/@cyberfortech"
+      github: "https://github.com/CyberFort",
+      website: "https://CyberFort.com",
+      medium: "https://medium.com/@CyberFort"
     }
   },
   {
@@ -76,15 +76,15 @@ const teamMembers = [
       "Business Strategy Specialist"
     ],
     contactInfo: {
-      email: "ayan@cyberfortech.com",
+      email: "ayan@CyberFort.com",
       skype: "ayan.skype"
     },
     socialLinks: {
-      linkedin: "https://www.linkedin.com/in/cyberfortech/",
+      linkedin: "https://www.linkedin.com/in/CyberFort/",
       twitter: "https://twitter.com/johndoe",
-      github: "https://github.com/cyberfortech",
-      website: "https://cyberfortech.com",
-      medium: "https://medium.com/@cyberfortech"
+      github: "https://github.com/CyberFort",
+      website: "https://CyberFort.com",
+      medium: "https://medium.com/@CyberFort"
     }
   },
   {
@@ -113,15 +113,15 @@ const teamMembers = [
       "Full Stack Developer"
     ],
     contactInfo: {
-      email: "mohsin@cyberfortech.com",
+      email: "mohsin@CyberFort.com",
       skype: "mohsin.skype"
     },
     socialLinks: {
-      linkedin: "https://www.linkedin.com/in/cyberfortech/",
+      linkedin: "https://www.linkedin.com/in/CyberFort/",
       twitter: "https://twitter.com/johndoe",
-      github: "https://github.com/cyberfortech",
-      website: "https://cyberfortech.com",
-      medium: "https://medium.com/@cyberfortech"
+      github: "https://github.com/CyberFort",
+      website: "https://CyberFort.com",
+      medium: "https://medium.com/@CyberFort"
     }
   },
   {
@@ -150,15 +150,15 @@ const teamMembers = [
       "Full Stack Developer"
     ],
     contactInfo: {
-      email: "mohsin@cyberfortech.com",
+      email: "mohsin@CyberFort.com",
       skype: "mohsin.skype"
     },
     socialLinks: {
-      linkedin: "https://www.linkedin.com/in/cyberfortech/",
+      linkedin: "https://www.linkedin.com/in/CyberFort/",
       twitter: "https://twitter.com/johndoe",
-      github: "https://github.com/cyberfortech",
-      website: "https://cyberfortech.com",
-      medium: "https://medium.com/@cyberfortech"
+      github: "https://github.com/CyberFort",
+      website: "https://CyberFort.com",
+      medium: "https://medium.com/@CyberFort"
     }
   }
 
@@ -197,7 +197,7 @@ const teamMembers = [
             viewport={{ once: true }}
           >
             <p className={styles.missionText}>
-              At CyberForTech, we believe that cybersecurity education should be
+              At CyberFort, we believe that cybersecurity education should be
               accessible, practical, and up-to-date with the latest industry trends.
               Our mission is to bridge the cybersecurity skills gap by providing
               high-quality training that combines theoretical knowledge with
@@ -294,7 +294,7 @@ const teamMembers = [
           className={styles.sectionHeader}
         >
           <h2>Meet Our Team</h2>
-          <p>The experts behind CyberForTech's success</p>
+          <p>The experts behind CyberFort's success</p>
         </motion.div>
 
         <TeamGrid 

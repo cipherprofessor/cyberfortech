@@ -25,7 +25,7 @@ const words = [
     className: "text-zinc-900 dark:text-white",
   },
   {
-    text: "CyberForTech",
+    text: "CyberFort",
     className: "text-blue-600 mt-6 dark:text-blue-400 font-bold",
   },
 ];

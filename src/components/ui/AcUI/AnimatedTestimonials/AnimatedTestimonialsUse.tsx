@@ -22,7 +22,7 @@ export function AceternityUIAnimatedTestimonialsUse() {
     },
     {
       quote:
-        "After completing multiple certifications through CyberForTech, I was able to secure a senior position in cybersecurity. The curriculum is comprehensive and up-to-date with current industry trends.",
+        "After completing multiple certifications through CyberFort, I was able to secure a senior position in cybersecurity. The curriculum is comprehensive and up-to-date with current industry trends.",
       name: "Michael Rodriguez",
       designation: "Information Security Manager",
       src: "/testm/testm1.avif",

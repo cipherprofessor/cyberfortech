@@ -90,7 +90,7 @@ export function AboutCompany() {
               className={styles.description}
               variants={itemVariants}
             >
-              At CyberForTech, we're dedicated to providing world-class cybersecurity education
+              At CyberFort, we're dedicated to providing world-class cybersecurity education
               that combines theoretical knowledge with practical skills. Our comprehensive
               training programs are designed to help you build a successful career in
               cybersecurity.
@@ -137,7 +137,7 @@ export function AboutCompany() {
             <div className={styles.imageWrapper}>
               <Image
                 src="/cybersecurity.webp"
-                alt="CyberForTech Training"
+                alt="CyberFort Training"
                 width={600}
                 height={800}
                 className={styles.mainImage}

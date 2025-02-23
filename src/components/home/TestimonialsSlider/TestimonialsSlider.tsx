@@ -11,7 +11,7 @@ const testimonials = [
     name: 'Sarah Johnson',
     role: 'Security Analyst at TechCorp',
     avatar: '/testm/testimonial1.jpg',
-    content: 'The cybersecurity courses provided by CyberForTech were instrumental in advancing my career. The hands-on labs and real-world scenarios helped me develop practical skills that I use daily.',
+    content: 'The cybersecurity courses provided by CyberFort were instrumental in advancing my career. The hands-on labs and real-world scenarios helped me develop practical skills that I use daily.',
     rating: 5,
     company: {
       name: 'TechCorp',
@@ -35,7 +35,7 @@ const testimonials = [
     name: 'Emily Rodriguez',
     role: 'Information Security Manager',
     avatar: '/testm/testm2.avif',
-    content: 'After completing multiple certifications through CyberForTech, I was able to secure a senior position in cybersecurity. The curriculum is comprehensive and up-to-date with current industry trends.',
+    content: 'After completing multiple certifications through CyberFort, I was able to secure a senior position in cybersecurity. The curriculum is comprehensive and up-to-date with current industry trends.',
     rating: 5,
     company: {
       name: 'CyberGuard',

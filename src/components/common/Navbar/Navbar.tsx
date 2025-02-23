@@ -110,13 +110,13 @@ export default function Navbar() {
         <Link href="/" className={styles.logoContainer}>
           <Image
             src="/logo/cyberlogo2.png"
-            alt="CyberForTech Logo"
+            alt="CyberFort Logo"
             width={40}
             height={40}
             className={styles.logo}
             priority
           />
-          <span className={styles.logoText}>CyberForTech</span>
+          <span className={styles.logoText}>CyberFort</span>
         </Link>
 
         {/* Desktop Navigation Links */}

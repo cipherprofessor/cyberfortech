@@ -287,15 +287,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
         }}
         className={styles.commentsWrapper}
       >
-        <Comments
-          postId={post.id}
-          onCommentAdded={(comment) => {
-            console.log('New comment added:', comment);
-          }}
-          onCommentDeleted={(commentId) => {
-            console.log('Comment deleted:', commentId);
-          }}
-        />
+        <Comments postId={post.id} />
       </motion.div>
       
     </article>

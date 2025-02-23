@@ -10,7 +10,7 @@ const offices = [
     city: "New York",
     address: "123 Tech Street, NY 10001",
     phone: "+1 (555) 123-4567",
-    email: "ny@cyberfortech.com",
+    email: "ny@CyberFort.com",
     hours: "9:00 AM - 6:00 PM EST",
     coordinates: { lat: 40.7128, lng: -74.0060 }
   },
@@ -19,7 +19,7 @@ const offices = [
     city: "San Francisco",
     address: "456 Innovation Ave, CA 94105",
     phone: "+1 (555) 987-6543",
-    email: "sf@cyberfortech.com",
+    email: "sf@CyberFort.com",
     hours: "9:00 AM - 6:00 PM PST",
     coordinates: { lat: 37.7749, lng: -122.4194 }
   }

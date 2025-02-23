@@ -9,7 +9,7 @@ export function Footer() {
         <div className={styles.content}>
           <div className={styles.section}>
             <Link href="/" className={styles.logo}>
-              CyberForTech
+              CyberFort
             </Link>
             <p className={styles.description}>
               Empowering individuals with expert-led cybersecurity education and hands-on training.
@@ -75,7 +75,7 @@ export function Footer() {
 
         <div className={styles.bottom}>
           <p className={styles.copyright}>
-            © {new Date().getFullYear()} CyberForTech. All rights reserved.
+            © {new Date().getFullYear()} CyberFort. All rights reserved.
           </p>
           <div className={styles.additionalLinks}>
             <Link href="/sitemap">Sitemap</Link>

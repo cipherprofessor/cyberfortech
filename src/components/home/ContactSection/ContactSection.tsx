@@ -26,7 +26,7 @@ export function ContactSection() {
     {
       icon: <Mail className={styles.icon} />,
       title: "Email",
-      details: ["info@cyberfortech.com", "support@cyberfortech.com"],
+      details: ["info@CyberFort.com", "support@CyberFort.com"],
       color: "blue"
     },
     {
@@ -38,7 +38,7 @@ export function ContactSection() {
     {
       icon: <Globe className={styles.icon} />,
       title: "Website",
-      details: ["www.cyberfortech.com", "Online Support 24/7"],
+      details: ["www.CyberFort.com", "Online Support 24/7"],
       color: "purple"
     },
     {
@@ -64,19 +64,19 @@ export function ContactSection() {
   const socialLinks = [
     {
       icon: <Linkedin className={styles.icon} />,
-      url: "https://linkedin.com/company/cyberfortech",
+      url: "https://linkedin.com/company/CyberFort",
       name: "LinkedIn",
       color: "linkedin"
     },
     {
       icon: <Youtube className={styles.icon} />,
-      url: "https://youtube.com/cyberfortech",
+      url: "https://youtube.com/CyberFort",
       name: "YouTube",
       color: "youtube"
     },
     {
       icon: <Instagram className={styles.icon} />,
-      url: "https://instagram.com/cyberfortech",
+      url: "https://instagram.com/CyberFort",
       name: "Instagram",
       color: "instagram"
     }

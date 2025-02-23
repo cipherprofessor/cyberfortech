@@ -1,5 +1,5 @@
 // components/Comments/Comments.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { MessageCircle, Reply, Trash2, Send, LogIn } from 'lucide-react';
@@ -8,35 +8,27 @@ import { Button } from '@/components/ui/button';
 import CustomAvatar from '@/components/ui/CustomAvatar/CustomAvatar';
 
 import styles from './Comments.module.scss';
-import { Comment, CommentsProps, CommentFormData } from '@/types/comments';
-import DeleteModal from '@/app/dashboard/myworkspace/components/ui/DeleteConfirmation/DeleteModal/DeleteModal';
+import { 
+  Comment, 
+  CommentsProps, 
+  CommentFormProps, 
+  CommentItemProps, 
+  CommentFormData 
+} from '@/types/comments';
 import { useToast } from '@/app/dashboard/myworkspace/components/ui/Toast/ToastContext';
+import DeleteModal from '@/app/dashboard/myworkspace/components/ui/DeleteConfirmation/DeleteModal/DeleteModal';
 
-
-const AnimatedComment: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className={styles.commentItem}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-const CommentForm: React.FC<{
-  postId: string;
-  parentId?: string;
-  onSubmit: (data: CommentFormData) => Promise<void>;
-  onCancel?: () => void;
-}> = ({ postId, parentId, onSubmit, onCancel }) => {
+const CommentForm: React.FC<CommentFormProps> = ({ 
+  postId, 
+  parentId, 
+  onSubmit, 
+  onCancel 
+}) => {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const { showToast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { showToast } = useToast(); // Add this
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,13 +38,13 @@ const CommentForm: React.FC<{
     try {
       await onSubmit({ content, parentId });
       setContent('');
-      showToast({  // Replace toast.success with this
+      showToast({
         message: 'Comment posted successfully',
         type: 'success',
-        description: 'Your comment has been added to the discussion.'
+        description: parentId ? 'Your reply has been added.' : 'Your comment has been added.'
       });
     } catch (error) {
-      showToast({  // Replace toast.error with this
+      showToast({
         message: 'Failed to post comment',
         type: 'error',
         description: 'Please try again later.'
@@ -66,13 +58,8 @@ const CommentForm: React.FC<{
     return (
       <div className={styles.signInPrompt}>
         <p>Please sign in to leave a comment</p>
-        <Button
-          onClick={() => window.location.href = '/sign-in'}
-          variant="outline"
-          className={styles.signInButton}
-        >
-          <LogIn className="mr-2 h-4 w-4" />
-          Sign In
+        <Button onClick={() => window.location.href = '/sign-in'} variant="outline">
+          <LogIn className="mr-2 h-4 w-4" />Sign In
         </Button>
       </div>
     );
@@ -86,7 +73,6 @@ const CommentForm: React.FC<{
           alt={user?.fullName || 'User'}
           fallback={user?.firstName?.[0] || 'U'}
           size="md"
-          className={styles.userAvatar}
         />
         <span className={styles.userName}>{user?.fullName}</span>
       </div>
@@ -96,27 +82,16 @@ const CommentForm: React.FC<{
         placeholder="Write a comment..."
         required
         disabled={isSubmitting}
-        aria-label="Comment content"
         className={styles.commentInput}
       />
       <div className={styles.formActions}>
         {onCancel && (
-          <Button
-            type="button"
-            onClick={onCancel}
-            variant="outline"
-            disabled={isSubmitting}
-            className={styles.cancelButton}
-          >
+          <Button type="button" onClick={onCancel} variant="outline" disabled={isSubmitting}>
             Cancel
           </Button>
         )}
-        <Button
-          type="submit"
-          disabled={isSubmitting || !content.trim()}
-          className={styles.submitButton}
-        >
-          <Send className="mr-2 h-4 w-4" />
+        <Button type="submit" disabled={isSubmitting || !content.trim()}>
+          <Send size={16} className="mr-2" />
           {isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
       </div>
@@ -124,57 +99,52 @@ const CommentForm: React.FC<{
   );
 };
 
-const CommentItem: React.FC<{
-  comment: Comment;
-  onReply: (parentId: string) => void;
-  onDelete: (commentId: string) => Promise<void>;
-}> = ({ comment, onReply, onDelete }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment, onReply, onDelete }) => {
   const { user } = useUser();
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { showToast } = useToast();
-  
-  const canDelete = 
-    user?.id === comment.userId || 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const canDelete = user?.id === comment.userId || 
     user?.publicMetadata?.role === 'admin' || 
     user?.publicMetadata?.role === 'superadmin';
 
-    const handleDelete = async () => {
-      try {
-        await onDelete(comment.id);
-        showToast({  // Replace toast.success with this
-          message: 'Comment deleted successfully',
-          type: 'success',
-          description: 'Your comment has been removed.'
-        });
-      } catch (error) {
-        showToast({  // Replace toast.error with this
-          message: 'Failed to delete comment',
-          type: 'error',
-          description: 'Please try again later.'
-        });
-      }
-    };
+  const handleDelete = async () => {
+    try {
+      await onDelete(comment.id);
+      showToast({
+        message: 'Comment deleted successfully',
+        type: 'success',
+        description: 'Your comment has been removed.'
+      });
+    } catch (error) {
+      showToast({
+        message: 'Failed to delete comment',
+        type: 'error',
+        description: 'Please try again later.'
+      });
+    }
+  };
 
   return (
-    <AnimatedComment>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className={styles.commentItem}
+    >
       <div className={styles.commentHeader}>
         <div className={styles.userInfo}>
           <CustomAvatar
             src={comment.user.avatarUrl}
             alt={comment.user.fullName}
             size="md"
-            className={styles.avatar}
           />
           <div className={styles.userMeta}>
             <span className={styles.userName}>{comment.user.fullName}</span>
-            <div className={styles.metadata}>
-              <time dateTime={comment.createdAt}>
-                {format(new Date(comment.createdAt), 'MMM d, yyyy h:mm a')}
-              </time>
-              {comment.updatedAt !== comment.createdAt && (
-                <span>(edited)</span>
-              )}
-            </div>
+            <time className={styles.metadata}>
+              {format(new Date(comment.createdAt), 'MMM d, yyyy h:mm a')}
+              {comment.updatedAt !== comment.createdAt && ' (edited)'}
+            </time>
           </div>
         </div>
         <div className={styles.actions}>
@@ -183,9 +153,9 @@ const CommentItem: React.FC<{
               onClick={() => onReply(comment.id)}
               variant="ghost"
               size="sm"
-              className={styles.actionButton}
+              className={`${styles.actionButton} ${styles.replyButton}`}
             >
-              <Reply className="mr-2 h-4 w-4" />
+              <Reply size={16} />
               Reply
             </Button>
           )}
@@ -196,7 +166,7 @@ const CommentItem: React.FC<{
               size="sm"
               className={`${styles.actionButton} ${styles.deleteButton}`}
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 size={16} />
             </Button>
           )}
         </div>
@@ -212,9 +182,9 @@ const CommentItem: React.FC<{
         description="Are you sure you want to delete this comment? This action cannot be undone."
       />
 
-      {comment.replies && comment.replies.length > 0 && (
+      {(comment.replies ?? []).length > 0 && (
         <div className={styles.replies}>
-          {comment.replies.map((reply) => (
+          {(comment.replies ?? []).map((reply) => (
             <CommentItem
               key={reply.id}
               comment={reply}
@@ -224,62 +194,95 @@ const CommentItem: React.FC<{
           ))}
         </div>
       )}
-    </AnimatedComment>
+    </motion.div>
   );
 };
 
-
-// Add this at the end of your Comments.tsx file
-
-export const Comments: React.FC<CommentsProps> = ({
-  postId,
-  className,
-  onCommentAdded,
-  onCommentDeleted
-}) => {
+export const Comments: React.FC<CommentsProps> = ({ postId, className }) => {
   const { isLoaded, isSignedIn } = useAuth();
+  const { showToast } = useToast();
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyToId, setReplyToId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isLoaded) {
-      fetchComments();
-    }
-  }, [isLoaded]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await fetch(`/api/blog/comments?postId=${postId}`);
       if (!response.ok) throw new Error('Failed to fetch comments');
       const data = await response.json();
       setComments(data);
     } catch (err) {
-      setError('Failed to load comments');
-      console.error('Error fetching comments:', err);
+      showToast({
+        message: 'Failed to load comments',
+        type: 'error',
+        description: 'Please try refreshing the page.'
+      });
     } finally {
       setIsLoading(false);
     }
+  }, [postId, showToast]);
+
+  useEffect(() => {
+    if (isLoaded) fetchComments();
+  }, [isLoaded, fetchComments]);
+
+  const handleSubmitComment = async (data: CommentFormData) => {
+    try {
+      const response = await fetch('/api/blog/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId, ...data })
+      });
+
+      if (!response.ok) throw new Error('Failed to submit comment');
+      
+      const newComment: Comment = await response.json();
+      setComments(prev => 
+        data.parentId 
+          ? prev.map(comment => 
+              comment.id === data.parentId
+                ? { ...comment, replies: [...(comment.replies || []), newComment] }
+                : comment
+            )
+          : [newComment, ...prev]
+      );
+      if (data.parentId) setReplyToId(null);
+    } catch (err) {
+      throw err;
+    }
   };
 
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      const response = await fetch(`/api/blog/comments?id=${commentId}`, {
+        method: 'DELETE'
+      });
 
-  if (error) {
-    return (
-      <div className={styles.container}>
-        <div className="text-red-500">{error}</div>
-      </div>
-    );
+      if (!response.ok) throw new Error('Failed to delete comment');
+
+      setComments(prev => 
+        prev.filter(comment => {
+          if (comment.id === commentId) return false;
+          if (comment.replies) {
+            comment.replies = comment.replies.filter(reply => reply.id !== commentId);
+          }
+          return true;
+        })
+      );
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  if (!isLoaded || isLoading) {
+    return <div className={styles.loading}>Loading comments...</div>;
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className || ''}`}>
       <div className={styles.header}>
         <h3>
-          <MessageCircle className="mr-2 h-5 w-5" />
+          <MessageCircle size={20} />
           Comments ({comments.length})
         </h3>
       </div>
@@ -287,119 +290,35 @@ export const Comments: React.FC<CommentsProps> = ({
       {!replyToId && (
         <CommentForm
           postId={postId}
-          onSubmit={async (data) => {
-            try {
-              const response = await fetch('/api/blog/comments', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  postId,
-                  content: data.content,
-                  parentId: data.parentId
-                })
-              });
-
-              if (!response.ok) throw new Error('Failed to submit comment');
-              
-              const newComment = await response.json();
-              if (data.parentId) {
-                setComments(comments.map(comment => 
-                  comment.id === data.parentId
-                    ? { ...comment, replies: [...(comment.replies || []), newComment] }
-                    : comment
-                ));
-              } else {
-                setComments([newComment, ...comments]);
-              }
-
-              onCommentAdded?.(newComment);
-            } catch (err) {
-              console.error('Error submitting comment:', err);
-              throw err;
-            }
-          }}
+          onSubmit={handleSubmitComment}
         />
       )}
 
       <AnimatePresence>
-        <div className={styles.commentList}>
-          {comments.map((comment) => (
-            <React.Fragment key={comment.id}>
-              <CommentItem
-                comment={comment}
-                onReply={setReplyToId}
-                onDelete={async (commentId) => {
-                  try {
-                    const response = await fetch(`/api/blog/comments?id=${commentId}`, {
-                      method: 'DELETE'
-                    });
-
-                    if (!response.ok) throw new Error('Failed to delete comment');
-
-                    setComments(prevComments => 
-                      prevComments.filter(comment => {
-                        if (comment.id === commentId) return false;
-                        if (comment.replies) {
-                          comment.replies = comment.replies.filter(reply => reply.id !== commentId);
-                        }
-                        return true;
-                      })
-                    );
-
-                    onCommentDeleted?.(commentId);
-                  } catch (err) {
-                    console.error('Error deleting comment:', err);
-                    throw err;
-                  }
-                }}
-              />
-              {replyToId === comment.id && (
-                <motion.div
-                  className={styles.replies}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                >
-                  <CommentForm
-                    postId={postId}
-                    parentId={comment.id}
-                    onSubmit={async (data) => {
-                      try {
-                        const response = await fetch('/api/blog/comments', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            postId,
-                            content: data.content,
-                            parentId: data.parentId
-                          })
-                        });
-
-                        if (!response.ok) throw new Error('Failed to submit comment');
-                        
-                        const newComment = await response.json();
-                        setComments(prevComments => 
-                          prevComments.map(comment => 
-                            comment.id === data.parentId
-                              ? { ...comment, replies: [...(comment.replies || []), newComment] }
-                              : comment
-                          )
-                        );
-
-                        setReplyToId(null);
-                        onCommentAdded?.(newComment);
-                      } catch (err) {
-                        console.error('Error submitting comment:', err);
-                        throw err;
-                      }
-                    }}
-                    onCancel={() => setReplyToId(null)}
-                  />
-                </motion.div>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
+        {comments.map(comment => (
+          <React.Fragment key={comment.id}>
+            <CommentItem
+              comment={comment}
+              onReply={setReplyToId}
+              onDelete={handleDeleteComment}
+            />
+            {replyToId === comment.id && (
+              <motion.div
+                className={styles.replies}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <CommentForm
+                  postId={postId}
+                  parentId={comment.id}
+                  onSubmit={handleSubmitComment}
+                  onCancel={() => setReplyToId(null)}
+                />
+              </motion.div>
+            )}
+          </React.Fragment>
+        ))}
       </AnimatePresence>
     </div>
   );

@@ -129,7 +129,7 @@ export const Sidebar = () => {
             className={styles.logo}
             whileHover={{ scale: 1.05 }}
           >
-            {isExpanded ? 'CyberForTech' : 'CFT'}
+            {isExpanded ? 'CyberFort' : 'CFT'}
           </motion.div>
           <div className={styles.headerActions}>
             <Button

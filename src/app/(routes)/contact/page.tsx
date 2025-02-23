@@ -57,8 +57,8 @@ const faqData: { id: string; avatar: string; color: FaqColor; question: string; 
     id: "5",
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
     color: "primary",
-    question: "Why should I choose Cyberfortech?",
-    answer: "Cyberfortech is a leading cybersecurity training provider with a proven track record of success. Our instructors are industry experts with years of experience in the field. We offer hands-on training, real-world projects, and personalized mentorship. Our platform is user-friendly and accessible from anywhere, with 24/7 support and resources."
+    question: "Why should I choose CyberFort?",
+    answer: "CyberFort is a leading cybersecurity training provider with a proven track record of success. Our instructors are industry experts with years of experience in the field. We offer hands-on training, real-world projects, and personalized mentorship. Our platform is user-friendly and accessible from anywhere, with 24/7 support and resources."
   }
 ];
 
@@ -98,8 +98,8 @@ export default function ContactPage() {
       icon: <Mail />,
       title: "Email Support",
       details: [
-        "General: info@cyberfortech.com",
-        "Support: help@cyberfortech.com"
+        "General: info@CyberFort.com",
+        "Support: help@CyberFort.com"
       ],
       description: "24/7 email support with average response time of 2 hours",
       color: "blue"
@@ -159,28 +159,28 @@ export default function ContactPage() {
   const socialLinks = [
     {
       icon: <Linkedin />,
-      url: "https://linkedin.com/company/cyberfortech",
+      url: "https://linkedin.com/company/CyberFort",
       name: "LinkedIn",
       description: "Career updates & industry insights",
       color: "linkedin"
     },
     {
       icon: <Youtube />,
-      url: "https://youtube.com/cyberfortech",
+      url: "https://youtube.com/CyberFort",
       name: "YouTube",
       description: "Tutorial videos & tech talks",
       color: "youtube"
     },
     {
       icon: <Instagram />,
-      url: "https://instagram.com/cyberfortech",
+      url: "https://instagram.com/CyberFort",
       name: "Instagram",
       description: "Behind the scenes & community",
       color: "instagram"
     },
     {
       icon: <Twitter />,
-      url: "https://instagram.com/cyberfortech",
+      url: "https://instagram.com/CyberFort",
       name: "Twitter",
       description: "Latest updates & announcements",
       color: "twitter"
