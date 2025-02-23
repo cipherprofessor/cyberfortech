@@ -1,6 +1,32 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+require("dotenv").config();
 
-const nextConfig: NextConfig = {
+const regexEqual = (x, y) => {
+  return (
+    x instanceof RegExp &&
+    y instanceof RegExp &&
+    x.source === y.source &&
+    x.global === y.global &&
+    x.ignoreCase === y.ignoreCase &&
+    x.multiline === y.multiline
+  );
+};
+
+// Overrides for css-loader plugin
+function cssLoaderOptions(modules) {
+  const { getLocalIdent, ...others } = modules;
+  return {
+    ...others,
+    localIdentName: "[hash:base64:6]",
+    exportLocalsConvention: "camelCaseOnly",
+    mode: "global",
+    auto: true,
+    exportGlobals: true,
+    localIdentContext: __dirname,
+  };
+}
+
+const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -39,25 +65,37 @@ const nextConfig: NextConfig = {
     ],
   },
   webpack: (config) => {
-    const rules = config.module.rules
-      .find((rule) => typeof rule === 'object' && rule.oneOf)
-      ?.oneOf?.filter((rule) => 
-        rule?.sideEffects === false && 
-        rule?.use?.loader?.includes('css-loader') &&
-        rule?.use?.options?.modules
-      ) ?? [];
+    const oneOf = config.module.rules.find(
+      (rule) => typeof rule.oneOf === "object"
+    );
 
-    rules.forEach((rule) => {
-      if (rule?.use?.options?.modules) {
-        rule.use.options.modules = {
-          ...rule.use.options.modules,
-          mode: 'global'
-        };
+    if (oneOf) {
+      // Find the module which targets *.scss|*.sass files
+      const moduleSassRule = oneOf.oneOf.find((rule) =>
+        regexEqual(rule.test, /\.module\.(scss|sass)$/)
+      );
+
+      if (moduleSassRule) {
+        // Get the config object for css-loader plugin
+        const cssLoader = moduleSassRule.use.find(({ loader }) =>
+          loader.includes("css-loader")
+        );
+        
+        if (cssLoader) {
+          cssLoader.options = {
+            ...cssLoader.options,
+            modules: {
+              ...cssLoaderOptions(cssLoader.options.modules),
+              generateScopedName: '[name]__[local]__[hash:base64:5]',
+              exportOnlyLocals: false,
+              globalModulePaths: [/global/, /node_modules/],
+            },
+          };
+        }
       }
-    });
-
+    }
     return config;
-  }
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
