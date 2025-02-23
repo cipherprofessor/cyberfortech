@@ -9,7 +9,8 @@ import {
   AlertCircle,
   Shield,
   Check,
-  ChevronDown
+  ChevronDown,
+  BanknoteIcon
 } from 'lucide-react';
 import { CreditCard as CreditCardComponent } from './CreditCard/CreditCard';
 
@@ -18,6 +19,7 @@ import { PaymentMethods } from './PaymentMethods';
 import { OrderSummary } from './OrderSummary';
 import { PaymentTimeline } from './PaymentTimeline';
 import { SecurityBadges } from './SecurityBadges';
+
 
 interface PaymentFormProps {
   paymentDetails: {
@@ -43,6 +45,28 @@ interface UPIDetails {
   upiId: string;
 }
 
+const paymentMethods = [
+    {
+      id: 'credit_card',
+      title: 'Credit/Debit Card',
+      description: 'Pay securely with your card',
+      icon: <CreditCard className={styles.methodIcon} />
+    },
+    {
+      id: 'upi',
+      title: 'UPI Payment',
+      description: 'GPay, PhonePe, Paytm & more',
+      icon: <Smartphone className={styles.methodIcon} />
+    },
+    {
+      id: 'net_banking',
+      title: 'Net Banking',
+      description: 'All major banks supported',
+      icon: <BanknoteIcon className={styles.methodIcon} />
+    }
+  ];
+
+
 export const PaymentForm: React.FC<PaymentFormProps> = ({
   paymentDetails,
   onPaymentComplete,
@@ -55,6 +79,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [promoCode, setPromoCode] = useState('');
   const [showPromo, setShowPromo] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
 
   const [cardDetails, setCardDetails] = useState<CardDetails>({
     cardNumber: '',
@@ -175,7 +200,7 @@ const getCardType = (number: string): 'visa' | 'mastercard' | 'amex' | 'unknown'
   
     return sum % 10 === 0;
   };
-  
+
 
   // Handle card number input
   // Enhanced card number input handling
@@ -208,10 +233,11 @@ const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
   return (
     <div className={`${styles.container} ${className}`}>
-      <PaymentMethods
-        selectedMethod={selectedMethod}
-        onMethodSelect={setSelectedMethod}
-      />
+     <PaymentMethods
+              methods={paymentMethods}
+              selectedMethod={selectedMethod}
+              onMethodSelect={setSelectedMethod}
+            />
 
       <AnimatePresence mode="wait">
         {selectedMethod && (
@@ -311,7 +337,9 @@ const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
               currency={paymentDetails.currency}
             />
 
-            <PaymentTimeline />
+            <PaymentTimeline 
+                  currentStep={paymentStatus === 'processing' ? 1 : paymentStatus === 'success' ? 2 : 0}
+                />
 
             <SecurityBadges />
 
@@ -360,3 +388,7 @@ const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     </div>
   );
 };
+
+function setCardErrors(arg0: (prev: any) => any) {
+    throw new Error('Function not implemented.');
+}
