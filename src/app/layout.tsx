@@ -10,9 +10,10 @@ import { Analytics } from '@vercel/analytics/next';
 import { extractRouterConfig } from "uploadthing/server";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { ourFileRouter } from "./api/uploadthing/core";
-import { Toaster } from "@/components/ui/toaster";
+
 import Script from "next/script";
-// import { Toaster } from "sonner";
+import { ToastProvider } from "@/components/ui/toast";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,13 +46,14 @@ export default function RootLayout({
           // className={`${inter.className} antialiased`}
           suppressHydrationWarning
         >
+          <ToastProvider>
+
+        
           <Providers>
             <Navbar />
             <main className="mt-16 light text-foreground bg-background">{children}
-            <Toaster />
             <SpeedInsights/>
             <Analytics />
-            <Toaster />
             </main>
             {/* <Footer /> */}
           </Providers>
@@ -64,6 +66,7 @@ export default function RootLayout({
            
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
+          </ToastProvider>
         </body>
       </html>
     </ClerkProvider>

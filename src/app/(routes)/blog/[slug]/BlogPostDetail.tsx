@@ -24,6 +24,9 @@ import { useTheme } from 'next-themes';
 import clsx from 'clsx';
 import styles from './BlogPostDetail.module.scss';
 import { BlogPost } from '@/types/blog';
+
+import { Toast } from '@radix-ui/react-toast';
+import { toast } from 'sonner';
 import Comments from '@/app/api/blog/comments/Comments';
 
 
@@ -191,7 +194,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
                 </button>
               </div>
             )}
-            <div className={styles.userActions}>
+            {/* <div className={styles.userActions}>
               <button 
                 onClick={handleLike}
                 className={clsx(styles.actionButton, likeCount > 0 && styles.liked)}
@@ -208,7 +211,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
               <button onClick={handleShare} className={styles.actionButton}>
                 <Share2 size={18} />
               </button>
-            </div>
+            </div> */}
           </div>
         </motion.div>
       </div>
@@ -273,12 +276,16 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
         )}
       </motion.div>
 
-      {/* Comments Section */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className={styles.comments}
+    {/* Comments Section */}
+    <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ 
+          duration: 0.6,
+          delay: 0.5,
+          ease: "easeOut"
+        }}
+        className={styles.commentsWrapper}
       >
         <Comments
           postId={post.id}
@@ -290,6 +297,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
           }}
         />
       </motion.div>
+      
     </article>
   );
 };

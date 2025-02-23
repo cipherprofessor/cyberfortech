@@ -137,100 +137,53 @@ export default function PaymentPage({ params }: PaymentPageProps) {
     console.error('Payment failed:', error);
   };
 
-  return (
-    <div className={styles.pageContainer}>
-      <div className={styles.contentWrapper}>
-        {/* Left Column - Course Details */}
-        <motion.div 
-          className={styles.leftColumn}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className={styles.courseCard}>
-            <div className={styles.courseHeader}>
-              <h1>{courseDetails.title}</h1>
-              <p className={styles.description}>{courseDetails.description}</p>
-            </div>
-
-            <div className={styles.courseInfo}>
-              <div className={styles.infoItem}>
-                <span className={styles.label}>Instructor</span>
-                <span className={styles.value}>{courseDetails.instructor}</span>
+    return (
+      <div className={styles.pageContainer}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.leftColumn}>
+            <div className={styles.courseCard}>
+              <div className={styles.courseHeader}>
+                <h1>{courseDetails.title}</h1>
+                <p className={styles.description}>{courseDetails.description}</p>
               </div>
-              <div className={styles.infoItem}>
-                <span className={styles.label}>Duration</span>
-                <span className={styles.value}>{courseDetails.duration}</span>
+  
+              <div className={styles.courseInfo}>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>Instructor</span>
+                  <span className={styles.value}>{courseDetails.instructor}</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>Duration</span>
+                  <span className={styles.value}>{courseDetails.duration}</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>Level</span>
+                  <span className={styles.value}>{courseDetails.level}</span>
+                </div>
               </div>
-              <div className={styles.infoItem}>
-                <span className={styles.label}>Level</span>
-                <span className={styles.value}>{courseDetails.level}</span>
+  
+              <div className={styles.featuresList}>
+                <h3>What you'll get</h3>
+                <ul>
+                  {courseDetails.features.map((feature, index) => (
+                    <li key={index}>
+                      <CheckCircle className={styles.checkIcon} />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-
-            <div className={styles.featuresList}>
-              <h3>What you'll get</h3>
-              <ul>
-                {courseDetails.features.map((feature, index) => (
-                  <motion.li 
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <CheckCircle className={styles.checkIcon} />
-                    <span>{feature}</span>
-                  </motion.li>
-                ))}
-              </ul>
             </div>
           </div>
-        </motion.div>
-
-       {/* Right Column - Payment Section */}
-       <div className={styles.rightColumn}>
-          <motion.div 
-            className={styles.paymentCard}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <PaymentMethods
-              methods={paymentMethods}
-              selectedMethod={selectedMethod}
-              onMethodSelect={setSelectedMethod}
+  
+          <div className={styles.rightColumn}>
+            <PaymentForm
+              paymentDetails={paymentDetails}
+              onPaymentComplete={handlePaymentComplete}
+              onPaymentError={handlePaymentError}
             />
-
-            {selectedMethod && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <PaymentForm
-                  paymentDetails={paymentDetails}
-                  onPaymentComplete={handlePaymentComplete}
-                  onPaymentError={handlePaymentError}
-                />
-
-                <OrderSummary
-                  courseName={courseDetails.title}
-                  amount={courseDetails.price}
-                  currency="USD"
-                  features={courseDetails.features}
-                  instructor={courseDetails.instructor}
-                  duration={courseDetails.duration}
-                />
-
-                <PaymentTimeline 
-                  currentStep={paymentStatus === 'processing' ? 1 : paymentStatus === 'success' ? 2 : 0}
-                />
-
-                <SecurityBadges />
-              </motion.div>
-            )}
-          </motion.div>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }

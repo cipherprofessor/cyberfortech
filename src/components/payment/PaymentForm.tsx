@@ -1,34 +1,28 @@
 // src/components/payment/PaymentForm.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import {
   CreditCard,
   Smartphone,
-  AlertCircle,
+  BanknoteIcon,
   Shield,
-  Check,
-  ChevronDown,
-  BanknoteIcon
+  CheckCircle
 } from 'lucide-react';
-import { CreditCard as CreditCardComponent } from './CreditCard/CreditCard';
-
 import styles from './PaymentForm.module.scss';
-import { PaymentMethods } from './PaymentMethods';
-import { OrderSummary } from './OrderSummary';
-import { PaymentTimeline } from './PaymentTimeline';
-import { SecurityBadges } from './SecurityBadges';
 
+interface PaymentDetails {
+  amount: number;
+  currency: string;
+  orderId: string;
+  courseId: string;
+  courseName: string;
+}
 
 interface PaymentFormProps {
-  paymentDetails: {
-    amount: number;
-    currency: string;
-    orderId: string;
-    courseId: string;
-    courseName: string;
-  };
+  paymentDetails: PaymentDetails;
   onPaymentComplete: (paymentId: string) => void;
   onPaymentError: (error: Error) => void;
   className?: string;
@@ -39,24 +33,57 @@ interface CardDetails {
   nameOnCard: string;
   expiryDate: string;
   cvv: string;
+  cardType?: 'visa' | 'mastercard' | 'amex' | 'unknown';
 }
 
-interface UPIDetails {
-  upiId: string;
+interface PaymentMethod {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  logos?: string[];
 }
 
-const paymentMethods = [
+export const PaymentForm: React.FC<PaymentFormProps> = ({
+  paymentDetails,
+  onPaymentComplete,
+  onPaymentError,
+  className = ''
+}) => {
+  const [selectedMethod, setSelectedMethod] = useState<string | null>('credit_card');
+  const [loading, setLoading] = useState(false);
+  const [isCardFlipped, setIsCardFlipped] = useState(false);
+  const [paymentStep, setPaymentStep] = useState(0);
+
+  const [cardDetails, setCardDetails] = useState<CardDetails>({
+    cardNumber: '',
+    nameOnCard: '',
+    expiryDate: '',
+    cvv: '',
+    cardType: 'unknown'
+  });
+
+  const [errors, setErrors] = useState({
+    cardNumber: '',
+    nameOnCard: '',
+    expiryDate: '',
+    cvv: ''
+  });
+
+  const paymentMethods: PaymentMethod[] = [
     {
       id: 'credit_card',
       title: 'Credit/Debit Card',
       description: 'Pay securely with your card',
-      icon: <CreditCard className={styles.methodIcon} />
+      icon: <CreditCard className={styles.methodIcon} />,
+      logos: ['/visa.svg', '/mastercard.svg', '/amex.svg']
     },
     {
       id: 'upi',
       title: 'UPI Payment',
       description: 'GPay, PhonePe, Paytm & more',
-      icon: <Smartphone className={styles.methodIcon} />
+      icon: <Smartphone className={styles.methodIcon} />,
+      logos: ['/gpay.svg', '/phonepe.svg', '/paytm.svg']
     },
     {
       id: 'net_banking',
@@ -66,102 +93,24 @@ const paymentMethods = [
     }
   ];
 
-
-export const PaymentForm: React.FC<PaymentFormProps> = ({
-  paymentDetails,
-  onPaymentComplete,
-  onPaymentError,
-  className = ''
-}) => {
-  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
-  const [isCardFlipped, setIsCardFlipped] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [promoCode, setPromoCode] = useState('');
-  const [showPromo, setShowPromo] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
-
-  const [cardDetails, setCardDetails] = useState<CardDetails>({
-    cardNumber: '',
-    nameOnCard: '',
-    expiryDate: '',
-    cvv: ''
-  });
-
-  const [upiDetails, setUpiDetails] = useState<UPIDetails>({
-    upiId: ''
-  });
-
-  // Format card number with spaces
   const formatCardNumber = (value: string): string => {
-    // Remove any spaces and non-numeric characters
     const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    
-    // Split into groups of 4 digits
     const parts: string[] = [];
     for (let i = 0; i < v.length; i += 4) {
       parts.push(v.slice(i, i + 4));
     }
-  
-    // Join with spaces, or return original value if empty
     return parts.length > 0 ? parts.join(' ') : value;
   };
-  
-  // Alternative implementation using regex
-  const formatCardNumber2 = (value: string): string => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    return v.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+
+  const formatExpiryDate = (value: string): string => {
+    const cleaned = value.replace(/\D/g, '');
+    if (cleaned.length >= 2) {
+      return `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}`;
+    }
+    return cleaned;
   };
 
-  // Format expiry date
-  const formatExpiryDate = (value: string) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    if (v.length >= 2) {
-      return `${v.slice(0, 2)}/${v.slice(2, 4)}`;
-    }
-    return v;
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedMethod) {
-      setError('Please select a payment method');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Validate input based on payment method
-      if (selectedMethod === 'credit_card') {
-        if (!cardDetails.cardNumber || !cardDetails.nameOnCard || !cardDetails.expiryDate || !cardDetails.cvv) {
-          throw new Error('Please fill in all card details');
-        }
-      } else if (selectedMethod === 'upi') {
-        if (!upiDetails.upiId) {
-          throw new Error('Please enter UPI ID');
-        }
-      }
-
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Generate mock payment ID
-      const paymentId = `PAY-${Math.random().toString(36).substr(2, 9)}`;
-      onPaymentComplete(paymentId);
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Payment failed');
-      setError(error.message);
-      onPaymentError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Card validation utilities
-const getCardType = (number: string): 'visa' | 'mastercard' | 'amex' | 'unknown' => {
+  const getCardType = (number: string): 'visa' | 'mastercard' | 'amex' | 'unknown' => {
     const cleaned = number.replace(/\D/g, '');
     
     const patterns = {
@@ -169,75 +118,133 @@ const getCardType = (number: string): 'visa' | 'mastercard' | 'amex' | 'unknown'
       mastercard: /^5[1-5]/,
       amex: /^3[47]/
     };
-  
+
     if (patterns.visa.test(cleaned)) return 'visa';
     if (patterns.mastercard.test(cleaned)) return 'mastercard';
     if (patterns.amex.test(cleaned)) return 'amex';
     return 'unknown';
   };
-  
-  const isValidCardNumber = (number: string): boolean => {
+
+  const validateCardNumber = (number: string): boolean => {
     const cleaned = number.replace(/\D/g, '');
-    
-    // Luhn algorithm validation
     let sum = 0;
     let isEven = false;
     
-    // Loop through values starting from the rightmost digit
     for (let i = cleaned.length - 1; i >= 0; i--) {
       let digit = parseInt(cleaned.charAt(i), 10);
-  
       if (isEven) {
         digit *= 2;
-        if (digit > 9) {
-          digit -= 9;
-        }
+        if (digit > 9) digit -= 9;
       }
-  
       sum += digit;
       isEven = !isEven;
     }
-  
+    
     return sum % 10 === 0;
   };
 
-
-  // Handle card number input
-  // Enhanced card number input handling
-const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     const formatted = formatCardNumber(input);
     
     if (formatted.length <= 19) {
+      const cardType = getCardType(formatted);
       setCardDetails(prev => ({
         ...prev,
         cardNumber: formatted,
-        cardType: getCardType(formatted)
+        cardType
       }));
-  
-      // Validate complete card numbers
+
       if (formatted.replace(/\D/g, '').length === 16) {
-        setCardErrors(prev => ({
+        setErrors(prev => ({
           ...prev,
-          cardNumber: !isValidCardNumber(formatted) ? 'Invalid card number' : ''
+          cardNumber: validateCardNumber(formatted) ? '' : 'Invalid card number'
         }));
       }
     }
   };
 
-  // Handle expiry date input
   const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formattedValue = formatExpiryDate(e.target.value);
-    setCardDetails({ ...cardDetails, expiryDate: formattedValue });
+    const formatted = formatExpiryDate(e.target.value);
+    if (formatted.length <= 5) {
+      setCardDetails(prev => ({ ...prev, expiryDate: formatted }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors = {
+      cardNumber: !validateCardNumber(cardDetails.cardNumber) ? 'Invalid card number' : '',
+      nameOnCard: !cardDetails.nameOnCard ? 'Name is required' : '',
+      expiryDate: !cardDetails.expiryDate ? 'Expiry date is required' : '',
+      cvv: !cardDetails.cvv ? 'CVV is required' : ''
+    };
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(error => error !== '');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setPaymentStep(1);
+
+    try {
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const paymentId = `PAY-${Math.random().toString(36).substr(2, 9)}`;
+      setPaymentStep(2);
+      onPaymentComplete(paymentId);
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Payment failed');
+      setPaymentStep(0);
+      onPaymentError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className={`${styles.container} ${className}`}>
-     <PaymentMethods
-              methods={paymentMethods}
-              selectedMethod={selectedMethod}
-              onMethodSelect={setSelectedMethod}
-            />
+      <div className={styles.methodsGrid}>
+        {paymentMethods.map((method) => (
+          <motion.div
+            key={method.id}
+            className={`${styles.methodCard} ${selectedMethod === method.id ? styles.selected : ''}`}
+            onClick={() => setSelectedMethod(method.id)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className={styles.methodContent}>
+              <div className={styles.iconWrapper}>{method.icon}</div>
+              <div className={styles.methodInfo}>
+                <h3>{method.title}</h3>
+                <p>{method.description}</p>
+              </div>
+            </div>
+
+            {method.logos && (
+              <div className={styles.methodLogos}>
+                {method.logos.map((logo, index) => (
+                  <div key={index} className={styles.logoWrapper}>
+                    <Image
+                      src={logo}
+                      alt={`${method.title} payment option`}
+                      width={32}
+                      height={20}
+                      className={styles.logo}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
 
       <AnimatePresence mode="wait">
         {selectedMethod && (
@@ -248,39 +255,33 @@ const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             exit={{ opacity: 0, height: 0 }}
             onSubmit={handleSubmit}
           >
-            {(selectedMethod === 'credit_card' || selectedMethod === 'debit_card') && (
+            {selectedMethod === 'credit_card' && (
               <div className={styles.cardSection}>
-                <CreditCardComponent
-                  cardNumber={cardDetails.cardNumber}
-                  cardHolder={cardDetails.nameOnCard}
-                  expiryDate={cardDetails.expiryDate}
-                  cvv={cardDetails.cvv}
-                  isFlipped={isCardFlipped}
-                />
-
                 <div className={styles.inputGroup}>
                   <label htmlFor="nameOnCard">Name on Card</label>
                   <input
                     type="text"
                     id="nameOnCard"
-                    placeholder="Enter name as on card"
                     value={cardDetails.nameOnCard}
                     onChange={(e) => setCardDetails({...cardDetails, nameOnCard: e.target.value})}
+                    placeholder="Enter name as on card"
                     required
                   />
+                  {errors.nameOnCard && <span className={styles.error}>{errors.nameOnCard}</span>}
                 </div>
 
                 <div className={styles.inputGroup}>
                   <label htmlFor="cardNumber">Card Number</label>
                   <input
-  type="text"
-  id="cardNumber"
-  placeholder="1234 5678 9012 3456"
-  value={cardDetails.cardNumber}
-  onChange={handleCardNumberChange}
-  maxLength={19}
-  required
-/>
+                    type="text"
+                    id="cardNumber"
+                    value={cardDetails.cardNumber}
+                    onChange={handleCardNumberChange}
+                    placeholder="1234 5678 9012 3456"
+                    maxLength={19}
+                    required
+                  />
+                  {errors.cardNumber && <span className={styles.error}>{errors.cardNumber}</span>}
                 </div>
 
                 <div className={styles.cardInputs}>
@@ -289,12 +290,13 @@ const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                     <input
                       type="text"
                       id="expiryDate"
-                      placeholder="MM/YY"
                       value={cardDetails.expiryDate}
                       onChange={handleExpiryChange}
+                      placeholder="MM/YY"
                       maxLength={5}
                       required
                     />
+                    {errors.expiryDate && <span className={styles.error}>{errors.expiryDate}</span>}
                   </div>
 
                   <div className={styles.inputGroup}>
@@ -302,85 +304,57 @@ const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                     <input
                       type="password"
                       id="cvv"
-                      placeholder="123"
                       value={cardDetails.cvv}
                       onChange={(e) => setCardDetails({...cardDetails, cvv: e.target.value.slice(0, 4)})}
                       onFocus={() => setIsCardFlipped(true)}
                       onBlur={() => setIsCardFlipped(false)}
+                      placeholder="123"
                       maxLength={4}
                       required
                     />
+                    {errors.cvv && <span className={styles.error}>{errors.cvv}</span>}
                   </div>
                 </div>
               </div>
             )}
 
-            {selectedMethod === 'upi' && (
-              <div className={styles.upiSection}>
-                <div className={styles.inputGroup}>
-                  <label htmlFor="upiId">UPI ID</label>
-                  <input
-                    type="text"
-                    id="upiId"
-                    placeholder="username@upi"
-                    value={upiDetails.upiId}
-                    onChange={(e) => setUpiDetails({...upiDetails, upiId: e.target.value})}
-                    required
-                  />
-                </div>
+            <div className={styles.summary}>
+              <div className={styles.summaryRow}>
+                <span>Amount to Pay</span>
+                <span>
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: paymentDetails.currency
+                  }).format(paymentDetails.amount)}
+                </span>
               </div>
-            )}
+            </div>
 
-            <OrderSummary
-              courseName={paymentDetails.courseName}
-              amount={paymentDetails.amount}
-              currency={paymentDetails.currency}
-            />
-
-            <PaymentTimeline 
-                  currentStep={paymentStatus === 'processing' ? 1 : paymentStatus === 'success' ? 2 : 0}
-                />
-
-            <SecurityBadges />
-
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  className={styles.error}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  role="alert"
+            <div className={styles.timeline}>
+              {[
+                { icon: <CreditCard />, title: 'Enter Payment Details' },
+                { icon: <Shield />, title: 'Processing Payment' },
+                { icon: <CheckCircle />, title: 'Payment Complete' }
+              ].map((step, index) => (
+                <div
+                  key={index}
+                  className={`${styles.timelineStep} ${index <= paymentStep ? styles.active : ''}`}
                 >
-                  <AlertCircle size={20} />
-                  <span>{error}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  <div className={styles.stepIcon}>{step.icon}</div>
+                  <div className={styles.stepTitle}>{step.title}</div>
+                </div>
+              ))}
+            </div>
 
             <button
               type="submit"
               className={styles.submitButton}
               disabled={loading}
             >
-              {loading ? (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  Processing Payment...
-                </motion.span>
-              ) : (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  Pay {new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: paymentDetails.currency
-                  }).format(paymentDetails.amount)}
-                </motion.span>
-              )}
+              {loading ? 'Processing...' : `Pay ${new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: paymentDetails.currency
+              }).format(paymentDetails.amount)}`}
             </button>
           </motion.form>
         )}
@@ -388,7 +362,3 @@ const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     </div>
   );
 };
-
-function setCardErrors(arg0: (prev: any) => any) {
-    throw new Error('Function not implemented.');
-}

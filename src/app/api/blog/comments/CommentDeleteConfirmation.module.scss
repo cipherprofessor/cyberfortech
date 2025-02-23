@@ -1,0 +1,72 @@
+// CommentDeleteConfirmation.module.scss
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .dialog {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .dialogContent {
+    text-align: center;
+  
+    h3 {
+      margin: 1rem 0;
+      font-size: 1.5rem;
+    }
+  
+    p {
+      margin-bottom: 1.5rem;
+      color: #666;
+    }
+  }
+  
+  .warningIcon {
+    color: #f59e0b;
+  }
+  
+  .dialogActions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .cancelButton, .deleteButton {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .cancelButton {
+    background: #e5e7eb;
+    color: #374151;
+    
+    &:hover {
+      background: #d1d5db;
+    }
+  }
+  
+  .deleteButton {
+    background: #ef4444;
+    color: white;
+    
+    &:hover {
+      background: #dc2626;
+    }
+  }

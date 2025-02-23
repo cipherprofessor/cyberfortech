@@ -1,267 +1,120 @@
-// src/app/(routes)/courses/[courseId]/payment/page.module.scss
-
 .pageContainer {
-    min-height: 100vh;
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem;
+  background-color: rgb(25, 25, 28);
+}
+
+.contentWrapper {
+  max-width: 1400px;
+  width: 90%;
+  margin: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 450px;
+  gap: 3rem;
+  align-items: start;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
     width: 100%;
+  }
+}
+
+.leftColumn {
+  .courseCard {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+
+  .courseHeader {
     padding: 2rem;
-    background-color: #f8fafc;
-  
-    :global(.dark) & {
-      background-color: rgb(25, 25, 28);
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #4f46e5, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
     }
-  
-    @media (max-width: 768px) {
-      padding: 1rem;
+
+    .description {
+      color: #94a3b8;
+      font-size: 1.125rem;
+      line-height: 1.6;
     }
   }
-  
-  .contentWrapper {
-    max-width: 1400px;
-    margin: 0 auto;
+
+  .courseInfo {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    
-    @media (max-width: 1024px) {
-      grid-template-columns: 1fr;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.02);
+    margin: 1rem 0;
+
+    .infoItem {
+      .label {
+        color: #94a3b8;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .value {
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 500;
+      }
     }
   }
-  
-  .leftColumn {
-    .courseCard {
-      background: white;
-      border-radius: 1.5rem;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  
-      :global(.dark) & {
-        background: rgba(255, 255, 255, 0.05);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
+
+  .featuresList {
+    padding: 2rem;
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1.5rem;
     }
-  
-    .courseHeader {
-      padding: 2rem;
-  
-      h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        background: linear-gradient(45deg, #4f46e5, #3b82f6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-  
-        @media (max-width: 768px) {
-          font-size: 1.5rem;
-        }
-      }
-  
-      .description {
-        font-size: 1.125rem;
-        line-height: 1.6;
-        color: #64748b;
-  
-        :global(.dark) & {
-          color: #94a3b8;
-        }
-      }
-    }
-  
-    .courseInfo {
+
+    ul {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      padding: 2rem;
-      background: #f8fafc;
-  
-      :global(.dark) & {
-        background: rgba(255, 255, 255, 0.03);
-      }
-  
-      .infoItem {
-        text-align: center;
-  
-        .label {
-          display: block;
-          font-size: 0.875rem;
-          color: #64748b;
-          margin-bottom: 0.5rem;
-  
-          :global(.dark) & {
-            color: #94a3b8;
-          }
-        }
-  
-        .value {
-          font-size: 1rem;
-          font-weight: 600;
-          color: #1e293b;
-  
-          :global(.dark) & {
-            color: #e2e8f0;
-          }
-        }
-      }
-    }
-  
-    .featuresList {
-      padding: 2rem;
-  
-      h3 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        color: #0f172a;
-  
-        :global(.dark) & {
-          color: #f8fafc;
-        }
-      }
-  
-      ul {
-        display: grid;
-        gap: 1rem;
-  
-        li {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          color: #64748b;
-          font-size: 1rem;
-  
-          :global(.dark) & {
-            color: #94a3b8;
-          }
-  
-          .checkIcon {
-            width: 20px;
-            height: 20px;
-            color: #10b981;
-            flex-shrink: 0;
-          }
-        }
-      }
-    }
-  }
-  
-  .rightColumn {
-    .paymentCard {
-      position: sticky;
-      top: 2rem;
-      background: white;
-      border-radius: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      overflow: hidden;
-  
-      :global(.dark) & {
-        background: rgba(255, 255, 255, 0.05);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
-  
-      @media (max-width: 1024px) {
-        position: static;
-      }
-    }
-  }
-  
-  .methodIcon {
-    width: 24px;
-    height: 24px;
-    color: #4f46e5;
-  }
-  
-  // Responsive Design
-  @media (max-width: 768px) {
-    .courseInfo {
-      grid-template-columns: 1fr !important;
-      gap: 1rem !important;
-  
-      .infoItem {
-        text-align: left !important;
+      gap: 1rem;
+
+      li {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: 0.75rem;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 0.75rem;
-  
-        .label {
-          margin-bottom: 0 !important;
-        }
-      }
-    }
-  
-    .featuresList {
-      padding: 1.5rem !important;
-  
-      h3 {
-        font-size: 1.125rem !important;
-      }
-  
-      ul {
-        gap: 0.75rem !important;
-  
-        li {
-          font-size: 0.875rem !important;
+        gap: 0.75rem;
+        color: #94a3b8;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          color: #4f46e5;
+          flex-shrink: 0;
         }
       }
     }
   }
-  
-  // Animation classes
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+}
+
+.rightColumn {
+  position: sticky;
+  top: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+
+  h2 {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  .animate-slideIn {
-    animation: slideIn 0.5s ease forwards;
-  }
-  
-  .animate-fadeIn {
-    animation: fadeIn 0.3s ease forwards;
-  }
-  
-  // Utility classes
-  .hidden {
-    display: none;
-  }
-  
-  .visible {
-    display: block;
-  }
-  
-  .flex {
-    display: flex;
-  }
-  
-  .items-center {
-    align-items: center;
-  }
-  
-  .justify-between {
-    justify-content: space-between;
-  }
-  
-  .gap-2 {
-    gap: 0.5rem;
-  }
-  
-  .gap-4 {
-    gap: 1rem;
-  }
+}

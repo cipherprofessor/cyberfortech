@@ -29,6 +29,15 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(222.2 84% 4.9%);
+    --primary: hsl(222.2 47.4% 11.2%);
+    --primary-alpha: rgba(0, 0, 0, 0.1);
+    --border: hsl(214.3 31.8% 91.4%);
+    --border-hover: hsl(214.3 31.8% 81.4%);
+    --muted-foreground: hsl(215.4 16.3% 46.9%);
+    --accent: hsl(210 40% 96.1%);
+    --destructive: hsl(0 84.2% 60.2%);
   }
 
   .dark {
@@ -56,6 +65,15 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --background: hsl(222.2 84% 4.9%);
+    --foreground: hsl(210 40% 98%);
+    --primary: hsl(210 40% 98%);
+    --primary-alpha: rgba(255, 255, 255, 0.1);
+    --border: hsl(217.2 32.6% 17.5%);
+    --border-hover: hsl(217.2 32.6% 27.5%);
+    --muted-foreground: hsl(215 20.2% 65.1%);
+    --accent: hsl(217.2 32.6% 17.5%);
+    --destructive: hsl(0 62.8% 30.6%);
   }
 }
 
@@ -125,3 +143,14 @@ My workspace is set up as follows: */
   --black-9: hsla(0,0%,100%,.9)
 }
  */
+
+
+ .toastContainer {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
