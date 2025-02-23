@@ -25,6 +25,7 @@ import { useTheme } from 'next-themes';
 import clsx from 'clsx';
 import styles from './BlogPostDetail.module.scss';
 import { BlogPost } from '@/types/blog';
+import Comments from '@/app/api/blog/comments/Comments';
 
 interface BlogPostDetailProps {
   post: BlogPost;
@@ -258,18 +259,37 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
       </motion.div>
 
       {/* Comments Section */}
-      <motion.div 
+      {/* <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
         className={styles.comments}
-      >
-        <h3>
+      > */}
+        {/* <h3>
           <MessageCircle size={20} />
           Comments
-        </h3>
-        {/* Add comments component here */}
-      </motion.div>
+        </h3> */}
+        
+        <motion.div 
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 0.5 }}
+  className={styles.comments}
+>
+  <Comments
+    postId={post.id}
+    onCommentAdded={(comment) => {
+      // Optional: Handle new comment added
+      console.log('New comment added:', comment);
+    }}
+    onCommentDeleted={(commentId) => {
+      // Optional: Handle comment deleted
+      console.log('Comment deleted:', commentId);
+    }}
+  />
+</motion.div>
+
+   
     </article>
   );
 };

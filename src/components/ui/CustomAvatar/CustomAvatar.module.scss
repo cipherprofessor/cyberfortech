@@ -1,0 +1,84 @@
+.avatar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.2s ease;
+  
+    &.clickable {
+      cursor: pointer;
+  
+      &:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-1px);
+      }
+  
+      &:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+    }
+  
+    &.loaded {
+      background-color: transparent;
+    }
+  }
+  
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  /* Sizes */
+  .sm {
+    width: 32px;
+    height: 32px;
+    font-size: 0.875rem;
+  }
+  
+  .md {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .lg {
+    width: 64px;
+    height: 64px;
+    font-size: 1.5rem;
+  }
+  
+  .xl {
+    width: 96px;
+    height: 96px;
+    font-size: 2rem;
+  }
+  
+  /* Dark mode support */
+  :global(.dark) {
+    .avatar {
+      background-color: var(--card-bg);
+      border-color: var(--border-color);
+    }
+  
+    .fallback {
+      background-color: var(--primary-color);
+    }
+  }
