@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon, DollarSignIcon, NotebookTabs, SquareKanban, ScanEye, Contact, BookUser, Quote, GraduationCap, Cog, Wrench, MessageCircleQuestion, TableOfContents, DollarSign, ReceiptPoundSterlingIcon, Settings2Icon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
-import styles from './Sidebar.module.scss';
-import { SidebarItem } from './SidebarItem';
+import styles from './Student-Sidebar.module.scss';
+import { SidebarItem } from './StudentSidebarItem';
 import { SidebarItemProps } from './types';
 import { IconInvoice, IconReceiptRefund, IconTransactionBitcoin } from '@tabler/icons-react';
-import { RiMoneyDollarBoxFill } from '@remixicon/react';
+
 
 
 export function StudentSidebar() {

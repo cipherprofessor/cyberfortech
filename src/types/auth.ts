@@ -1,11 +1,11 @@
 // src/types/auth.ts
 
-import { ROLES, PERMISSIONS } from '@/constants/auth';
+import { ROLES,} from '@/constants/auth';
 
-export type Role = typeof ROLES[keyof typeof ROLES];
-export type Permission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
+export type Role = typeof ROLES[keyof typeof ROLES];;
+
 
 export interface UserRole {
   role: Role;
-  permissions?: Permission[];
+
 }

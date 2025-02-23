@@ -1,30 +1,38 @@
 // src/components/auth/ProtectedRoute.tsx
 'use client';
+
 import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
-import { ReactNode } from "react";
-import { SidebarLoadingSkeleton } from "../formloadingskelton";
+import { ReactNode, useEffect } from "react";
+import { hasPermission } from "@/utils/auth";
+import type { Role } from "@/types/auth";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  allowedRoles?: string[];
+  allowedRoles?: Role[];
 }
 
 export function ProtectedRoute({ children, allowedRoles = [] }: ProtectedRouteProps) {
   const { isAuthenticated, isLoaded, role } = useAuth();
 
+  useEffect(() => {
+    if (isLoaded && !isAuthenticated) {
+      redirect('/login');
+    }
+
+    if (isLoaded && isAuthenticated && allowedRoles.length > 0) {
+      const hasAccess = allowedRoles.some(requiredRole => 
+        hasPermission(role as Role, requiredRole)
+      );
+      
+      if (!hasAccess) {
+        redirect('/');
+      }
+    }
+  }, [isLoaded, isAuthenticated, role, allowedRoles]);
+
   if (!isLoaded) {
-    return <div>
-      <SidebarLoadingSkeleton />
-    </div>;
-  }
-
-  if (!isAuthenticated) {
-    redirect('/');
-  }
-
-  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-    redirect('/unauthorized');
+    return <div>Loading...</div>;
   }
 
   return <>{children}</>;

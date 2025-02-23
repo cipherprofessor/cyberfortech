@@ -1,4 +1,4 @@
-// src/app/dashboard/student-dashboard/layout.tsx
+// src/app/dashboard/instructor-dashboard/layout.tsx
 'use client';
 
 import { ThemeProvider } from 'next-themes';
@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute allowedRoles={[ROLES.STUDENT]}>
+    <ProtectedRoute allowedRoles={[ROLES.INSTRUCTOR]}>
       <ThemeProvider attribute="class">
         <div className={styles.layoutContainer}>
           <StudentSidebar />

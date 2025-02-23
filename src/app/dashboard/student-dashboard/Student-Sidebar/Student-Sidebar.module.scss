@@ -1,0 +1,360 @@
+// Variables
+$light-bg: #ffffff;
+$dark-bg: rgb(25,25,28);
+$light-text: #202020;
+$dark-text: #cccccc;
+$border-light: #e0e0e0;
+$border-dark: #333333;
+$hover-light: rgba(0, 0, 0, 0.05);
+$hover-dark: rgba(255, 255, 255, 0.05);
+$mid-light: #494848;
+$mid-blue:rgb(32,41,71);
+
+// Base sidebar
+.sidebar {
+  width: 193px;
+  height: 100vh;
+  // background: #ffffffe6;
+  background-color:#ffffffe6 ;
+  border-right: 1px solid $border-light;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  overflow-y: auto;
+  margin-top: 18px;
+
+  &.dark {
+    background: $dark-bg;
+    border-right-color: $border-dark;
+  }
+
+  &.mobile {
+    z-index: 100;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $light-text;
+    margin-bottom: 2rem;
+
+    .dark & {
+      color: $dark-text;
+    }
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 47px;
+  }
+}
+
+// Sidebar items
+.sidebarItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .mainItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.02);
+      background: $hover-light;
+      box-shadow: 0 2px 8px rgba(46, 222, 199, 0.16);
+    }
+
+    &.mainLabel {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: $border-dark;
+    }
+
+    .dark & {
+      color: $dark-text;
+      
+      &:hover {
+        background: $hover-dark;
+        color: white;
+      }
+    }
+
+    .icon {
+      display: flex;
+      align-items: center;
+    }
+
+    .chevron {
+      margin-left: auto;
+    }
+  }
+
+  .subItems {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-left: 1.7rem;
+
+    .subItem {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+
+      &:hover {
+        transform: scale(1.02);
+        background: $hover-light;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        color: rgb(0, 0, 0);
+      }
+
+      &.subLabel {
+        font-size: 0.8rem;
+        color: $light-text;
+      }
+
+      .dark & {
+        color: $dark-text;
+        
+        &:hover {
+          background: $hover-dark;
+          color: white;
+        }
+      }
+
+      .icon {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
+
+// Mobile menu
+.mobileMenuButton {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  background: $light-bg;
+  border: 1px solid $border-light;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+
+  .dark & {
+    background: $dark-bg;
+    border-color: $border-dark;
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+
+
+// Sidebar.module.scss - Add these new icon-specific styles
+
+// Icon base styles
+%icon-base {
+  transition: all 0.2s ease;
+  &:hover {
+    filter: brightness(1.2);
+  }
+}
+
+// Main menu icons
+.dashboardIcon {
+  @extend %icon-base;
+  color: #4A90E2;
+}
+
+.analyticsIcon {
+  @extend %icon-base;
+  color: #50C878;
+}
+
+.coursesIcon {
+  @extend %icon-base;
+  color: #F4A460;
+}
+
+.commicationIcon {
+  @extend %icon-base;
+  color: #9370DB;
+}
+
+.userIcon {
+  @extend %icon-base;
+  color: #20B2AA;
+}
+
+.settingIcon {
+  @extend %icon-base;
+  color: #166dc3;
+}
+
+.helpIcon {
+  @extend %icon-base;
+  color: #DB7093;
+}
+
+
+
+
+// Submenu icons
+.analyticsOverviewIcon {
+  @extend %icon-base;
+  color: #4f46b4;
+}
+
+.analyticsUserGrowthIcon {
+  @extend %icon-base;
+  color: #b33c62;
+}
+
+.analyticsRevenueIcon {
+  @extend %icon-base;
+  color: #ba66cd;
+}
+
+.coursesIconDashboard {
+  @extend %icon-base;
+  color: #7094db;
+}
+
+.coursesIconManagement {
+  @extend %icon-base;
+  color: #57d355;
+}
+
+.coursesIconReviews {
+  @extend %icon-base;
+  color: #8A2BE2;
+}
+
+.commicationInboxIcon {
+  @extend %icon-base;
+  color: #48D1CC;
+}
+
+.commicationForumIcon{
+  @extend %icon-base;
+  color: #e141bc;
+}
+
+.commicationGrowthIcon {
+  @extend %icon-base;
+  color: #1E90FF;
+}
+
+.userAllusersIcon {
+  @extend %icon-base;
+  color: #dc143c9a;
+}
+
+.userAdminsIcon {
+  @extend %icon-base;
+  color: #69d2ff;
+}
+
+.userStudentsIcon {
+  @extend %icon-base;
+  color: #dda0dc;
+}
+
+.userInstructorsIcon {
+  @extend %icon-base;
+  color: #a3bc32;
+}
+
+
+
+.settingGeneralIcon {
+  @extend %icon-base;
+  color: #b45546;
+}
+
+.settingSecurityIcon {
+  @extend %icon-base;
+  color: #3CB371;
+}
+
+.settingNotificationsIcon {
+  @extend %icon-base;
+  color: #6677cd;
+}
+
+.helpFaqIcon {
+  @extend %icon-base;
+  color: #9370DB;
+}
+
+.helpSupportIcon {
+  @extend %icon-base;
+  color: #BA55D3;
+}
+
+.helpContactIcon {
+  @extend %icon-base;
+  color: #3CB371;
+}
+
+
+
+
+// Dark theme overrides
+.dark {
+  .dashboardIcon,
+  .analyticsIcon,
+  .coursesIcon,
+  .communicationIcon,
+  .usersIcon,
+  .settingsIcon,
+  .helpIcon,
+  .pieChartIcon,
+  .barChartIcon,
+  .dollarIcon,
+  .mailIcon,
+  .forumIcon,
+  .draftsIcon,
+  .contactIcon,
+  .adminIcon,
+  .studentIcon,
+  .securityIcon,
+  .notificationIcon,
+  .faqIcon,
+  .supportIcon {
+    filter: brightness(0.9);
+    opacity: 0.9;
+  }
+}
+
+// Keep all existing styles...

@@ -1,17 +1,29 @@
-'use client';
 // src/hooks/useAuth.ts
+'use client';
+
 import { useUser } from "@clerk/nextjs";
-import { ROLES } from '@/constants';
-import { isAdmin } from '@/utils';
-import type { Role } from '@/types';
+import { ROLES, METADATA_MAPPING } from '@/constants/auth';
+import { isAdmin } from '@/utils/auth';
+import type { Role } from '@/types/auth';
 
 export function useAuth() {
   const { user, isLoaded } = useUser();
   
-  // Handle both metadata structures with default STUDENT role
-  const role = !user?.publicMetadata ? ROLES.STUDENT :
-               user?.publicMetadata?.role as Role || 
-               (user?.publicMetadata?.data === "example" ? ROLES.STUDENT : ROLES.STUDENT);
+  const determineRole = (): Role => {
+    if (!user?.publicMetadata) return ROLES.STUDENT;
+    
+    if ('role' in user.publicMetadata) {
+      return (user.publicMetadata.role as Role) || ROLES.STUDENT;
+    }
+    
+    if ('data' in user.publicMetadata) {
+      return METADATA_MAPPING[user.publicMetadata.data as keyof typeof METADATA_MAPPING] || ROLES.STUDENT;
+    }
+    
+    return ROLES.STUDENT;
+  };
+
+  const role = determineRole();
 
   return {
     user,
@@ -19,7 +31,8 @@ export function useAuth() {
     isAuthenticated: !!user,
     isSuperAdmin: role === ROLES.SUPERADMIN,
     isAdmin: isAdmin(role),
-    isStudent: role === ROLES.STUDENT || user?.publicMetadata?.data === "example",
+    isInstructor: role === ROLES.INSTRUCTOR,
+    isStudent: role === ROLES.STUDENT,
     role
   };
 }

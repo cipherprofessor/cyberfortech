@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-import styles from './Sidebar.module.scss';
+import styles from './Student-Sidebar.module.scss';
 import { SidebarItemProps } from './types';
 
 export function SidebarItem({ label, icon, href, subItems, labelClassName }: SidebarItemProps) {
