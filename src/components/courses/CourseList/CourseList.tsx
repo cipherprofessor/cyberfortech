@@ -7,6 +7,8 @@ import { CourseCardPlaceholder } from '../CourseCard/CourseCardPlaceholder';
 import { Button, Pagination } from '@heroui/react';
 import { CourseFilter } from '../CourseFilter/CourseFilter';
 
+import { Course, FilterState } from '@/types/courses';
+
 
 
 export function CourseList() {

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import styles from "./CourseFilter.module.scss";
+import { CourseFilterProps, CourseLevel, FilterState } from "@/types/courses";
 
 export function CourseFilter({
   onFilterChange,
@@ -27,16 +28,19 @@ export function CourseFilter({
     0,
     defaultMaxPrice,
   ]);
-  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+  // const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [durationRange, setDurationRange] = useState<string>("all");
   const [minRating, setMinRating] = useState<number>(0);
   const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("rating");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const levels: CourseLevel[] = ['Beginner', 'Intermediate', 'Advanced'];
+  const [selectedLevels, setSelectedLevels] = useState<CourseLevel[]>([]);
+  // const levels: CourseLevel[] = [...]; // Your levels array
 
   // Calculate derived values using useMemo
-  const { maxPrice, levels, categories } = useMemo(() => {
+  const { maxPrice, categories } = useMemo(() => {
     const calculatedMaxPrice =
       courses.length > 0
         ? Math.max(...courses.map((course) => course.price))
@@ -88,9 +92,11 @@ export function CourseFilter({
     setMinRating(rating === minRating ? 0 : rating);
   };
 
-  const handleLevelChange = (level: string) => {
-    setSelectedLevels((prev) =>
-      prev.includes(level) ? prev.filter((l) => l !== level) : [...prev, level]
+  const handleLevelChange = (level: CourseLevel) => {
+    setSelectedLevels(prev => 
+      prev.includes(level) 
+        ? prev.filter(l => l !== level)
+        : [...prev, level]
     );
   };
 
@@ -252,28 +258,28 @@ export function CourseFilter({
 
 {/* Level Filter */}
 {levels.length > 0 && (
-  <section className={styles.section}>
-    <h3><GraduationCap size={16} /> Level</h3>
-    {levels.map((level: string) => (
-      <label 
-        key={level} 
-        className={styles.checkboxItem}
-        htmlFor={`level-${level}`}
-      >
-        <div className={styles.checkboxWrapper}>
-          <input
-            type="checkbox"
-            id={`level-${level}`}
-            checked={selectedLevels.includes(level)}
-            onChange={() => handleLevelChange(level)}
-            className={styles.checkbox}
-          />
-          <span className={styles.checkboxLabel}>{level}</span>
-        </div>
-      </label>
-    ))}
-  </section>
-)}
+      <section className={styles.section}>
+        <h3><GraduationCap size={16} /> Level</h3>
+        {levels.map((level) => (
+          <label 
+            key={level} 
+            className={styles.checkboxItem}
+            htmlFor={`level-${level}`}
+          >
+            <div className={styles.checkboxWrapper}>
+              <input
+                type="checkbox"
+                id={`level-${level}`}
+                checked={selectedLevels.includes(level)}
+                onChange={() => handleLevelChange(level)}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkboxLabel}>{level}</span>
+            </div>
+          </label>
+        ))}
+      </section>
+    )}
 
 {/* Categories Filter */}
 {categories.length > 0 && (

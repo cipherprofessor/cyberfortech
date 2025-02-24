@@ -128,8 +128,6 @@ export default function ChartsDashboardTab3() {
       data={streamGraphMockData}
       xAxisLabel="Months"
       yAxisLabel="Sales"
-      lightColors={["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]}
-      darkColors={["#ffb74d", "#81c784", "#64b5f6", "#e57373"]}
     />
 
     </CardBody>

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -36,7 +36,7 @@ export function CourseCard({ course }: CourseCardProps) {
 
   // Function to render stars with decimal values
   const renderStars = (rating: number) => {
-    const stars = [];
+    const stars: JSX.Element[] = [];
     const fullStars = Math.floor(rating);
     const decimalPart = rating % 1;
     
