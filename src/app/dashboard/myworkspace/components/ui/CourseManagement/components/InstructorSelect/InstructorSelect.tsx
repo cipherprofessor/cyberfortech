@@ -13,7 +13,7 @@ interface InstructorSelectProps {
   courseInstructorId?: string;
 }
 
-export const InstructorSelect = ({
+export const CourseInstructorSelect = ({
   instructors,
   selectedInstructor,
   setSelectedInstructor,
@@ -72,13 +72,17 @@ export const InstructorSelect = ({
     setSearchQuery('');
   };
 
-  const handleClear = () => {
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setSelectedInstructor('');
     setFormData(prev => ({
       ...prev,
       instructor_id: ''
     }));
   };
+
+  console.log("Instructors data:", instructors);
+  console.log("Selected instructor:", selectedInstructor);
 
   return (
     <div className={`${styles.formGroup} ${isDark ? styles.dark : ''}`}>
@@ -108,10 +112,7 @@ export const InstructorSelect = ({
               </div>
               <button 
                 className={styles.clearButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleClear();
-                }}
+                onClick={handleClear}
               >
                 <X size={16} />
               </button>

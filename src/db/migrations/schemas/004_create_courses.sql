@@ -1,7 +1,7 @@
 -- Description: Creates courses and related tables including enrollments and reviews
 -- Version: 4
 -- Depends on: 003_create_instructors.sql
-
+-- src/db/migrations/schemas/004_create_courses.sql
 -- Create courses table
 CREATE TABLE IF NOT EXISTS courses (
     id TEXT PRIMARY KEY,

@@ -15,7 +15,7 @@ interface ImageUploadProps {
   setIsFileUpload: (value: boolean) => void;
 }
 
-export const ImageUpload = ({
+export const CourseImageUpload = ({
   imagePreview,
   isFileUpload,
   formData,
