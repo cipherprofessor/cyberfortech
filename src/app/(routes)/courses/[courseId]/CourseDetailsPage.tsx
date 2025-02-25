@@ -1,58 +1,46 @@
-// src/app/(routes)/courses/[courseId]/CourseDetailsPage.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
 import { CourseContent } from '@/components/courses/CourseContent/CourseContent';
 import { CourseHeader } from '@/components/courses/CourseHeader/CourseHeader';
 import { CourseSidebar } from '@/components/courses/CourseSidebar/CourseSidebar';
 import { useTheme } from 'next-themes';
-import { 
-  Loader2, 
-  AlertTriangle,
-  RefreshCw
-} from 'lucide-react';
+import { Loader2, AlertTriangle, RefreshCw } from 'lucide-react';
 import styles from './course-detail.module.scss';
-import { Course } from '@/types/courses';
+import { CourseDataProvider, useCourseData } from '@/contexts/CourseDataProvider';
+
 
 interface CourseDetailClientProps {
   courseId: string;
 }
 
+// Main component wrapper with context provider
 export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
-  const [course, setCourse] = useState<Course | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  return (
+    <CourseDataProvider courseId={courseId}>
+      <CourseDetailContent />
+    </CourseDataProvider>
+  );
+}
+
+// Inner component that consumes the context
+function CourseDetailContent() {
+  const { 
+    courseBasic, 
+    courseContent, 
+    isLoadingBasic, 
+    isLoadingContent, 
+    errorBasic, 
+    errorContent,
+    refetchBasic, 
+    refetchContent 
+  } = useCourseData();
+  
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  // Move fetchCourse inside the component
-  const fetchCourse = async () => {
-    if (!courseId) {
-      setError('Course ID is required');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const { data } = await axios.get<Course>(`/api/courses/${courseId}`);
-      setCourse(data);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load course details');
-      console.error('Error fetching course:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCourse();
-  }, [courseId]);
-
-  if (loading) {
+  // Show loading state if either basic info or content is loading
+  if (isLoadingBasic || isLoadingContent) {
     return (
       <motion.div 
         className={styles.loadingContainer}
@@ -76,7 +64,8 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
     );
   }
 
-  if (error || !course) {
+  // Show error state if either basic info or content has an error
+  if ((errorBasic || !courseBasic) || (errorContent || !courseContent)) {
     return (
       <motion.div 
         className={styles.errorContainer}
@@ -91,12 +80,15 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             aria-label="Error icon" 
           />
           <h2>Error Loading Course</h2>
-          <p>{error || 'Failed to load course'}</p>
+          <p>{errorBasic || errorContent || 'Failed to load course'}</p>
           <motion.button
             className={styles.retryButton}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => fetchCourse()}
+            onClick={() => {
+              refetchBasic();
+              refetchContent();
+            }}
             aria-label="Retry loading course"
           >
             <RefreshCw size={16} aria-hidden="true" />
@@ -107,21 +99,22 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
     );
   }
 
-  // Create a courseData object with all required fields having defaults
-  const courseData: Course = {
-    id: course.id,
-    title: course.title || '',
-    description: course.description || '',
-    price: course.price || 0,
-    duration: course.duration || 'Not specified',
-    level: course.level || 'Beginner',
-    category: course.category || '',
-    instructor_id: course.instructor_id || '',
-    instructor_name: course.instructor_name || '',
-    image_url: course.image_url || '',
-    total_students: course.total_students || 0,
-    total_reviews: course.total_reviews || 0,
-    average_rating: course.average_rating || 0
+  // Create a complete course data object with defaults for required fields
+  const courseData = {
+    id: courseBasic.id,
+    title: courseBasic.title || '',
+    description: courseBasic.description || '',
+    price: courseBasic.price || 0,
+    duration: courseBasic.duration || courseContent.courseContent.estimated_completion_time || 'Not specified',
+    level: courseBasic.level || courseContent.courseContent.level || 'Beginner',
+    category: courseBasic.category || '',
+    instructor_id: courseBasic.instructor_id || '',
+    instructor_name: courseBasic.instructor_name || courseContent.courseContent.instructor_name || '',
+    instructor_profile_image_url: courseBasic.instructor_profile_image_url || '',
+    image_url: courseBasic.image_url || courseContent.courseContent.image_url || '',
+    total_students: courseBasic.total_students || 0,
+    total_reviews: courseBasic.total_reviews || 0,
+    average_rating: courseBasic.average_rating || 0
   };
 
   return (
@@ -148,7 +141,10 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
               transition={{ delay: 0.1 }}
               className={styles.mainContent}
             >
-              <CourseContent courseId={courseId} />
+              <CourseContent 
+                courseId={courseBasic.id} 
+                courseContentData={courseContent} 
+              />
             </motion.main>
           </div>
           
@@ -158,7 +154,10 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
             transition={{ delay: 0.2 }}
             className={styles.sidebarColumn}
           >
-            <CourseSidebar course={courseData} />
+            <CourseSidebar 
+              course={courseData} 
+              courseContentData={courseContent}
+            />
           </motion.aside>
         </div>
       </motion.div>
