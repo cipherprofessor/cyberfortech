@@ -1,123 +1,268 @@
-// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/components/CourseCard/CourseCard.module.scss
+// src/components/courses/CourseCard/CourseCard.module.scss
+.cardWrapper {
+  height: 100%;
+  display: flex;
+}
+
 .courseCard {
-    background-color: rgb(25, 25, 28);;
-    border: 1px solid var(--border-color);
-    border-radius: 1rem;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.1);
-  
-      .image {
-        transform: scale(1.05);
-      }
-    }
-  
-    .courseImage {
-      position: relative;
-      height: 160px;
-      overflow: hidden;
-  
-      .image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-      }
-  
-      .courseLevel {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        padding: 0.25rem 0.75rem;
-        background: rgba(0, 0, 0, 0.75);
-        color: white;
-        border-radius: 1rem;
-        font-size: 0.75rem;
-        backdrop-filter: blur(4px);
-      }
-    }
-  
-    .courseInfo {
-      padding: 1.5rem;
-  
-      h3 {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
-      }
-  
-      p {
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-        margin-bottom: 1rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-    }
-  
-    .courseStats {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-  
-      .stat {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-  
-        svg {
-          color: var(--button-bg);
-        }
-      }
-    }
-  
-    .courseActions {
-      display: flex;
-      gap: 0.5rem;
-  
-      button {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-  
-        &.editButton {
-          background: var(--hover-bg);
-          color: var(--text-primary);
-          border: 1px solid var(--border-color);
-  
-          &:hover {
-            background: var(--button-bg);
-            color: white;
-          }
-        }
-  
-        &.deleteButton {
-          background: var(--hover-bg);
-          color: var(--danger-color);
-          border: 1px solid var(--border-color);
-  
-          &:hover {
-            background: var(--danger-color);
-            color: white;
-          }
-        }
-      }
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  :global(.dark) & {
+    background: #1f2937;
+    border-color: #374151;
+  }
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+
+  .image {
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .image {
+    transform: scale(1.05);
+  }
+}
+
+.level {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(4px);
+  color: white;
+  z-index: 1;
+
+  &.beginner { background: rgba(34, 197, 94, 0.9); }
+  &.intermediate { background: rgba(249, 115, 22, 0.9); }
+  &.advanced { background: rgba(239, 68, 68, 0.9); }
+}
+
+.content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1a1a1a;
+
+  :global(.dark) & {
+    color: #f3f4f6;
+  }
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  :global(.dark) & {
+    color: #9ca3af;
+  }
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.875rem;
+
+  svg {
+    color: #3b82f6;
+  }
+
+  :global(.dark) & {
+    color: #9ca3af;
+    
+    svg {
+      color: #60a5fa;
     }
   }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+
+  :global(.dark) & {
+    border-top-color: #374151;
+  }
+}
+
+.editButton,
+.deleteButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid #e5e7eb;
+
+  :global(.dark) & {
+    border-color: #374151;
+  }
+}
+
+.editButton {
+  background: #f3f4f6;
+  color: #1f2937;
+
+  &:hover {
+    background: #3b82f6;
+    color: white;
+  }
+
+  :global(.dark) & {
+    background: #374151;
+    color: #f3f4f6;
+
+    &:hover {
+      background: #3b82f6;
+    }
+  }
+}
+
+.deleteButton {
+  background: #f3f4f6;
+  color: #ef4444;
+
+  &:hover {
+    background: #ef4444;
+    color: white;
+  }
+
+  :global(.dark) & {
+    background: #374151;
+
+    &:hover {
+      background: #ef4444;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .imageContainer {
+    height: 180px;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+}
+
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+
+  :global(.dark) & {
+    border-top-color: #374151;
+  }
+}
+
+.editButton,
+.deleteButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.editButton {
+  background: #3b82f6;
+  color: white;
+
+  &:hover {
+    background: #2563eb;
+  }
+
+  :global(.dark) & {
+    background: #3b82f6;
+    
+    &:hover {
+      background: #60a5fa;
+    }
+  }
+}
+
+.deleteButton {
+  background: #ef4444;
+  color: white;
+
+  &:hover {
+    background: #dc2626;
+  }
+
+  :global(.dark) & {
+    background: #ef4444;
+    
+    &:hover {
+      background: #f87171;
+    }
+  }
+}
