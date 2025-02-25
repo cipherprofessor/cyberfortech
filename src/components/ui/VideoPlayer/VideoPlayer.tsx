@@ -1,7 +1,8 @@
 'use client';
+// src/components/ui/VideoPlayer/VideoPlayer.tsx
 
 import { useState, useEffect, useRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, SkipForward, SkipBack } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, SkipForward, SkipBack, X } from 'lucide-react';
 import styles from './VideoPlayer.module.scss';
 
 interface VideoPlayerProps {
@@ -10,9 +11,17 @@ interface VideoPlayerProps {
   autoPlay?: boolean;
   onComplete?: () => void;
   className?: string;
+  onClose?: () => void;
 }
 
-export function VideoPlayer({ url, title, autoPlay = false, onComplete, className = '' }: VideoPlayerProps) {
+export function VideoPlayer({ 
+  url, 
+  title, 
+  autoPlay = false, 
+  onComplete, 
+  className = '',
+  onClose
+}: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -22,6 +31,8 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Extract video ID from YouTube URL
   const getYouTubeID = (url: string): string | null => {
@@ -74,6 +85,7 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
     }
     
     setIsPlaying(!isPlaying);
+    showControls();
   };
 
   // Handle mute/unmute
@@ -82,6 +94,7 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
     
     videoRef.current.muted = !isMuted;
     setIsMuted(!isMuted);
+    showControls();
   };
 
   // Handle time update
@@ -108,6 +121,7 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
     const newTime = parseFloat(e.target.value);
     videoRef.current.currentTime = newTime;
     setCurrentTime(newTime);
+    showControls();
   };
 
   // Handle fullscreen
@@ -125,6 +139,7 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
     }
     
     setIsFullscreen(!isFullscreen);
+    showControls();
   };
 
   // Format time (seconds to MM:SS)
@@ -140,7 +155,88 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
     
     videoRef.current.currentTime += seconds;
     setCurrentTime(videoRef.current.currentTime);
+    showControls();
   };
+
+  // Handle controls visibility
+  const showControls = () => {
+    setControlsVisible(true);
+    
+    if (controlsTimeoutRef.current) {
+      clearTimeout(controlsTimeoutRef.current);
+    }
+    
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (isPlaying) {
+        setControlsVisible(false);
+      }
+    }, 3000);
+  };
+
+  // Handle mouse movement to show controls
+  const handleMouseMove = () => {
+    showControls();
+  };
+
+  // Handle click on video to toggle play/pause
+  const handleVideoClick = () => {
+    togglePlay();
+  };
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!playerRef.current) return;
+      
+      // Only handle keydown events if the player is focused
+      if (!playerRef.current.contains(document.activeElement)) return;
+      
+      switch (e.key) {
+        case ' ':  // Space bar
+          e.preventDefault();
+          togglePlay();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          skip(10);
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          skip(-10);
+          break;
+        case 'm':
+        case 'M':
+          e.preventDefault();
+          toggleMute();
+          break;
+        case 'f':
+        case 'F':
+          e.preventDefault();
+          toggleFullScreen();
+          break;
+        default:
+          break;
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current);
+      }
+    };
+  }, [isPlaying, isMuted, isFullscreen]);
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Render YouTube iframe or native video player
   if (isYouTubeURL(url)) {
@@ -162,6 +258,16 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
             className={styles.youtubeEmbed}
           />
         )}
+        
+        {onClose && (
+          <button 
+            className={styles.closeButton}
+            onClick={onClose}
+            aria-label="Close video"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
     );
   }
@@ -171,6 +277,8 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
     <div 
       ref={playerRef}
       className={`${styles.videoPlayer} ${className} ${isFullscreen ? styles.fullscreen : ''}`}
+      onMouseMove={handleMouseMove}
+      tabIndex={0} // Make the container focusable for keyboard events
     >
       {title && <h3 className={styles.videoTitle}>{title}</h3>}
       {isLoading && <div className={styles.loader}>Loading...</div>}
@@ -183,10 +291,20 @@ export function VideoPlayer({ url, title, autoPlay = false, onComplete, classNam
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         autoPlay={autoPlay}
-        onClick={togglePlay}
+        onClick={handleVideoClick}
       />
       
-      <div className={styles.controls}>
+      {onClose && (
+        <button 
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label="Close video"
+        >
+          <X size={20} />
+        </button>
+      )}
+      
+      <div className={`${styles.controls} ${controlsVisible || !isPlaying ? styles.visible : ''}`}>
         <button 
           className={styles.playPauseButton} 
           onClick={togglePlay}

@@ -4,10 +4,21 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { ShoppingCart, Share2, Heart, PlayCircle, Book, Clock, Users, Award } from 'lucide-react';
+import { 
+  ShoppingCart, 
+  Share2, 
+  Heart, 
+  PlayCircle, 
+  Book, 
+  Clock, 
+  Users, 
+  Award,
+  CheckCircle,
+  Shield
+} from 'lucide-react';
 import styles from './CourseSidebar.module.scss';
 import { Button } from '@/components/ui/button';
-import { CourseSidebarProps } from '../types';
+import { CourseSidebarProps } from '@/types/courses';
 import { VideoPlayer } from '@/components/ui/VideoPlayer/VideoPlayer';
 import axios from 'axios';
 
@@ -44,7 +55,8 @@ export function CourseSidebar({
   const [showVideo, setShowVideo] = useState(false);
   
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   // Fetch course content from API
   useEffect(() => {
@@ -143,6 +155,7 @@ export function CourseSidebar({
             url={courseContent.courseContent.course_demo_url}
             title="Course Preview"
             className={styles.videoPlayer}
+            onClose={toggleVideoPlayer}
           />
         ) : (
           <>
@@ -167,100 +180,102 @@ export function CourseSidebar({
         )}
       </div>
 
-      <div className={styles.pricing} aria-label="Course pricing">
-        <span className={styles.price}>{formatPrice(course.price)}</span>
-      </div>
+      <div className={styles.scrollableContent}>
+        <div className={styles.pricing} aria-label="Course pricing">
+          <span className={styles.price}>{formatPrice(course.price)}</span>
+        </div>
 
-      <div className={styles.actions}>
-        <Button
-          onClick={handleEnroll}
-          className={styles.enrollButton}
-          disabled={loading}
-          aria-busy={loading}
-        >
-          <ShoppingCart className={styles.icon} size={20} aria-hidden="true" />
-          {loading ? 'Enrolling...' : 'Enroll Now'}
-        </Button>
+        <div className={styles.actions}>
+          <Button
+            onClick={handleEnroll}
+            className={styles.enrollButton}
+            disabled={loading}
+            aria-busy={loading}
+          >
+            <ShoppingCart className={styles.icon} size={20} aria-hidden="true" />
+            {loading ? 'Enrolling...' : 'ENROLL NOW'}
+          </Button>
 
-        <AnimatePresence>
-          {error && (
-            <motion.p
-              className={styles.error}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              role="alert"
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                className={styles.error}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                role="alert"
+              >
+                {error}
+              </motion.p>
+            )}
+          </AnimatePresence>
+
+          <div className={styles.secondaryActions}>
+            <Button 
+              variant="outline" 
+              className={styles.actionButton}
+              onClick={handleWishlist}
+              aria-label="Add to wishlist"
             >
-              {error}
-            </motion.p>
-          )}
-        </AnimatePresence>
+              <Heart className={styles.icon} size={20} aria-hidden="true" />
+              Wishlist
+            </Button>
+            <Button 
+              variant="outline" 
+              className={styles.actionButton}
+              onClick={handleShare}
+              aria-label="Share course"
+            >
+              <Share2 className={styles.icon} size={20} aria-hidden="true" />
+              Share
+            </Button>
+          </div>
+        </div>
 
-        <div className={styles.secondaryActions}>
-          <Button 
-            variant="outline" 
-            className={styles.actionButton}
-            onClick={handleWishlist}
-            aria-label="Add to wishlist"
-          >
-            <Heart className={styles.icon} size={20} aria-hidden="true" />
-            Wishlist
-          </Button>
-          <Button 
-            variant="outline" 
-            className={styles.actionButton}
-            onClick={handleShare}
-            aria-label="Share course"
-          >
-            <Share2 className={styles.icon} size={20} aria-hidden="true" />
-            Share
-          </Button>
+        <div className={styles.info} role="list">
+          <div className={styles.infoItem} role="listitem">
+            <Users className={styles.infoIcon} size={18} />
+            <span className={styles.label}>Students</span>
+            <span className={styles.value}>{course.total_students?.toLocaleString() || 0}</span>
+          </div>
+          <div className={styles.infoItem} role="listitem">
+            <Clock className={styles.infoIcon} size={18} />
+            <span className={styles.label}>Duration</span>
+            <span className={styles.value}>
+              {courseContent?.courseContent?.estimated_completion_time || course.duration}
+            </span>
+          </div>
+          <div className={styles.infoItem} role="listitem">
+            <Award className={styles.infoIcon} size={18} />
+            <span className={styles.label}>Level</span>
+            <span className={styles.value}>
+              {courseContent?.courseContent?.level || course.level}
+            </span>
+          </div>
+          <div className={styles.infoItem} role="listitem">
+            <Book className={styles.infoIcon} size={18} />
+            <span className={styles.label}>Lessons</span>
+            <span className={styles.value}>
+              {courseContent?.sections?.reduce((total, section) => total + section.lessons.length, 0) || 'N/A'}
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div className={styles.info} role="list">
-        <div className={styles.infoItem} role="listitem">
-          <Users className={styles.infoIcon} size={18} />
-          <span className={styles.label}>Students</span>
-          <span className={styles.value}>{course.total_students?.toLocaleString() || 0}</span>
-        </div>
-        <div className={styles.infoItem} role="listitem">
-          <Clock className={styles.infoIcon} size={18} />
-          <span className={styles.label}>Duration</span>
-          <span className={styles.value}>
-            {courseContent?.courseContent?.estimated_completion_time || course.duration}
-          </span>
-        </div>
-        <div className={styles.infoItem} role="listitem">
-          <Award className={styles.infoIcon} size={18} />
-          <span className={styles.label}>Level</span>
-          <span className={styles.value}>
-            {courseContent?.courseContent?.level || course.level}
-          </span>
-        </div>
-        <div className={styles.infoItem} role="listitem">
-          <Book className={styles.infoIcon} size={18} />
-          <span className={styles.label}>Lessons</span>
-          <span className={styles.value}>
-            {courseContent?.sections?.reduce((total, section) => total + section.lessons.length, 0) || 'N/A'}
-          </span>
-        </div>
-      </div>
+        {courseContent?.courseContent?.prerequisites && courseContent.courseContent.prerequisites.length > 0 && (
+          <div className={styles.prerequisites}>
+            <h4 className={styles.prerequisitesTitle}>Prerequisites</h4>
+            <ul className={styles.prerequisitesList}>
+              {courseContent.courseContent.prerequisites.map((prereq, index) => (
+                <li key={index} className={styles.prerequisiteItem}>{prereq}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-      {courseContent?.courseContent?.prerequisites && courseContent.courseContent.prerequisites.length > 0 && (
-        <div className={styles.prerequisites}>
-          <h4 className={styles.prerequisitesTitle}>Prerequisites</h4>
-          <ul className={styles.prerequisitesList}>
-            {courseContent.courseContent.prerequisites.map((prereq, index) => (
-              <li key={index} className={styles.prerequisiteItem}>{prereq}</li>
-            ))}
-          </ul>
+        <div className={styles.guarantee}>
+          <p><CheckCircle size={16} /> 30-Day Money-Back Guarantee</p>
+          <p><Shield size={16} /> Full Lifetime Access</p>
         </div>
-      )}
-
-      <div className={styles.guarantee}>
-        <p>30-Day Money-Back Guarantee</p>
-        <p>Full Lifetime Access</p>
       </div>
     </motion.div>
   );

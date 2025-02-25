@@ -36,9 +36,27 @@
     z-index: 2;
     opacity: 1;
     transition: opacity 0.3s;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    z-index: 3;
+    transition: background-color 0.2s;
     
-    .videoPlayer:hover & {
-      opacity: 0;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.8);
     }
   }
   
@@ -54,6 +72,11 @@
     gap: 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 2;
+    
+    &.visible {
+      opacity: 1;
+    }
     
     .videoPlayer:hover & {
       opacity: 1;

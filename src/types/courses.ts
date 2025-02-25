@@ -10,36 +10,98 @@ export type Section = {
 };
 
 
-export type Course = {
-    createdAt?: string | number | Date;
+export interface Course {
     id: string;
     title: string;
     description: string;
-    image_url: string;
-    // duration: string;
-    duration: string | undefined;
-    // level: string;
     price: number;
-    average_rating: number;
-    enrollment_count?: number;
-    category: string;
-    instructor_avatar?: string;
+    duration?: string;
+    level?: string;
+    category?: string;
+    instructor_id?: string;
+    instructor_name?: string;
+    instructor_profile_image_url?: string;
+    image_url: string;
+    total_students?: number;
     total_reviews?: number;
+    average_rating?: number;
     created_at?: string;
     updated_at?: string;
-    instructor_id?: string;
-    total_students: number;
-    ratings?: number;
-    rating?: number;
-    instructor_name: string | null;
-    instructor_profile_image_url: string | null;
-    sections: CourseSection[]; // Adding sections for course detail page
-    level?: CourseLevel;
-    courseId?: string;
+    courseId?: string; // Optional field that might be passed
+  }
 
+// src/types/courses.ts
 
+// export interface Course {
+//     id: string;
+//     title: string;
+//     description: string;
+//     price: number;
+//     duration?: string;
+//     level?: string;
+//     category?: string;
+//     instructor_id?: string;
+//     instructor_name?: string;
+//     instructor_profile_image_url?: string;
+//     image_url: string;
+//     total_students?: number;
+//     total_reviews?: number;
+//     average_rating?: number;
+//     created_at?: string;
+//     updated_at?: string;
+//     courseId?: string; // Optional field that might be passed
+//   }
+  
+  export interface CourseSidebarProps {
+    course: Course;
+    className?: string;
+    onEnroll?: (courseId: string) => Promise<void>;
+    onWishlist?: (courseId: string) => Promise<void>;
+    onShare?: (courseId: string) => Promise<void>;
+    customTheme?: {
+      primary: string;
+      secondary: string;
+    };
+  }
+  
+  export interface CourseContentResponse {
+    courseContent: {
+      course_demo_url: string;
+      course_outline: string;
+      learning_objectives: string[];
+      prerequisites: string[];
+      target_audience: string;
+      estimated_completion_time: string;
+      course_title: string;
+      course_description: string;
+      image_url: string;
+      level: string;
+      instructor_name: string;
+    };
+    sections: {
+      id: string;
+      title: string;
+      description: string;
+      sequence_number: number;
+      lessons: {
+        id: string;
+        title: string;
+        description: string;
+        contentType: string;
+        duration: number;
+        isFreePreview: boolean;
+        sequenceNumber: number;
+        progress?: string;
+        content: {
+          videoUrl: string | null;
+          articleContent: string | null;
+          quizData: any | null;
+          assignmentDetails: any | null;
+        };
+      }[];
+    }[];
+  }
 
-};
 
 
 export interface Course11 {

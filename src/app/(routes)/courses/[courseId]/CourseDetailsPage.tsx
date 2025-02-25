@@ -107,6 +107,23 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
     );
   }
 
+  // Create a courseData object with all required fields having defaults
+  const courseData: Course = {
+    id: course.id,
+    title: course.title || '',
+    description: course.description || '',
+    price: course.price || 0,
+    duration: course.duration || 'Not specified',
+    level: course.level || 'Beginner',
+    category: course.category || '',
+    instructor_id: course.instructor_id || '',
+    instructor_name: course.instructor_name || '',
+    image_url: course.image_url || '',
+    total_students: course.total_students || 0,
+    total_reviews: course.total_reviews || 0,
+    average_rating: course.average_rating || 0
+  };
+
   return (
     <AnimatePresence>
       <motion.div 
@@ -115,37 +132,33 @@ export function CourseDetailClient({ courseId }: CourseDetailClientProps) {
         exit={{ opacity: 0 }}
         className={`${styles.courseContainer} ${isDark ? styles.dark : ''}`}
       >
-        <div className={styles.header}>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <CourseHeader course={course} />
-          </motion.div>
-        </div>
-        
         <div className={styles.courseContent}>
-          <motion.main 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <CourseContent courseId={courseId} />
-          </motion.main>
+          <div className={styles.mainContentColumn}>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={styles.header}
+            >
+              <CourseHeader course={courseData} />
+            </motion.div>
+            
+            <motion.main 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className={styles.mainContent}
+            >
+              <CourseContent courseId={courseId} />
+            </motion.main>
+          </div>
           
           <motion.aside 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className={styles.sidebarColumn}
           >
-            <CourseSidebar 
-  course={{
-    ...course,
-    duration: course?.duration || 'Not specified',  // Provide default value
-    level: course?.level || 'Beginner',  // Provide default value
-    total_students: course?.total_students || 0  // Provide default value
-  }} 
-/>
+            <CourseSidebar course={courseData} />
           </motion.aside>
         </div>
       </motion.div>
