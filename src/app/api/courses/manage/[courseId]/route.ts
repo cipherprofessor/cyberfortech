@@ -1,6 +1,6 @@
 // src/app/api/courses/manage/route.ts
 import { db } from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 
 // Helper function to safely convert rows to courses
@@ -66,10 +66,6 @@ export async function GET() {
    );
  }
 }
-
-// src/app/api/courses/manage/route.ts
-// Update the POST function:
-
 
 
 export async function POST(request: Request) {
@@ -246,6 +242,211 @@ export async function GETv2() {
     );
   }
 }
+
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { courseId: string } }
+) {
+  try {
+    // Always await params before using them
+    const resolvedParams = await Promise.resolve(params);
+    const courseId = resolvedParams.courseId;
+    
+    console.log("Updating course with ID:", courseId);
+    
+    if (!courseId) {
+      return NextResponse.json(
+        { error: 'Course ID is required' },
+        { status: 400 }
+      );
+    }
+    
+    // Check if course exists
+    const courseCheck = await db.execute({
+      sql: 'SELECT id FROM courses WHERE id = ?',
+      args: [courseId]
+    });
+    
+    if (courseCheck.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Course not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Get update data
+    const data = await request.json();
+    const {
+      title,
+      description,
+      price,
+      duration,
+      level,
+      category,
+      instructor_id,
+      image_url
+    } = data;
+    
+    // Update the course
+    const result = await db.execute({
+      sql: `
+        UPDATE courses SET
+          title = ?,
+          description = ?,
+          price = ?,
+          duration = ?,
+          level = ?,
+          category = ?,
+          instructor_id = ?,
+          image_url = ?,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `,
+      args: [
+        title,
+        description,
+        price,
+        duration,
+        level,
+        category,
+        instructor_id,
+        image_url,
+        courseId
+      ]
+    });
+    
+    console.log("Update result:", result);
+    
+    return NextResponse.json({
+      success: true, 
+      message: 'Course updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating course:', error);
+    return NextResponse.json(
+      { error: 'Failed to update course', details: String(error) },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { courseId: string } }
+) {
+  try {
+    // Always await params before using them
+    const resolvedParams = await Promise.resolve(params);
+    const courseId = resolvedParams.courseId;
+    
+    console.log("Deleting course with ID:", courseId);
+    
+    if (!courseId) {
+      return NextResponse.json(
+        { error: 'Course ID is required' },
+        { status: 400 }
+      );
+    }
+    
+    // Check if course exists
+    const courseCheck = await db.execute({
+      sql: 'SELECT id FROM courses WHERE id = ?',
+      args: [courseId]
+    });
+    
+    if (courseCheck.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Course not found' },
+        { status: 404 }
+      );
+    }
+    
+    // In a real application, you might want to:
+    // 1. First delete related records (enrollments, reviews, content, sections, lessons)
+    // 2. Then delete the course itself
+    
+    // For example, delete course content first
+    await db.execute({
+      sql: 'DELETE FROM course_content WHERE course_id = ?',
+      args: [courseId]
+    });
+    
+    // Delete course sections and lessons
+    const sections = await db.execute({
+      sql: 'SELECT id FROM course_sections WHERE course_id = ?',
+      args: [courseId]
+    });
+    
+    for (const section of sections.rows) {
+      const sectionId = String(section.id);
+      
+      // Delete lessons for this section
+      const lessons = await db.execute({
+        sql: 'SELECT id FROM course_lessons WHERE section_id = ?',
+        args: [sectionId]
+      });
+      
+      for (const lesson of lessons.rows) {
+        const lessonId = String(lesson.id);
+        
+        // Delete lesson content
+        await db.execute({
+          sql: 'DELETE FROM course_lesson_content WHERE lesson_id = ?',
+          args: [lessonId]
+        });
+        
+        // Delete lesson progress
+        await db.execute({
+          sql: 'DELETE FROM lesson_progress WHERE lesson_id = ?',
+          args: [lessonId]
+        });
+        
+        // Delete lesson
+        await db.execute({
+          sql: 'DELETE FROM course_lessons WHERE id = ?',
+          args: [lessonId]
+        });
+      }
+      
+      // Delete section
+      await db.execute({
+        sql: 'DELETE FROM course_sections WHERE id = ?',
+        args: [sectionId]
+      });
+    }
+    
+    // Delete enrollments
+    await db.execute({
+      sql: 'DELETE FROM enrollments WHERE course_id = ?',
+      args: [courseId]
+    });
+    
+    // Delete reviews
+    await db.execute({
+      sql: 'DELETE FROM course_reviews WHERE course_id = ?',
+      args: [courseId]
+    });
+    
+    // Finally, delete the course
+    await db.execute({
+      sql: 'DELETE FROM courses WHERE id = ?',
+      args: [courseId]
+    });
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Course and related data deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting course:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete course', details: String(error) },
+      { status: 500 }
+    );
+  }
+}
+
 
 // Add validation middleware (optional but recommended)
 export async function middleware(request: Request) {
