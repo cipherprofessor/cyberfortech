@@ -1,5 +1,5 @@
 'use client';
-
+//src/app/dashboard/myworkspace/components/ui/CourseManagement/CourseManagement.tsx
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -11,7 +11,6 @@ import styles from './CourseManagement.module.scss';
 import Loading from '@/app/(routes)/blog/[slug]/loading';
 
 import { SuccessAlert, ErrorAlert } from '@/components/ui/Mine/Alert/Alert';
-
 
 import { DeleteConfirmDialog } from '@/components/ui/DeleteConfirmation/DeleteConfirmation';
 import { SearchControls } from './components/SearchControls/SearchControls';
@@ -80,6 +79,8 @@ export function CourseManagement() {
     setShowCreatePage(true);
   };
 
+  
+
   const handleEditCourse = (course: Course) => {
     setCreatePageMode('edit');
     setSelectedCourse(course);
@@ -118,23 +119,41 @@ export function CourseManagement() {
     }
   };
 
-  const handleCourseSubmit = async (courseData: Partial<Course>) => {
-    try {
-      if (createPageMode === 'create') {
-        await axios.post('/api/courses/manage', courseData);
-        showAlert('success', 'Course created successfully');
-      } else {
-        await axios.put(`/api/courses/manage/${selectedCourse?.id}`, courseData);
-        showAlert('success', 'Course updated successfully');
-      }
+  // Update to handleCourseSubmit in CourseManagement.tsx
+
+// Update to handleCourseSubmit in CourseManagement.tsx
+
+const handleCourseSubmit = async (courseData: Partial<Course>): Promise<{ id: string }> => {
+  try {
+    if (createPageMode === 'create') {
+      // Create the course and get the response with the new course ID
+      const response = await axios.post('/api/courses/manage', courseData);
+      
+      // Extract the new course ID from the response
+      const newCourseId = response.data.courseId || ''; 
+      
+      console.log('New course created with ID:', newCourseId); // Debug log
+      
+      showAlert('success', 'Course created successfully');
       await fetchCourses();
-      setShowCreatePage(false);
-    } catch (error) {
-      console.error('Error saving course:', error);
-      showAlert('error', `Failed to ${createPageMode} course`);
-      throw error;
+      
+      // Return the id in the format CourseCreatePage expects
+      return { id: newCourseId.toString() };
+    } else {
+      // For edit mode, we already have the course ID
+      await axios.put(`/api/courses/manage/${selectedCourse?.id}`, courseData);
+      
+      showAlert('success', 'Course updated successfully');
+      await fetchCourses();
+      
+      return { id: (selectedCourse?.id || '').toString() };
     }
-  };
+  } catch (error) {
+    console.error('Error saving course:', error);
+    showAlert('error', `Failed to ${createPageMode} course`);
+    throw error;
+  }
+};
 
   const handleCancelCreate = () => {
     setShowCreatePage(false);

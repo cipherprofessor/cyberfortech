@@ -35,6 +35,7 @@ export type Course = {
     instructor_profile_image_url: string | null;
     sections: CourseSection[]; // Adding sections for course detail page
     level?: CourseLevel;
+    courseId?: string;
 
 
 

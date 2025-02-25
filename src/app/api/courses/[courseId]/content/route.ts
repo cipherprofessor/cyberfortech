@@ -1,8 +1,16 @@
 // src/app/api/courses/[courseId]/content/route.ts
+// Complete version with lessons processing
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@libsql/client';
 import { headers } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
+
+// Initialize database client
+const client = createClient({
+  url: process.env.TURSO_DATABASE_URL!,
+  authToken: process.env.TURSO_AUTH_TOKEN
+});
 
 // Define request types
 interface CourseContentRequest {
@@ -35,60 +43,544 @@ interface CourseContentRequest {
   }[];
 }
 
-// Define response types
-interface CourseContent {
-  course_demo_url: string;
-  course_outline: string;
-  learning_objectives: string[];
-  prerequisites: string[];
-  target_audience: string;
-  estimated_completion_time: string;
-  course_title: string;
-  course_description: string;
-  image_url: string;
-  level: string;
-  instructor_name: string;
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { courseId: string } }
+) {
+  console.log("POST request received for course content");
+  
+  try {
+    // 1. Params handling
+    const resolvedParams = await Promise.resolve(params);
+    const courseId = resolvedParams.courseId;
+    console.log("Course ID:", courseId);
+    
+    if (!courseId || typeof courseId !== 'string') {
+      console.log("Invalid course ID");
+      return NextResponse.json(
+        { error: 'Invalid course ID' },
+        { status: 400 }
+      );
+    }
+
+    // 2. Request body
+    let requestData: CourseContentRequest;
+    try {
+      requestData = await request.json();
+      console.log("Request data received");
+    } catch (jsonError) {
+      console.error("Failed to parse request JSON:", jsonError);
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+    
+    // 3. Database check to see if course exists
+    let courseCheck;
+    try {
+      courseCheck = await client.execute({
+        sql: 'SELECT id, instructor_id FROM courses WHERE id = ?',
+        args: [courseId]
+      });
+      console.log("Course check result:", courseCheck.rows);
+    } catch (dbError) {
+      console.error("Database error during course check:", dbError);
+      return NextResponse.json(
+        { error: 'Database error', details: String(dbError) },
+        { status: 500 }
+      );
+    }
+
+    if (!courseCheck || courseCheck.rows.length === 0) {
+      console.log("Course not found");
+      return NextResponse.json({
+        error: 'Course not found',
+        courseId
+      }, { status: 404 });
+    }
+    
+    const { courseContent, sections } = requestData;
+    const instructorId = courseCheck.rows[0].instructor_id;
+    
+    // Handle each operation separately without transactions
+    
+    // Step 1: Handle course content
+    try {
+      console.log("Handling course content");
+      
+      // Check if course content exists
+      const contentCheck = await client.execute({
+        sql: 'SELECT id FROM course_content WHERE course_id = ?',
+        args: [courseId]
+      });
+      
+      if (contentCheck.rows.length === 0) {
+        // Create new course content
+        const contentId = uuidv4();
+        console.log("Creating new course content with ID:", contentId);
+        
+        await client.execute({
+          sql: `
+            INSERT INTO course_content (
+              id, 
+              course_id, 
+              instructor_id, 
+              course_demo_url, 
+              course_outline, 
+              learning_objectives, 
+              prerequisites, 
+              target_audience, 
+              estimated_completion_time
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `,
+          args: [
+            contentId,
+            courseId,
+            instructorId,
+            courseContent.course_demo_url || '',
+            courseContent.course_outline || '',
+            JSON.stringify(courseContent.learning_objectives || []),
+            JSON.stringify(courseContent.prerequisites || []),
+            courseContent.target_audience || '',
+            courseContent.estimated_completion_time || ''
+          ]
+        });
+        
+        console.log("Course content created successfully");
+      } else {
+        // Update existing course content
+        console.log("Updating existing course content");
+        
+        await client.execute({
+          sql: `
+            UPDATE course_content SET
+              course_demo_url = ?,
+              course_outline = ?,
+              learning_objectives = ?,
+              prerequisites = ?,
+              target_audience = ?,
+              estimated_completion_time = ?,
+              updated_at = CURRENT_TIMESTAMP
+            WHERE course_id = ?
+          `,
+          args: [
+            courseContent.course_demo_url || '',
+            courseContent.course_outline || '',
+            JSON.stringify(courseContent.learning_objectives || []),
+            JSON.stringify(courseContent.prerequisites || []),
+            courseContent.target_audience || '',
+            courseContent.estimated_completion_time || '',
+            courseId
+          ]
+        });
+        
+        console.log("Course content updated successfully");
+      }
+    } catch (error) {
+      console.error("Error handling course content:", error);
+      return NextResponse.json(
+        { error: 'Failed to save course content', details: String(error) },
+        { status: 500 }
+      );
+    }
+    
+    // Step 2: Process sections and lessons
+    try {
+      console.log(`Processing ${sections.length} sections`);
+      
+      // Get existing sections
+      const existingSections = await client.execute({
+        sql: 'SELECT id, sequence_number FROM course_sections WHERE course_id = ?',
+        args: [courseId]
+      });
+      
+      // Create a map with proper types
+      const existingSectionMap: Record<string, string> = {};
+      
+      // Track which sections we process to know which ones to delete later
+      const processedSectionIds: string[] = [];
+      
+      // Populate the map with existing section IDs, using sequence_number as string keys
+      for (const row of existingSections.rows) {
+        if (row.sequence_number !== null && row.id !== null) {
+          existingSectionMap[String(row.sequence_number)] = String(row.id);
+        }
+      }
+      
+      // Process each section
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i];
+        const sequenceNumber = section.sequence_number;
+        
+        let sectionId: string;
+        
+        // Check if section exists by sequence number
+        if (existingSectionMap[String(sequenceNumber)]) {
+          // Update existing section
+          sectionId = existingSectionMap[String(sequenceNumber)];
+          console.log(`Updating section with ID: ${sectionId}`);
+          
+          await client.execute({
+            sql: `
+              UPDATE course_sections SET
+                title = ?,
+                description = ?,
+                updated_at = CURRENT_TIMESTAMP
+              WHERE id = ?
+            `,
+            args: [
+              section.title,
+              section.description,
+              sectionId
+            ]
+          });
+        } else {
+          // Create new section
+          sectionId = uuidv4();
+          console.log(`Creating new section with ID: ${sectionId}`);
+          
+          await client.execute({
+            sql: `
+              INSERT INTO course_sections (
+                id, 
+                course_id, 
+                title, 
+                description, 
+                sequence_number
+              ) VALUES (?, ?, ?, ?, ?)
+            `,
+            args: [
+              sectionId,
+              courseId,
+              section.title,
+              section.description,
+              sequenceNumber
+            ]
+          });
+        }
+        
+        // Add to processed sections
+        processedSectionIds.push(sectionId);
+        
+        // Process lessons for this section
+        await processLessons(sectionId, section.lessons);
+      }
+      
+      // Clean up any sections that are no longer in the updated content
+      await deleteUnusedSections(courseId, processedSectionIds);
+      
+      console.log("All sections and lessons processed successfully");
+    } catch (error) {
+      console.error("Error processing sections:", error);
+      return NextResponse.json(
+        { error: 'Failed to save course sections', details: String(error) },
+        { status: 500 }
+      );
+    }
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Course content updated successfully'
+    });
+    
+  } catch (error) {
+    console.error("Unhandled error in course content POST handler:", error);
+    return NextResponse.json(
+      { 
+        error: 'Failed to process course content request',
+        details: String(error)
+      },
+      { status: 500 }
+    );
+  }
 }
 
-interface LessonContent {
-  id: string;
-  lesson_id: string;
-  content_type: string;
-  video_url: string | null;
-  article_content: string | null;
-  quiz_data: string | null;
-  assignment_details: string | null;
+// Helper function to process lessons for a section
+async function processLessons(sectionId: string, lessons: any[]) {
+  console.log(`Processing ${lessons.length} lessons for section ${sectionId}`);
+  
+  // Get existing lessons for this section
+  const existingLessons = await client.execute({
+    sql: 'SELECT id, sequence_number FROM course_lessons WHERE section_id = ?',
+    args: [sectionId]
+  });
+  
+  // Create a map for existing lessons
+  const existingLessonMap: Record<string, string> = {};
+  
+  // Track which lessons we process to know which ones to delete later
+  const processedLessonIds: string[] = [];
+  
+  // Populate the lesson map
+  for (const row of existingLessons.rows) {
+    if (row.sequence_number !== null && row.id !== null) {
+      existingLessonMap[String(row.sequence_number)] = String(row.id);
+    }
+  }
+  
+  // Process each lesson
+  for (let i = 0; i < lessons.length; i++) {
+    const lesson = lessons[i];
+    const sequenceNumber = lesson.sequence_number;
+    
+    let lessonId: string;
+    
+    // Check if lesson exists by sequence number
+    if (existingLessonMap[String(sequenceNumber)]) {
+      // Update existing lesson
+      lessonId = existingLessonMap[String(sequenceNumber)];
+      console.log(`Updating lesson with ID: ${lessonId}`);
+      
+      await client.execute({
+        sql: `
+          UPDATE course_lessons SET
+            title = ?,
+            description = ?,
+            content_type = ?,
+            duration = ?,
+            is_free_preview = ?,
+            updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `,
+        args: [
+          lesson.title,
+          lesson.description,
+          lesson.content_type,
+          lesson.duration,
+          lesson.is_free_preview ? 1 : 0,
+          lessonId
+        ]
+      });
+    } else {
+      // Create new lesson
+      lessonId = uuidv4();
+      console.log(`Creating new lesson with ID: ${lessonId}`);
+      
+      await client.execute({
+        sql: `
+          INSERT INTO course_lessons (
+            id,
+            section_id,
+            title,
+            description,
+            content_type,
+            duration,
+            is_free_preview,
+            sequence_number
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        args: [
+          lessonId,
+          sectionId,
+          lesson.title,
+          lesson.description,
+          lesson.content_type,
+          lesson.duration,
+          lesson.is_free_preview ? 1 : 0,
+          sequenceNumber
+        ]
+      });
+    }
+    
+    // Add to processed lessons
+    processedLessonIds.push(lessonId);
+    
+    // Process lesson content
+    await processLessonContent(lessonId, lesson.content_type, lesson.content);
+  }
+  
+  // Clean up any lessons that are no longer in the updated content
+  await deleteUnusedLessons(sectionId, processedLessonIds);
 }
 
-// Initialize database client
-const client = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN
-});
+// Helper function to process lesson content
+async function processLessonContent(lessonId: string, contentType: string, content: any) {
+  console.log(`Processing content for lesson ${lessonId}`);
+  
+  // Check if lesson content exists
+  const contentCheck = await client.execute({
+    sql: 'SELECT id FROM course_lesson_content WHERE lesson_id = ?',
+    args: [lessonId]
+  });
+  
+  // Prepare content fields based on lesson type
+  let videoUrl: string | null = null;
+  let articleContent: string | null = null;
+  let quizData: string | null = null;
+  let assignmentDetails: string | null = null;
+  
+  if (contentType === 'video' && content.video_url) {
+    videoUrl = content.video_url;
+  } else if (contentType === 'article' && content.article_content) {
+    articleContent = content.article_content;
+  } else if (contentType === 'quiz' && content.quiz_data) {
+    quizData = JSON.stringify(content.quiz_data);
+  } else if (contentType === 'assignment' && content.assignment_details) {
+    assignmentDetails = JSON.stringify(content.assignment_details);
+  }
+  
+  if (contentCheck.rows.length === 0) {
+    // Create new lesson content
+    const contentId = uuidv4();
+    
+    await client.execute({
+      sql: `
+        INSERT INTO course_lesson_content (
+          id,
+          lesson_id,
+          content_type,
+          video_url,
+          article_content,
+          quiz_data,
+          assignment_details
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+      `,
+      args: [
+        contentId,
+        lessonId,
+        contentType,
+        videoUrl,
+        articleContent,
+        quizData,
+        assignmentDetails
+      ]
+    });
+  } else {
+    // Update existing lesson content
+    await client.execute({
+      sql: `
+        UPDATE course_lesson_content SET
+          content_type = ?,
+          video_url = ?,
+          article_content = ?,
+          quiz_data = ?,
+          assignment_details = ?,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE lesson_id = ?
+      `,
+      args: [
+        contentType,
+        videoUrl,
+        articleContent,
+        quizData,
+        assignmentDetails,
+        lessonId
+      ]
+    });
+  }
+}
 
-// Default content for new courses
-const defaultContent: CourseContent = {
-  course_demo_url: '',
-  course_outline: '',
-  learning_objectives: [],
-  prerequisites: [],
-  target_audience: '',
-  estimated_completion_time: '',
-  course_title: '',
-  course_description: '',
-  image_url: '',
-  level: '',
-  instructor_name: ''
-};
+// Helper function to clean up sections that are no longer in the content
+async function deleteUnusedSections(courseId: string, processedSectionIds: string[]) {
+  console.log("Cleaning up unused sections");
+  
+  // Get all sections for this course
+  const allSections = await client.execute({
+    sql: 'SELECT id FROM course_sections WHERE course_id = ?',
+    args: [courseId]
+  });
+  
+  // Find sections to delete
+  for (const row of allSections.rows) {
+    const sectionId = String(row.id);
+    
+    if (!processedSectionIds.includes(sectionId)) {
+      console.log(`Deleting unused section: ${sectionId}`);
+      
+      // First clean up all lessons and their content
+      await deleteAllLessonsForSection(sectionId);
+      
+      // Then delete the section
+      await client.execute({
+        sql: 'DELETE FROM course_sections WHERE id = ?',
+        args: [sectionId]
+      });
+    }
+  }
+}
+
+// Helper function to clean up lessons that are no longer in the content
+async function deleteUnusedLessons(sectionId: string, processedLessonIds: string[]) {
+  console.log("Cleaning up unused lessons for section", sectionId);
+  
+  // Get all lessons for this section
+  const allLessons = await client.execute({
+    sql: 'SELECT id FROM course_lessons WHERE section_id = ?',
+    args: [sectionId]
+  });
+  
+  // Find lessons to delete
+  for (const row of allLessons.rows) {
+    const lessonId = String(row.id);
+    
+    if (!processedLessonIds.includes(lessonId)) {
+      console.log(`Deleting unused lesson: ${lessonId}`);
+      
+      // Delete lesson content first
+      await client.execute({
+        sql: 'DELETE FROM course_lesson_content WHERE lesson_id = ?',
+        args: [lessonId]
+      });
+      
+      // Delete lesson progress
+      await client.execute({
+        sql: 'DELETE FROM lesson_progress WHERE lesson_id = ?',
+        args: [lessonId]
+      });
+      
+      // Delete lesson
+      await client.execute({
+        sql: 'DELETE FROM course_lessons WHERE id = ?',
+        args: [lessonId]
+      });
+    }
+  }
+}
+
+// Helper function to delete all lessons for a section
+async function deleteAllLessonsForSection(sectionId: string) {
+  console.log(`Deleting all lessons for section: ${sectionId}`);
+  
+  // Get all lessons for this section
+  const lessons = await client.execute({
+    sql: 'SELECT id FROM course_lessons WHERE section_id = ?',
+    args: [sectionId]
+  });
+  
+  // Delete each lesson
+  for (const row of lessons.rows) {
+    const lessonId = String(row.id);
+    
+    // Delete lesson content
+    await client.execute({
+      sql: 'DELETE FROM course_lesson_content WHERE lesson_id = ?',
+      args: [lessonId]
+    });
+    
+    // Delete lesson progress
+    await client.execute({
+      sql: 'DELETE FROM lesson_progress WHERE lesson_id = ?',
+      args: [lessonId]
+    });
+    
+    // Delete lesson
+    await client.execute({
+      sql: 'DELETE FROM course_lessons WHERE id = ?',
+      args: [lessonId]
+    });
+  }
+}
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { courseId: string } }
 ) {
   try {
-    // Use Promise.resolve to handle both promise and non-promise params
+    // Process params
     const resolvedParams = await Promise.resolve(params);
     const courseId = resolvedParams.courseId;
+    console.log("GET request for course content, ID:", courseId);
     
     if (!courseId || typeof courseId !== 'string') {
       return NextResponse.json(
@@ -97,9 +589,9 @@ export async function GET(
       );
     }
 
-     // Get user ID from headers
-     const headersList = headers();
-     const userId = (await headersList).get('x-user-id');
+    // Get user ID from headers
+    const headersList = headers();
+    const userId = (await headersList).get('x-user-id') || '';
 
     // First check if course exists
     const courseCheck = await client.execute({
@@ -137,88 +629,141 @@ export async function GET(
       args: [courseId]
     });
 
-    // Fetch sections with lessons
+    // Fetch sections
     const sections = await client.execute({
       sql: `
         SELECT 
           cs.id,
           cs.title,
           cs.description,
-          cs.sequence_number,
-          json_group_array(
-            CASE 
-              WHEN cl.id IS NOT NULL THEN
-                json_object(
-                  'id', cl.id,
-                  'title', cl.title,
-                  'description', cl.description,
-                  'contentType', cl.content_type,
-                  'duration', COALESCE(cl.duration, 0),
-                  'isFreePreview', cl.is_free_preview,
-                  'sequenceNumber', cl.sequence_number,
-                  'progress', COALESCE(
-                    (SELECT completion_status 
-                    FROM lesson_progress 
-                    WHERE lesson_id = cl.id 
-                    AND user_id = ?),
-                    'not_started'
-                  )
-                )
-              ELSE '{}'
-            END
-          ) as lessons
+          cs.sequence_number
         FROM course_sections cs
-        LEFT JOIN course_lessons cl ON cs.id = cl.section_id
         WHERE cs.course_id = ?
-        GROUP BY cs.id
         ORDER BY cs.sequence_number
-      `,
-      args: [userId || '', courseId]
-    });
-
-    // Fetch lesson content details
-    const lessonContent = await client.execute({
-      sql: `
-        SELECT 
-          clc.*,
-          cl.id as lesson_id,
-          cl.title as lesson_title,
-          cl.content_type,
-          cl.duration,
-          cl.is_free_preview
-        FROM course_lesson_content clc
-        JOIN course_lessons cl ON cl.id = clc.lesson_id
-        WHERE cl.section_id IN (
-          SELECT id FROM course_sections 
-          WHERE course_id = ?
-        )
-        ORDER BY cl.sequence_number
       `,
       args: [courseId]
     });
 
-    // Transform sections data to parse JSON arrays and remove empty lesson objects
-    const transformedSections = sections.rows.map(section => ({
-      ...section,
-      lessons: JSON.parse(section.lessons as string)
-        .filter((lesson: any) => lesson.id)
+    // Fetch all lessons for this course
+    const lessons = await client.execute({
+      sql: `
+        SELECT 
+          cl.id,
+          cl.section_id,
+          cl.title,
+          cl.description,
+          cl.content_type,
+          cl.duration,
+          cl.is_free_preview,
+          cl.sequence_number,
+          COALESCE(
+            (SELECT completion_status 
+            FROM lesson_progress 
+            WHERE lesson_id = cl.id 
+            AND user_id = ?),
+            'not_started'
+          ) as progress
+        FROM course_lessons cl
+        JOIN course_sections cs ON cl.section_id = cs.id
+        WHERE cs.course_id = ?
+        ORDER BY cs.sequence_number, cl.sequence_number
+      `,
+      args: [userId, courseId]
+    });
+
+    // Fetch lesson content
+    const lessonContent = await client.execute({
+      sql: `
+        SELECT 
+          clc.lesson_id,
+          clc.content_type,
+          clc.video_url,
+          clc.article_content,
+          clc.quiz_data,
+          clc.assignment_details
+        FROM course_lesson_content clc
+        JOIN course_lessons cl ON clc.lesson_id = cl.id
+        JOIN course_sections cs ON cl.section_id = cs.id
+        WHERE cs.course_id = ?
+      `,
+      args: [courseId]
+    });
+
+    // Group lessons by section
+    // Replace the content-related part in the GET handler with this code:
+
+// Group lessons by section
+const lessonsBySection: Record<string, any[]> = {};
+for (const lesson of lessons.rows) {
+  const sectionId = String(lesson.section_id);
+  if (!lessonsBySection[sectionId]) {
+    lessonsBySection[sectionId] = [];
+  }
+  
+  // Find content for this lesson
+  const content = lessonContent.rows.find((c: any) => String(c.lesson_id) === String(lesson.id));
+  
+  // Safely handle content parsing
+  let parsedQuizData = null;
+  let parsedAssignmentDetails = null;
+  
+  if (content) {
+    if (content.quiz_data && typeof content.quiz_data === 'string') {
+      try {
+        parsedQuizData = JSON.parse(content.quiz_data);
+      } catch (e) {
+        console.error('Error parsing quiz data:', e);
+      }
+    }
+    
+    if (content.assignment_details && typeof content.assignment_details === 'string') {
+      try {
+        parsedAssignmentDetails = JSON.parse(content.assignment_details);
+      } catch (e) {
+        console.error('Error parsing assignment details:', e);
+      }
+    }
+  }
+  
+  lessonsBySection[sectionId].push({
+    id: String(lesson.id),
+    title: lesson.title,
+    description: lesson.description,
+    contentType: lesson.content_type,
+    duration: lesson.duration,
+    isFreePreview: Boolean(lesson.is_free_preview),
+    sequenceNumber: lesson.sequence_number,
+    progress: lesson.progress,
+    content: content ? {
+      videoUrl: content.video_url,
+      articleContent: content.article_content,
+      quizData: parsedQuizData,
+      assignmentDetails: parsedAssignmentDetails
+    } : {}
+  });
+}
+
+    // Format the sections with their lessons
+    const formattedSections = sections.rows.map((section: any) => ({
+      id: String(section.id),
+      title: section.title,
+      description: section.description,
+      sequence_number: section.sequence_number,
+      lessons: lessonsBySection[String(section.id)] || []
     }));
 
     // Format the response
     const response = {
-      courseContent: {
-        ...defaultContent,
-        ...courseContent.rows[0]
-      },
-      sections: transformedSections,
-      lessonContent: lessonContent.rows
+      courseContent: courseContent.rows[0] || {},
+      sections: formattedSections
     };
 
-    // Parse string arrays back to actual arrays
-    if (typeof response.courseContent.learning_objectives === 'string') {
+    // Parse JSON strings if they exist
+    if (response.courseContent.learning_objectives && typeof response.courseContent.learning_objectives === 'string') {
       response.courseContent.learning_objectives = JSON.parse(response.courseContent.learning_objectives);
     }
-    if (typeof response.courseContent.prerequisites === 'string') {
+    
+    if (response.courseContent.prerequisites && typeof response.courseContent.prerequisites === 'string') {
       response.courseContent.prerequisites = JSON.parse(response.courseContent.prerequisites);
     }
 
@@ -230,401 +775,7 @@ export async function GET(
     return NextResponse.json(
       { 
         error: 'Failed to fetch course content',
-        details: process.env.NODE_ENV === 'development' ? error : undefined
-      },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { courseId: string } }
-) {
-  try {
-    // Use Promise.resolve to handle both promise and non-promise params
-    const resolvedParams = await Promise.resolve(params);
-    const courseId = resolvedParams.courseId;
-    
-    if (!courseId || typeof courseId !== 'string') {
-      return NextResponse.json(
-        { error: 'Invalid course ID' },
-        { status: 400 }
-      );
-    }
-
-    // Get user ID from headers for auditing purposes
-    const headersList = headers();
-    const userId = (await headersList).get('x-user-id');
-
-    // First check if course exists
-    const courseCheck = await client.execute({
-      sql: 'SELECT id, instructor_id FROM courses WHERE id = ?',
-      args: [courseId]
-    });
-
-    if (courseCheck.rows.length === 0) {
-      return NextResponse.json(
-        { error: 'Course not found' },
-        { status: 404 }
-      );
-    }
-
-    const instructorId = courseCheck.rows[0].instructor_id;
-
-    // Parse request body
-    const requestData: CourseContentRequest = await request.json();
-    const { courseContent, sections } = requestData;
-
-    // Begin transaction
-    await client.execute({ sql: 'BEGIN TRANSACTION', args: [] });
-
-    try {
-      // Check if course content exists
-      const courseContentCheck = await client.execute({
-        sql: 'SELECT id FROM course_content WHERE course_id = ?',
-        args: [courseId]
-      });
-
-      if (courseContentCheck.rows.length === 0) {
-        // Create new course content
-        await client.execute({
-          sql: `
-            INSERT INTO course_content (
-              id, 
-              course_id, 
-              instructor_id, 
-              course_demo_url, 
-              course_outline, 
-              learning_objectives, 
-              prerequisites, 
-              target_audience, 
-              estimated_completion_time
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `,
-          args: [
-            uuidv4(),
-            courseId,
-            instructorId,
-            courseContent.course_demo_url || '',
-            courseContent.course_outline || '',
-            JSON.stringify(courseContent.learning_objectives || []),
-            JSON.stringify(courseContent.prerequisites || []),
-            courseContent.target_audience || '',
-            courseContent.estimated_completion_time || ''
-          ]
-        });
-      } else {
-        // Update existing course content
-        await client.execute({
-          sql: `
-            UPDATE course_content SET
-              course_demo_url = ?,
-              course_outline = ?,
-              learning_objectives = ?,
-              prerequisites = ?,
-              target_audience = ?,
-              estimated_completion_time = ?,
-              updated_at = CURRENT_TIMESTAMP
-            WHERE course_id = ?
-          `,
-          args: [
-            courseContent.course_demo_url || '',
-            courseContent.course_outline || '',
-            JSON.stringify(courseContent.learning_objectives || []),
-            JSON.stringify(courseContent.prerequisites || []),
-            courseContent.target_audience || '',
-            courseContent.estimated_completion_time || '',
-            courseId
-          ]
-        });
-      }
-
-      // Get existing sections to check which ones to update/delete
-      const existingSections = await client.execute({
-        sql: 'SELECT id FROM course_sections WHERE course_id = ?',
-        args: [courseId]
-      });
-      
-      const existingSectionIds = existingSections.rows.map(row => String(row.id)).filter(id => id !== null);
-      const newSectionIds: (string | number | bigint | ArrayBuffer)[] = [];
-
-      // Process sections
-      for (const section of sections) {
-        let sectionId;
-        
-        // Check if section exists by sequence number
-        const sectionCheck = await client.execute({
-          sql: 'SELECT id FROM course_sections WHERE course_id = ? AND sequence_number = ?',
-          args: [courseId, section.sequence_number]
-        });
-
-        if (sectionCheck.rows.length === 0) {
-          // Create new section
-          sectionId = uuidv4();
-          await client.execute({
-            sql: `
-              INSERT INTO course_sections (
-                id, 
-                course_id, 
-                title, 
-                description, 
-                sequence_number
-              ) VALUES (?, ?, ?, ?, ?)
-            `,
-            args: [
-              sectionId,
-              courseId,
-              section.title,
-              section.description,
-              section.sequence_number
-            ]
-          });
-        } else {
-          // Update existing section
-          sectionId = sectionCheck.rows[0].id;
-          await client.execute({
-            sql: `
-              UPDATE course_sections SET
-                title = ?,
-                description = ?,
-                updated_at = CURRENT_TIMESTAMP
-              WHERE id = ?
-            `,
-            args: [
-              section.title,
-              section.description,
-              sectionId
-            ]
-          });
-        }
-
-        newSectionIds.push(sectionId);
-
-        // Get existing lessons for this section
-        const existingLessons = await client.execute({
-          sql: 'SELECT id FROM course_lessons WHERE section_id = ?',
-          args: [sectionId]
-        });
-        
-        const existingLessonIds = existingLessons.rows.map(row => row.id);
-        const newLessonIds: string[] = [];
-
-        // Process lessons
-        for (const lesson of section.lessons) {
-          let lessonId;
-          
-          // Check if lesson exists by sequence number
-          const lessonCheck = await client.execute({
-            sql: 'SELECT id FROM course_lessons WHERE section_id = ? AND sequence_number = ?',
-            args: [sectionId, lesson.sequence_number]
-          });
-
-          if (lessonCheck.rows.length === 0) {
-            // Create new lesson
-            lessonId = uuidv4();
-            await client.execute({
-              sql: `
-                INSERT INTO course_lessons (
-                  id, 
-                  section_id, 
-                  title, 
-                  description, 
-                  content_type, 
-                  duration, 
-                  is_free_preview, 
-                  sequence_number
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-              `,
-              args: [
-                lessonId,
-                sectionId,
-                lesson.title,
-                lesson.description,
-                lesson.content_type,
-                lesson.duration,
-                lesson.is_free_preview ? 1 : 0,
-                lesson.sequence_number
-              ]
-            });
-          } else {
-            // Update existing lesson
-            lessonId = lessonCheck.rows[0].id;
-            await client.execute({
-              sql: `
-                UPDATE course_lessons SET
-                  title = ?,
-                  description = ?,
-                  content_type = ?,
-                  duration = ?,
-                  is_free_preview = ?,
-                  updated_at = CURRENT_TIMESTAMP
-                WHERE id = ?
-              `,
-              args: [
-                lesson.title,
-                lesson.description,
-                lesson.content_type,
-                lesson.duration,
-                lesson.is_free_preview ? 1 : 0,
-                lessonId
-              ]
-            });
-          }
-
-          newLessonIds.push(lessonId);
-
-          // Check if lesson content exists
-          const lessonContentCheck = await client.execute({
-            sql: 'SELECT id FROM course_lesson_content WHERE lesson_id = ?',
-            args: [lessonId]
-          });
-
-          // Prepare content fields based on lesson type
-          let videoUrl: string | null = null;
-          let articleContent: string | null = null;
-          let quizData: string | null = null;
-          let assignmentDetails: string | null = null;
-
-          if (lesson.content_type === 'video' && lesson.content.video_url) {
-            videoUrl = lesson.content.video_url;
-          } else if (lesson.content_type === 'article' && lesson.content.article_content) {
-            articleContent = lesson.content.article_content;
-          } else if (lesson.content_type === 'quiz' && lesson.content.quiz_data) {
-            quizData = JSON.stringify(lesson.content.quiz_data);
-          } else if (lesson.content_type === 'assignment' && lesson.content.assignment_details) {
-            assignmentDetails = JSON.stringify(lesson.content.assignment_details);
-          }
-
-          if (lessonContentCheck.rows.length === 0) {
-            // Create new lesson content
-            await client.execute({
-              sql: `
-                INSERT INTO course_lesson_content (
-                  id,
-                  lesson_id,
-                  content_type,
-                  video_url,
-                  article_content,
-                  quiz_data,
-                  assignment_details
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
-              `,
-              args: [
-                uuidv4(),
-                lessonId,
-                lesson.content_type,
-                videoUrl,
-                articleContent,
-                quizData,
-                assignmentDetails
-              ]
-            });
-          } else {
-            // Update existing lesson content
-            await client.execute({
-              sql: `
-                UPDATE course_lesson_content SET
-                  content_type = ?,
-                  video_url = ?,
-                  article_content = ?,
-                  quiz_data = ?,
-                  assignment_details = ?,
-                  updated_at = CURRENT_TIMESTAMP
-                WHERE lesson_id = ?
-              `,
-              args: [
-                lesson.content_type,
-                videoUrl,
-                articleContent,
-                quizData,
-                assignmentDetails,
-                lessonId
-              ]
-            });
-          }
-        }
-
-        // Delete lessons that are no longer in the updated content
-        const lessonsToDelete = existingLessonIds.filter(id => id !== null && !newLessonIds.includes(String(id)));
-        
-        for (const lessonId of lessonsToDelete) {
-          // Delete lesson content first
-          await client.execute({
-            sql: 'DELETE FROM course_lesson_content WHERE lesson_id = ?',
-            args: [lessonId]
-          });
-          
-          // Delete lesson progress
-          await client.execute({
-            sql: 'DELETE FROM lesson_progress WHERE lesson_id = ?',
-            args: [lessonId]
-          });
-          
-          // Delete lesson
-          await client.execute({
-            sql: 'DELETE FROM course_lessons WHERE id = ?',
-            args: [lessonId]
-          });
-        }
-      }
-
-      // Delete sections that are no longer in the updated content
-      const sectionsToDelete = existingSectionIds.filter(id => !newSectionIds.includes(id));
-      
-      for (const sectionId of sectionsToDelete) {
-        // Get lessons for this section
-        const lessonsToDelete = await client.execute({
-          sql: 'SELECT id FROM course_lessons WHERE section_id = ?',
-          args: [sectionId]
-        });
-        
-        // Delete lesson content and lessons
-        for (const row of lessonsToDelete.rows) {
-          const lessonId = row.id;
-          
-          await client.execute({
-            sql: 'DELETE FROM course_lesson_content WHERE lesson_id = ?',
-            args: [lessonId]
-          });
-          
-          await client.execute({
-            sql: 'DELETE FROM lesson_progress WHERE lesson_id = ?',
-            args: [lessonId]
-          });
-          
-          await client.execute({
-            sql: 'DELETE FROM course_lessons WHERE id = ?',
-            args: [lessonId]
-          });
-        }
-        
-        // Delete section
-        await client.execute({
-          sql: 'DELETE FROM course_sections WHERE id = ?',
-          args: [sectionId]
-        });
-      }
-
-      // Commit transaction
-      await client.execute({ sql: 'COMMIT',args: [] });
-
-      return NextResponse.json({
-        success: true,
-        message: 'Course content updated successfully'
-      });
-    } catch (error) {
-      // Rollback transaction on error
-      await client.execute({ sql: 'ROLLBACK', args: [] });
-      throw error;
-    }
-  } catch (error) {
-    console.error('Error updating course content:', error);
-    
-    return NextResponse.json(
-      { 
-        error: 'Failed to update course content',
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined
       },
       { status: 500 }
     );

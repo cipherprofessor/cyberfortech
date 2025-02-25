@@ -1,4 +1,4 @@
-// src/app/dashboard/myworkspace/components/ui/CourseManagement/api/courseContentApi.ts
+// src/app/dashboard/myworkspace/components/ui/CourseManagement/CourseCreatePage/api/courseContentApi.ts
 import axios from 'axios';
 
 /**
@@ -8,6 +8,7 @@ import axios from 'axios';
  */
 export const fetchCourseContent = async (courseId: string) => {
   try {
+    console.log('Fetching course content for course ID:', courseId);
     const response = await axios.get(`/api/courses/${courseId}/content`);
     
     const { courseContent, sections } = response.data;
@@ -84,6 +85,9 @@ export interface CourseContentData {
  */
 export const saveCourseContent = async (courseId: string, data: CourseContentData) => {
   try {
+    console.log('Saving course content for course ID:', courseId);
+    console.log('Content data sample:', JSON.stringify(data).substring(0, 200) + '...');
+    
     const response = await axios.post(`/api/courses/${courseId}/content`, data);
     return response.data;
   } catch (error) {

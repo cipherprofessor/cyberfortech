@@ -1,6 +1,7 @@
 // src/app/api/courses/manage/route.ts
 import { db } from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function GET() {
   try {
@@ -42,8 +43,7 @@ export async function GET() {
   }
 }
 
-// src/app/api/courses/manage/route.ts
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
     const {
@@ -57,14 +57,21 @@ export async function POST(request: Request) {
       image_url
     } = data;
 
+    // Generate a UUID for the course
+    const courseId = uuidv4();
+    
+    console.log("Creating course with ID:", courseId);
+
+    // Execute the insert with explicit id value
     const result = await db.execute({
       sql: `
         INSERT INTO courses (
-          title, description, price, duration, level,
+          id, title, description, price, duration, level,
           category, instructor_id, image_url
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
+        courseId,
         title,
         description,
         price,
@@ -76,10 +83,16 @@ export async function POST(request: Request) {
       ]
     });
 
-    // Convert BigInt to string or number
-    const courseId = typeof result.lastInsertRowid === 'bigint' 
-      ? result.lastInsertRowid.toString()
-      : result.lastInsertRowid;
+    // Log the result for debugging
+    console.log("Insert result:", result);
+
+    // Verify the course was created by checking it exists
+    const verification = await db.execute({
+      sql: "SELECT id FROM courses WHERE id = ?",
+      args: [courseId]
+    });
+    
+    console.log("Verification result:", verification.rows);
 
     return NextResponse.json({ 
       message: 'Course created successfully',
@@ -88,7 +101,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating course:', error);
     return NextResponse.json(
-      { error: 'Failed to create course' },
+      { error: 'Failed to create course', details: String(error) },
       { status: 500 }
     );
   }

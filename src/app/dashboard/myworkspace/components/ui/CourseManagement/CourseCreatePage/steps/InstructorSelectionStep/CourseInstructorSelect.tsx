@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Search, User, X } from 'lucide-react';
 import { Instructor } from '@/types/courses';
 import { fetchInstructors } from '@/utils/courseDataAdapter';
-import styles from './InstructorSelectionStep.module.scss';
+import styles from './CourseInstructorSelect.module.scss';
 
 interface InstructorSelectionStepProps {
   selectedInstructorId: string | null;

@@ -1,26 +1,29 @@
 'use client';
-
+//src/app/dashboard/myworkspace/components/ui/CourseManagement/CourseCreatePage/CourseCreatePage.tsx
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import axios from 'axios';
+
 import { Course } from '@/types/courses';
 import { useTheme } from 'next-themes';
 import styles from './CourseCreatePage.module.scss';
 import { ErrorAlert, SuccessAlert } from '@/components/ui/Mine/Alert/Alert';
-
-import { fetchCourseContent, saveCourseContent } from './api/courseContentApi';
-import { StepIndicator } from './components/StepIndicator/StepIndicator';
-import { InstructorSelectionStep } from './steps/InstructorSelectionStep/CourseInstructorSelect';
-import { CourseContentStep } from './steps/CourseContentStep/CourseContentStep';
-import { CourseDetailsStep } from './steps/CourseDetailsStep/CourseDetailsStep';
-import { CourseImageStep } from './steps/CourseImageStep/CourseImageStep';
 import { BasicInfoStep } from './steps/BasicInfoStep/BasicInfoStep';
 
+import { CourseImageStep } from './steps/CourseImageStep/CourseImageStep';
+import { CourseDetailsStep } from './steps/CourseDetailsStep/CourseDetailsStep';
+import { CourseContentStep } from './steps/CourseContentStep/CourseContentStep';
+import { StepIndicator } from './components/StepIndicator/StepIndicator';
+
+import { InstructorSelectionStep } from './steps/InstructorSelectionStep/CourseInstructorSelect';
+import { fetchCourseContent, saveCourseContent } from './api/courseContentApi';
 
 interface CourseCreatePageProps {
-  mode: 'create' | 'edit';
-  course?: Course | null;
-  onSubmit: (courseData: Partial<Course>) => Promise<void>;
-  onCancel: () => void;
+    mode: 'create' | 'edit';
+    course?: Course | null;
+    onSubmit: (courseData: Partial<Course>) => Promise<{ id: string }>;
+    onCancel: () => void;
 }
 
 export function CourseCreatePage({
@@ -29,6 +32,7 @@ export function CourseCreatePage({
   onSubmit,
   onCancel
 }: CourseCreatePageProps) {
+  const router = useRouter();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [loading, setLoading] = useState(false);
@@ -141,7 +145,9 @@ export function CourseCreatePage({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+ // Update to handleSubmit function in CourseCreatePage.tsx
+
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate current step before proceeding
@@ -160,20 +166,33 @@ export function CourseCreatePage({
     
     try {
       // First create/update the course
-      await onSubmit(formData);
+      const response = await onSubmit(formData);
       
-      // Then create/update course content if this is the final step
-      if (course?.id) {
-        await saveCourseContent(course.id, {
-          courseContent: contentData,
-          sections: sections
-        });
+      // Get course ID - since we know response should have id based on type definition
+      const courseId = response.id;
+      
+      console.log('Received course ID:', courseId); // Debug log
+      
+      // Then create/update course content if this is the final step and we have a course ID
+      if (courseId) {
+        try {
+          await saveCourseContent(courseId, {
+            courseContent: contentData,
+            sections: sections
+          });
+          console.log('Course content saved successfully'); // Debug log
+        } catch (contentError) {
+          console.error('Error saving course content:', contentError);
+          showAlert('error', 'Course created but failed to save course content');
+        }
+        
+        showAlert('success', `Course ${mode === 'create' ? 'created' : 'updated'} successfully!`);
+        setTimeout(() => {
+          onCancel();
+        }, 2000);
+      } else {
+        throw new Error('Failed to get course ID after saving');
       }
-      
-      showAlert('success', `Course ${mode === 'create' ? 'created' : 'updated'} successfully!`);
-      setTimeout(() => {
-        onCancel();
-      }, 2000);
     } catch (error) {
       console.error('Error saving course:', error);
       showAlert('error', 'Failed to save course');

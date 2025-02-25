@@ -1,5 +1,5 @@
 'use client';
-
+//src/app/dashboard/myworkspace/components/ui/CourseManagement/CourseCreatePage/steps/CourseDetailsStep/CourseDetailsStep.tsx
 import { PlusCircle, MinusCircle, Info, Link, Clock } from 'lucide-react';
 import styles from './CourseDetailsStep.module.scss';
 

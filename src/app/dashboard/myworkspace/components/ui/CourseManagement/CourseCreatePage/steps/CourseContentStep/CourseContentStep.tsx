@@ -1,5 +1,5 @@
 'use client';
-
+//src/app/dashboard/myworkspace/components/ui/CourseManagement/CourseCreatePage/steps/CourseContentStep/CourseContentStep.tsx
 import { useState } from 'react';
 import { PlusCircle, MinusCircle, ChevronDown, ChevronUp, Video, FileText, Book } from 'lucide-react';
 import styles from './CourseContentStep.module.scss';
