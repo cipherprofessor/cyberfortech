@@ -67,7 +67,7 @@ const quickLinks = [
     icon: <Calendar className={styles.quickIcon} />,
     title: "Schedule a Demo",
     description: "See our platform in action",
-    link: "/schedule-demo"
+    link: ""
   },
   {
     icon: <FileCheck className={styles.quickIcon} />,
@@ -79,13 +79,13 @@ const quickLinks = [
     icon: <BookOpen className={styles.quickIcon} />,
     title: "Student Resources",
     description: "Access learning materials",
-    link: "/resources"
+    link: ""
   },
   {
     icon: <Shield className={styles.quickIcon} />,
     title: "Certificate Verification",
     description: "Verify course certificates",
-    link: "/verify"
+    link: ""
   }
 ];
 
@@ -98,8 +98,8 @@ export default function ContactPage() {
       icon: <Mail />,
       title: "Email Support",
       details: [
-        "General: info@CyberFort.com",
-        "Support: help@CyberFort.com"
+        "General: hello@cyberfort.tech",
+        "Support: hello@cyberfortech.in"
       ],
       description: "24/7 email support with average response time of 2 hours",
       color: "blue"
@@ -108,10 +108,10 @@ export default function ContactPage() {
       icon: <Phone />,
       title: "Phone Support",
       details: [
-        "Main: +1 (555) 123-4567",
-        "Toll-free: 1-800-CYBER-TECH"
+        "General Inquiries: 7006712347",
+        "Support Line: +91 9650443642"
       ],
-      description: "Available Mon-Fri, 9AM-6PM EST",
+      description: "Available Mon-Sat, 9AM-6PM EST",
       color: "green"
     },
     {
@@ -138,18 +138,18 @@ export default function ContactPage() {
       icon: <MapPin />,
       title: "Visit Us",
       details: [
-        "123 Tech Street, Suite 100",
-        "Cyber City, CC 12345"
+        "Mig-3 Colony ",
+        "Aligarh Uttar Pradesh"
       ],
       description: "Book an appointment for in-person consultation",
       color: "red"
     },
     {
       icon: <MessageSquare />,
-      title: "Live Chat",
+      title: "Contact Us",
       details: [
-        "Available 24/7",
-        "Response time: < 5 mins"
+        "Sales : +91 9205838868",
+        "Operations : +91 942842322"
       ],
       description: "Instant support for urgent queries",
       color: "indigo"
@@ -159,21 +159,21 @@ export default function ContactPage() {
   const socialLinks = [
     {
       icon: <Linkedin />,
-      url: "https://linkedin.com/company/CyberFort",
+      url: "https://www.linkedin.com/company/cyberfort-tech",
       name: "LinkedIn",
       description: "Career updates & industry insights",
       color: "linkedin"
     },
     {
       icon: <Youtube />,
-      url: "https://youtube.com/CyberFort",
+      url: "https://www.youtube.com/@CYBER-FORT-TECH",
       name: "YouTube",
       description: "Tutorial videos & tech talks",
       color: "youtube"
     },
     {
       icon: <Instagram />,
-      url: "https://instagram.com/CyberFort",
+      url: "https://www.instagram.com/cyberfort_tech/",
       name: "Instagram",
       description: "Behind the scenes & community",
       color: "instagram"

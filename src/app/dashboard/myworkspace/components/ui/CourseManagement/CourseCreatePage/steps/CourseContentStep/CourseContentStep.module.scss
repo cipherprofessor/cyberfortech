@@ -1,0 +1,429 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 1rem;
+  
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      color: #111827;
+    }
+  
+    p {
+      color: #6b7280;
+      margin: 0;
+    }
+  }
+  
+  .sectionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .section {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background-color: #f9fafb;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: #f3f4f6;
+    }
+  }
+  
+  .sectionInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .sectionIndex {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6b7280;
+  }
+  
+  .sectionTitle {
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .sectionActions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .lessonCount {
+    font-size: 0.75rem;
+    color: #6b7280;
+    background-color: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+  }
+  
+  .removeButton, .expandButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    color: #6b7280;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover:not(:disabled) {
+      background-color: #f3f4f6;
+      color: #111827;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .sectionContent {
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .sectionForm {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  .lessonsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    
+    h3 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 0.5rem;
+    }
+  }
+  
+  .lesson {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+  
+  .lessonHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background-color: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .lessonIndex {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+  }
+  
+  .lessonForm {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+    }
+  }
+  
+  .formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .input, .textarea, .select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: #fff;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    
+    &:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+    
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
+  
+  .textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  
+  .checkboxWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+  }
+  
+  .checkbox {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid #d1d5db;
+    appearance: none;
+    background-color: #fff;
+    cursor: pointer;
+    position: relative;
+    
+    &:checked {
+      background-color: #4f46e5;
+      border-color: #4f46e5;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 5px;
+        width: 4px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+  }
+  
+  .checkboxLabel {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+  }
+  
+  .addLessonButton, .addSectionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .addLessonButton {
+    background-color: #fff;
+    border: 1px dashed #d1d5db;
+    color: #4f46e5;
+    
+    &:hover {
+      background-color: #f9fafb;
+      border-color: #4f46e5;
+    }
+  }
+  
+  .addSectionButton {
+    background-color: #eef2ff;
+    border: 1px dashed #c7d2fe;
+    color: #4f46e5;
+    margin-top: 1rem;
+    
+    &:hover {
+      background-color: #e0e7ff;
+      border-color: #4f46e5;
+    }
+  }
+  
+  /* Dark theme styles */
+  .dark {
+    .header {
+      h2 {
+        color: #f9fafb;
+      }
+      
+      p {
+        color: #9ca3af;
+      }
+    }
+    
+    .section {
+      border-color: #4b5563;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+    
+    .sectionHeader {
+      background-color: #1f2937;
+      
+      &:hover {
+        background-color: #374151;
+      }
+    }
+    
+    .sectionIndex {
+      color: #9ca3af;
+    }
+    
+    .sectionTitle {
+      color: #f9fafb;
+    }
+    
+    .lessonCount {
+      color: #d1d5db;
+      background-color: #374151;
+    }
+    
+    .removeButton, .expandButton {
+      color: #9ca3af;
+      
+      &:hover:not(:disabled) {
+        background-color: #374151;
+        color: #f9fafb;
+      }
+    }
+    
+    .sectionContent {
+      border-color: #4b5563;
+    }
+    
+    .lessonsContainer {
+      h3 {
+        color: #9ca3af;
+      }
+    }
+    
+    .lesson {
+      border-color: #4b5563;
+    }
+    
+    .lessonHeader {
+      background-color: #111827;
+      border-color: #4b5563;
+    }
+    
+    .lessonIndex {
+      color: #d1d5db;
+    }
+    
+    .formGroup {
+      label {
+        color: #e5e7eb;
+      }
+    }
+    .input, .textarea, .select {
+        background-color: #111827;
+        border-color: #4b5563;
+        color: #f9fafb;
+        
+        &:focus {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+        }
+        
+        &::placeholder {
+          color: #6b7280;
+        }
+      }
+      
+      .select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      }
+      
+      .checkbox {
+        background-color: #1f2937;
+        border-color: #4b5563;
+        
+        &:checked {
+          background-color: #6366f1;
+          border-color: #6366f1;
+        }
+      }
+      
+      .checkboxLabel {
+        color: #e5e7eb;
+      }
+      
+      .addLessonButton {
+        background-color: #1f2937;
+        border-color: #4b5563;
+        color: #6366f1;
+        
+        &:hover {
+          background-color: #111827;
+          border-color: #6366f1;
+        }
+      }
+      
+      .addSectionButton {
+        background-color: rgba(99, 102, 241, 0.1);
+        border-color: #4b5563;
+        color: #6366f1;
+        
+        &:hover {
+          background-color: rgba(99, 102, 241, 0.2);
+          border-color: #6366f1;
+        }
+      }
+    }

@@ -1,4 +1,5 @@
-// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/components/Header/Header.tsx
+'use client';
+
 import { Book, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import styles from './Header.module.scss';
@@ -8,6 +9,18 @@ interface HeaderProps {
 }
 
 export const Header = ({ onCreateCourse }: HeaderProps) => {
+  const handleCreateCourseClick = (e: React.MouseEvent) => {
+    // Prevent any default behaviors
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Call the provided callback
+    onCreateCourse();
+    
+    // Log to help with debugging
+    console.log('Create Course button clicked');
+  };
+
   return (
     <motion.div 
       className={styles.header}
@@ -24,9 +37,10 @@ export const Header = ({ onCreateCourse }: HeaderProps) => {
 
       <motion.button
         className={styles.createButton}
-        onClick={onCreateCourse}
+        onClick={handleCreateCourseClick}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        type="button"
       >
         <Plus size={20} />
         <span>Create Course</span>

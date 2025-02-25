@@ -6,6 +6,8 @@ import { TypewriterEffect } from "@/components/ui/AcUI/TypeWritterEffect/typewri
 import { useState, useEffect } from 'react';
 import styles from "./HeroSection.module.scss";
 import { BackgroundBeams } from "@/components/ui/AcUI/BackgroundBeams/background-beams";
+import router from "next/router";
+import { useRouter } from "next/navigation";
 
 const words = [
   {
@@ -45,6 +47,7 @@ const features = [
 export function HeroSection() {
   const [mounted, setMounted] = useState(false);
   const [animatedStats, setAnimatedStats] = useState(stats.map(() => 0));
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -67,6 +70,14 @@ export function HeroSection() {
       }, 50);
     });
   }, []);
+
+  const handleExploreCoursesButton = () => {
+    router.push('/courses');
+  }
+
+  const handleContactUsCoursesButton = () => {
+    router.push('/contact');
+  }
 
   if (!mounted) return null;
 
@@ -102,11 +113,11 @@ export function HeroSection() {
               transition={{ delay: 0.7 }}
               className={styles.ctaGroup}
             >
-              <Button size="lg" className={styles.primaryButton}>
-                Start Learning Now
+              <Button size="lg" className={styles.primaryButton} onClick={handleExploreCoursesButton}>
+                Explore our Courses
               </Button>
-              <Button variant="outline" size="lg" className={styles.secondaryButton}>
-                Schedule Free Demo
+              <Button variant="outline" size="lg" className={styles.secondaryButton} onClick={handleContactUsCoursesButton }>
+                Contact Us
               </Button>
             </motion.div>
 

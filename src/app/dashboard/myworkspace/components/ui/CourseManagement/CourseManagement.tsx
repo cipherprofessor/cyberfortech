@@ -1,12 +1,9 @@
-// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/CourseManagement.tsx
-// Alpha centauri
 'use client';
-
+//src/app/dashboard/myworkspace/components/ui/CourseManagement/CourseManagement.tsx
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useTheme } from 'next-themes';
-
 
 import { Course } from '@/types/courses';
 
@@ -15,20 +12,20 @@ import Loading from '@/app/(routes)/blog/[slug]/loading';
 
 import { SuccessAlert, ErrorAlert } from '@/components/ui/Mine/Alert/Alert';
 
-import { CourseModal } from './Course-Modal';
 import { DeleteConfirmDialog } from '@/components/ui/DeleteConfirmation/DeleteConfirmation';
 import { SearchControls } from './components/SearchControls/SearchControls';
 import { EmptyState } from './components/EmptyState/EmptyState';
 import { Header } from './components/Header/Header';
 import { CourseCard } from './components/CourseCard/CourseCard';
+import { CourseCreatePage } from './CourseCreatePage/CourseCreatePage';
 
 export function CourseManagement() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
+  const [showCreatePage, setShowCreatePage] = useState(false);
+  const [createPageMode, setCreatePageMode] = useState<'create' | 'edit'>('create');
   const [alertState, setAlertState] = useState<{
     show: boolean;
     type: 'success' | 'error';
@@ -77,15 +74,17 @@ export function CourseManagement() {
   }, []);
 
   const handleCreateCourse = () => {
-    setModalMode('create');
+    setCreatePageMode('create');
     setSelectedCourse(null);
-    setIsModalOpen(true);
+    setShowCreatePage(true);
   };
 
+  
+
   const handleEditCourse = (course: Course) => {
-    setModalMode('edit');
+    setCreatePageMode('edit');
     setSelectedCourse(course);
-    setIsModalOpen(true);
+    setShowCreatePage(true);
   };
 
   const handleDeleteClick = (courseId: string, courseName: string) => {
@@ -120,27 +119,49 @@ export function CourseManagement() {
     }
   };
 
-  const handleModalSubmit = async (courseData: Partial<Course>) => {
-    try {
-      if (modalMode === 'create') {
-        await axios.post('/api/courses/manage', courseData);
-        showAlert('success', 'Course created successfully');
-      } else {
-        await axios.put(`/api/courses/manage/${selectedCourse?.id}`, courseData);
-        showAlert('success', 'Course updated successfully');
-      }
+  // Update to handleCourseSubmit in CourseManagement.tsx
+
+// Update to handleCourseSubmit in CourseManagement.tsx
+
+const handleCourseSubmit = async (courseData: Partial<Course>): Promise<{ id: string }> => {
+  try {
+    if (createPageMode === 'create') {
+      // Create the course and get the response with the new course ID
+      const response = await axios.post('/api/courses/manage', courseData);
+      
+      // Extract the new course ID from the response
+      const newCourseId = response.data.courseId || ''; 
+      
+      console.log('New course created with ID:', newCourseId); // Debug log
+      
+      showAlert('success', 'Course created successfully');
       await fetchCourses();
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Error saving course:', error);
-      showAlert('error', `Failed to ${modalMode} course`);
-      throw error;
+      
+      // Return the id in the format CourseCreatePage expects
+      return { id: newCourseId.toString() };
+    } else {
+      // For edit mode, we already have the course ID
+      await axios.put(`/api/courses/manage/${selectedCourse?.id}`, courseData);
+      
+      showAlert('success', 'Course updated successfully');
+      await fetchCourses();
+      
+      return { id: (selectedCourse?.id || '').toString() };
     }
+  } catch (error) {
+    console.error('Error saving course:', error);
+    showAlert('error', `Failed to ${createPageMode} course`);
+    throw error;
+  }
+};
+
+  const handleCancelCreate = () => {
+    setShowCreatePage(false);
   };
 
   const filteredCourses = courses.filter(course => 
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.instructor_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -156,6 +177,17 @@ export function CourseManagement() {
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (showCreatePage) {
+    return (
+      <CourseCreatePage
+        mode={createPageMode}
+        course={selectedCourse}
+        onSubmit={handleCourseSubmit}
+        onCancel={handleCancelCreate}
+      />
+    );
   }
 
   return (
@@ -183,25 +215,19 @@ export function CourseManagement() {
         initial="hidden"
         animate="visible"
       >
-        {filteredCourses.map((course) => (
-          <CourseCard
-            key={course.id}
-            course={course}
-            onEdit={handleEditCourse}
-            onDelete={handleDeleteClick}
-          />
-        ))}
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course) => (
+            <CourseCard
+              key={course.id}
+              course={course}
+              onEdit={handleEditCourse}
+              onDelete={handleDeleteClick}
+            />
+          ))
+        ) : (
+          <EmptyState />
+        )}
       </motion.div>
-
-      {filteredCourses.length === 0 && <EmptyState />}
-
-      <CourseModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        mode={modalMode}
-        course={selectedCourse}
-        onSubmit={handleModalSubmit}
-      />
 
       <DeleteConfirmDialog
         show={deleteConfirm.show}
