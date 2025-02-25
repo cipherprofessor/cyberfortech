@@ -1,42 +1,48 @@
-"use client";
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
-import { Info, Search, ChevronDown, X } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import styles from './InstructorSelect.module.scss';
+import { Info, Search, ChevronDown, X, User } from 'lucide-react';
+import styles from './CourseInstructorSelect.module.scss';
 import { Instructor } from '@/types/courses';
 
-interface InstructorSelectProps {
+interface CourseInstructorSelectProps {
   instructors: Instructor[] | null | undefined;
   selectedInstructor: string | null;
   setSelectedInstructor: (instructorId: string) => void;
   setFormData: (data: any) => void;
   courseInstructorId?: string;
+  isDark?: boolean;
 }
 
-export const CourseInstructorSelect = ({
+export function CourseInstructorSelect({
   instructors,
   selectedInstructor,
   setSelectedInstructor,
   setFormData,
-  courseInstructorId
-}: InstructorSelectProps) => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  courseInstructorId,
+  isDark = false
+}: CourseInstructorSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  // Debug log instructors data
+  console.log('Instructors data:', instructors);
+  
   // Ensure instructors is an array before using array methods
   const instructorsArray = Array.isArray(instructors) ? instructors : [];
+  
+  // Make sure the instructors array is properly populated
+  console.log('Instructors array:', instructorsArray);
 
   const selectedInstructorData = instructorsArray.find(
     instructor => instructor.id === selectedInstructor
   );
 
   const filteredInstructors = instructorsArray.filter(instructor =>
-    instructor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instructor.email.toLowerCase().includes(searchQuery.toLowerCase())
+    instructor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    instructor.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
@@ -62,7 +68,15 @@ export const CourseInstructorSelect = ({
     }
   }, [isOpen]);
 
+  // Debug when dropdown is opened
+  useEffect(() => {
+    if (isOpen) {
+      console.log('Dropdown opened, filtered instructors:', filteredInstructors);
+    }
+  }, [isOpen, filteredInstructors]);
+
   const handleSelect = (instructor: Instructor) => {
+    console.log('Selecting instructor:', instructor);
     setSelectedInstructor(instructor.id);
     setFormData(prev => ({
       ...prev,
@@ -81,11 +95,8 @@ export const CourseInstructorSelect = ({
     }));
   };
 
-  console.log("Instructors data:", instructors);
-  console.log("Selected instructor:", selectedInstructor);
-
   return (
-    <div className={`${styles.formGroup} ${isDark ? styles.dark : ''}`}>
+    <div className={`${styles.container} ${isDark ? styles.dark : ''}`}>
       <label htmlFor="instructor">
         <span>Course Instructor</span>
         <div className={styles.tooltip}>
@@ -101,18 +112,29 @@ export const CourseInstructorSelect = ({
         >
           {selectedInstructorData ? (
             <div className={styles.selectedInstructor}>
-              <img 
-                src={selectedInstructorData.profile_image_url || '/default-avatar.png'} 
-                alt={selectedInstructorData.name}
-                className={styles.instructorAvatar}
-              />
+              {selectedInstructorData.profile_image_url ? (
+                <img 
+                  src={selectedInstructorData.profile_image_url} 
+                  alt={selectedInstructorData.name || 'Instructor'}
+                  className={styles.instructorAvatar}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).onerror = null;
+                    (e.target as HTMLImageElement).src = '/default-avatar.png';
+                  }}
+                />
+              ) : (
+                <div className={styles.defaultAvatar}>
+                  <User size={16} />
+                </div>
+              )}
               <div className={styles.instructorInfo}>
-                <span className={styles.instructorName}>{selectedInstructorData.name}</span>
-                <span className={styles.instructorEmail}>{selectedInstructorData.email}</span>
+                <span className={styles.instructorName}>{selectedInstructorData.name || 'Unnamed Instructor'}</span>
+                <span className={styles.instructorEmail}>{selectedInstructorData.email || ''}</span>
               </div>
               <button 
                 className={styles.clearButton}
                 onClick={handleClear}
+                type="button"
               >
                 <X size={16} />
               </button>
@@ -151,14 +173,24 @@ export const CourseInstructorSelect = ({
                     }`}
                     onClick={() => handleSelect(instructor)}
                   >
-                    <img
-                      src={instructor.profile_image_url || '/default-avatar.png'}
-                      alt={instructor.name}
-                      className={styles.instructorAvatar}
-                    />
+                    {instructor.profile_image_url ? (
+                      <img
+                        src={instructor.profile_image_url}
+                        alt={instructor.name || 'Instructor'}
+                        className={styles.instructorAvatar}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).onerror = null;
+                          (e.target as HTMLImageElement).src = '/default-avatar.png';
+                        }}
+                      />
+                    ) : (
+                      <div className={styles.defaultAvatar}>
+                        <User size={16} />
+                      </div>
+                    )}
                     <div className={styles.instructorInfo}>
-                      <span className={styles.instructorName}>{instructor.name}</span>
-                      <span className={styles.instructorEmail}>{instructor.email}</span>
+                      <span className={styles.instructorName}>{instructor.name || 'Unnamed Instructor'}</span>
+                      <span className={styles.instructorEmail}>{instructor.email || ''}</span>
                     </div>
                   </div>
                 ))
@@ -171,6 +203,13 @@ export const CourseInstructorSelect = ({
           </div>
         )}
       </div>
+
+      {/* Debug section - remove in production */}
+      <div style={{ display: 'none' }}>
+        <p>Selected instructor: {selectedInstructor}</p>
+        <p>Instructors count: {instructorsArray.length}</p>
+        <p>Filtered instructors count: {filteredInstructors.length}</p>
+      </div>
     </div>
   );
-};
+}

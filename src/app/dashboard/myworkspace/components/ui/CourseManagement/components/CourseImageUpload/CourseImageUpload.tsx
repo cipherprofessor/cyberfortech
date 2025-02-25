@@ -1,9 +1,11 @@
-// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/components/ImageUpload/ImageUpload.tsx
-import { ImageIcon, Trash2, Link } from 'lucide-react';
-import { Course } from '@/types/courses';
-import styles from './ImageUpload.module.scss';
+'use client';
 
-interface ImageUploadProps {
+import { useState } from 'react';
+import { Info, Image as ImageIcon, Link, Trash2, Upload } from 'lucide-react';
+import styles from './CourseImageUpload.module.scss';
+import { Course } from '@/types/courses';
+
+interface CourseImageUploadProps {
   imagePreview: string | null;
   isFileUpload: boolean;
   formData: Partial<Course>;
@@ -12,10 +14,11 @@ interface ImageUploadProps {
   showAlert: (type: 'success' | 'error', message: string) => void;
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   removeImage: () => void;
-  setIsFileUpload: (value: boolean) => void;
+  setIsFileUpload: (isFileUpload: boolean) => void;
+  isDark?: boolean;
 }
 
-export const CourseImageUpload = ({
+export function CourseImageUpload({
   imagePreview,
   isFileUpload,
   formData,
@@ -24,36 +27,40 @@ export const CourseImageUpload = ({
   showAlert,
   handleImageUpload,
   removeImage,
-  setIsFileUpload
-}: ImageUploadProps) => {
+  setIsFileUpload,
+  isDark = false
+}: CourseImageUploadProps) {
   return (
-    <div className={styles.imageUploadContainer}>
+    <div className={`${styles.container} ${isDark ? styles.dark : ''}`}>
+      <label>
+        <span>Course Image</span>
+        <div className={styles.tooltip}>
+          <Info size={14} className={styles.infoIcon} />
+          <span className={styles.tooltipText}>Add a compelling image that represents your course. Use high-quality images for better visibility.</span>
+        </div>
+      </label>
+
       <div className={styles.imageMethodToggle}>
         <button
           type="button"
           className={`${styles.methodButton} ${!isFileUpload ? styles.active : ''}`}
           onClick={() => setIsFileUpload(false)}
         >
-          Image URL
+          <Link size={16} />
+          <span>Image URL</span>
         </button>
         <button
           type="button"
           className={`${styles.methodButton} ${isFileUpload ? styles.active : ''}`}
           onClick={() => setIsFileUpload(true)}
         >
-          Upload Image
+          <Upload size={16} />
+          <span>Upload Image</span>
         </button>
       </div>
 
       {isFileUpload ? (
         <div className={styles.imageUpload}>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className={styles.fileInput}
-          />
           <div className={styles.uploadArea}>
             {imagePreview ? (
               <div className={styles.previewImage}>
@@ -62,18 +69,25 @@ export const CourseImageUpload = ({
                   type="button"
                   onClick={removeImage}
                   className={styles.removeImage}
+                  aria-label="Remove image"
                 >
                   <Trash2 size={16} />
                 </button>
               </div>
             ) : (
-              <>
+              <label className={styles.uploadLabel}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className={styles.fileInput}
+                />
                 <ImageIcon size={32} className={styles.uploadIcon} />
                 <p>Click or drag image to upload</p>
                 <span className={styles.uploadHint}>
                   Supported formats: JPEG, PNG, WebP (max 5MB)
                 </span>
-              </>
+              </label>
             )}
           </div>
         </div>
@@ -83,12 +97,17 @@ export const CourseImageUpload = ({
             <Link size={16} />
             <input
               type="url"
-              value={formData.image_url}
+              value={formData.image_url || ''}
               onChange={(e) => {
                 setFormData({ ...formData, image_url: e.target.value });
-                setImagePreview(e.target.value ? e.target.value : null);
+                if (e.target.value) {
+                  setImagePreview(e.target.value);
+                } else {
+                  setImagePreview(null);
+                }
               }}
               placeholder="Enter image URL"
+              className={styles.input}
             />
           </div>
           {imagePreview && (
@@ -104,8 +123,12 @@ export const CourseImageUpload = ({
               {formData.image_url && (
                 <button 
                   type="button"
-                  onClick={removeImage}
+                  onClick={() => {
+                    setFormData({ ...formData, image_url: '' });
+                    setImagePreview(null);
+                  }}
                   className={styles.removeImage}
+                  aria-label="Remove image"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -116,4 +139,4 @@ export const CourseImageUpload = ({
       )}
     </div>
   );
-};
+}

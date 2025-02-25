@@ -2,6 +2,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@libsql/client';
 import { headers } from 'next/headers';
+import { v4 as uuidv4 } from 'uuid';
+
+// Define request types
+interface CourseContentRequest {
+  courseContent: {
+    course_demo_url: string;
+    course_outline: string;
+    learning_objectives: string[];
+    prerequisites: string[];
+    target_audience: string;
+    estimated_completion_time: string;
+  };
+  sections: {
+    title: string;
+    description: string;
+    sequence_number: number;
+    lessons: {
+      title: string;
+      description: string;
+      content_type: string;
+      duration: number;
+      is_free_preview: boolean;
+      sequence_number: number;
+      content: {
+        video_url?: string;
+        article_content?: string;
+        quiz_data?: any;
+        assignment_details?: any;
+      };
+    }[];
+  }[];
+}
 
 // Define response types
 interface CourseContent {
@@ -198,6 +230,400 @@ export async function GET(
     return NextResponse.json(
       { 
         error: 'Failed to fetch course content',
+        details: process.env.NODE_ENV === 'development' ? error : undefined
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { courseId: string } }
+) {
+  try {
+    // Use Promise.resolve to handle both promise and non-promise params
+    const resolvedParams = await Promise.resolve(params);
+    const courseId = resolvedParams.courseId;
+    
+    if (!courseId || typeof courseId !== 'string') {
+      return NextResponse.json(
+        { error: 'Invalid course ID' },
+        { status: 400 }
+      );
+    }
+
+    // Get user ID from headers for auditing purposes
+    const headersList = headers();
+    const userId = (await headersList).get('x-user-id');
+
+    // First check if course exists
+    const courseCheck = await client.execute({
+      sql: 'SELECT id, instructor_id FROM courses WHERE id = ?',
+      args: [courseId]
+    });
+
+    if (courseCheck.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Course not found' },
+        { status: 404 }
+      );
+    }
+
+    const instructorId = courseCheck.rows[0].instructor_id;
+
+    // Parse request body
+    const requestData: CourseContentRequest = await request.json();
+    const { courseContent, sections } = requestData;
+
+    // Begin transaction
+    await client.execute({ sql: 'BEGIN TRANSACTION', args: [] });
+
+    try {
+      // Check if course content exists
+      const courseContentCheck = await client.execute({
+        sql: 'SELECT id FROM course_content WHERE course_id = ?',
+        args: [courseId]
+      });
+
+      if (courseContentCheck.rows.length === 0) {
+        // Create new course content
+        await client.execute({
+          sql: `
+            INSERT INTO course_content (
+              id, 
+              course_id, 
+              instructor_id, 
+              course_demo_url, 
+              course_outline, 
+              learning_objectives, 
+              prerequisites, 
+              target_audience, 
+              estimated_completion_time
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `,
+          args: [
+            uuidv4(),
+            courseId,
+            instructorId,
+            courseContent.course_demo_url || '',
+            courseContent.course_outline || '',
+            JSON.stringify(courseContent.learning_objectives || []),
+            JSON.stringify(courseContent.prerequisites || []),
+            courseContent.target_audience || '',
+            courseContent.estimated_completion_time || ''
+          ]
+        });
+      } else {
+        // Update existing course content
+        await client.execute({
+          sql: `
+            UPDATE course_content SET
+              course_demo_url = ?,
+              course_outline = ?,
+              learning_objectives = ?,
+              prerequisites = ?,
+              target_audience = ?,
+              estimated_completion_time = ?,
+              updated_at = CURRENT_TIMESTAMP
+            WHERE course_id = ?
+          `,
+          args: [
+            courseContent.course_demo_url || '',
+            courseContent.course_outline || '',
+            JSON.stringify(courseContent.learning_objectives || []),
+            JSON.stringify(courseContent.prerequisites || []),
+            courseContent.target_audience || '',
+            courseContent.estimated_completion_time || '',
+            courseId
+          ]
+        });
+      }
+
+      // Get existing sections to check which ones to update/delete
+      const existingSections = await client.execute({
+        sql: 'SELECT id FROM course_sections WHERE course_id = ?',
+        args: [courseId]
+      });
+      
+      const existingSectionIds = existingSections.rows.map(row => String(row.id)).filter(id => id !== null);
+      const newSectionIds: (string | number | bigint | ArrayBuffer)[] = [];
+
+      // Process sections
+      for (const section of sections) {
+        let sectionId;
+        
+        // Check if section exists by sequence number
+        const sectionCheck = await client.execute({
+          sql: 'SELECT id FROM course_sections WHERE course_id = ? AND sequence_number = ?',
+          args: [courseId, section.sequence_number]
+        });
+
+        if (sectionCheck.rows.length === 0) {
+          // Create new section
+          sectionId = uuidv4();
+          await client.execute({
+            sql: `
+              INSERT INTO course_sections (
+                id, 
+                course_id, 
+                title, 
+                description, 
+                sequence_number
+              ) VALUES (?, ?, ?, ?, ?)
+            `,
+            args: [
+              sectionId,
+              courseId,
+              section.title,
+              section.description,
+              section.sequence_number
+            ]
+          });
+        } else {
+          // Update existing section
+          sectionId = sectionCheck.rows[0].id;
+          await client.execute({
+            sql: `
+              UPDATE course_sections SET
+                title = ?,
+                description = ?,
+                updated_at = CURRENT_TIMESTAMP
+              WHERE id = ?
+            `,
+            args: [
+              section.title,
+              section.description,
+              sectionId
+            ]
+          });
+        }
+
+        newSectionIds.push(sectionId);
+
+        // Get existing lessons for this section
+        const existingLessons = await client.execute({
+          sql: 'SELECT id FROM course_lessons WHERE section_id = ?',
+          args: [sectionId]
+        });
+        
+        const existingLessonIds = existingLessons.rows.map(row => row.id);
+        const newLessonIds: string[] = [];
+
+        // Process lessons
+        for (const lesson of section.lessons) {
+          let lessonId;
+          
+          // Check if lesson exists by sequence number
+          const lessonCheck = await client.execute({
+            sql: 'SELECT id FROM course_lessons WHERE section_id = ? AND sequence_number = ?',
+            args: [sectionId, lesson.sequence_number]
+          });
+
+          if (lessonCheck.rows.length === 0) {
+            // Create new lesson
+            lessonId = uuidv4();
+            await client.execute({
+              sql: `
+                INSERT INTO course_lessons (
+                  id, 
+                  section_id, 
+                  title, 
+                  description, 
+                  content_type, 
+                  duration, 
+                  is_free_preview, 
+                  sequence_number
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+              `,
+              args: [
+                lessonId,
+                sectionId,
+                lesson.title,
+                lesson.description,
+                lesson.content_type,
+                lesson.duration,
+                lesson.is_free_preview ? 1 : 0,
+                lesson.sequence_number
+              ]
+            });
+          } else {
+            // Update existing lesson
+            lessonId = lessonCheck.rows[0].id;
+            await client.execute({
+              sql: `
+                UPDATE course_lessons SET
+                  title = ?,
+                  description = ?,
+                  content_type = ?,
+                  duration = ?,
+                  is_free_preview = ?,
+                  updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+              `,
+              args: [
+                lesson.title,
+                lesson.description,
+                lesson.content_type,
+                lesson.duration,
+                lesson.is_free_preview ? 1 : 0,
+                lessonId
+              ]
+            });
+          }
+
+          newLessonIds.push(lessonId);
+
+          // Check if lesson content exists
+          const lessonContentCheck = await client.execute({
+            sql: 'SELECT id FROM course_lesson_content WHERE lesson_id = ?',
+            args: [lessonId]
+          });
+
+          // Prepare content fields based on lesson type
+          let videoUrl: string | null = null;
+          let articleContent: string | null = null;
+          let quizData: string | null = null;
+          let assignmentDetails: string | null = null;
+
+          if (lesson.content_type === 'video' && lesson.content.video_url) {
+            videoUrl = lesson.content.video_url;
+          } else if (lesson.content_type === 'article' && lesson.content.article_content) {
+            articleContent = lesson.content.article_content;
+          } else if (lesson.content_type === 'quiz' && lesson.content.quiz_data) {
+            quizData = JSON.stringify(lesson.content.quiz_data);
+          } else if (lesson.content_type === 'assignment' && lesson.content.assignment_details) {
+            assignmentDetails = JSON.stringify(lesson.content.assignment_details);
+          }
+
+          if (lessonContentCheck.rows.length === 0) {
+            // Create new lesson content
+            await client.execute({
+              sql: `
+                INSERT INTO course_lesson_content (
+                  id,
+                  lesson_id,
+                  content_type,
+                  video_url,
+                  article_content,
+                  quiz_data,
+                  assignment_details
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+              `,
+              args: [
+                uuidv4(),
+                lessonId,
+                lesson.content_type,
+                videoUrl,
+                articleContent,
+                quizData,
+                assignmentDetails
+              ]
+            });
+          } else {
+            // Update existing lesson content
+            await client.execute({
+              sql: `
+                UPDATE course_lesson_content SET
+                  content_type = ?,
+                  video_url = ?,
+                  article_content = ?,
+                  quiz_data = ?,
+                  assignment_details = ?,
+                  updated_at = CURRENT_TIMESTAMP
+                WHERE lesson_id = ?
+              `,
+              args: [
+                lesson.content_type,
+                videoUrl,
+                articleContent,
+                quizData,
+                assignmentDetails,
+                lessonId
+              ]
+            });
+          }
+        }
+
+        // Delete lessons that are no longer in the updated content
+        const lessonsToDelete = existingLessonIds.filter(id => id !== null && !newLessonIds.includes(String(id)));
+        
+        for (const lessonId of lessonsToDelete) {
+          // Delete lesson content first
+          await client.execute({
+            sql: 'DELETE FROM course_lesson_content WHERE lesson_id = ?',
+            args: [lessonId]
+          });
+          
+          // Delete lesson progress
+          await client.execute({
+            sql: 'DELETE FROM lesson_progress WHERE lesson_id = ?',
+            args: [lessonId]
+          });
+          
+          // Delete lesson
+          await client.execute({
+            sql: 'DELETE FROM course_lessons WHERE id = ?',
+            args: [lessonId]
+          });
+        }
+      }
+
+      // Delete sections that are no longer in the updated content
+      const sectionsToDelete = existingSectionIds.filter(id => !newSectionIds.includes(id));
+      
+      for (const sectionId of sectionsToDelete) {
+        // Get lessons for this section
+        const lessonsToDelete = await client.execute({
+          sql: 'SELECT id FROM course_lessons WHERE section_id = ?',
+          args: [sectionId]
+        });
+        
+        // Delete lesson content and lessons
+        for (const row of lessonsToDelete.rows) {
+          const lessonId = row.id;
+          
+          await client.execute({
+            sql: 'DELETE FROM course_lesson_content WHERE lesson_id = ?',
+            args: [lessonId]
+          });
+          
+          await client.execute({
+            sql: 'DELETE FROM lesson_progress WHERE lesson_id = ?',
+            args: [lessonId]
+          });
+          
+          await client.execute({
+            sql: 'DELETE FROM course_lessons WHERE id = ?',
+            args: [lessonId]
+          });
+        }
+        
+        // Delete section
+        await client.execute({
+          sql: 'DELETE FROM course_sections WHERE id = ?',
+          args: [sectionId]
+        });
+      }
+
+      // Commit transaction
+      await client.execute({ sql: 'COMMIT',args: [] });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Course content updated successfully'
+      });
+    } catch (error) {
+      // Rollback transaction on error
+      await client.execute({ sql: 'ROLLBACK', args: [] });
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error updating course content:', error);
+    
+    return NextResponse.json(
+      { 
+        error: 'Failed to update course content',
         details: process.env.NODE_ENV === 'development' ? error : undefined
       },
       { status: 500 }
