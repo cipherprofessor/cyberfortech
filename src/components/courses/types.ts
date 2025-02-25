@@ -85,17 +85,17 @@ export interface Course {
 
 export type CourseLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
 
-export interface CourseSidebarProps {
-  course: Course;
-  className?: string;
-  onEnroll?: (courseId: string) => Promise<void>;
-  onWishlist?: (courseId: string) => Promise<void>;
-  onShare?: (courseId: string) => Promise<void>;
-  customTheme?: {
-    primary: string;
-    secondary: string;
-  };
-}
+// export interface CourseSidebarProps {
+//   course: Course;
+//   className?: string;
+//   onEnroll?: (courseId: string) => Promise<void>;
+//   onWishlist?: (courseId: string) => Promise<void>;
+//   onShare?: (courseId: string) => Promise<void>;
+//   customTheme?: {
+//     primary: string;
+//     secondary: string;
+//   };
+// }
 
 export interface StyleProps {
   $isDark: boolean;
@@ -104,6 +104,7 @@ export interface StyleProps {
 
 export interface CourseSidebarProps {
   course: Course;
+  courseContentData?: any; 
   className?: string;
   onEnroll?: (courseId: string) => Promise<void>;
   onWishlist?: (courseId: string) => Promise<void>;

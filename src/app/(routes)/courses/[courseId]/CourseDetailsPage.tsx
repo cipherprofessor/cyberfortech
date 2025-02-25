@@ -156,7 +156,7 @@ function CourseDetailContent() {
           >
             <CourseSidebar 
               course={courseData} 
-              courseContentData={courseContent}
+              courseContent={courseContent}
             />
           </motion.aside>
         </div>
