@@ -1,0 +1,348 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 1rem;
+  
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      color: #111827;
+    }
+  
+    p {
+      color: #6b7280;
+      margin: 0;
+    }
+  }
+  
+  .formSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+  
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .sectionTitle {
+    margin-bottom: 1rem;
+  
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem;
+      color: #111827;
+    }
+  
+    p {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0;
+    }
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+    }
+  }
+  
+  .formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    
+    .infoIcon {
+      color: #6b7280;
+      cursor: help;
+    }
+    
+    .tooltipText {
+      visibility: hidden;
+      width: 240px;
+      background-color: #1f2937;
+      color: #fff;
+      text-align: center;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      position: absolute;
+      z-index: 20;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-weight: normal;
+      font-size: 0.75rem;
+      white-space: normal;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      
+      &::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #1f2937 transparent transparent transparent;
+      }
+    }
+    
+    &:hover .tooltipText {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  
+  .inputWithIcon {
+    position: relative;
+    
+    .inputIcon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      pointer-events: none;
+    }
+    
+    .input {
+      padding-left: 2.5rem;
+    }
+  }
+  
+  .input, .textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: #fff;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    
+    &:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+    
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
+  
+  .textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .fieldHint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0.25rem 0 0;
+  }
+  
+  .arrayItems {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .arrayItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    
+    .arrayItemIndex {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.75rem;
+      height: 1.75rem;
+      background-color: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #4b5563;
+      flex-shrink: 0;
+    }
+    
+    .input {
+      flex-grow: 1;
+    }
+    
+    .removeButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3f4f6;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        padding: 0.5rem;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        
+        &:hover:not(:disabled) {
+          background-color: #fee2e2;
+          border-color: #fca5a5;
+          color: #dc2626;
+        }
+        
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+    
+    .addButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background-color: #fff;
+      border: 1px dashed #d1d5db;
+      border-radius: 0.375rem;
+      padding: 0.75rem;
+      color: #4f46e5;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      
+      &:hover {
+        background-color: #f9fafb;
+        border-color: #4f46e5;
+      }
+    }
+    
+    /* Dark theme styles */
+    .dark {
+      .header {
+        h2 {
+          color: #f9fafb;
+        }
+        
+        p {
+          color: #9ca3af;
+        }
+      }
+      
+      .formSection {
+        background-color: #1f2937;
+        border-color: #4b5563;
+      }
+      
+      .sectionTitle {
+        h3 {
+          color: #f9fafb;
+        }
+        
+        p {
+          color: #9ca3af;
+        }
+      }
+      
+      .formGroup {
+        label {
+          color: #e5e7eb;
+        }
+      }
+      
+      .tooltip {
+        .infoIcon {
+          color: #9ca3af;
+        }
+      }
+      
+      .inputWithIcon {
+        .inputIcon {
+          color: #9ca3af;
+        }
+      }
+      
+      .input, .textarea {
+        background-color: #111827;
+        border-color: #4b5563;
+        color: #f9fafb;
+        
+        &:focus {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+        }
+        
+        &::placeholder {
+          color: #6b7280;
+        }
+      }
+      
+      .fieldHint {
+        color: #9ca3af;
+      }
+      
+      .arrayItem {
+        .arrayItemIndex {
+          background-color: #374151;
+          border-color: #4b5563;
+          color: #d1d5db;
+        }
+        
+        .removeButton {
+          background-color: #374151;
+          border-color: #4b5563;
+          color: #9ca3af;
+          
+          &:hover:not(:disabled) {
+            background-color: rgba(220, 38, 38, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+          }
+        }
+      }
+      
+      .addButton {
+        background-color: #1f2937;
+        border-color: #4b5563;
+        color: #6366f1;
+        
+        &:hover {
+          background-color: #111827;
+          border-color: #6366f1;
+        }
+      }
+    }

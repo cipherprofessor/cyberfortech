@@ -169,6 +169,7 @@ export interface CourseModalProps {
     specialization?: string;
     rating?: number;
     total_courses?: number;
+    years_of_experience?: number;
   }
 
   export interface DeleteConfirmDialogProps {
