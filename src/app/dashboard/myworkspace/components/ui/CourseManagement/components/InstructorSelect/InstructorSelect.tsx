@@ -1,4 +1,4 @@
-// src/components/ui/Mine/SuperadminDashboard/CoursesDashboard/CourseManagement/components/InstructorSelect/InstructorSelect.tsx
+"use client";
 import { useState, useEffect, useRef } from 'react';
 import { Info, Search, ChevronDown, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -6,7 +6,7 @@ import styles from './InstructorSelect.module.scss';
 import { Instructor } from '@/types/courses';
 
 interface InstructorSelectProps {
-  instructors: Instructor[];
+  instructors: Instructor[] | null | undefined;
   selectedInstructor: string | null;
   setSelectedInstructor: (instructorId: string) => void;
   setFormData: (data: any) => void;
@@ -27,11 +27,14 @@ export const InstructorSelect = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedInstructorData = instructors.find(
+  // Ensure instructors is an array before using array methods
+  const instructorsArray = Array.isArray(instructors) ? instructors : [];
+
+  const selectedInstructorData = instructorsArray.find(
     instructor => instructor.id === selectedInstructor
   );
 
-  const filteredInstructors = instructors.filter(instructor =>
+  const filteredInstructors = instructorsArray.filter(instructor =>
     instructor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     instructor.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
