@@ -12,19 +12,28 @@ import {
   TrendingUp,
   Award,
   Tag,
-  Calendar
+  Calendar,
+  Edit,
+  Trash2,
+  User
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTheme } from 'next-themes';
 import styles from './CourseCard.module.scss';
-import { CourseCardProps } from '@/types/courses';
+
 import { formatDistanceToNow, parseISO } from 'date-fns';
+import { CourseCardProps } from '../types';
 
 export function CourseCard({ 
   course, 
   priorityLoad,
   onEdit,
-  onDelete
+  onDelete,
+  isManagementView = false
 }: CourseCardProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
   const defaultImageUrl = '/cyberimagecoursecover.jpg';
   const [imgError, setImgError] = useState(false);
   const defaultInstructorImage = '/team/instructor_default.jpg';
@@ -32,12 +41,15 @@ export function CourseCard({
   const [isHovered, setIsHovered] = useState(false);
 
   const imageSource = imgError || !course.image_url ? defaultImageUrl : course.image_url;
-  const instructorImageSource = instructorImgError || !course.instructor_avatar ? 
-    defaultInstructorImage : course.instructor_avatar;
+  const instructorImageSource = instructorImgError || !course.instructor_profile_image_url ? 
+    defaultInstructorImage : course.instructor_profile_image_url;
     
   // Format update date if available
   const formattedDate = course.updated_at ? 
     `Updated ${formatDistanceToNow(parseISO(course.updated_at), { addSuffix: true })}` : '';
+
+  // Get the review count from either total_reviews or ratings field
+  const reviewCount = course.total_reviews || course.ratings || 0;
 
   const levelIcon = () => {
     switch(course.level?.toLowerCase() || 'beginner') {
@@ -135,24 +147,31 @@ export function CourseCard({
   };
 
   // Functions for edit/delete actions (only used in management view)
-  const handleEdit = () => {
+  const handleEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (onEdit) {
       onEdit(course);
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (onDelete) {
       onDelete(course.id, course.title || 'Untitled Course');
     }
   };
 
-  // Determine if this is a management card with edit/delete options
-  const isManagementCard = !!onEdit && !!onDelete;
+  // Determine if management controls should be shown
+  const showManagementControls = isManagementView || (!!onEdit && !!onDelete);
 
-  // The link destination - if it's a management card, disable the link
-  const linkDestination = isManagementCard ? '#' : `/courses/${course.id}`;
+  // The link destination - if it's a management card with click-to-edit, disable the link
+  const linkDestination = showManagementControls && !onEdit ? '#' : `/courses/${course.id}`;
 
+  // Apply classes conditionally based on theme
+  const courseCardClass = `${styles.courseCard} ${isHovered ? styles.hovered : ''} ${isDark ? styles.dark : ''}`;
+  
   return (
     <motion.div
       whileHover={{ y: -8, transition: { type: "spring", stiffness: 300 } }}
@@ -166,8 +185,9 @@ export function CourseCard({
     >
       <Link 
         href={linkDestination}
-        onClick={(e) => isManagementCard && e.preventDefault()}
-        className={`${styles.courseCard} ${isHovered ? styles.hovered : ''}`}
+        onClick={(e) => showManagementControls && !onEdit && e.preventDefault()}
+        className={courseCardClass}
+        tabIndex={0}
       >
         <div className={styles.imageContainer}>
           <motion.div
@@ -226,30 +246,6 @@ export function CourseCard({
               )}
             </>
           )}
-          
-          {isManagementCard && isHovered && (
-            <motion.div 
-              className={styles.actionButtons}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <button 
-                className={`${styles.actionButton} ${styles.editButton}`}
-                onClick={handleEdit}
-                aria-label="Edit course"
-              >
-                Edit
-              </button>
-              <button 
-                className={`${styles.actionButton} ${styles.deleteButton}`}
-                onClick={handleDelete}
-                aria-label="Delete course"
-              >
-                Delete
-              </button>
-            </motion.div>
-          )}
         </div>
         
         <div className={styles.content}>
@@ -264,26 +260,32 @@ export function CourseCard({
           <p className={styles.description}>{course.description || "No description available"}</p>
           
           <div className={styles.instructor}>
-            <motion.div 
-              className={styles.instructorAvatar}
-              animate={isHovered ? { 
-                scale: 1.1, 
-                boxShadow: '0 0 0 2px rgba(var(--primary-color-rgb, 59, 130, 246), 0.5)' 
-              } : {}}
-              transition={{ duration: 0.3 }}
-            >
-              {instructorImageSource && (
-                <Image
-                  src={instructorImageSource}
-                  alt={course.instructor_name || 'Instructor'}
-                  width={28}
-                  height={28}
-                  className={styles.instructorImage}
-                  onError={() => setInstructorImgError(true)}
-                />
-              )}
-            </motion.div>
-            <span className={styles.instructorName}>{course.instructor_name || "Unknown Instructor"}</span>
+            <div className={styles.instructorLabel}>
+              <User size={14} />
+              <span>Instructor</span>
+            </div>
+            <div className={styles.instructorInfo}>
+              <motion.div 
+                className={styles.instructorAvatar}
+                animate={isHovered ? { 
+                  scale: 1.1, 
+                  boxShadow: '0 0 0 2px rgba(var(--primary-color-rgb, 59, 130, 246), 0.5)' 
+                } : {}}
+                transition={{ duration: 0.3 }}
+              >
+                {instructorImageSource && (
+                  <Image
+                    src={instructorImageSource}
+                    alt={course.instructor_name || 'Instructor'}
+                    width={28}
+                    height={28}
+                    className={styles.instructorImage}
+                    onError={() => setInstructorImgError(true)}
+                  />
+                )}
+              </motion.div>
+              <span className={styles.instructorName}>{course.instructor_name || "Unknown Instructor"}</span>
+            </div>
           </div>
           
           <div className={styles.details}>
@@ -331,9 +333,9 @@ export function CourseCard({
                   '0.0'
                 }
               </motion.span>
-              {course.ratings || 0 > 0 && (
+              {reviewCount > 0 && (
                 <span className={styles.reviewCount}>
-                  ({formatNumber(course.ratings || 0)})
+                  ({formatNumber(reviewCount)})
                 </span>
               )}
             </div>
@@ -351,7 +353,7 @@ export function CourseCard({
             </motion.div>
           </div>
           
-          {!isManagementCard && isHovered && (
+          {!showManagementControls && isHovered && (
             <motion.div 
               className={styles.viewCourse}
               initial={{ opacity: 0, y: 10 }}
@@ -361,8 +363,87 @@ export function CourseCard({
               View Course
             </motion.div>
           )}
+          
+          {showManagementControls && (
+            <motion.div 
+              className={styles.managementControls}
+              initial={{ opacity: isHovered ? 1 : 0 }}
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <button 
+                className={`${styles.managementButton} ${styles.editButton}`}
+                onClick={handleEdit}
+                aria-label="Edit course"
+                tabIndex={0}
+              >
+                <Edit size={15} />
+                <span>Edit</span>
+              </button>
+              <button 
+                className={`${styles.managementButton} ${styles.deleteButton}`}
+                onClick={handleDelete}
+                aria-label="Delete course"
+                tabIndex={0}
+              >
+                <Trash2 size={15} />
+                <span>Delete</span>
+              </button>
+            </motion.div>
+          )}
         </div>
       </Link>
     </motion.div>
+  );
+}
+
+// Skeleton loader component for CourseCard
+export function CourseCardSkeleton() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
+  return (
+    <div className={`${styles.cardWrapper} ${styles.skeletonWrapper}`}>
+      <div className={`${styles.courseCard} ${styles.skeleton} ${isDark ? styles.dark : ''}`}>
+        <div className={styles.imageContainer}>
+          <div className={styles.skeletonImage}></div>
+          <div className={`${styles.skeletonLevel} ${styles.pulse}`}></div>
+        </div>
+        
+        <div className={styles.content}>
+          <div className={`${styles.skeletonTitle} ${styles.pulse}`}></div>
+          <div className={`${styles.skeletonDescription} ${styles.pulse}`}></div>
+          
+          <div className={styles.instructor}>
+            <div className={styles.instructorLabel}>
+              <div className={`${styles.skeletonIcon} ${styles.pulse}`}></div>
+              <div className={`${styles.skeletonText} ${styles.pulse}`} style={{ width: '60px' }}></div>
+            </div>
+            <div className={styles.instructorInfo}>
+              <div className={`${styles.skeletonAvatar} ${styles.pulse}`}></div>
+              <div className={`${styles.skeletonText} ${styles.pulse}`} style={{ width: '120px' }}></div>
+            </div>
+          </div>
+          
+          <div className={styles.details}>
+            <div className={`${styles.skeletonDetail} ${styles.pulse}`}></div>
+            <div className={`${styles.skeletonDetail} ${styles.pulse}`}></div>
+          </div>
+          
+          <div className={styles.footer}>
+            <div className={styles.rating}>
+              <div className={styles.stars}>
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className={`${styles.skeletonStar} ${styles.pulse}`}></div>
+                ))}
+              </div>
+              <div className={`${styles.skeletonText} ${styles.pulse}`} style={{ width: '30px' }}></div>
+            </div>
+            
+            <div className={`${styles.skeletonPrice} ${styles.pulse}`}></div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

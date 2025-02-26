@@ -1,4 +1,39 @@
-// types/courses.ts
+// src/types/courses.ts
+
+/**
+ * Core Types
+ */
+
+export type CourseLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
+
+export interface Course {
+  id: string;
+  title?: string;
+  description?: string;
+  price?: number;
+  duration?: string;
+  level?: string;
+  category?: string;
+  instructor_id?: string;
+  instructor_name?: string;
+  instructor_profile_image_url?: string;
+  image_url?: string;
+  total_students?: number;
+  total_reviews?: number;
+  average_rating?: number;
+  created_at?: string;
+  updated_at?: string;
+  
+  // Alternative field names for compatibility
+  instructor_avatar?: string;
+  enrollment_count?: number;
+  ratings?: number;
+  createdAt?: string;
+  courseId?: string;
+  
+  // Content-related fields
+  sections?: any[];
+}
 
 export interface Lesson {
   id: string;
@@ -7,6 +42,21 @@ export interface Lesson {
   isLocked?: boolean;
   description?: string;
   videoUrl?: string;
+  order_index?: number;
+  is_free?: boolean;
+  isFreePreview?: boolean;
+  contentType?: string;
+  resource_type?: string;
+  resource_url?: string;
+  is_complete?: boolean;
+  progress?: string;
+  sequenceNumber?: number;
+  content?: {
+    videoUrl: string | null;
+    articleContent: string | null;
+    quizData: any | null;
+    assignmentDetails: any | null;
+  };
 }
 
 export interface Section {
@@ -14,16 +64,30 @@ export interface Section {
   title: string;
   description?: string;
   lessons: Lesson[];
+  order_index?: number;
+  sequence_number?: number;
 }
 
-// export interface Course {
-//   id: string;
-//   title: string;
-//   sections: Section[];
-// }
+/**
+ * Component Props
+ */
+
+export interface CourseCardProps {
+  course: Course;
+  priorityLoad?: boolean;
+  onEdit?: (course: Course) => void;
+  onDelete?: (courseId: string, courseName: string) => void;
+  isManagementView?: boolean;
+}
+
+export interface CourseHeaderProps {
+  course: Course;
+}
 
 export interface CourseContentProps {
-  course: Course;
+  courseId: string;
+  courseContentData: any;
+  course?: Course;
   className?: string;
   onLessonClick?: (lessonId: string) => void;
   onSectionToggle?: (sectionId: string) => void;
@@ -31,6 +95,33 @@ export interface CourseContentProps {
   showDuration?: boolean;
   variant?: 'default' | 'compact';
   theme?: 'light' | 'dark' | 'auto';
+}
+
+export interface CourseDetailProps {
+  courseId: string;
+}
+
+export interface CourseSidebarProps {
+  course: Course;
+  courseContent?: any;
+  courseContentData?: any;
+  className?: string;
+  onEnroll?: (courseId: string) => Promise<void>;
+  onWishlist?: (courseId: string) => Promise<void>;
+  onShare?: (courseId: string) => Promise<void>;
+  customTheme?: {
+    primary: string;
+    secondary: string;
+  };
+}
+
+export interface CourseModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mode: 'create' | 'edit';
+  course?: Course | null;
+  loading?: boolean;
+  onSubmit: (courseData: Partial<Course>) => Promise<void>;
 }
 
 export interface SectionItemProps {
@@ -49,71 +140,21 @@ export interface LessonItemProps {
   onClick?: () => void;
 }
 
-
-/// Course Sidebar
-
-// src/components/courses/CourseSidebar/types.ts
-
-// export interface Course {
-//   id: string;
-//   price: number;
-//   total_students: number;
-//   duration: string;
-//   level: CourseLevel;
-//   image_url: string;
-// }
-
-export interface Course {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  duration: string;
-  level: string;
-  category: string;
-  instructor_id: string;
-  instructor_name?: string;
-  instructor_profile_image_url?: string;
-  image_url: string;
-  total_students: number;
-  total_reviews?: number;
-  average_rating?: number;
-  created_at?: string;
-  updated_at?: string;
+export interface DeleteConfirmDialogProps {
+  show: boolean;
+  courseName: string;
+  onConfirm: () => void;
+  onCancel: () => void;
 }
-
-
-export type CourseLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
-
-// export interface CourseSidebarProps {
-//   course: Course;
-//   className?: string;
-//   onEnroll?: (courseId: string) => Promise<void>;
-//   onWishlist?: (courseId: string) => Promise<void>;
-//   onShare?: (courseId: string) => Promise<void>;
-//   customTheme?: {
-//     primary: string;
-//     secondary: string;
-//   };
-// }
 
 export interface StyleProps {
   $isDark: boolean;
   $customTheme?: CourseSidebarProps['customTheme'];
 }
 
-export interface CourseSidebarProps {
-  course: Course;
-  courseContentData?: any; 
-  className?: string;
-  onEnroll?: (courseId: string) => Promise<void>;
-  onWishlist?: (courseId: string) => Promise<void>;
-  onShare?: (courseId: string) => Promise<void>;
-  customTheme?: {
-    primary: string;
-    secondary: string;
-  };
-}
+/**
+ * API Response Types
+ */
 
 export interface CourseContentResponse {
   courseContent: {
@@ -151,4 +192,46 @@ export interface CourseContentResponse {
       };
     }[];
   }[];
+}
+
+export interface CourseAnalytics {
+  totalEnrollments: number;
+  totalCompletions: number;
+  averageWatchTime: number;
+  totalRevenue: number;
+  popularCategories: { category: string; count: number; }[];
+  monthlyEnrollments: { month: string; count: number; }[];
+  instructorPerformance: { instructor: string; students: number; rating: number; }[];
+}
+
+export interface Instructor {
+  id: string;
+  name: string;
+  email: string;
+  profile_image_url: string | null;
+  specialization?: string;
+  rating?: number;
+  total_courses?: number;
+  years_of_experience?: number;
+}
+
+/**
+ * Filter Types
+ */
+
+export interface FilterState {
+  sortBy: 'newest' | 'price' | 'rating' | 'duration';
+  sortOrder: 'asc' | 'desc';
+  priceRange: [number, number];
+  selectedCategories: string[];
+  selectedLevels: string[];
+  durationRange: 'all' | 'short' | 'medium' | 'long';
+  minRating: number;
+  search: string;
+  createdAt?: Date;
+}
+
+export interface CourseFilterProps {
+  onFilterChange: (filters: FilterState) => void;
+  courses: Course[];
 }

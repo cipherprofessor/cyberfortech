@@ -5,7 +5,8 @@ import { Star, Users, Clock, Award, BookOpen, Tag, Calendar, BarChart2 } from 'l
 import { useTheme } from 'next-themes';
 import { useEffect, useRef } from 'react';
 import styles from './CourseHeader.module.scss';
-import { Course } from '@/types/courses';
+import { Course } from '../types';
+
 
 interface CourseHeaderProps {
   course: Course;

@@ -5,8 +5,6 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useTheme } from 'next-themes';
 
-import { Course } from '@/types/courses';
-
 import styles from './CourseManagement.module.scss';
 import Loading from '@/app/(routes)/blog/[slug]/loading';
 
@@ -16,8 +14,11 @@ import { DeleteConfirmDialog } from '@/components/ui/DeleteConfirmation/DeleteCo
 import { SearchControls } from './components/SearchControls/SearchControls';
 import { EmptyState } from './components/EmptyState/EmptyState';
 import { Header } from './components/Header/Header';
-import { CourseCard } from './components/CourseCard/CourseCard';
+
 import { CourseCreatePage } from './CourseCreatePage/CourseCreatePage';
+import { Course } from '@/components/courses/types';
+import { CourseCard } from '@/components/courses/ResuableCourseCard/CourseCard';
+
 
 export function CourseManagement() {
   const [courses, setCourses] = useState<Course[]>([]);

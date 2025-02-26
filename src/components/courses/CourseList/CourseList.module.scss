@@ -1,85 +1,301 @@
 .courseListContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
   width: 100%;
+  min-height: 100vh;
+  padding-bottom: 2rem;
+  transition: background-color 0.3s ease;
+  --primary-color: #3b82f6;
+  --primary-color-rgb: 59, 130, 246;
+  --bg-color: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --filter-bg: #ffffff;
+  --filter-border: #e5e7eb;
+  --filter-shadow: rgba(0, 0, 0, 0.05);
+  --card-hover-shadow: rgba(0, 0, 0, 0.1);
+  --empty-state-icon: #e5e7eb;
+  --reset-btn-bg: #3b82f6;
+  --reset-btn-hover: #2563eb;
+  --pagination-bg: #ffffff;
+  --pagination-border: #e5e7eb;
+  --pagination-active: #3b82f6;
+  --scroll-to-top-bg: #ffffff;
+  --scroll-to-top-color: #3b82f6;
+  --scroll-to-top-shadow: rgba(0, 0, 0, 0.1);
+  --results-count-color: #3b82f6;
+  --filter-header-border: #f3f4f6;
+  
+  &.dark {
+    --primary-color: #60a5fa;
+    --primary-color-rgb: 96, 165, 250;
+    --bg-color: #111827;
+    --text-primary: #f3f4f6;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --filter-bg: #1f2937;
+    --filter-border: #374151;
+    --filter-shadow: rgba(0, 0, 0, 0.2);
+    --card-hover-shadow: rgba(0, 0, 0, 0.25);
+    --empty-state-icon: #374151;
+    --reset-btn-bg: #3b82f6;
+    --reset-btn-hover: #60a5fa;
+    --pagination-bg: #1f2937;
+    --pagination-border: #374151;
+    --pagination-active: #3b82f6;
+    --scroll-to-top-bg: #1f2937;
+    --scroll-to-top-color: #60a5fa;
+    --scroll-to-top-shadow: rgba(0, 0, 0, 0.3);
+    --results-count-color: #60a5fa;
+    --filter-header-border: #2d3748;
+  }
 }
 
 .content {
-  display: grid;
-  grid-template-columns: 300px 1fr;
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
   gap: 2rem;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
+  position: relative;
+  
+  @media (max-width: 768px) {
+    gap: 0;
   }
 }
 
 .filterSection {
-  @media (min-width: 1024px) {
-    position: sticky;
-    top: 2rem;
-    height: fit-content;
+  width: 300px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 5.5rem;
+  max-height: calc(100vh - 6rem);
+  overflow-y: auto;
+  background-color: var(--filter-bg);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--filter-border);
+  box-shadow: 0 4px 20px var(--filter-shadow);
+  
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    max-width: 90vw;
+    z-index: 50;
+    max-height: 100vh;
+    border-radius: 0;
+    border-right: 1px solid var(--filter-border);
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+  }
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 20px;
+  }
+}
+
+.filterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--filter-header-border);
+  
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: var(--filter-border);
+      color: var(--text-primary);
+    }
   }
 }
 
 .mainContent {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  min-height: 300px;
 }
 
 .courseGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
   
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
-  }
-}
-
-.emptyState {
-  text-align: center;
-  padding: 3rem;
-  border-radius: 1rem;
-  
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    
-    :global(.dark) & {
-      color: #ffffff;
-    }
-    :global(:not(.dark)) & {
-      color: #1a1a1a;
-    }
-  }
-  
-  p {
-    font-size: 0.875rem;
-    
-    :global(.dark) & {
-      color: #9ca3af;
-    }
-    :global(:not(.dark)) & {
-      color: #6b7280;
-    }
+    gap: 1.5rem;
   }
 }
 
 .pagination {
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid;
+  padding: 1rem 0;
+}
 
-  :global(.dark) & {
-    border-color: #2d3748;
+/* Custom pagination styling - no :global selectors */
+.paginationContainer {
+  display: flex;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: var(--pagination-bg);
+  box-shadow: 0 2px 8px var(--filter-shadow);
+}
+
+.paginationButton {
+  background-color: var(--pagination-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--pagination-border);
+  padding: 0.5rem 1rem;
+  margin: 0;
+  transition: all 0.2s ease;
+  min-width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paginationButton:hover:not([disabled]) {
+  background-color: var(--filter-border);
+}
+
+.paginationButtonActive {
+  background-color: var(--pagination-active);
+  color: white;
+  border-color: var(--pagination-active);
+}
+
+.paginationButtonDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.emptyState {
+  margin: 4rem auto;
+  text-align: center;
+  max-width: 400px;
+  
+  .emptyStateIcon {
+    margin-bottom: 1.5rem;
+    color: var(--empty-state-icon);
+    display: flex;
+    justify-content: center;
   }
-  :global(:not(.dark)) & {
-    border-color: #e2e8f0;
+  
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+  }
+  
+  p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+  
+  .resetButton {
+    background-color: var(--reset-btn-bg);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: var(--reset-btn-hover);
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+.resultsSummary {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: -1rem;
+  
+  span {
+    font-weight: 600;
+    color: var(--results-count-color);
+  }
+}
+
+.scrollToTop {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--scroll-to-top-bg);
+  color: var(--scroll-to-top-color);
+  border: 1px solid var(--filter-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--scroll-to-top-shadow);
+  transition: all 0.3s ease;
+  z-index: 40;
+  
+  &:hover {
+    box-shadow: 0 6px 16px var(--scroll-to-top-shadow);
+    transform: translateY(-5px);
+  }
+  
+  @media (max-width: 640px) {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .courseListContainer {
+    padding: 0;
   }
 }
