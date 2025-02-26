@@ -30,9 +30,9 @@ export interface Course {
   ratings?: number;
   createdAt?: string;
   courseId?: string;
-  
-  // Content-related fields
   sections?: any[];
+  is_published: number;
+  is_featured: number;
 }
 
 export interface Lesson {
@@ -76,8 +76,21 @@ export interface CourseCardProps {
   course: Course;
   priorityLoad?: boolean;
   onEdit?: (course: Course) => void;
-  onDelete?: (courseId: string, courseName: string) => void;
+  onDelete?: (id: string, title: string) => void;
   isManagementView?: boolean;
+  className?: string;
+  colorScheme?: 'default' | 'primary' | 'secondary' | 'accent';
+  size?: 'small' | 'medium' | 'large';
+  layout?: 'grid' | 'list';
+  direction?: 'ltr' | 'rtl';
+  showInstructor?: boolean;
+  showRating?: boolean;
+  showPrice?: boolean;
+  showLevel?: boolean;
+  showStudents?: boolean;
+  showDuration?: boolean;
+  showCategory?: boolean;
+  showActions?: boolean;
 }
 
 export interface CourseHeaderProps {
