@@ -171,41 +171,52 @@ export function CourseHeader({ course }: CourseHeaderProps) {
         </motion.p>
 
         {course.instructor_name && (
-          <motion.div 
-            className={styles.instructorInfo}
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-          >
-            <div className={styles.avatarContainer}>
-              <motion.div 
-                className={styles.avatarWrapper}
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <div className={styles.avatarInitials}>
-                  {course.instructor_name.split(' ').map(name => name[0]).join('')}
-                </div>
-              </motion.div>
-              <motion.div 
-                className={styles.avatarBadge}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5, type: "spring" }}
-              >
-                <BookOpen size={12} />
-              </motion.div>
-            </div>
-            <div className={styles.instructorDetails}>
-              <span className={styles.instructorLabel}>Instructor</span>
-              <span className={styles.instructorName}>{course.instructor_name}</span>
-              <div className={styles.instructorMeta}>
-                <span>Professional Educator</span>
-                <span className={styles.dot}>&middot;</span>
-                <span>Course Creator</span>
-              </div>
-            </div>
-          </motion.div>
-        )}
+  <motion.div 
+    className={styles.instructorInfo}
+    variants={itemVariants}
+    whileHover={{ scale: 1.02 }}
+  >
+    <div className={styles.avatarContainer}>
+      <motion.div 
+        className={styles.avatarWrapper}
+        whileHover={{ scale: 1.1 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        {course.instructor_profile_image_url ? (
+          <img
+            src={course.instructor_profile_image_url}
+            alt={course.instructor_name}
+            className={styles.avatarImage}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove(styles.hidden);
+            }}
+          />
+        ) : null}
+        <div className={`${styles.avatarInitials} ${course.instructor_profile_image_url ? styles.hidden : ''}`}>
+          {course.instructor_name.split(' ').map(name => name[0]).join('')}
+        </div>
+      </motion.div>
+      <motion.div 
+        className={styles.avatarBadge}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.5, type: "spring" }}
+      >
+        <BookOpen size={12} />
+      </motion.div>
+    </div>
+    <div className={styles.instructorDetails}>
+      <span className={styles.instructorLabel}>Instructor</span>
+      <span className={styles.instructorName}>{course.instructor_name}</span>
+      <div className={styles.instructorMeta}>
+        <span>Professional Educator</span>
+        <span className={styles.dot}>&middot;</span>
+        <span>Course Creator</span>
+      </div>
+    </div>
+  </motion.div>
+)}
 
         <motion.div 
           className={styles.stats}
