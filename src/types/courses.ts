@@ -27,33 +27,20 @@ export interface Course {
     average_rating?: number;
     created_at?: string;
     updated_at?: string;
-    courseId?: string; // Optional field that might be passed
+    courseId?: string; 
+    ratings?: number;
+    // sections: Section[];
+    sections?: any[]; // Added for backward compatibility
+    instructor_avatar?: string;
+    enrollment_count?: number; // Alternate field name
   }
 
-// src/types/courses.ts
 
-// export interface Course {
-//     id: string;
-//     title: string;
-//     description: string;
-//     price: number;
-//     duration?: string;
-//     level?: string;
-//     category?: string;
-//     instructor_id?: string;
-//     instructor_name?: string;
-//     instructor_profile_image_url?: string;
-//     image_url: string;
-//     total_students?: number;
-//     total_reviews?: number;
-//     average_rating?: number;
-//     created_at?: string;
-//     updated_at?: string;
-//     courseId?: string; // Optional field that might be passed
-//   }
   
   export interface CourseSidebarProps {
     course: Course;
+    courseContent?: any;
+    courseContentData?: any;
     className?: string;
     onEnroll?: (courseId: string) => Promise<void>;
     onWishlist?: (courseId: string) => Promise<void>;
@@ -62,6 +49,7 @@ export interface Course {
       primary: string;
       secondary: string;
     };
+
   }
   
   export interface CourseContentResponse {
@@ -145,42 +133,41 @@ export type FilterState = {
 };
 
 export type CourseCardProps = {
-    course: {
-        id: string;
-        title: string;
-        description: string;
-        image_url: string;
-        duration: string;
-        level: string;
-        price: number;
-        average_rating: number;
-        enrollment_count?: number;
-        instructor_name: string;
-        category: string;
-        total_students?: number;
-        ratings?: number;
-        instructor_profile_image_url: string | null;
-        sections: Section[];
-    };
+  course: Course;
+  priorityLoad?: boolean;
+  onEdit?: (course: Course) => void;
+  onDelete?: (courseId: string, courseName: string) => void;
 };
 
 export interface CourseHeaderProps {
-    course: {
-        title: string;
-        description: string;
-        instructor_avatar: string;
-        level: string;
-        duration: string;
-        average_rating: number;
-        total_reviews: number;
-        total_students: number;
-        instructor_name?: string;
-    };
+  course: Course;
+
 }
 
 export interface CourseFilterProps {
     onFilterChange?: (filters: FilterState) => void;
     courses?: Course[];
+}
+
+export interface CourseContentProps {
+  courseId: string;
+  courseContentData: any;
+}
+
+export interface CourseContentSection {
+  id: string;
+  title: string;
+  lessons: CourseLessonItem[];
+}
+
+export interface CourseLessonItem {
+  id: string;
+  title: string;
+  duration: string;
+  is_free: boolean;
+  is_complete?: boolean;
+  resource_type: string;
+  resource_url?: string;
 }
 
 export interface CourseLesson {
@@ -190,11 +177,9 @@ export interface CourseLesson {
     order_index: number;
 }
 
-// export interface CourseContentProps {
-//   course: {
-//     sections: Section[];
-//   };
-// }
+export interface CourseDetailProps {
+  courseId: string;
+}
 
 export interface CourseModalProps {
     isOpen: boolean;

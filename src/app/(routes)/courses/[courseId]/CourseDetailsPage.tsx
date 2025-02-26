@@ -99,22 +99,29 @@ function CourseDetailContent() {
     );
   }
 
+  // Extract sections from courseContent if available
+  const sections = courseContent?.sections || [];
+
   // Create a complete course data object with defaults for required fields
   const courseData = {
     id: courseBasic.id,
     title: courseBasic.title || '',
     description: courseBasic.description || '',
     price: courseBasic.price || 0,
-    duration: courseBasic.duration || courseContent.courseContent.estimated_completion_time || 'Not specified',
-    level: courseBasic.level || courseContent.courseContent.level || 'Beginner',
+    duration: courseBasic.duration || courseContent?.courseContent?.estimated_completion_time || 'Not specified',
+    level: courseBasic.level || courseContent?.courseContent?.level || 'Beginner',
     category: courseBasic.category || '',
     instructor_id: courseBasic.instructor_id || '',
-    instructor_name: courseBasic.instructor_name || courseContent.courseContent.instructor_name || '',
+    instructor_name: courseBasic.instructor_name || courseContent?.courseContent?.instructor_name || '',
     instructor_profile_image_url: courseBasic.instructor_profile_image_url || '',
-    image_url: courseBasic.image_url || courseContent.courseContent.image_url || '',
+    instructor_avatar: courseBasic.instructor_profile_image_url || '', // Added for backward compatibility
+    image_url: courseBasic.image_url || courseContent?.courseContent?.image_url || '',
     total_students: courseBasic.total_students || 0,
     total_reviews: courseBasic.total_reviews || 0,
-    average_rating: courseBasic.average_rating || 0
+    average_rating: courseBasic.average_rating || 0,
+    updated_at: courseBasic.updated_at || '',
+    created_at: courseBasic.created_at || '',
+    sections: sections // Added for backward compatibility
   };
 
   return (
