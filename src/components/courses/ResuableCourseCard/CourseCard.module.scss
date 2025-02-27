@@ -1,5 +1,5 @@
 // Define CSS variables for theming
-:global(:root) {
+.theme {
     --card-border-radius: 0.75rem;
     --card-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
     --card-padding: 1rem 1.5rem;
@@ -36,6 +36,7 @@
   
   // Component styles
   .cardWrapper {
+    composes: theme;
     width: 100%;
     margin-bottom: 1.5rem;
     
