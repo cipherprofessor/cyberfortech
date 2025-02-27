@@ -1,5 +1,5 @@
 // Define CSS variables for theming
-:root {
+:global(:root) {
     --card-border-radius: 0.75rem;
     --card-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
     --card-padding: 1rem 1.5rem;
