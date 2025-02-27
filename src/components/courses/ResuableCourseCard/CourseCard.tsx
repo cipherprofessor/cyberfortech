@@ -23,16 +23,8 @@ import { useTheme } from 'next-themes';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 
 import styles from './CourseCard.module.scss';
-import { Course } from '../types';
+import { CourseCardProps } from '../types';
 
-interface CourseCardProps {
-  course: Course;
-  priorityLoad?: boolean;
-  onEdit?: (course: Course) => void;
-  onDelete?: (id: string, title: string) => void;
-  isManagementView?: boolean;
-  className?: string;
-}
 
 export const CourseCard: React.FC<CourseCardProps> = ({ 
   course,
@@ -40,7 +32,19 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   onEdit,
   onDelete,
   isManagementView = false,
-  className = ''
+  className = '',
+  colorScheme = 'default',
+  size = 'medium',
+  layout = 'grid',
+  direction = 'ltr',
+  showInstructor = true,
+  showRating = true,
+  showPrice = true,
+  showLevel = true,
+  showStudents = true,
+  showDuration = true,
+  showCategory = true,
+  showActions = true
 }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -189,13 +193,17 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   const showManagementControls = isManagementView || (!!onEdit && !!onDelete);
 
   // The link destination - if it's a management card with click-to-edit, disable the link
-  const linkDestination = showManagementControls ? '#' : `/courses/${course.id}`;
+  const linkDestination = showManagementControls && !onEdit ? '#' : `/courses/${course.id}`;
 
   // Apply classes conditionally based on props and theme
   const courseCardClass = `
     ${styles.courseCard} 
     ${isHovered ? styles.hovered : ''} 
     ${isDark ? styles.dark : ''} 
+    ${styles[colorScheme]} 
+    ${styles[size]} 
+    ${styles[layout]} 
+    ${styles[direction]} 
     ${className}
   `;
   
@@ -212,7 +220,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
     >
       <Link 
         href={linkDestination}
-        onClick={(e) => showManagementControls && e.preventDefault()}
+        onClick={(e) => showManagementControls && !onEdit && e.preventDefault()}
         className={courseCardClass}
         tabIndex={0}
         aria-label={`Course: ${course.title || 'Untitled Course'}`}
@@ -238,19 +246,21 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             )}
           </motion.div>
           
-          <motion.div 
-            className={`${styles.level} ${styles[course.level?.toLowerCase() || 'beginner']}`}
-            animate={isHovered ? { y: -5, x: -5 } : { y: 0, x: 0 }}
-            transition={{ duration: 0.3 }}
-            aria-label={`Level: ${course.level || 'Beginner'}`}
-          >
-            {levelIcon()}
-            <span>{course.level || 'Beginner'}</span>
-          </motion.div>
+          {showLevel && (
+            <motion.div 
+              className={`${styles.level} ${styles[course.level?.toLowerCase() || 'beginner']}`}
+              animate={isHovered ? { y: -5, x: -5 } : { y: 0, x: 0 }}
+              transition={{ duration: 0.3 }}
+              aria-label={`Level: ${course.level || 'Beginner'}`}
+            >
+              {levelIcon()}
+              <span>{course.level || 'Beginner'}</span>
+            </motion.div>
+          )}
           
           {isHovered && (
             <>
-              {course.category && (
+              {showCategory && course.category && (
                 <motion.div 
                   className={styles.category}
                   initial={{ opacity: 0, y: 10 }}
@@ -282,7 +292,6 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         <div className={styles.content}>
           <motion.h3 
             className={styles.title}
-            animate={isHovered ? { color: 'var(--primary-color-light)' } : {}}
             transition={{ duration: 0.3 }}
           >
             {course.title || "Untitled Course"}
@@ -292,39 +301,41 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             {course.description || "No description available"}
           </p>
           
-          <div className={styles.instructor}>
-            <div className={styles.instructorLabel}>
-              <User size={14} aria-hidden="true" />
-              <span>Instructor</span>
+          {showInstructor && (
+            <div className={styles.instructor}>
+              <div className={styles.instructorLabel}>
+                <User size={14} aria-hidden="true" />
+                <span>Instructor</span>
+              </div>
+              <div className={styles.instructorInfo}>
+                <motion.div 
+                  className={styles.instructorAvatar}
+                  animate={isHovered ? { 
+                    scale: 1.1, 
+                    boxShadow: '0 0 0 2px var(--primary-color-light)' 
+                  } : {}}
+                  transition={{ duration: 0.3 }}
+                >
+                  {instructorImageSource && (
+                    <Image
+                      src={instructorImageSource}
+                      alt={course.instructor_name || 'Instructor'}
+                      width={28}
+                      height={28}
+                      className={styles.instructorImage}
+                      onError={() => setInstructorImgError(true)}
+                    />
+                  )}
+                </motion.div>
+                <span className={styles.instructorName}>
+                  {course.instructor_name || "Unknown Instructor"}
+                </span>
+              </div>
             </div>
-            <div className={styles.instructorInfo}>
-              <motion.div 
-                className={styles.instructorAvatar}
-                animate={isHovered ? { 
-                  scale: 1.1, 
-                  boxShadow: '0 0 0 2px var(--primary-color-light)' 
-                } : {}}
-                transition={{ duration: 0.3 }}
-              >
-                {instructorImageSource && (
-                  <Image
-                    src={instructorImageSource}
-                    alt={course.instructor_name || 'Instructor'}
-                    width={28}
-                    height={28}
-                    className={styles.instructorImage}
-                    onError={() => setInstructorImgError(true)}
-                  />
-                )}
-              </motion.div>
-              <span className={styles.instructorName}>
-                {course.instructor_name || "Unknown Instructor"}
-              </span>
-            </div>
-          </div>
+          )}
           
           <div className={styles.details}>
-            {course.duration && (
+            {showDuration && course.duration && (
               <motion.div 
                 className={styles.detailItem}
                 animate={isHovered ? { 
@@ -340,60 +351,66 @@ export const CourseCard: React.FC<CourseCardProps> = ({
               </motion.div>
             )}
             
-            <motion.div 
-              className={styles.detailItem}
-              animate={isHovered ? { 
-                y: -3, 
-                backgroundColor: 'var(--hover-light)',
-                scale: 1.03
-              } : {}}
-              transition={{ duration: 0.2, delay: 0.05 }}
-              aria-label={`Students: ${formatNumber(course.total_students || course.enrollment_count || 0)}`}
-            >
-              <Users size={16} aria-hidden="true" />
-              <span>
-                {formatNumber(course.total_students || course.enrollment_count || 0)} Students
-              </span>
-            </motion.div>
+            {showStudents && (
+              <motion.div 
+                className={styles.detailItem}
+                animate={isHovered ? { 
+                  y: -3, 
+                  backgroundColor: 'var(--hover-light)',
+                  scale: 1.03
+                } : {}}
+                transition={{ duration: 0.2, delay: 0.05 }}
+                aria-label={`Students: ${formatNumber(course.total_students || course.enrollment_count || 0)}`}
+              >
+                <Users size={16} aria-hidden="true" />
+                <span>
+                  {formatNumber(course.total_students || course.enrollment_count || 0)} Students
+                </span>
+              </motion.div>
+            )}
           </div>
           
           <div className={styles.footer}>
-            <div className={styles.rating}>
-              <div className={styles.stars} aria-label={`Rating: ${course.average_rating || 0} out of 5`}>
-                {renderStars(course.average_rating || 0)}
+            {showRating && (
+              <div className={styles.rating}>
+                <div className={styles.stars} aria-label={`Rating: ${course.average_rating || 0} out of 5`}>
+                  {renderStars(course.average_rating || 0)}
+                </div>
+                <motion.span 
+                  className={styles.ratingValue}
+                  animate={isHovered ? { scale: 1.1 } : {}}
+                  transition={{ duration: 0.2 }}
+                >
+                  {course.average_rating ? 
+                    Number(course.average_rating).toFixed(1) : 
+                    '0.0'
+                  }
+                </motion.span>
+                {reviewCount > 0 && (
+                  <span className={styles.reviewCount}>
+                    ({formatNumber(reviewCount)})
+                  </span>
+                )}
               </div>
-              <motion.span 
-                className={styles.ratingValue}
-                animate={isHovered ? { scale: 1.1 } : {}}
-                transition={{ duration: 0.2 }}
-              >
-                {course.average_rating ? 
-                  Number(course.average_rating).toFixed(1) : 
-                  '0.0'
-                }
-              </motion.span>
-              {reviewCount > 0 && (
-                <span className={styles.reviewCount}>
-                  ({formatNumber(reviewCount)})
-                </span>
-              )}
-            </div>
+            )}
             
-            <motion.div 
-              className={styles.price}
-              animate={isHovered ? { 
-                scale: 1.08,
-                color: 'var(--primary-color-light)' 
-              } : {}}
-              transition={{ duration: 0.3 }}
-              aria-label={`Price: $${course.price?.toFixed(2) || "0.00"}`}
-            >
-              <DollarSign size={16} aria-hidden="true" />
-              <span>{course.price?.toFixed(2) || "0.00"}</span>
-            </motion.div>
+            {showPrice && (
+              <motion.div 
+                className={styles.price}
+                animate={isHovered ? { 
+                  scale: 1.08,
+                  color: 'var(--primary-color-light)' 
+                } : {}}
+                transition={{ duration: 0.3 }}
+                aria-label={`Price: ${course.price?.toFixed(2) || "0.00"}`}
+              >
+                <DollarSign size={16} aria-hidden="true" />
+                <span>{course.price?.toFixed(2) || "0.00"}</span>
+              </motion.div>
+            )}
           </div>
           
-          {!showManagementControls && isHovered && (
+          {showActions && !showManagementControls && isHovered && (
             <motion.div 
               className={styles.viewCourse}
               initial={{ opacity: 0, y: 10 }}
@@ -404,7 +421,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             </motion.div>
           )}
           
-          {showManagementControls && (
+          {showManagementControls && showActions && (
             <motion.div 
               className={styles.managementControls}
               initial={{ opacity: isHovered ? 1 : 0 }}
@@ -438,13 +455,27 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 };
 
 // Skeleton loader component for CourseCard
-export const CourseCardSkeleton: React.FC = () => {
+export const CourseCardSkeleton: React.FC<{
+  size?: 'small' | 'medium' | 'large';
+  layout?: 'grid' | 'list';
+}> = ({ 
+  size = 'medium',
+  layout = 'grid'
+}) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
+  const skeletonClass = `
+    ${styles.courseCard} 
+    ${styles.skeleton} 
+    ${isDark ? styles.dark : ''}
+    ${styles[size]}
+    ${styles[layout]}
+  `;
+  
   return (
     <div className={`${styles.cardWrapper} ${styles.skeletonWrapper}`}>
-      <div className={`${styles.courseCard} ${styles.skeleton} ${isDark ? styles.dark : ''}`}>
+      <div className={skeletonClass}>
         <div className={styles.imageContainer}>
           <div className={styles.skeletonImage}></div>
           <div className={`${styles.skeletonLevel} ${styles.pulse}`}></div>

@@ -57,6 +57,10 @@
     height: 100%;
     position: relative;
     text-decoration: none;
+    min-height: 520px;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
     
     &.dark {
       background-color: var(--background-dark);
@@ -66,17 +70,19 @@
     
     &.hovered {
       transform: translateY(-8px);
-      box-shadow: 0 10px 25px rgba(59, 131, 246, 0.3);
+      box-shadow: 0 12px 30px rgba(59, 131, 246, 0.35);
+      border: 2px solid var(--primary-color-light);
       
       &.dark {
-        box-shadow: 0 10px 25px rgba(96, 165, 250, 0.2);
+        box-shadow: 0 12px 30px rgba(96, 165, 250, 0.25);
+        border: 2px solid var(--primary-color-dark);
       }
     }
   }
   
   .imageContainer {
     position: relative;
-    height: 180px;
+    height: 200px;
     overflow: hidden;
     
     .image {
@@ -93,10 +99,10 @@
   }
   
   .title {
-    font-size: var(--title-font-size);
-    font-weight: 600;
+    font-size: 1.25rem;
+    font-weight: 700;
     margin: 0 0 0.5rem 0;
-    color: var(--text-light);
+    color: #000000;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -105,7 +111,7 @@
     transition: color 0.3s ease;
     
     .dark & {
-      color: var(--text-dark);
+      color: #ffffff;
     }
   }
   
@@ -174,19 +180,27 @@
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(96, 165, 250, 0.9);
     color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.35rem;
     z-index: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
     
     .dark & {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(96, 165, 250, 0.9);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    
+    &:hover {
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
     }
   }
   
@@ -194,45 +208,62 @@
     position: absolute;
     bottom: 0.75rem;
     left: 0.75rem;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(55, 65, 81, 0.9);
     color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.35rem;
     z-index: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
     
     .dark & {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(75, 85, 99, 0.9);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    
+    &:hover {
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
     }
   }
   
   .instructor {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .instructorWrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
   
   .instructorLabel {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    font-size: 0.75rem;
-    color: var(--text-secondary-light);
-    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    white-space: nowrap;
     
     .dark & {
-      color: var(--text-secondary-dark);
+      color: #d1d5db;
     }
   }
   
   .instructorInfo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    flex: 1;
   }
   
   .instructorAvatar {
@@ -259,20 +290,40 @@
     display: flex;
     gap: 0.75rem;
     margin-bottom: 0.75rem;
+    flex-wrap: wrap;
   }
   
   .detailItem {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.5rem;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
     background-color: rgba(0, 0, 0, 0.05);
-    border-radius: 0.25rem;
+    border-radius: 50px;
     font-size: 0.75rem;
     transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
     
     .dark & {
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    &:hover {
+      background-color: rgba(59, 130, 246, 0.15);
+      
+      .dark & {
+        background-color: rgba(96, 165, 250, 0.2);
+      }
+    }
+  }
+  
+  .detailIcon {
+    color: var(--primary-color-light);
+    
+    .dark & {
+      color: var(--primary-color-dark);
     }
   }
   
@@ -282,19 +333,30 @@
     align-items: center;
   }
   
+  .ratingContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
   .rating {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.35rem;
   }
   
   .stars {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    height: 16px;
+    line-height: 1;
   }
   
   .starIcon {
     color: #d1d5db;
+    display: block;
+    line-height: 1;
+    width: 16px;
+    height: 16px;
     
     &.filled {
       color: var(--rating-color-light);
@@ -307,13 +369,18 @@
   
   .partialStarContainer {
     position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    height: 16px;
+    width: 16px;
     
     .starIcon {
       position: absolute;
       top: 0;
       left: 0;
+      height: 16px;
+      width: 16px;
     }
   }
   
@@ -334,77 +401,130 @@
   .price {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    font-size: 1rem;
-    font-weight: 600;
+    gap: 0.35rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    padding: 0.35rem 0.5rem;
+    color: #3b82f6;
+    
+    .dark & {
+      color: #60a5fa;
+    }
+  }
+  
+  .priceValue {
+    color: inherit;
+  }
+  
+  .priceIcon {
+    color: inherit;
   }
   
   .viewCourse {
-    position: absolute;
-    bottom: 1.25rem;
-    right: 1.25rem;
+    margin-top: 1rem;
     background-color: var(--primary-color-light);
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    padding: 0.6rem 1.25rem;
+    border-radius: 50px;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 3px 8px rgba(59, 130, 246, 0.3);
     
     .dark & {
       background-color: var(--primary-color-dark);
-    }
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 8px rgba(96, 165, 250, 0.3);
     }
   }
+
   
   .managementControls {
     display: flex;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
+    gap: 0.75rem;
+    margin-top: 1rem;
     width: 100%;
+    
+    // &.deleteButton {
+    //   background-color: var(--level-advanced-light);
+    //   color: white;
+      
+    //   .dark & {
+    //     background-color: var(--level-advanced-dark);
+    //   }
+      
+    //   &:hover {
+    //     background-color: darken(#ef4444, 10%);
+    //   }
+    // }
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+  
+    :global(.dark) & {
+      border-top-color: #374151;
+    }
   }
   
-  .managementButton {
+  .editButton,
+  .deleteButton {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.25rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.25rem;
-    border: none;
-    font-size: 0.75rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
     font-weight: 500;
-    cursor: pointer;
-    flex: 1;
-    transition: all 0.3s ease;
-    
-    &.editButton {
-      background-color: var(--primary-color-light);
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
+  
+    :global(.dark) & {
+      border-color: #374151;
+    }
+  }
+  
+  .editButton {
+    background: #f3f4f6;
+    color: #1f2937;
+  
+    &:hover {
+      background: #3b82f6;
       color: white;
-      
-      .dark & {
-        background-color: var(--primary-color-dark);
-      }
-      
+    }
+  
+    :global(.dark) & {
+      background: #374151;
+      color: #f3f4f6;
+  
       &:hover {
-        background-color: darken(#3b82f6, 10%);
+        background: #3b82f6;
       }
     }
-    
-    &.deleteButton {
-      background-color: var(--level-advanced-light);
+  }
+  
+  .deleteButton {
+    background: #f3f4f6;
+    color: #ef4444;
+  
+    &:hover {
+      background: #ef4444;
       color: white;
-      
-      .dark & {
-        background-color: var(--level-advanced-dark);
-      }
-      
+    }
+  
+    :global(.dark) & {
+      background: #374151;
+  
       &:hover {
-        background-color: darken(#ef4444, 10%);
+        background: #ef4444;
       }
     }
   }
