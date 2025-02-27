@@ -410,22 +410,23 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             )}
           </div>
           
-          {showActions && !showManagementControls && isHovered && (
-            <motion.div 
-              className={styles.viewCourse}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              View Course
-            </motion.div>
-          )}
+          
+{showActions && !showManagementControls && (
+  <motion.div 
+    className={styles.viewCourse}
+    initial={{ opacity: 1 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.3 }}
+  >
+    View Course
+  </motion.div>
+)}
           
           {showManagementControls && showActions && (
             <motion.div 
               className={styles.managementControls}
-              initial={{ opacity: isHovered ? 1 : 0 }}
-              animate={{ opacity: isHovered ? 1 : 0 }}
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
             >
               <button 

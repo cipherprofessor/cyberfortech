@@ -377,7 +377,10 @@ export function CourseList({ isFilterOpen = false }: CourseListProps) {
               <div className={styles.courseGrid}>
                 {currentCourses.map((course) => (
                   <div key={course.id}>
-                    <CourseCard course={course} />
+                    <CourseCard 
+                    course={course}
+                    isManagementView={false}
+                     />
                   </div>
                 ))}
               </div>

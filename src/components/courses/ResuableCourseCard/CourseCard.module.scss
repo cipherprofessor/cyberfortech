@@ -253,6 +253,7 @@
     font-weight: 500;
     color: #4b5563;
     white-space: nowrap;
+    margin-right: 20px;
     
     .dark & {
       color: #d1d5db;
@@ -433,11 +434,23 @@
     cursor: pointer;
     width: 100%;
     box-shadow: 0 3px 8px rgba(59, 130, 246, 0.3);
+    display: block;
+    opacity: 1;
+    text-align: center;
     
-    .dark & {
-      background-color: var(--primary-color-dark);
-      box-shadow: 0 3px 8px rgba(96, 165, 250, 0.3);
-    }
+    &:hover {
+        background-color: darken(#3b82f6, 10%);
+        transform: translateY(-2px);
+      }
+      
+      .dark & {
+        background-color: var(--primary-color-dark);
+        box-shadow: 0 3px 8px rgba(96, 165, 250, 0.3);
+        
+        &:hover {
+          background-color: darken(#60a5fa, 10%);
+        }
+      }
   }
 
   
@@ -446,19 +459,7 @@
     gap: 0.75rem;
     margin-top: 1rem;
     width: 100%;
-    
-    // &.deleteButton {
-    //   background-color: var(--level-advanced-light);
-    //   color: white;
-      
-    //   .dark & {
-    //     background-color: var(--level-advanced-dark);
-    //   }
-      
-    //   &:hover {
-    //     background-color: darken(#ef4444, 10%);
-    //   }
-    // }
+    opacity: 1;
   }
 
   .actions {
@@ -493,27 +494,27 @@
   }
   
   .editButton {
-    background: #f3f4f6;
-    color: #1f2937;
+    background: #3b82f6;
+      color: white;
   
     &:hover {
-      background: #3b82f6;
+        background: #1c6beb;
       color: white;
     }
   
     :global(.dark) & {
-      background: #374151;
+      background: #3b83f6f4;
       color: #f3f4f6;
   
       &:hover {
-        background: #3b82f6;
+        background: #1c6beb;
       }
     }
   }
   
   .deleteButton {
-    background: #f3f4f6;
-    color: #ef4444;
+    background: #ef4444be;
+    color: #f3f4f6;
   
     &:hover {
       background: #ef4444;
@@ -521,7 +522,7 @@
     }
   
     :global(.dark) & {
-      background: #374151;
+        background: #ef4444be;
   
       &:hover {
         background: #ef4444;
