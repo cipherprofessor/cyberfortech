@@ -3,23 +3,51 @@
 // Container
 .aboutContainer {
   width: 90%;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 2rem 0;
 
   @media (max-width: 768px) {
     width: 95%;
+    padding: 1.5rem 0;
+  }
+}
+
+// Common Section Header
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #1f2937;
+
+    @media (max-width: 768px) {
+      font-size: 1.875rem;
+    }
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: #6b7280;
+    max-width: 600px;
+    margin: 0 auto;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
 }
 
 // Mission Section
 .mission {
   margin-bottom: 4rem;
-  padding: 2rem;
-  border-radius: 1.5rem;
-  transition: all 0.3s ease;
+  padding: 1rem 0;
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
+    margin-bottom: 3rem;
   }
 
   .missionHeader {
@@ -31,6 +59,10 @@
       font-weight: 700;
       color: #1f2937;
       margin-bottom: 1rem;
+
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
     }
 
     .missionSubtext {
@@ -38,6 +70,10 @@
       color: #6b7280;
       max-width: 600px;
       margin: 0 auto;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
     }
   }
 
@@ -49,23 +85,38 @@
 
     @media (max-width: 1024px) {
       grid-template-columns: 1fr;
+      gap: 2rem;
     }
 
-    // .missionContent {
-    //   .missionText {
-    //     font-size: 1.125rem;
-    //     line-height: 1.7;
-    //     color: #303132;
-    //     margin-bottom: 2rem;
-    //   }
-    // }
+    .missionContent {
+      .missionText {
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: #303132;
+        margin-bottom: 2rem;
+
+        @media (max-width: 768px) {
+          font-size: 1rem;
+          line-height: 1.6;
+        }
+      }
+    }
 
     .missionImage {
       position: relative;
       height: 400px;
       border-radius: 1rem;
       overflow: hidden;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.484);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      @media (max-width: 768px) {
+        height: 300px;
+      }
+
+      @media (max-width: 480px) {
+        height: 250px;
+      }
 
       .image {
         object-fit: cover;
@@ -77,9 +128,13 @@
 // Value Cards
 .valueCards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
   margin-top: 2rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -91,12 +146,31 @@
   border: 1px solid #e5e7eb;
   border-radius: 1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  background: white;
+  position: relative;
+
+  .valueCardIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: rgba(59, 130, 246, 0.1);
+    margin-bottom: 1rem;
+    color: #3b82f6;
+    transition: all 0.3s ease;
+  }
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     border-color: #3b82f6;
+
+    .valueCardIcon {
+      background: #3b82f6;
+      color: white;
+      transform: scale(1.05);
+    }
   }
 
   h3 {
@@ -109,84 +183,31 @@
   p {
     color: #6b7280;
     line-height: 1.5;
+    font-size: 0.95rem;
   }
 }
 
 // Stats Section
 .statsSection {
   margin: 4rem 0;
-}
-
-// Bento Grid Section
-.bentoSection {
-  margin: 4rem 0;
-  
-  .bentoHeader {
-    text-align: center;
-    margin-bottom: 3rem;
-
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #1f2937;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      color: #6b7280;
-      font-size: 1.125rem;
-    }
-  }
-}
-
-// Journey Section
-.journeySection {
-  margin: 4rem 0;
-  padding: 3rem;
-  border-radius: 1.5rem;
-  transition: all 0.3s ease;
+  padding: 1rem 0;
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
+    margin: 3rem 0;
   }
 
-  .journeyHeader {
+  .statsSectionHeader {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 
     h2 {
-      font-size: 2.5rem;
+      font-size: 2.25rem;
       font-weight: 700;
       color: #1f2937;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      color: #6b7280;
-      font-size: 1.125rem;
-    }
-  }
-}
-
-// Team Section
-.teamSection {
-  margin: 4rem 0;
-  padding: 4rem 0;
-
-  .sectionHeader {
-    text-align: center;
-    margin-bottom: 3rem;
-
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      // background: linear-gradient(135deg, #1f2937, #4b5563);
-      -webkit-background-clip: text;
-      color: transparent;
+      margin-bottom: 0.75rem;
 
       @media (max-width: 768px) {
-        font-size: 2rem;
+        font-size: 1.875rem;
       }
     }
 
@@ -195,69 +216,115 @@
       color: #6b7280;
       max-width: 600px;
       margin: 0 auto;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
     }
   }
+}
 
-  .teamGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 1rem;
+// Why Choose Us Section (More Compact)
+.whyChooseUs {
+  margin: 4rem 0;
+  padding: 1rem 0;
+  
+  @media (max-width: 768px) {
+    margin: 3rem 0;
+  }
+}
 
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
+// Journey Section
+.journeySection {
+  margin: 4rem 0;
+  padding: 2rem 0;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 0;
+    margin: 3rem 0;
+  }
+
+  .journeyHeader {
+    text-align: center;
+    margin-bottom: 2.5rem;
+
+    h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 0.75rem;
+
+      @media (max-width: 768px) {
+        font-size: 1.875rem;
+      }
     }
+
+    p {
+      color: #6b7280;
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Team Section
+.teamSection {
+  margin: 4rem 0;
+  padding: 2rem 0;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 0;
+    margin: 3rem 0;
   }
 }
 
 // Dark Mode Styles
 :global(.dark) {
-  .mission,
-  .journeySection {
-    // background: #1e293b;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  }
-
   .missionHeader,
   .bentoHeader,
-  .journeyHeader {
+  .journeyHeader,
+  .statsSectionHeader,
+  .sectionHeader {
     h2 {
-      color: #ffffff;
+      color: #f3f4f6;
     }
 
     p {
-      color: #cfd2d9f5;
+      color: #d1d5db;
     }
   }
 
   .missionImage {
-    box-shadow: 0 8px 16px rgb(238, 237, 237);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
 
-    .image {
-      box-shadow: 0 8px 16px rgb(238, 237, 237);
+  .missionContent {
+    .missionText {
+      color: #f3f4f6;
     }
   }
-  // .mission{
-  //   .missionHeader{
-  //     .missionSubtext{
-  //       color: #fdfdfd;
-  //     }
-  //   }
-  // }
-
-   
-
-
-
 
   .valueCard {
-    // background: #1e293b;
+    background: #1f2937;
     border-color: #374151;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+    .valueCardIcon {
+      background: rgba(96, 165, 250, 0.2);
+      color: #60a5fa;
+    }
 
     &:hover {
       border-color: #60a5fa;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+
+      .valueCardIcon {
+        background: #60a5fa;
+        color: #1f2937;
+      }
     }
 
     h3 {
@@ -265,29 +332,13 @@
     }
 
     p {
-      color: #9ca3af;
+      color: #d1d5db;
     }
   }
 
-  .teamSection {
-    // background: linear-gradient(to bottom, #0f172a, #1e293b);
-
-    .sectionHeader {
-      h2 {
-        // background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-        -webkit-background-clip: text;
-        color: whitesmoke;
-      }
-
-      p {
-        color: #e0e3e9;
-      }
-    }
-  }
   .missionHeader {
     .missionSubtext {
-      color: #fdfdfdb9;
+      color: #d1d5db;
     }
   }
-
 }

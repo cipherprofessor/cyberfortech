@@ -1,17 +1,29 @@
 "use client"
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { 
+  BookOpen, 
+  Award, 
+  Users, 
+  Shield, 
+  Zap, 
+  Code, 
+  Globe, 
+  Clock,
+  UserCheck
+} from 'lucide-react';
 
 
-import { AcUITimeline } from '@/components/ui/AcUI/TimeLine/TimeLineDemo';
 import { KeyMetrics } from '@/components/home/KeyMetrics/KeyMetrics';
 import { TeamGrid } from '@/components/ui/Mine/TeamCard/TeamGrid';
 
+
 import styles from './about.module.scss';
+import { FeatureCards } from '@/components/aboutus/FeatureCards/FeatureCards';
+import { CyberFortTimeline } from '@/components/ui/AcUI/TimeLine/TimeLineDemo';
 
 export default function AboutPage() {
 
- 
 const teamMembers = [
   {
     name: "Ayan Ali Dar",
@@ -19,12 +31,6 @@ const teamMembers = [
     role: "Founder & CEO",
     image: "/team/ayan.png",
     bio: "7+ years of experience in Marketing and Business Development",
-    // specialization: [
-    //   "Marketing Strategy",
-      // "Business Development",
-      // "Leadership",
-      // "Digital Marketing"
-    // ],
     experience: "Marketing Expert",
     achievements: [
       "100+ marketing campaigns",
@@ -33,7 +39,6 @@ const teamMembers = [
     ],
     location: "Cyber City, CC",
     projects: 150,
-    // availability: "Available for consulting",
     certifications: [
       "Digital Marketing Expert",
       "Business Strategy Specialist"
@@ -56,12 +61,6 @@ const teamMembers = [
     role: "AWS & Full Stack Developer",
     image: "/team/mohsin.jpg",
     bio: "5+ Years of Experience in Cloud And Full Stack Development",
-    // specialization: [
-    //   "Marketing Strategy",
-      // "Business Development",
-      // "Leadership",
-      // "Digital Marketing"
-    // ],
     experience: "Web Dev Expert",
     achievements: [
        "Trained 1000+ Students",
@@ -70,7 +69,6 @@ const teamMembers = [
     ],
     location: "Chennai, India",
     projects: 100,
-    // availability: "Available for consulting",
     certifications: [
       "Digital Marketing Expert",
       "Business Strategy Specialist"
@@ -93,12 +91,6 @@ const teamMembers = [
     role: "AI & Machine Learning Engineer",
     image: "/team/arsalan.jpg",
     bio: "2+ years of experience in AI and Machine Learning",
-    // specialization: [
-    //   "AWS Cloud",
-    //   "Full Stack",
-    //   "DevOps",
-    //   "System Architecture"
-    // ],
     experience: "AI Expert",
     achievements: [
       "20+ AI Projects",
@@ -107,7 +99,6 @@ const teamMembers = [
     ],
     location: "Tangmarg",
     projects: 25,
-    // availability: "Available for Projects",
     certifications: [
       "AWS Solutions Architect",
       "Full Stack Developer"
@@ -130,12 +121,6 @@ const teamMembers = [
     role: "Cybersecurity Engineer",
     image: "/testm/testm1.avif",
     bio: "3+ years of experience in Cybersecurity and Ethical Hacking",
-    // specialization: [
-    //   "AWS Cloud",
-    //   "Full Stack",
-    //   "DevOps",
-    //   "System Architecture"
-    // ],
     experience: "Cybersecurity Expert",
     achievements: [
       "30+ Cybersecurity Projects",
@@ -144,7 +129,6 @@ const teamMembers = [
     ],
     location: "Kashmir, India",
     projects: 35,
-    // availability: "Available for Projects",
     certifications: [
       "AWS Solutions Architect",
       "Full Stack Developer"
@@ -161,10 +145,36 @@ const teamMembers = [
       medium: "https://medium.com/@CyberFort"
     }
   }
-
 ];
 
+// Animation variants
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6 }
+  }
+};
 
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { duration: 0.5 }
+  }
+};
 
   return (
     <div className={styles.aboutContainer}>
@@ -203,46 +213,70 @@ const teamMembers = [
               high-quality training that combines theoretical knowledge with
               hands-on experience.
             </p>
-            <div className={styles.valueCards}>
+            <motion.div 
+              className={styles.valueCards}
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
               <motion.div 
                 className={styles.valueCard}
+                variants={fadeIn}
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
+                <div className={styles.valueCardIcon}>
+                  <BookOpen size={28} />
+                </div>
                 <h3>Quality Education</h3>
                 <p>Expert-led courses with real-world applications</p>
               </motion.div>
               <motion.div 
                 className={styles.valueCard}
+                variants={fadeIn}
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
+                <div className={styles.valueCardIcon}>
+                  <Zap size={28} />
+                </div>
                 <h3>Practical Experience</h3>
                 <p>Hands-on labs and real-world scenarios</p>
               </motion.div>
               <motion.div 
                 className={styles.valueCard}
+                variants={fadeIn}
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
+                <div className={styles.valueCardIcon}>
+                  <Users size={28} />
+                </div>
                 <h3>Community Support</h3>
                 <p>Active learning community and mentorship</p>
               </motion.div>
               <motion.div 
                 className={styles.valueCard}
+                variants={fadeIn}
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <h3>Community Support</h3>
-                <p>Active learning community and mentorship</p>
+                <div className={styles.valueCardIcon}>
+                  <Shield size={28} />
+                </div>
+                <h3>Industry-Relevant</h3>
+                <p>Curriculum aligned with current security practices</p>
               </motion.div>
-            </div>
+            </motion.div>
           </motion.div>
           <motion.div 
             className={styles.missionImage}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 200 }}
           >
             <Image
               src="/cyber1.png"
@@ -256,21 +290,31 @@ const teamMembers = [
 
       {/* Stats Section */}
       <section className={styles.statsSection}>
-        <KeyMetrics />
-      </section>
-
-      {/* Bento Grid Section */}
-      <section className={styles.bentoSection}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className={styles.bentoHeader}
+          className={styles.statsSectionHeader}
+        >
+          <h2>Our Impact</h2>
+          <p>The numbers that define our journey</p>
+        </motion.div>
+        <KeyMetrics />
+      </section>
+
+      {/* Why Choose Us Section - More Compact */}
+      <section className={styles.whyChooseUs}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={styles.sectionHeader}
         >
           <h2>Why Choose Us</h2>
           <p>Discover what makes our approach to cybersecurity education unique</p>
         </motion.div>
-        {/* <AcUiBentoGrid /> */}
+        
+        <FeatureCards />
       </section>
 
       {/* Journey Timeline */}
@@ -281,8 +325,10 @@ const teamMembers = [
           viewport={{ once: true }}
           className={styles.journeyHeader}
         >
+          <h2>Our Journey</h2>
+          <p>From inception to becoming a leading cybersecurity education platform</p>
         </motion.div>
-        <AcUITimeline />
+        <CyberFortTimeline />
       </section>
 
       {/* Team Section */}
