@@ -92,7 +92,7 @@
       .missionText {
         font-size: 1.125rem;
         line-height: 1.7;
-        color: #303132;
+        // color: #303132;
         margin-bottom: 2rem;
 
         @media (max-width: 768px) {
@@ -295,7 +295,7 @@
     }
 
     p {
-      color: #d1d5db;
+      color: #ffffff;
     }
   }
 
@@ -305,8 +305,12 @@
 
   .missionContent {
     .missionText {
-      color: #f3f4f6;
+      color: #ffffff;
     }
+  }
+
+  .missionText {
+    color: #ffffff;
   }
 
   .valueCard {
