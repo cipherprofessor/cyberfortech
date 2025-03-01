@@ -14,10 +14,22 @@ import {
   SortDesc,
   X,
   FilterIcon,
+  DollarSign,
+  DollarSignIcon,
+  TimerIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import styles from "./CourseFilter.module.scss";
-import { CourseFilterProps, CourseLevel, FilterState } from "@/types/courses";
+import { CourseFilterProps, CourseLevel, FilterState } from "../types";
+import { LucideIcon } from "lucide-react";
+
+type SortOption = "rating" | "newest" | "price" | "duration";
+
+interface SortOptionType {
+  value: SortOption;
+  label: string;
+  icon: LucideIcon;
+}
 
 export function CourseFilter({
   onFilterChange,
@@ -30,10 +42,10 @@ export function CourseFilter({
   ]);
   // const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [durationRange, setDurationRange] = useState<string>("all");
+  const [durationRange, setDurationRange] = useState<"all" | "short" | "medium" | "long">("all");
   const [minRating, setMinRating] = useState<number>(0);
   const [search, setSearch] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("rating");
+  const [sortBy, setSortBy] = useState<SortOption>("rating");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const levels: CourseLevel[] = ['Beginner', 'Intermediate', 'Advanced'];
   const [selectedLevels, setSelectedLevels] = useState<CourseLevel[]>([]);
@@ -43,29 +55,25 @@ export function CourseFilter({
   const { maxPrice, categories } = useMemo(() => {
     const calculatedMaxPrice =
       courses.length > 0
-        ? Math.max(...courses.map((course) => course.price))
+        ? Math.max(...courses.map((course) => course.price || 0)) // Add fallback value
         : defaultMaxPrice;
-
-    const uniqueLevels = Array.from(
-      new Set(courses.map((course) => course.level))
-    );
+  
     const uniqueCategories = Array.from(
-      new Set(courses.map((course) => course.category.trim()))
+      new Set(courses.map((course) => (course.category ?? "").trim()))
     );
-
+  
     return {
       maxPrice: calculatedMaxPrice,
-      levels: uniqueLevels,
       categories: uniqueCategories,
     };
   }, [courses, defaultMaxPrice]);
 
-  const sortOptions = [
+  const sortOptions: SortOptionType[] = [
     { value: "rating", label: "Rating", icon: Star },
     { value: "newest", label: "Newest", icon: Clock },
-    { value: "price", label: "Price", icon: Wallet },
-    { value: "duration", label: "Duration", icon: Clock },
-  ];
+    { value: "price", label: "Price", icon: DollarSignIcon },
+    { value: "duration", label: "Duration", icon: TimerIcon }
+  ] as const;
 
   useEffect(() => {
     if (maxPrice !== priceRange[1]) {
@@ -79,14 +87,14 @@ export function CourseFilter({
     }
   };
 
-  const handleSortChange = (value: string) => {
-    if (value === sortBy) {
-      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+  const handleSortChange = (value: SortOption) => {
+    if (sortBy === value) {
+      setSortOrder(prev => prev === "asc" ? "desc" : "asc");
     } else {
       setSortBy(value);
       setSortOrder("desc");
     }
-  };
+};
 
   const handleRatingChange = (rating: number) => {
     setMinRating(rating === minRating ? 0 : rating);
@@ -157,7 +165,6 @@ export function CourseFilter({
     >
      {/* // Update the Search Input section */}
 <section className={styles.section}>
-  <h3><FilterIcon size={16} /> Filters</h3>
   <div className={styles.searchWrapper}>
     <Search size={16} className={styles.searchIcon} />
     <input
@@ -185,6 +192,9 @@ export function CourseFilter({
           <ArrowUpDown size={16} /> Sort By
         </h3>
         <div className={styles.sortButtons}>
+
+
+          
           {sortOptions.map((option) => (
             <button
               key={option.value}

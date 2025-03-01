@@ -8,7 +8,7 @@ import {
   Sparkles,
   ChevronDown
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import styles from "./courses.module.scss";
 
@@ -17,11 +17,32 @@ export default function CoursesPage() {
   const isDark = theme === 'dark';
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  
+  // Check if it's mobile view
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add event listener for resize
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
   // Track scroll for header effects
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (headerRef.current) {
+        const headerHeight = headerRef.current.getBoundingClientRect().height;
+        setIsScrolled(window.scrollY > headerHeight / 2);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -50,10 +71,15 @@ export default function CoursesPage() {
     show: { opacity: 1, y: 0 }
   };
 
+  const toggleFilters = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
   return (
     <div className={`${styles.pageWrapper} ${isDark ? styles.dark : ''}`}>
       <div className={styles.coursesContainer}>
         <motion.div 
+          ref={headerRef}
           className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}
           initial="hidden"
           animate="show"
@@ -82,26 +108,28 @@ export default function CoursesPage() {
         </motion.div>
 
         <main className={styles.courseSection}>
-          <motion.div 
-            className={styles.mobileSorting}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <button 
-              className={`${styles.filterToggle} ${isFilterOpen ? styles.active : ''}`}
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              aria-expanded={isFilterOpen}
-              aria-label="Toggle filters"
+          {isMobile && (
+            <motion.div 
+              className={styles.mobileSorting}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
             >
-              <Filter size={16} />
-              <span>{isFilterOpen ? 'Hide Filters' : 'Show Filters'}</span>
-              <ChevronDown 
-                size={14} 
-                className={`${styles.chevron} ${isFilterOpen ? styles.rotated : ''}`} 
-              />
-            </button>
-          </motion.div>
+              <button 
+                className={`${styles.filterToggle} ${isFilterOpen ? styles.active : ''}`}
+                onClick={toggleFilters}
+                aria-expanded={isFilterOpen}
+                aria-label="Toggle filters"
+              >
+                <Filter size={16} />
+                <span>{isFilterOpen ? 'Hide Filters' : 'Show Filters'}</span>
+                <ChevronDown 
+                  size={14} 
+                  className={`${styles.chevron} ${isFilterOpen ? styles.rotated : ''}`} 
+                />
+              </button>
+            </motion.div>
+          )}
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -109,7 +137,10 @@ export default function CoursesPage() {
             transition={{ delay: 0.4 }}
             className={styles.courseListWrapper}
           >
-            <CourseList isFilterOpen={isFilterOpen} />
+            <CourseList 
+              isFilterOpen={isFilterOpen} 
+              onFilterToggle={setIsFilterOpen} 
+            />
           </motion.div>
         </main>
       </div>
