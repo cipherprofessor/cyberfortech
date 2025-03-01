@@ -6,31 +6,43 @@ $colors: (
     primary: #3b82f6,
     gradient: linear-gradient(135deg, #3b82f6, #60a5fa),
     shadow: rgba(59, 130, 246, 0.4),
+    light-bg: rgba(59, 130, 246, 0.1),
+    dark-bg: rgba(59, 130, 246, 0.2),
   ),
   purple: (
     primary: #8b5cf6,
     gradient: linear-gradient(135deg, #8b5cf6, #a78bfa),
     shadow: rgba(139, 92, 246, 0.4),
+    light-bg: rgba(139, 92, 246, 0.1),
+    dark-bg: rgba(139, 92, 246, 0.2),
   ),
   green: (
     primary: #10b981,
     gradient: linear-gradient(135deg, #10b981, #34d399),
     shadow: rgba(16, 185, 129, 0.4),
+    light-bg: rgba(16, 185, 129, 0.1),
+    dark-bg: rgba(16, 185, 129, 0.2),
   ),
   orange: (
     primary: #f59e0b,
     gradient: linear-gradient(135deg, #f59e0b, #fbbf24),
     shadow: rgba(245, 158, 11, 0.4),
+    light-bg: rgba(245, 158, 11, 0.1),
+    dark-bg: rgba(245, 158, 11, 0.2),
   ),
   red: (
     primary: #ef4444,
     gradient: linear-gradient(135deg, #ef4444, #f87171),
     shadow: rgba(239, 68, 68, 0.4),
+    light-bg: rgba(239, 68, 68, 0.1),
+    dark-bg: rgba(239, 68, 68, 0.2),
   ),
   indigo: (
     primary: #6366f1,
     gradient: linear-gradient(135deg, #6366f1, #818cf8),
     shadow: rgba(99, 102, 241, 0.4),
+    light-bg: rgba(99, 102, 241, 0.1),
+    dark-bg: rgba(99, 102, 241, 0.2),
   ),
 );
 
@@ -44,7 +56,7 @@ $colors: (
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
   height: fit-content;
-  box-shadow: 0 4px 12px rgba(36, 41, 46, 0.152);
+  box-shadow: 0 4px 12px rgba(36, 41, 46, 0.08);
 
   &::before {
     content: "";
@@ -62,23 +74,27 @@ $colors: (
   }
 
   // Generate color-specific styles
-//   @each $color, $values in $colors {
-//     &.#{$color} {
-//       &::before {
-//         background: map-get($values, gradient);
-//       }
+  @each $color, $values in $colors {
+    &.#{$color} {
+      &::before {
+        background: map-get($values, gradient);
+      }
 
-//       .roleChip {
-//         background: rgba(map-get($values, primary), 0.1);
-//         color: map-get($values, primary);
-//       }
+      .roleChip {
+        background: map-get($values, light-bg);
+        color: map-get($values, primary);
+      }
 
-//       .achievementIcon {
-//         color: #f59e0b; // Keep golden color for all variants
-//       }
-//     }
-//   }
-// }
+      .achievementIcon {
+        color: #f59e0b; // Keep golden color for all variants
+      }
+      
+      &:hover {
+        box-shadow: 0 10px 25px rgba(map-get($values, primary), 0.15);
+      }
+    }
+  }
+}
 
 .imageSection {
   position: relative;
@@ -149,7 +165,7 @@ $colors: (
   transition: all 0.2s ease;
 
   svg {
-    color: #1b2ebc;
+    color: #3b82f6;
   }
 
   &:hover {
@@ -190,7 +206,7 @@ $colors: (
 .bio {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #000000;
+  color: #374151;
   margin-bottom: 1rem;
 }
 
@@ -199,8 +215,6 @@ $colors: (
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  //   background: #4f5d7033;
-  //   color: #0be0f5;
   border-radius: 2rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -209,7 +223,6 @@ $colors: (
 
   &:hover {
     transform: translateY(-1px);
-    // background: rgba(245, 158, 11, 0.15);
   }
 }
 
@@ -284,80 +297,82 @@ $colors: (
   color: #4b5563;
   transition: all 0.2s ease;
 
-  //   &:hover {
-  //     transform: translateY(-2px);
-  //   }
-
   &.linkedin {
-    background: #0a66c2ca;
+    background: rgba(10, 102, 194, 0.8);
     color: white;
-    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.587);
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.25);
   }
 
   &.twitter {
-    background: #1da0f2cb;
+    background: rgba(29, 160, 242, 0.8);
     color: white;
-    box-shadow: 0 4px 12px rgba(29, 160, 242, 0.533);
+    box-shadow: 0 4px 12px rgba(29, 160, 242, 0.25);
   }
 
   &.github {
-    background: #24292ec7;
+    background: rgba(36, 41, 46, 0.8);
     color: white;
-    box-shadow: 0 4px 12px rgba(36, 41, 46, 0.528);
+    box-shadow: 0 4px 12px rgba(36, 41, 46, 0.25);
   }
 
   &.email {
-    background: #ea4435c5;
+    background: rgba(234, 68, 53, 0.8);
     color: white;
-    box-shadow: 0 4px 12px rgba(234, 68, 53, 0.466);
+    box-shadow: 0 4px 12px rgba(234, 68, 53, 0.25);
   }
 
   &.website {
-    background: #6365f1c2;
+    background: rgba(99, 101, 241, 0.8);
     color: white;
-    box-shadow: 0 4px 12px rgba(99, 241, 187, 0.492);
+    box-shadow: 0 4px 12px rgba(99, 101, 241, 0.25);
   }
 
   &.skype {
-    background: #b363f1c7;
+    background: rgba(179, 99, 241, 0.8);
     color: white;
-    box-shadow: 0 4px 12px rgba(113, 54, 181, 0.489);
+    box-shadow: 0 4px 12px rgba(179, 99, 241, 0.25);
   }
 
   &.linkedin:hover {
     background: #0a66c2;
     color: white;
-    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(10, 102, 194, 0.3);
   }
 
   &.twitter:hover {
     background: #1da1f2;
     color: white;
-    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(29, 161, 242, 0.3);
   }
 
   &.github:hover {
     background: #24292e;
     color: white;
-    box-shadow: 0 4px 12px rgba(36, 41, 46, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(36, 41, 46, 0.3);
   }
 
   &.email:hover {
     background: #ea4335;
     color: white;
-    box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(234, 67, 53, 0.3);
   }
 
   &.website:hover {
     background: #6366f1;
     color: white;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
   }
 
   &.skype:hover {
     background: #b363f1;
     color: white;
-    box-shadow: 0 4px 12px rgba(54, 181, 78, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(179, 99, 241, 0.3);
   }
 }
 
@@ -366,7 +381,24 @@ $colors: (
   .card {
     background: #1e293b;
     border-color: #374151;
-    box-shadow: 0 4px 12px rgba(253, 253, 253, 0.152);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    
+    &:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    @each $color, $values in $colors {
+      &.#{$color} {
+        .roleChip {
+          background: map-get($values, dark-bg);
+          color: lighten(map-get($values, primary), 10%);
+        }
+        
+        &:hover {
+          box-shadow: 0 10px 25px rgba(map-get($values, primary), 0.2);
+        }
+      }
+    }
   }
 
   .imageWrapper::after {
@@ -380,11 +412,12 @@ $colors: (
     border-color: rgba(255, 255, 255, 0.1);
 
     svg {
-      color: #0bf4f57d;
+      color: #60a5fa;
     }
 
     &:hover {
       background: rgba(30, 41, 59, 0.98);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
   }
 
@@ -393,7 +426,7 @@ $colors: (
   }
 
   .bio {
-    color: #ffffff;
+    color: #d1d5db;
   }
 
   .tag {
@@ -406,7 +439,7 @@ $colors: (
   }
 
   .achievement {
-    color: #9ca3af;
+    color: #d1d5db;
     border-color: #374151;
 
     .achievementIcon {
@@ -420,83 +453,67 @@ $colors: (
 
   .socialLink {
     background: #374151;
-    color: #9ca3af;
-
-    &:hover {
-      color: white;
-    }
+    color: #d1d5db;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 
     &.linkedin {
-      background: #0a66c28c;
+      background: rgba(10, 102, 194, 0.6);
       color: white;
-      box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
     }
 
     &.twitter {
-      background: #1da0f281;
+      background: rgba(29, 161, 242, 0.6);
       color: white;
-      box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
     }
 
     &.github {
-      background: #24292e82;
+      background: rgba(36, 41, 46, 0.6);
       color: white;
-      box-shadow: 0 4px 12px rgba(36, 41, 46, 0.2);
     }
 
     &.email {
-      background: #ea44357b;
+      background: rgba(234, 67, 53, 0.6);
       color: white;
-      box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
     }
 
     &.website {
-      background: #6365f17e;
+      background: rgba(99, 102, 241, 0.6);
       color: white;
-      box-shadow: 0 4px 12px rgba(99, 241, 187, 0.2);
     }
 
     &.skype {
-      background: #b363f185;
+      background: rgba(179, 99, 241, 0.6);
       color: white;
-      box-shadow: 0 4px 12px rgba(113, 54, 181, 0.2);
     }
 
     &.linkedin:hover {
       background: #0a66c2;
-      color: white;
-      box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
+      box-shadow: 0 6px 16px rgba(10, 102, 194, 0.4);
     }
 
     &.twitter:hover {
       background: #1da1f2;
-      color: white;
-      box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
+      box-shadow: 0 6px 16px rgba(29, 161, 242, 0.4);
     }
 
     &.github:hover {
       background: #24292e;
-      color: white;
-      box-shadow: 0 4px 12px rgba(36, 41, 46, 0.2);
+      box-shadow: 0 6px 16px rgba(36, 41, 46, 0.4);
     }
 
     &.email:hover {
       background: #ea4335;
-      color: white;
-      box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
+      box-shadow: 0 6px 16px rgba(234, 67, 53, 0.4);
     }
 
     &.website:hover {
       background: #6366f1;
-      color: white;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
     }
 
     &.skype:hover {
       background: #b363f1;
-      color: white;
-      box-shadow: 0 4px 12px rgba(54, 181, 78, 0.2);
+      box-shadow: 0 6px 16px rgba(179, 99, 241, 0.4);
     }
   }
-}
 }

@@ -1,4 +1,3 @@
-// src/components/TeamCard/TeamCard.tsx
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -15,7 +14,6 @@ import {
   MessageCircle,
 } from "lucide-react";
 import styles from "./TeamCard.module.scss";
-import { Chip } from "@heroui/react";
 
 interface SocialLinks {
   linkedin?: string;
@@ -118,6 +116,13 @@ export function TeamCard({
 
         <p className={styles.bio}>{bio}</p>
 
+        {experience && (
+          <div className={styles.experienceChip}>
+            <Calendar size={14} />
+            <span>{experience}</span>
+          </div>
+        )}
+
         {specialization.length > 0 && (
           <div className={styles.tags}>
             {specialization.map((skill, index) => (
@@ -166,6 +171,7 @@ export function TeamCard({
               className={`${styles.socialLink} ${styles.linkedin}`}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="LinkedIn Profile"
             >
               <Linkedin size={16} />
             </motion.a>
@@ -178,6 +184,7 @@ export function TeamCard({
               className={`${styles.socialLink} ${styles.twitter}`}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="Twitter Profile"
             >
               <Twitter size={16} />
             </motion.a>
@@ -190,6 +197,7 @@ export function TeamCard({
               className={`${styles.socialLink} ${styles.github}`}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="GitHub Profile"
             >
               <Github size={16} />
             </motion.a>
@@ -200,6 +208,7 @@ export function TeamCard({
               className={`${styles.socialLink} ${styles.email}`}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="Email"
             >
               <Mail size={16} />
             </motion.a>
@@ -212,6 +221,7 @@ export function TeamCard({
               className={`${styles.socialLink} ${styles.website}`}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="Website"
             >
               <Globe size={16} />
             </motion.a>
@@ -222,6 +232,7 @@ export function TeamCard({
               className={`${styles.socialLink} ${styles.skype}`}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="Skype"
             >
               <MessageCircle size={15} />
             </motion.a>
