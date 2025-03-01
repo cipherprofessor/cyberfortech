@@ -32,7 +32,7 @@ const teamMembers = [
     role: "Founder & CEO",
     image: "/team/ayan.png",
     bio: "7+ years of experience in Marketing and Business Development",
-    experience: "Marketing Expert",
+    // experience: "Marketing Expert",
     achievements: [
       "100+ marketing campaigns",
       "Grew business revenue by 200%",
@@ -62,7 +62,7 @@ const teamMembers = [
     role: "AWS & Full Stack Developer",
     image: "/team/mohsin.jpg",
     bio: "5+ Years of Experience in Cloud And Full Stack Development",
-    experience: "Web Dev Expert",
+    // experience: "Web Dev Expert",
     achievements: [
        "Trained 1000+ Students",
       "Developed 50+ Full Stack Apps",
@@ -92,7 +92,7 @@ const teamMembers = [
     role: "AI & Machine Learning Engineer",
     image: "/team/arsalan.jpg",
     bio: "2+ years of experience in AI and Machine Learning",
-    experience: "AI Expert",
+    // experience: "AI Expert",
     achievements: [
       "20+ AI Projects",
       "Developed 15+ AI Models",
@@ -122,7 +122,7 @@ const teamMembers = [
     role: "Cybersecurity Engineer",
     image: "/testm/testm1.avif",
     bio: "3+ years of experience in Cybersecurity and Ethical Hacking",
-    experience: "Cybersecurity Expert",
+    // experience: "Cybersecurity Expert",
     achievements: [
       "30+ Cybersecurity Projects",
       "Performed 50+ Penetration Tests",
