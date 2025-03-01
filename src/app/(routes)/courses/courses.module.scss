@@ -59,20 +59,9 @@
   width: 100%;
   position: relative;
   z-index: 30;
-  // background-color: var(--header-bg);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   border-bottom: 1px solid transparent;
-  
-  // &.scrolled {
-  //   position: sticky;
-  //   top: 0;
-  //   left: 0;
-  //   right: 0;
-  //   padding: 1rem 0;
-  //   border-bottom-color: var(--filter-toggle-border);
-  //   box-shadow: 0 4px 10px var(--header-shadow);
-  // }
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -186,7 +175,7 @@
   display: none;
   position: sticky;
   top: 5.5rem;
-  z-index: 20;
+  z-index: 0;
   padding: 0.5rem 0;
   background-color: var(--header-bg);
   
