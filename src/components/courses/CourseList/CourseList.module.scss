@@ -63,7 +63,7 @@
 }
 
 .filterSection {
-  width: 300px;
+  width: 280px;
   flex-shrink: 0;
   position: sticky;
   top: 5.5rem;
@@ -71,13 +71,13 @@
   overflow-y: auto;
   background-color: var(--filter-bg);
   border-radius: 1rem;
-  padding: 1.5rem;
+  padding: 1.5rem 0rem 0rem 0rem;
   border: 1px solid var(--filter-border);
   box-shadow: 0 4px 20px var(--filter-shadow);
   
   @media (max-width: 768px) {
     position: fixed;
-    top: 0;
+    top: 55px;
     left: 0;
     bottom: 0;
     width: 300px;
@@ -107,36 +107,32 @@
 
 .filterHeader {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+  justify-content: center; // Center horizontally
+  align-items: center; // Center vertically
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--filter-header-border);
   
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--text-primary);
     margin: 0;
-  }
-  
-  .closeButton {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.375rem;
-    transition: all 0.2s ease;
+    display: flex; // Add this
+    align-items: center; // Add this
+    gap: 0.5rem; // Add space between icon and text
     
-    &:hover {
-      background-color: var(--filter-border);
-      color: var(--text-primary);
-    }
+      svg {
+        color: #3b82f6;
+      } // Makes icon blue
+    
   }
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center; // Add this
+  margin-right: 10px;
 }
 
 .mainContent {
@@ -170,13 +166,26 @@
   padding: 1rem 0;
 }
 
-/* Custom pagination styling - no :global selectors */
+/* Custom pagination styling */
 .paginationContainer {
   display: flex;
   border-radius: 0.5rem;
   overflow: hidden;
   background-color: var(--pagination-bg);
   box-shadow: 0 2px 8px var(--filter-shadow);
+  
+  @media (max-width: 640px) {
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    &::-webkit-scrollbar {
+      height: 0;
+      width: 0;
+      display: none;
+    }
+  }
 }
 
 .paginationButton {
@@ -190,10 +199,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.paginationButton:hover:not([disabled]) {
-  background-color: var(--filter-border);
+  cursor: pointer;
+  
+  &:hover:not([disabled]):not(.paginationButtonActive) {
+    background-color: var(--filter-border);
+  }
 }
 
 .paginationButtonActive {
@@ -255,6 +265,7 @@
   font-size: 0.875rem;
   color: var(--text-secondary);
   margin-bottom: -1rem;
+  margin-left: 8px;
   
   span {
     font-weight: 600;
@@ -298,4 +309,8 @@
   .courseListContainer {
     padding: 0;
   }
+}
+
+.closeButton{
+
 }

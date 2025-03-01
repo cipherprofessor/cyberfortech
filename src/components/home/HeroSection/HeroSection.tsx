@@ -6,7 +6,6 @@ import { TypewriterEffect } from "@/components/ui/AcUI/TypeWritterEffect/typewri
 import { useState, useEffect } from 'react';
 import styles from "./HeroSection.module.scss";
 import { BackgroundBeams } from "@/components/ui/AcUI/BackgroundBeams/background-beams";
-import router from "next/router";
 import { useRouter } from "next/navigation";
 
 const words = [
@@ -86,6 +85,7 @@ export function HeroSection() {
       <BackgroundBeams className={styles.backgroundBeams} />
       <div className={styles.content}>
         <div className={styles.gridContainer}>
+          {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -116,12 +116,12 @@ export function HeroSection() {
               <Button size="lg" className={styles.primaryButton} onClick={handleExploreCoursesButton}>
                 Explore our Courses
               </Button>
-              <Button variant="outline" size="lg" className={styles.secondaryButton} onClick={handleContactUsCoursesButton }>
+              <Button variant="outline" size="lg" className={styles.secondaryButton} onClick={handleContactUsCoursesButton}>
                 Contact Us
               </Button>
             </motion.div>
 
-
+            {/* Features moved inside the text content div for mobile */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -137,24 +137,23 @@ export function HeroSection() {
                   className={styles.featureCard}
                 >
                   <div className={styles.featureIconWrapper}>
-                  <span className={styles.featureIcon}>{feature.icon}</span>
-                  <h3 className={styles.featureTitle}>{feature.title}</h3>
+                    <span className={styles.featureIcon}>{feature.icon}</span>
+                    <h3 className={styles.featureTitle}>{feature.title}</h3>
                   </div>
                   <p className={styles.featureDescription}>{feature.description}</p>
                 </motion.div>
               ))}
             </motion.div>
-            
-            
           </motion.div>
 
+          {/* Image Content */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className={styles.imageContent}
           >
-            {/* <div className={styles.imageWrapper}> */}
+            <div className={styles.imageWrapper}>
               <Image
                 src="/logo/cyber4.png"
                 alt="Cybersecurity Training"
@@ -163,8 +162,9 @@ export function HeroSection() {
                 className={styles.heroImage}
                 priority
               />
-            {/* </div> */}
+            </div>
 
+            {/* Stats Grid */}
             <div className={styles.statsGrid}>
               {stats.map((stat, index) => (
                 <motion.div
@@ -174,6 +174,7 @@ export function HeroSection() {
                   transition={{ delay: 1 + index * 0.2, type: "spring" }}
                   className={styles.stat}
                 >
+                  <span className={styles.statIcon}>{stat.icon}</span>
                   <span className={styles.number}>
                     {typeof animatedStats[index] === 'number' 
                       ? Math.round(animatedStats[index]) + (stat.number.includes('%') ? '%' : '') 
@@ -181,43 +182,39 @@ export function HeroSection() {
                   </span>
                   <span className={styles.label}>{stat.label}</span>
                 </motion.div>
-
-                
               ))}
             </div>
-
-            
-
-            
           </motion.div>
         </div>
+        
+        {/* Trust Badges */}
         <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-              className={styles.trustBadges}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          className={styles.trustBadges}
+        >
+          {[
+            "aws", "ceh", "cisco-ar21", "gcp", 
+            "hashicorp", "nextjs-ar21", "nginx-ar21", "reactjs-ar21"
+          ].map((logo, index) => (
+            <motion.div
+              key={logo}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1 + index * 0.1 }}
+              className={styles.badge}
             >
-              {[
-                "aws", "ceh", "cisco-ar21", "gcp", 
-                "hashicorp", "nextjs-ar21", "nginx-ar21", "reactjs-ar21"
-              ].map((logo, index) => (
-                <motion.div
-                  key={logo}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1 + index * 0.1 }}
-                  className={styles.badge}
-                >
-                  <Image
-                    src={`/logocompanies/${logo}.svg`}
-                    alt={`${logo} certification`}
-                    width={80}
-                    height={40}
-                    style={{ objectFit: 'contain' }}
-                  />
-                </motion.div>
-              ))}
+              <Image
+                src={`/logocompanies/${logo}.svg`}
+                alt={`${logo} certification`}
+                width={80}
+                height={40}
+                style={{ objectFit: 'contain' }}
+              />
             </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

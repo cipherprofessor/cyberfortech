@@ -56,19 +56,23 @@
   align-items: center;
   padding: 2.5rem 0;
   margin-bottom: 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: var(--header-bg);
+  width: 100%;
+  position: relative;
+  z-index: 30;
+  // background-color: var(--header-bg);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   border-bottom: 1px solid transparent;
   
-  &.scrolled {
-    padding: 1rem 0;
-    border-bottom-color: var(--filter-toggle-border);
-    box-shadow: 0 4px 10px var(--header-shadow);
-  }
+  // &.scrolled {
+  //   position: sticky;
+  //   top: 0;
+  //   left: 0;
+  //   right: 0;
+  //   padding: 1rem 0;
+  //   border-bottom-color: var(--filter-toggle-border);
+  //   box-shadow: 0 4px 10px var(--header-shadow);
+  // }
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -98,6 +102,11 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  
+  @media (max-width: 640px) {
+    width: 45px;
+    height: 45px;
+  }
 }
 
 .headerText {
@@ -128,6 +137,10 @@
     
     @media (max-width: 768px) {
       font-size: 1rem;
+    }
+    
+    @media (max-width: 640px) {
+      font-size: 0.875rem;
     }
   }
 }
@@ -170,9 +183,19 @@
 }
 
 .mobileSorting {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 1.5rem;
+  display: none;
+  position: sticky;
+  top: 5.5rem;
+  z-index: 20;
+  padding: 0.5rem 0;
+  background-color: var(--header-bg);
+  
+  /* Show only on mobile */
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1.5rem;
+  }
 }
 
 .filterToggle {
@@ -210,6 +233,7 @@
 
 .courseListWrapper {
   min-height: 300px;
+  width: 100%;
 }
 
 @keyframes sparkle {

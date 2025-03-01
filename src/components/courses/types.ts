@@ -31,8 +31,8 @@ export interface Course {
   createdAt?: string;
   courseId?: string;
   sections?: any[];
-  is_published: number;
-  is_featured: number;
+  is_published?: number;
+  is_featured?: number;
 }
 
 export interface Lesson {

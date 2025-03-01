@@ -1,9 +1,9 @@
 "use client"
-import { useCallback, useEffect, useState, ReactNode } from 'react';
+import { useCallback, useEffect, useState, ReactNode, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@heroui/react';
-import { Filter, Search, SlidersHorizontal, X, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, X, ChevronUp, ChevronLeft, ChevronRight, FilterIcon } from 'lucide-react';
 
 import styles from './CourseList.module.scss';
 
@@ -11,12 +11,12 @@ import { CourseFilter } from '../CourseFilter/CourseFilter';
 import { Course, FilterState } from '../types';
 import { CourseCard, CourseCardSkeleton } from '../ResuableCourseCard/CourseCard';
 
-
 interface CourseListProps {
   isFilterOpen?: boolean;
+  onFilterToggle?: (isOpen: boolean) => void;
 }
 
-export function CourseList({ isFilterOpen = false }: CourseListProps) {
+export function CourseList({ isFilterOpen = false, onFilterToggle }: CourseListProps) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
@@ -24,25 +24,22 @@ export function CourseList({ isFilterOpen = false }: CourseListProps) {
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showFilters, setShowFilters] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [scrollToTopVisible, setScrollToTopVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const coursesPerPage = 9;
 
-  // Set mounted state after component mounts to avoid hydration issues
+  // Set mounted state and detect mobile
   useEffect(() => {
     setIsMounted(true);
-    const isWideScreen = window.innerWidth > 768;
-    setShowFilters(isWideScreen || isFilterOpen);
-  }, [isFilterOpen]);
-
-  // Listen for isFilterOpen prop changes - only after mounting to avoid hydration errors
-  useEffect(() => {
-    if (isMounted) {
-      const isWideScreen = window.innerWidth > 768;
-      setShowFilters(isWideScreen || isFilterOpen);
-    }
-  }, [isFilterOpen, isMounted]);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Check scroll position to show/hide scroll to top button
   useEffect(() => {
@@ -66,6 +63,9 @@ export function CourseList({ isFilterOpen = false }: CourseListProps) {
         setFilteredCourses(data);
       } catch (error) {
         console.error('Error fetching courses:', error);
+        // Show empty state instead of mock data
+        setCourses([]);
+        setFilteredCourses([]);
       } finally {
         setLoading(false);
       }
@@ -288,9 +288,11 @@ export function CourseList({ isFilterOpen = false }: CourseListProps) {
     }
   };
 
-  // Toggle filters on mobile
-  const toggleFilters = () => {
-    setShowFilters(!showFilters);
+  // Close filters on mobile
+  const closeFilters = () => {
+    if (isMobile && onFilterToggle) {
+      onFilterToggle(false);
+    }
   };
 
   // Conditional rendering to avoid hydration issues
@@ -313,30 +315,43 @@ export function CourseList({ isFilterOpen = false }: CourseListProps) {
   return (
     <div className={`${styles.courseListContainer} ${isDark ? styles.dark : ''}`}>
       <div className={styles.content}>
-        {isMounted && (
-          <>
-            {showFilters && (
-              <aside className={styles.filterSection}>
-                <div className={styles.filterHeader}>
-                  <h2>Filters</h2>
-                  {window.innerWidth <= 768 && (
-                    <button 
-                      className={styles.closeButton}
-                      onClick={toggleFilters}
-                      aria-label="Close filters"
-                    >
-                      <X size={20} />
-                    </button>
-                  )}
-                </div>
-                <CourseFilter 
-                  onFilterChange={handleFilterChange}
-                  courses={courses}
-                />
-              </aside>
-            )}
-          </>
-        )}
+        {/* Desktop: Always show filters. Mobile: Show only when isFilterOpen is true */}
+        <AnimatePresence>
+          {(!isMobile || (isMobile && isFilterOpen)) && (
+            <motion.aside 
+              className={styles.filterSection}
+              initial={{ x: isMobile ? -300 : 0, opacity: isMobile ? 0 : 1 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: isMobile ? -300 : 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className={styles.filterHeader}>
+  <div className={styles.searchWrapper}>
+    <h3>
+      <FilterIcon size={16} color="currentColor" /> 
+      <span>Courses Filter</span>
+    </h3>
+  </div>
+
+              
+
+                {isMobile && (
+                  <button 
+                    className={styles.closeButton}
+                    onClick={closeFilters}
+                    aria-label="Close filters"
+                  >
+                    <X size={20} />
+                  </button>
+                )}
+              </div>
+              <CourseFilter 
+                onFilterChange={handleFilterChange}
+                courses={courses}
+              />
+            </motion.aside>
+          )}
+        </AnimatePresence>
 
         <main className={styles.mainContent}>
           {loading ? (
@@ -378,9 +393,9 @@ export function CourseList({ isFilterOpen = false }: CourseListProps) {
                 {currentCourses.map((course) => (
                   <div key={course.id}>
                     <CourseCard 
-                    course={course}
-                    isManagementView={false}
-                     />
+                      course={course}
+                      isManagementView={false}
+                    />
                   </div>
                 ))}
               </div>
