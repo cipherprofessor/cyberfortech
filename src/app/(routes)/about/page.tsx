@@ -15,12 +15,13 @@ import {
 
 
 import { KeyMetrics } from '@/components/home/KeyMetrics/KeyMetrics';
-import { TeamGrid } from '@/components/ui/Mine/TeamCard/TeamGrid';
+
 
 
 import styles from './about.module.scss';
 import { FeatureCards } from '@/components/aboutus/FeatureCards/FeatureCards';
 import { CyberFortTimeline } from '@/components/ui/AcUI/TimeLine/TimeLineDemo';
+import { TeamGrid } from '@/components/aboutus/TeamCard/TeamGrid';
 
 export default function AboutPage() {
 
