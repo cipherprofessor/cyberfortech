@@ -48,9 +48,9 @@
     --icon-wrapper-bg: rgba(30, 41, 59, 0.8);
     --badge-bg: rgba(30, 41, 59, 0.5);
     
-    &::after {
-      background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent 60%);
-    }
+    // &::after {
+    //   // background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent 60%);
+    // }
   }
 
   --text-primary: #0f172a;

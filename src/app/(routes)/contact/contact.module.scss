@@ -10,7 +10,7 @@
     left: 0;
     right: 0;
     height: 400px;
-    background: linear-gradient(150deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
+    // background: linear-gradient(150deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
     clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
     z-index: -1;
   }
@@ -377,9 +377,9 @@
   .contactSection {
     // background: #0f172a;
 
-    &::before {
-      background: linear-gradient(150deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
-    }
+    // &::before {
+    //   background: linear-gradient(150deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+    // }
   }
 
   .header {

@@ -13,7 +13,7 @@
     left: 0;
     right: 0;
     height: 250px;
-    background: linear-gradient(145deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+    // background: linear-gradient(145deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
     z-index: -1;
   }
 
@@ -28,7 +28,7 @@
     --header-bg: rgba(25, 25, 35, 0.9);
     --stat-card-bg: rgba(35, 35, 45, 0.9);
     
-    background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), rgba(15, 15, 20, 0.05));
+    // background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), rgba(15, 15, 20, 0.05));
   }
 
   --background: #ffffff;
