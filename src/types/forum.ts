@@ -52,6 +52,7 @@ export interface Topic {
     views: number;
     subcategory_id?: number;
     subcategory_name?: string;
+    status?: string;
   }
   
   // API response interface

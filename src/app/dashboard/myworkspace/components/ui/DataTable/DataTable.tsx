@@ -1,3 +1,4 @@
+//src/app/dashboard/myworkspace/components/ui/DataTable/DataTable.tsx
 "use client";
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
@@ -25,35 +26,46 @@ export interface Column<T> {
   render?: (value: any, item: T) => React.ReactNode;
 }
 
+// Add customProps to TableProps interface
 export interface TableProps<T> {
-    data: T[];
-    columns: Column<T>[];
-    title?: string;
-    showSearch?: boolean;
-    isLoading?: boolean;
-    selectable?: boolean;
-    onSelectionChange?: (selectedItems: T[]) => void;
-    onEdit?: (item: T) => void;
-    onDelete?: (items: T[]) => void;
-    className?: string;
-    searchPlaceholder?: string;
-  }
+  data: T[];
+  columns: Column<T>[];
+  title?: string;
+  showSearch?: boolean;
+  isLoading?: boolean;
+  selectable?: boolean;
+  onSelectionChange?: (selectedItems: T[]) => void;
+  onEdit?: (item: T) => void;
+  onDelete?: (items: T[]) => void;
+  className?: string;
+  searchPlaceholder?: string;
+  customProps?: {
+    onSearchChange?: (value: string) => void;
+    searchValue?: string;
+    currentPage?: number;
+    totalPages?: number;
+    onPageChange?: (page: number) => void;
+    useCustomDeleteModal?: boolean;
+    useCustomEditModal?: boolean;  // Add this flag
+  };
+}
 
-  function DataTable<T extends { id: string | number }>({
-    data,
-    columns: defaultColumns,
-    title = "Recent Orders",
-    showSearch = true,
-    isLoading = false,
-    selectable = true,
-    onSelectionChange,
-    onEdit,
-    onDelete,
-    className = "",
-    searchPlaceholder = "Search orders..."
-  }: TableProps<T>) {
+function DataTable<T extends { id: string | number }>({
+  data,
+  columns: defaultColumns,
+  title = "Recent Orders",
+  showSearch = true,
+  isLoading = false,
+  selectable = true,
+  onSelectionChange,
+  onEdit,
+  onDelete,
+  className = "",
+  searchPlaceholder = "Search orders...",
+  customProps
+}: TableProps<T>) {
     const [selectedItems, setSelectedItems] = useState<T[]>([]);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState(customProps?.searchValue || "");
     const [sortConfig, setSortConfig] = useState<{
       key: keyof T | 'actions';
       direction: SortDirection;
@@ -103,13 +115,25 @@ export interface TableProps<T> {
       };
     
       const handleEditClick = (item: T) => {
-        setSelectedForEdit(item);
-        setEditModalOpen(true);
+        if (customProps?.useCustomEditModal) {
+          // If using custom edit modal, just call the onEdit handler
+          onEdit?.(item);
+        } else {
+          // Otherwise use the built-in modal
+          setSelectedForEdit(item);
+          setEditModalOpen(true);
+        }
       };
     
       const handleDeleteClick = (items: T[]) => {
-        setItemsToDelete(items);
-        setDeleteModalOpen(true);
+        if (customProps?.useCustomDeleteModal) {
+          // If using custom delete modal, just call the onDelete handler
+          onDelete?.(items);
+        } else {
+          // Otherwise use the built-in modal
+          setItemsToDelete(items);
+          setDeleteModalOpen(true);
+        }
       };
     
       const handleSaveEdit = (editedItem: T) => {
@@ -127,21 +151,26 @@ export interface TableProps<T> {
 
       
 
-      const filteredData = useMemo(() => {
-        if (!searchTerm) return data;
-        
-        const searchLower = searchTerm.toLowerCase();
-        return data.filter(item =>
-          Object.entries(item).some(([key, value]) => {
-            if (typeof value === 'object' && value !== null) {
-              return Object.values(value).some(v => 
-                String(v).toLowerCase().includes(searchLower)
-              );
-            }
-            return String(value).toLowerCase().includes(searchLower);
-          })
+      // Replace the filteredData useMemo with this (if using customProps, we'll skip client-side filtering):
+const filteredData = useMemo(() => {
+  // If customProps.onSearchChange is provided, we're doing server-side filtering
+  if (customProps?.onSearchChange) return data;
+  
+  // Otherwise do client-side filtering
+  if (!searchTerm) return data;
+  
+  const searchLower = searchTerm.toLowerCase();
+  return data.filter(item =>
+    Object.entries(item).some(([key, value]) => {
+      if (typeof value === 'object' && value !== null) {
+        return Object.values(value).some(v => 
+          String(v).toLowerCase().includes(searchLower)
         );
-      }, [data, searchTerm]);
+      }
+      return String(value).toLowerCase().includes(searchLower);
+    })
+  );
+}, [data, searchTerm, customProps]);
 
      // Update the sortedData useMemo in DataTable.tsx
      const sortedData = useMemo(() => {
@@ -230,34 +259,57 @@ export interface TableProps<T> {
                 <div className={styles.searchWrapper}>
                   <Search className={styles.searchIcon} />
                   <input
-                    type="text"
-                    placeholder={searchPlaceholder}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={styles.searchInput}
-                  />
+  type="text"
+  placeholder={searchPlaceholder}
+  value={customProps?.searchValue !== undefined ? customProps.searchValue : searchTerm}
+  onChange={(e) => {
+    const value = e.target.value;
+    if (customProps?.onSearchChange) {
+      customProps.onSearchChange(value);
+      // Don't update local searchTerm when using custom search
+    } else {
+      setSearchTerm(value);
+    }
+  }}
+  className={styles.searchInput}
+/>
                 </div>
               )}
     
-              <div className={styles.pagination}>
-                <button
-                  className={styles.paginationButton}
-                  onClick={() => handlePageChange(pagination.page - 1)}
-                  disabled={pagination.page === 1}
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <span className={styles.paginationInfo}>
-                  Page {pagination.page} of {totalPages}
-                </span>
-                <button
-                  className={styles.paginationButton}
-                  onClick={() => handlePageChange(pagination.page + 1)}
-                  disabled={pagination.page === totalPages}
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
+    <div className={styles.pagination}>
+  <button
+    className={styles.paginationButton}
+    onClick={() => {
+      if (customProps?.onPageChange) {
+        customProps.onPageChange((customProps.currentPage || pagination.page) - 1);
+      } else {
+        handlePageChange(pagination.page - 1);
+      }
+    }}
+    disabled={customProps?.currentPage ? customProps.currentPage === 1 : pagination.page === 1}
+  >
+    <ChevronLeft size={16} />
+  </button>
+  <span className={styles.paginationInfo}>
+    Page {customProps?.currentPage || pagination.page} of {customProps?.totalPages || totalPages}
+  </span>
+  <button
+    className={styles.paginationButton}
+    onClick={() => {
+      if (customProps?.onPageChange) {
+        customProps.onPageChange((customProps.currentPage || pagination.page) + 1);
+      } else {
+        handlePageChange(pagination.page + 1);
+      }
+    }}
+    disabled={customProps?.currentPage && customProps.totalPages 
+      ? customProps.currentPage === customProps.totalPages 
+      : pagination.page === totalPages}
+  >
+    <ChevronRight size={16} />
+  </button>
+</div>
+
             </div>
           </div>
     
@@ -363,27 +415,31 @@ export interface TableProps<T> {
           </div>
     
           {/* Modals */}
-          {selectedForEdit && (
-            <EditOrderModal
-              isOpen={editModalOpen}
-              onClose={() => {
-                setEditModalOpen(false);
-                setSelectedForEdit(null);
-              }}
-              order={selectedForEdit}
-              onSave={handleSaveEdit}
-            />
-          )}
+          {!customProps?.useCustomEditModal && selectedForEdit && (
+  <EditOrderModal
+    isOpen={editModalOpen}
+    onClose={() => {
+      setEditModalOpen(false);
+      setSelectedForEdit(null);
+    }}
+    order={selectedForEdit}
+    onSave={handleSaveEdit}
+  />
+)}
     
-          <DeleteConfirmationModal
-            isOpen={deleteModalOpen}
-            onClose={() => {
-              setDeleteModalOpen(false);
-              setItemsToDelete([]);
-            }}
-            onConfirm={handleConfirmDelete}
-            itemCount={itemsToDelete.length}
-          />
+          {/* Only show the built-in delete modal if one isn't provided by the parent */}
+{!customProps?.useCustomDeleteModal && (
+  <DeleteConfirmationModal
+    isOpen={deleteModalOpen}
+    onClose={() => {
+      setDeleteModalOpen(false);
+      setItemsToDelete([]);
+    }}
+    onConfirm={handleConfirmDelete}
+    itemCount={itemsToDelete.length}
+  />
+)}
+
         </div>
       );
     }

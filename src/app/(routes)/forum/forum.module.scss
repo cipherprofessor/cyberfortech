@@ -226,12 +226,11 @@
 
 
 .tableSection {
-  background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   width: 100%;
-  margin: 24px auto;
+  margin: 14px auto;
   padding: 24px;
 
 }
@@ -390,3 +389,73 @@
   }
 }
 
+
+
+
+
+
+// Add these styles to your existing forum.module.scss file
+
+// Topic cell styling
+.topicCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topicIcon {
+  color: #6b7280;
+}
+
+// Status styling
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  
+  &.pinned {
+    background-color: #fef3c7;
+    color: #d97706;
+  }
+  
+  &.locked {
+    background-color: #fee2e2;
+    color: #ef4444;
+  }
+  
+  &.active {
+    background-color: #d1fae5;
+    color: #10b981;
+  }
+}
+
+// Table styling
+.topicsTable {
+  width: 100%;
+  
+  :global(.dark) & {
+    .topicIcon {
+      color: #9ca3af;
+    }
+    
+    .status {
+      &.pinned {
+        background-color: rgba(217, 119, 6, 0.2);
+        color: #fcd34d;
+      }
+      
+      &.locked {
+        background-color: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+      }
+      
+      &.active {
+        background-color: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+      }
+    }
+  }
+}
