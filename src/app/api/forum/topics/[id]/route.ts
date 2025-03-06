@@ -1,3 +1,4 @@
+//src/app/api/forum/topics/[id]/route.ts
 import { createClient } from '@libsql/client';
 import { NextResponse, NextRequest } from 'next/server';
 
@@ -12,14 +13,21 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Get the topic ID directly from params
     const topicId = params.id;
+    console.log("ID from params:", params?.id);
     
-    if (!topicId) {
+    if (!topicId || topicId === 'undefined' || topicId === '[id]') {
+      console.error('Invalid topicId:', topicId);
       return NextResponse.json(
         { error: 'Topic ID is required' },
         { status: 400 }
       );
     }
+
+    console.log(`Fetching topic with ID: ${topicId}`);
+    console.log("Full params object:", JSON.stringify(params));
+console.log("ID from params:", params?.id);
 
     // First, get the topic details
     const topicResult = await client.execute({
@@ -38,6 +46,7 @@ export async function GET(
     });
 
     if (!topicResult.rows.length) {
+      console.log(`Topic not found: ${topicId}`);
       return NextResponse.json(
         { error: 'Topic not found' },
         { status: 404 }
@@ -71,11 +80,12 @@ export async function GET(
       is_pinned: topic.is_pinned,
       is_locked: topic.is_locked,
       replies_count: topic.reply_count,
-      views: (Number(topic.views) ?? 0) + 1, // Include the incremented view
+      views: (typeof topic.views === 'number' ? topic.views : 0) + 1, // Include the incremented view
       subcategory_id: topic.subcategory_id,
       subcategory_name: topic.subcategory_name,
     };
 
+    console.log(`Successfully fetched topic: ${topicId}`);
     return NextResponse.json({ topic: formattedTopic });
 
   } catch (error) {

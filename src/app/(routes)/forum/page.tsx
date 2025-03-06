@@ -1,3 +1,4 @@
+//src/app/(routes)/forum/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -15,10 +16,7 @@ import { TrendingReactions } from '@/components/Forum/TrendingReactions/Trending
 import { useAuth } from '@/hooks/useAuth';
 import { 
   Category, 
-  ForumStatsData, 
-  TopicsResponse, 
-  ApiTopic, 
-  TopicData 
+  ForumStatsData
 } from '@/types/forum';
 import styles from './forum.module.scss';
 import { Button } from '@heroui/button';
@@ -46,7 +44,6 @@ export default function ForumPage() {
   const totalCategoryPages = Math.ceil((categories?.length || 0) / CATEGORIES_PER_PAGE);
 
   // Fetch Categories
-  // Function to fetch categories
   const fetchCategories = async () => {
     try {
       console.log('Fetching categories...');

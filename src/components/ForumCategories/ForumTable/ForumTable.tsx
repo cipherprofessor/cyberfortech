@@ -1,13 +1,13 @@
 "use client";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import DataTable, { Column } from '@/app/dashboard/myworkspace/components/ui/DataTable/DataTable';
 import { useAuth } from '@/hooks/useAuth';
 import styles from './ForumTable.module.scss';
 import { formatDate } from '@/utils/formattingData';
-import { MessageSquare, X } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import Avatar from '@/app/dashboard/myworkspace/components/ui/DataTable/Avatar';
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 
 // Define the Topic interface based on API response
 interface Topic {
@@ -30,7 +30,7 @@ interface Topic {
   reply_count: number;
 }
 
-// Define TopicData interface for internal use (add status property)
+// Define TopicData interface for internal use
 interface TopicData {
   id: string | number;
   title: string;
@@ -49,7 +49,7 @@ interface TopicData {
   categoryId: string;
   subcategory_id: string | null;
   subcategory_name: string | null;
-  status?: string; // Add this property to fix the TypeScript error
+  status?: string;
 }
 
 interface PaginationData {
@@ -64,32 +64,31 @@ interface ApiResponse {
   pagination: PaginationData;
 }
 
-// Add a custom hook for debounced search
+// Custom hook for debounced search
 function useDebouncedSearch(initialValue: string = '', delay: number = 300) {
-    const [searchTerm, setSearchTerm] = useState(initialValue);
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialValue);
-    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [searchTerm, setSearchTerm] = useState(initialValue);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialValue);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Update debounced value after delay
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
     
-    // Update debounced value after delay
-    useEffect(() => {
+    searchTimeoutRef.current = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, delay);
+    
+    return () => {
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
       }
-      
-      searchTimeoutRef.current = setTimeout(() => {
-        setDebouncedSearchTerm(searchTerm);
-      }, delay);
-      
-      return () => {
-        if (searchTimeoutRef.current) {
-          clearTimeout(searchTimeoutRef.current);
-        }
-      };
-    }, [searchTerm, delay]);
-    
-    return [searchTerm, debouncedSearchTerm, setSearchTerm] as const;
-  }
+    };
+  }, [searchTerm, delay]);
   
+  return [searchTerm, debouncedSearchTerm, setSearchTerm] as const;
+}
 
 // Create a custom DeleteConfirmationModal for forum topics
 const ForumDeleteModal = ({ 
@@ -162,7 +161,7 @@ const ForumEditModal = ({
         <div className={styles.modalHeader}>
           <h3 className={styles.modalTitle}>Edit Forum Topic</h3>
           <button className={styles.closeButton} onClick={onClose}>
-            <X size={18} />
+            <span>×</span>
           </button>
         </div>
         
@@ -228,6 +227,7 @@ const ForumEditModal = ({
 };
 
 export function ForumTable() {
+  const router = useRouter();
   const [topics, setTopics] = useState<TopicData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -240,19 +240,14 @@ export function ForumTable() {
   });
   const { isAdmin, isStudent, user } = useAuth();
   
+  // Use debounced search to optimize API calls
+  const [searchTerm, debouncedSearchTerm, setSearchTerm] = useDebouncedSearch('');
+  
   // Add state for the modals
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [topicsToDelete, setTopicsToDelete] = useState<TopicData[]>([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [topicToEdit, setTopicToEdit] = useState<TopicData | null>(null);
-  
-  // Add reference for search input to maintain focus
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
-  
-  // Replace your searchTerm state with the debounced hook
-  const [searchTerm, debouncedSearchTerm, setSearchTerm] = useDebouncedSearch('');
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Define columns for the DataTable
   const columns: Column<TopicData>[] = [
@@ -317,7 +312,7 @@ export function ForumTable() {
       render: (date: string) => formatDate(date)
     },
     {
-      key: 'is_pinned' as keyof TopicData, // Use an actual field instead of 'status'
+      key: 'is_pinned' as keyof TopicData,
       label: 'Status',
       sortable: true,
       visible: true,
@@ -373,20 +368,8 @@ export function ForumTable() {
     subcategory_name: topic.subcategory_name
   });
 
-  // Update the search handler to just update the state without triggering API calls
-  const handleSearch = (query: string) => {
-    setSearchTerm(query);
-    // No direct API call here - the useEffect above will handle it
-  };
-
-  // Add a topic click handler
-  const handleTopicClick = (topicId: string | number) => {
-    router.push(`/forum/topics/${topicId}`);
-  };
-  
-
   // Fetch topics function (separated to be reusable)
-  const fetchTopics = async (page = currentPage, search = searchTerm) => {
+  const fetchTopics = useCallback(async (page = currentPage, search = debouncedSearchTerm) => {
     try {
       setLoading(true);
       // Add search parameter if provided
@@ -406,26 +389,39 @@ export function ForumTable() {
     } finally {
       setLoading(false);
     }
+  }, [currentPage, debouncedSearchTerm]);
+
+  // Handle search changes (debounced)
+  const handleSearch = (query: string) => {
+    setSearchTerm(query);
   };
 
-  // Fetch topics on page change
-   // Replace the useEffect that depends on searchTerm with this one
-   useEffect(() => {
-    // Only fetch when the debounced value changes
+  // Effect to fetch topics when the debounced search term changes
+  useEffect(() => {
     if (currentPage !== 1) {
       setCurrentPage(1);
     } else {
       fetchTopics(1, debouncedSearchTerm);
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, fetchTopics]);
 
-  // Handle delete click - opens custom modal instead of DataTable's built-in modal
+  // Effect to fetch topics when the page changes
+  useEffect(() => {
+    fetchTopics(currentPage, debouncedSearchTerm);
+  }, [currentPage, fetchTopics]);
+
+  // Handle topic click for navigation
+  const handleTopicClick = (topicId: string | number) => {
+    router.push(`/forum/topics/${topicId}`);
+  };
+
+  // Handle delete click
   const handleDeleteClick = (topicsToDelete: TopicData[]) => {
     setTopicsToDelete(topicsToDelete);
     setDeleteModalOpen(true);
   };
 
-  // Handle confirm delete from custom modal
+  // Handle confirm delete
   const handleConfirmDelete = async () => {
     if (topicsToDelete.length === 0) return;
     
@@ -451,13 +447,13 @@ export function ForumTable() {
     }
   };
 
-  // Handle edit click - opens custom edit modal
+  // Handle edit click
   const handleEditClick = (topic: TopicData) => {
     setTopicToEdit(topic);
     setEditModalOpen(true);
   };
 
-  // Handle save from edit modal
+  // Handle save topic
   const handleSaveTopic = async (updatedTopic: TopicData) => {
     try {
       setLoading(true);
@@ -495,7 +491,7 @@ export function ForumTable() {
   // Create custom props for the DataTable
   const customProps = {
     onSearchChange: handleSearch,
-    searchValue: searchTerm, 
+    searchValue: searchTerm,
     currentPage: currentPage,
     totalPages: pagination.pages,
     onPageChange: (page: number) => setCurrentPage(page),

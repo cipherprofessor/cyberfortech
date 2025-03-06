@@ -1,7 +1,7 @@
-// src/app/(routes)/forum/topics/[id]/page.tsx
+//src/app/(routes)/forum/topics/[id]/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { TopicContent } from '@/components/Forum/TopicContent/TopicContent';
@@ -11,7 +11,7 @@ import { AttachmentViewer } from '@/components/Forum/AttachmentViewer/Attachment
 import { ReactionAnalytics } from '@/components/Forum/ReactionAnalytics/ReactionAnalytics';
 import { RichReplyForm } from '@/components/Forum/ReplyForm/RichReplyForm';
 import { useAuth } from '@/hooks/useAuth';
-import { MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import { MessageSquare, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import { TopicSkeleton } from '@/components/Forum/Skeleton/TopicSkeleton/TopicSkeleton';
 import styles from './page.module.scss';
 
@@ -39,7 +39,7 @@ interface Attachment {
 }
 
 interface Topic {
-  id: number;
+  id: number | string;
   title: string;
   content: string;
   authorId: string;
@@ -51,7 +51,7 @@ interface Topic {
     joinedDate: string;
     postCount: number;
   };
-  categoryId: number;
+  categoryId: number | string;
   categoryName: string;
   createdAt: string;
   updatedAt?: string;
@@ -66,6 +66,38 @@ interface Topic {
   isLocked: boolean;
 }
 
+// This function maps API response to your expected Topic format
+const mapApiResponseToTopic = (apiResponse: any): Topic => {
+  return {
+    id: apiResponse.id || apiResponse.topic?.id,
+    title: apiResponse.title || apiResponse.topic?.title || '',
+    content: apiResponse.content || apiResponse.topic?.content || '',
+    authorId: apiResponse.authorId || apiResponse.topic?.author_id || '',
+    author: {
+      id: apiResponse.authorId || apiResponse.topic?.author_id || '',
+      name: apiResponse.authorName || apiResponse.topic?.author_name || '',
+      avatar: apiResponse.authorImage || apiResponse.topic?.author_image || '',
+      role: 'Member', // Default role
+      joinedDate: apiResponse.createdAt || apiResponse.topic?.created_at || '',
+      postCount: 0 // Default post count
+    },
+    categoryId: apiResponse.categoryId || apiResponse.topic?.category_id || '',
+    categoryName: apiResponse.category_name || apiResponse.topic?.category_name || '',
+    createdAt: apiResponse.createdAt || apiResponse.topic?.created_at || '',
+    updatedAt: apiResponse.updatedAt || apiResponse.topic?.updated_at,
+    likes: 0, // Default value as this might not be in API
+    hasLiked: false, // Default value as this might not be in API
+    attachments: [], // Default value as this might not be in API
+    reactions: [
+      { type: 'like', count: 0, hasReacted: false },
+      { type: 'heart', count: 0, hasReacted: false },
+      { type: 'insightful', count: 0, hasReacted: false },
+      { type: 'funny', count: 0, hasReacted: false }
+    ],
+    isLocked: !!apiResponse.is_locked || !!apiResponse.topic?.is_locked
+  };
+};
+
 export default function TopicPage() {
   const params = useParams();
   const router = useRouter();
@@ -77,22 +109,52 @@ export default function TopicPage() {
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
 
-  useEffect(() => {
-    fetchTopic();
-  }, [params.id]);
+  // Fixed fetchTopic function with proper error handling
+  const fetchTopic = useCallback(async () => {
+    if (!params.id) {
+      setError('Topic ID is missing');
+      setLoading(false);
+      return;
+    }
 
-  const fetchTopic = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/forum/topics/${params.id}`);
-      setTopic(response.data);
-      setReplies(response.data.replies || []);
+      
+      // Make the API call with the topic ID directly from params
+      const topicId = params.id;
+      const response = await axios.get(`/api/forum/topics/${topicId}`);
+      
+      if (!response.data || !response.data.topic) {
+        throw new Error('Invalid response format');
+      }
+
+      // Map API response to your topic format
+      const mappedTopic = mapApiResponseToTopic(response.data);
+      setTopic(mappedTopic);
+      
+      // Fetch replies
+      try {
+        const repliesResponse = await axios.get(`/api/forum/topics/${topicId}/replies`);
+        setReplies(repliesResponse.data?.replies || []);
+      } catch (replyErr) {
+        console.error('Error fetching replies:', replyErr);
+        // Don't fail the whole page if just replies fail
+      }
     } catch (err) {
       console.error('Error fetching topic:', err);
-      setError('Failed to load topic');
+      setError('Failed to load topic details');
     } finally {
       setLoading(false);
     }
+  }, [params.id]);
+
+  // Call fetchTopic when the ID changes
+  useEffect(() => {
+    fetchTopic();
+  }, [fetchTopic]);
+
+  const handleBack = () => {
+    router.push('/forum');
   };
 
   const handleLike = async () => {
@@ -111,7 +173,6 @@ export default function TopicPage() {
       console.error('Error liking topic:', err);
     }
   };
-
 
   const handleReaction = async (type: 'like' | 'heart' | 'insightful' | 'funny') => {
     if (!topic) return;
@@ -211,7 +272,11 @@ export default function TopicPage() {
   if (error || !topic) {
     return (
       <div className={styles.error}>
-        {error || 'Topic not found'}
+        <p>{error || 'Topic not found'}</p>
+        <button onClick={handleBack} className={styles.backButton}>
+          <ArrowLeft size={16} />
+          Go Back to Forum
+        </button>
       </div>
     );
   }
@@ -219,6 +284,10 @@ export default function TopicPage() {
   return (
     <div className={styles.topicPage}>
       <div className={styles.topicHeader}>
+        <button onClick={handleBack} className={styles.backButton}>
+          <ArrowLeft size={16} />
+          Back to Forum
+        </button>
         <h1>{topic.title}</h1>
         <div className={styles.topicMeta}>
           <span>Posted in {topic.categoryName}</span>
@@ -264,7 +333,7 @@ export default function TopicPage() {
         {/* Reactions Section */}
         <div className={styles.reactionsSection}>
           <ReactionButtonAnimated
-            postId={topic.id}
+            postId={typeof topic.id === 'number' ? topic.id : parseInt(topic.id)}
             initialReactions={topic.reactions}
             onReact={handleReaction}
           />
@@ -282,7 +351,7 @@ export default function TopicPage() {
         {showAnalytics && (
           <div className={styles.analyticsSection}>
             <ReactionAnalytics 
-              postId={topic.id}
+              postId={typeof topic.id === 'number' ? topic.id : parseInt(topic.id)}
               period="daily"
             />
           </div>
