@@ -20,13 +20,16 @@
   margin: 0 auto;
   padding: 0 2rem;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
 }
 
 .gridContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  min-height: calc(100vh - 16rem);
+  align-items: center;
+  margin-bottom: 3rem;
 }
 
 .textContent {
@@ -44,7 +47,7 @@
   position: relative;
   
   h1 {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: 700;
     line-height: 1.2;
     margin-bottom: 1.5rem;
@@ -69,16 +72,21 @@
   }
 }
 
+// Feature section - now a separate container below hero content
+.featureSection {
+  width: 100%;
+  margin: 0 auto 3rem;
+}
+
 .featureGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  margin: 1rem 0;
 }
 
 .featureCard {
   background: rgba(255, 255, 255, 0.8);
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 1rem;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -108,6 +116,7 @@
   flex-direction: row;
   align-items: center;
   gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .featureIcon {
@@ -120,7 +129,6 @@
 .featureTitle {
   font-size: 1.125rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
   color: rgb(9, 9, 11);
 
   :global(.dark) & {
@@ -179,10 +187,9 @@
 
 .trustBadges {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 1.5rem;
-  max-width: 100%;
-  margin-top: 2rem;
+  width: 100%;
 }
 
 .badge {
@@ -207,8 +214,7 @@
 
     :global(.dark) & {
       box-shadow: 0 10px 20px rgba(254, 254, 254, 0.227);
-      transform: translateY(-5px);
-      transition: all 0.3s ease;
+      transform: translateY(-2px);
     }
   }
 
@@ -228,7 +234,7 @@
 .imageContent {
   position: relative;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 
@@ -237,7 +243,6 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 1.5rem;
 
   .heroImage {
     width: 80%;
@@ -251,86 +256,14 @@
   }
 }
 
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  width: 100%;
-}
-
-.stat {
-  text-align: center;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 1.25rem 1rem;
-  border-radius: 1rem;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 8px 32px #3b82f61a;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  
-
-  :global(.dark) & {
-    background: rgba(39, 39, 42, 0.8);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px #3b82f61a;
-  }
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(105, 102, 102, 0.194);
-    transition: all 0.3s ease;
-
-    :global(.dark) & {
-      box-shadow: 0 10px 20px rgba(254, 254, 254, 0.227);
-      transform: translateY(-5px);
-      transition: all 0.3s ease;
-    }
-  }
-
-  .statIcon {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .number {
-    display: block;
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(45deg, #007bff, #00bcd4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.25rem;
-  }
-
-  .label {
-    font-size: 0.875rem;
-    color: rgb(63, 63, 70);
-
-    :global(.dark) & {
-      color: rgb(161, 161, 170);
-    }
-  }
-}
-
 // Responsive styles
 @media (max-width: 1200px) {
   .gridContainer {
     gap: 3rem;
   }
 
-  .headingWrapper h1 {
-    font-size: 3rem;
-  }
-
-  .description {
-    font-size: 1.125rem;
-  }
-
   .trustBadges {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(7, 1fr);
   }
 }
 
@@ -338,12 +271,13 @@
   .gridContainer {
     grid-template-columns: 1fr;
     gap: 2rem;
+    margin-bottom: 2rem;
   }
 
   .textContent {
+    order: 1;
     align-items: center;
     text-align: center;
-    order: 1;
   }
 
   .description {
@@ -351,20 +285,17 @@
     margin: 0 auto;
   }
 
-  .featureGrid {
-    max-width: 800px;
-    margin: 2rem auto;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   .imageContent {
     order: 2;
-    margin-top: 1rem;
   }
 
   .imageWrapper {
     max-width: 500px;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto;
+  }
+
+  .trustBadges {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -379,8 +310,8 @@
   }
 
   .gridContainer {
-    min-height: auto;
     gap: 2rem;
+    margin-bottom: 2rem;
   }
 
   .headingWrapper h1 {
@@ -398,7 +329,7 @@
 
   .featureCard {
     text-align: left;
-    padding: 1rem;
+    padding: 1.25rem;
   }
 
   .ctaGroup {
@@ -416,36 +347,8 @@
   }
 
   .trustBadges {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    margin-top: 1.5rem;
-  }
-
-  .statsGrid {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .stat {
-    padding: 1rem;
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
-    gap: 1rem;
-
-    .number {
-      font-size: 1.75rem;
-      margin-bottom: 0;
-    }
-
-    .statIcon {
-      margin-bottom: 0;
-    }
-
-    .label {
-      margin-top: 0.25rem;
-    }
   }
 }
 
@@ -477,16 +380,9 @@
   .badge {
     padding: 0.5rem;
   }
-
-  .stat {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    .number {
-      font-size: 1.75rem;
-    }
+  
+  .trustBadges {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
 }

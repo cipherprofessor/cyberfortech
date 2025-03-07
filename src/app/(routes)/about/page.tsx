@@ -208,11 +208,7 @@ const scaleIn = {
             viewport={{ once: true }}
           >
             <p className={styles.missionText}>
-              At CyberFort, we believe that cybersecurity education should be
-              accessible, practical, and up-to-date with the latest industry trends.
-              Our mission is to bridge the cybersecurity skills gap by providing
-              high-quality training that combines theoretical knowledge with
-              hands-on experience.
+            Cyberfort Technologies excels in delivering cutting-edge cybersecurity solutions to safeguard businesses, individuals, and government agencies against advanced threats. Services include threat detection, incident response, penetration testing, vulnerability assessments, compliance management, and security consulting, ensuring robust data protection and operational resilience.
             </p>
             <motion.div 
               className={styles.valueCards}

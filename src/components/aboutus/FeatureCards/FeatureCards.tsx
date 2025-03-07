@@ -7,23 +7,23 @@ export function FeatureCards() {
   const features = [
     {
       icon: <Code size={24} />,
-      title: "Hands-on Labs",
-      description: "Practice in realistic environments with guided labs that simulate real-world scenarios"
+      title: "Industry-Leading Training",
+      description: "Cyberfort Technologies offers industry-leading training programs in critical cybersecurity certifications. These certifications empower professionals to excel in ethical hacking, security awareness, incident response, and compliance management. What sets us apart is our holistic, hands-on approach. "
     },
     {
       icon: <Award size={24} />,
-      title: "Industry Certifications",
-      description: "Courses aligned with top industry certifications to boost your career prospects"
+      title: "Practical Learning",
+      description: "Our programs blend theoretical knowledge with real-world scenarios, enabling participants to apply what they learn directly to evolving cybersecurity challenges. Through simulated attack environments and cutting-edge tools, we ensure trainees gain practical expertise that goes beyond textbook learning."
     },
     {
       icon: <UserCheck size={24} />,
       title: "Expert Instructors",
-      description: "Learn from professionals with years of experience in the cybersecurity industry"
+      description: "Moreover, our instructors are seasoned cybersecurity experts, bringing years of field experience to the training. This ensures that participants receive guidance rooted in industry best practices and real-time insights."
     },
     {
       icon: <Clock size={24} />,
-      title: "Flexible Learning",
-      description: "Self-paced courses that fit your schedule, with lifetime access to materials"
+      title: "Tailored Training",
+      description: "Unlike generic programs, we tailor training to meet specific organizational or individual needs, focusing on the skills most relevant to their roles. Our commitment to fostering a deep understanding of cybersecurity principles, combined with our practical, adaptable methodology, makes our certification programs a cut above the rest"
     }
   ];
 

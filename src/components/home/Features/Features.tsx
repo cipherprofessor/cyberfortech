@@ -19,7 +19,7 @@ const features = [
   },
   {
     icon: Monitor,
-    title: 'Hands-On Labs',
+    title: 'Hands-On Labs Now',
     description: 'Practice in real-world scenarios with our state-of-the-art virtual lab environment.',
     color: '#28a745',
   },
