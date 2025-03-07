@@ -1,0 +1,77 @@
+"use client";
+
+import React from 'react';
+import { usePathname } from 'next/navigation';
+import ServiceNavigation from '@/components/ServiceNavigation/ServiceNavigation';
+import dynamic from 'next/dynamic';
+import { Loader } from 'lucide-react';
+
+// Define a mapping of service paths to their component names
+const serviceComponents: Record<string, React.ComponentType> = {
+  '/services/network-security': dynamic(() => import('@/components/services/NetworkSecurityPage'), {
+    loading: () => <LoadingComponent />
+  }),
+  '/services/application-security': dynamic(() => import('@/components/services/ApplicationSecurityPage'), {
+    loading: () => <LoadingComponent />
+  }),
+  '/services/cloud-security': dynamic(() => import('@/components/services/CloudSecurityPage'), {
+    loading: () => <LoadingComponent />
+  }),
+  '/services/penetration-testing': dynamic(() => import('@/components/services/PenetrationTestingPage'), {
+    loading: () => <LoadingComponent />
+  }),
+  '/services/security-compliance': dynamic(() => import('@/components/services/SecurityCompliancePage'), {
+    loading: () => <LoadingComponent />
+  }),
+  '/services/incident-response': dynamic(() => import('@/components/services/IncidentResponsePage'), {
+    loading: () => <LoadingComponent />
+  }),
+  '/services/aws-cloud-security': dynamic(() => import('@/components/services/AWSCloudSecurityPage'), {
+    loading: () => <LoadingComponent />
+  }),
+  '/services/full-stack-development': dynamic(() => import('@/components/services/FullStackDevelopmentPage'), {
+    loading: () => <LoadingComponent />
+  }),
+};
+
+const LoadingComponent = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '50vh',
+    flexDirection: 'column',
+    gap: '1rem'
+  }}>
+    <Loader size={40} className="animate-spin" color="#007bff" />
+    <p>Loading service details...</p>
+  </div>
+);
+
+const NotFoundComponent = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '50vh',
+    flexDirection: 'column',
+    gap: '1rem'
+  }}>
+    <h2>Service Not Found</h2>
+    <p>The requested service could not be found. Please check the URL or navigate using the service menu.</p>
+  </div>
+);
+
+export default function ServicePage() {
+  const pathname = usePathname();
+  
+  // Find the component for the current path
+  const ServiceComponent = serviceComponents[pathname];
+  
+  return (
+    <div>
+      <ServiceNavigation />
+      {ServiceComponent ? <ServiceComponent /> : <NotFoundComponent />}
+    </div>
+  );
+}

@@ -1,0 +1,123 @@
+.serviceNavigation {
+    padding: 1rem 0;
+    background-color: rgb(249, 250, 251);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+    margin-bottom: 2rem;
+    
+    :global(.dark) & {
+      background-color: rgb(17, 24, 39);
+      border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+    }
+  }
+  
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .navTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: rgb(17, 24, 39);
+    
+    :global(.dark) & {
+      color: rgb(243, 244, 246);
+    }
+  }
+  
+  .navItems {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  .navItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(55, 65, 81);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    
+    :global(.dark) & {
+      color: rgb(209, 213, 219);
+    }
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--nav-item-color, rgb(17, 24, 39));
+      
+      :global(.dark) & {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--nav-item-color, rgb(243, 244, 246));
+      }
+      
+      .navIcon {
+        color: var(--nav-item-color);
+      }
+    }
+    
+    &.active {
+      background-color: rgba(var(--nav-item-color-rgb, 0, 123, 255), 0.1);
+      color: var(--nav-item-color, rgb(17, 24, 39));
+      border-color: var(--nav-item-color);
+      
+      :global(.dark) & {
+        background-color: rgba(var(--nav-item-color-rgb, 0, 123, 255), 0.2);
+        color: var(--nav-item-color, rgb(243, 244, 246));
+      }
+      
+      .navIcon {
+        color: var(--nav-item-color);
+      }
+    }
+  }
+  
+  .navIcon {
+    width: 1rem;
+    height: 1rem;
+    color: rgb(107, 114, 128);
+    transition: color 0.2s ease;
+    
+    :global(.dark) & {
+      color: rgb(156, 163, 175);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 1rem;
+    }
+    
+    .navItems {
+      gap: 0.5rem;
+    }
+    
+    .navItem {
+      padding: 0.375rem 0.625rem;
+      font-size: 0.75rem;
+    }
+    
+    .navIcon {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .navItems {
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+    
+    .navItem {
+      width: 100%;
+    }
+  }

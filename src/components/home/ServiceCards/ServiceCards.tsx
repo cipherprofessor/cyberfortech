@@ -13,7 +13,10 @@ import {
   CloudLightning,
   ShieldAlert,
   CircuitBoard,
-  ArrowRight,Users, Clock, BarChart2,
+  ArrowRight,
+  Users, 
+  Clock, 
+  BarChart2,
   Atom,
   ServerCrash
 } from 'lucide-react';
@@ -22,6 +25,7 @@ import CountUp from 'react-countup';
 import Link from 'next/link';
 import styles from './ServiceCards.module.scss';
 import { useRef } from 'react';
+import { hexToRgb } from '@/utils/colorUtils';
 
 const services = [
   {
@@ -29,7 +33,7 @@ const services = [
     description: "Implement robust network protection strategies with advanced threat detection and prevention systems.",
     icon: Network,
     decorativeIcon: CircuitBoard,
-    link: "",
+    link: "/services/network-security",
     color: "#007bff"
   },
   {
@@ -37,7 +41,7 @@ const services = [
     description: "Secure your applications throughout the development lifecycle with our comprehensive security solutions.",
     icon: Code2,
     decorativeIcon: FileCode2,
-    link: "",
+    link: "/services/application-security",
     color: "#00bcd4"
   },
   {
@@ -45,7 +49,7 @@ const services = [
     description: "Protect your cloud infrastructure with state-of-the-art security measures and continuous monitoring.",
     icon: Cloud,
     decorativeIcon: CloudLightning,
-    link: "",
+    link: "/services/cloud-security",
     color: "#6610f2"
   },
   {
@@ -53,7 +57,7 @@ const services = [
     description: "Proactively identify and address vulnerabilities with our expert penetration testing services.",
     icon: Search,
     decorativeIcon: ShieldAlert,
-    link: "",
+    link: "/services/penetration-testing",
     color: "#dc3545"
   },
   {
@@ -61,7 +65,7 @@ const services = [
     description: "Ensure compliance with industry standards and regulations through our comprehensive auditing services.",
     icon: ShieldCheck,
     decorativeIcon: Shield,
-    link: "",
+    link: "/services/security-compliance",
     color: "#28a745"
   },
   {
@@ -69,7 +73,7 @@ const services = [
     description: "Rapid and effective security incident handling with our expert team available 24/7.",
     icon: Lock,
     decorativeIcon: Database,
-    link: "",
+    link: "/services/incident-response",
     color: "#fd7e14"
   },
   {
@@ -77,7 +81,7 @@ const services = [
     description: "Secure your AWS cloud environment with our advanced security solutions and best practices.",
     icon: ServerCrash,
     decorativeIcon: ServerCrash,
-    link: "",
+    link: "/services/aws-cloud-security",
     color: "#007bff"
   },
   {
@@ -85,7 +89,7 @@ const services = [
     description: "Build scalable and secure web applications with our expert full stack development services.",
     icon: Atom,
     decorativeIcon: Atom,
-    link: "",
+    link: "/services/full-stack-development",
     color: "#00bcd4"
   },
 ];
@@ -105,8 +109,8 @@ const cardVariants = {
 };
 
 export function ServiceCards() {
-  // const countUpRef1 = useRef(null);
-  // const countUpRef2 = useRef(null);
+  const countUpRef1 = useRef(null);
+  const countUpRef2 = useRef(null);
   return (
     <section className={styles.servicesSection}>
       <div className={styles.container}>
@@ -239,7 +243,10 @@ export function ServiceCards() {
                 transition: { duration: 0.2 }
               }}
               className={styles.card}
-              style={{ '--card-color': service.color } as any}
+              style={{ 
+                '--card-color': service.color,
+                '--card-color-rgb': hexToRgb(service.color)
+              } as any}
             >
               <Link href={service.link} className={styles.cardLink}>
                 <div className={styles.cardContent}>
@@ -277,14 +284,14 @@ export function ServiceCards() {
 
                   <p className={styles.description}>{service.description}</p>
 
-                  {/* <motion.div 
+                  <motion.div 
                     className={styles.learnMore}
                     whileHover={{ x: 5 }}
                     transition={{ duration: 0.2 }}
                   >
                     <span>Learn More</span>
                     <ArrowRight className={styles.arrowIcon} />
-                  </motion.div> */}
+                  </motion.div>
                 </div>
               </Link>
             </motion.div>
