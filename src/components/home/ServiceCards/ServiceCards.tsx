@@ -25,7 +25,8 @@ import CountUp from 'react-countup';
 import Link from 'next/link';
 import styles from './ServiceCards.module.scss';
 import { useRef } from 'react';
-import { hexToRgb } from '@/utils/colorUtils';
+import { hexToRgb } from '@/components/common/ServiceDetail/colorUtils';
+
 
 const services = [
   {

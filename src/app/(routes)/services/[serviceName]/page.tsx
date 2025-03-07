@@ -2,34 +2,35 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import ServiceNavigation from '@/components/ServiceNavigation/ServiceNavigation';
+
 import dynamic from 'next/dynamic';
 import { Loader } from 'lucide-react';
+import ServiceNavigation from '@/components/common/ServiceDetail/ServiceNavigation';
 
 // Define a mapping of service paths to their component names
 const serviceComponents: Record<string, React.ComponentType> = {
-  '/services/network-security': dynamic(() => import('@/components/services/NetworkSecurityPage'), {
+  '/services/network-security': dynamic(() => import('@/components/common/ServiceDetail/NetworkSecurityPage'), {
     loading: () => <LoadingComponent />
   }),
-  '/services/application-security': dynamic(() => import('@/components/services/ApplicationSecurityPage'), {
+  '/services/application-security': dynamic(() => import('@/components/common/ServiceDetail/ApplicationSecurityPage'), {
     loading: () => <LoadingComponent />
   }),
-  '/services/cloud-security': dynamic(() => import('@/components/services/CloudSecurityPage'), {
+  '/services/cloud-security': dynamic(() => import('@/components/common/ServiceDetail/CloudSecurityPage'), {
     loading: () => <LoadingComponent />
   }),
-  '/services/penetration-testing': dynamic(() => import('@/components/services/PenetrationTestingPage'), {
+  '/services/penetration-testing': dynamic(() => import('@/components/common/ServiceDetail/PenetrationTestingPage'), {
     loading: () => <LoadingComponent />
   }),
-  '/services/security-compliance': dynamic(() => import('@/components/services/SecurityCompliancePage'), {
+  '/services/security-compliance': dynamic(() => import('@/components/common/ServiceDetail/SecurityCompliancePage'), {
     loading: () => <LoadingComponent />
   }),
-  '/services/incident-response': dynamic(() => import('@/components/services/IncidentResponsePage'), {
+  '/services/incident-response': dynamic(() => import('@/components/common/ServiceDetail/IncidentResponsePage'), {
     loading: () => <LoadingComponent />
   }),
-  '/services/aws-cloud-security': dynamic(() => import('@/components/services/AWSCloudSecurityPage'), {
+  '/services/aws-cloud-security': dynamic(() => import('@/components/common/ServiceDetail/AWSCloudSecurityPage'), {
     loading: () => <LoadingComponent />
   }),
-  '/services/full-stack-development': dynamic(() => import('@/components/services/FullStackDevelopmentPage'), {
+  '/services/full-stack-development': dynamic(() => import('@/components/common/ServiceDetail/FullStackDevelopmentPage'), {
     loading: () => <LoadingComponent />
   }),
 };

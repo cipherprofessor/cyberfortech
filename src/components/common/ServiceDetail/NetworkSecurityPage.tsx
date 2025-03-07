@@ -52,3 +52,5 @@ const NetworkSecurityPage = () => {
     />
   );
 };
+
+export default NetworkSecurityPage;

@@ -1,5 +1,6 @@
+import { ServiceCards } from '@/components/home/ServiceCards/ServiceCards';
 import { Metadata } from 'next';
-import { ServiceCards } from '@/components/ServiceCards';
+
 
 export const metadata: Metadata = {
   title: 'Our Services | Cyberfort Technologies',
