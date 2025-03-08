@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { BlogPost } from '@/types/blog';
-import BlogPostDetail from './BlogPostDetail';
+import BlogPostDetail from '../../../../components/blog/BlogPostDetails/BlogPostDetail';
 import { getCurrentUser } from '@/lib/clerk';
 
 const client = createClient({

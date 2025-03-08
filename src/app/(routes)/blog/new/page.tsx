@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { useBlogOperations } from '@/hooks/useBlogOperations';
 
-import BlogEditor from '@/components/blog/BlogEditor';
+import BlogEditor from '@/components/blog/BlogEditor/BlogEditor';
 import BlogProvider from '@/contexts/BlogContext';
 
 

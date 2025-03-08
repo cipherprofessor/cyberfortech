@@ -1,5 +1,5 @@
 
-import BlogEditor from '@/components/blog/BlogEditor';
+import BlogEditor from '@/components/blog/BlogEditor/BlogEditor';
 import { useBlogOperations } from '@/hooks/useBlogOperations';
 import router from 'next/router';
 
