@@ -42,6 +42,7 @@ export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const { isAuthenticated, isSuperAdmin, isAdmin, isStudent, role } = useAuth();
   const pathname = usePathname();
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -62,6 +63,16 @@ export default function Navbar() {
     }
     return pathname.startsWith(path);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 370);
+    };
+    
+    handleResize(); // Check on initial load
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
 
   const renderNavLink = (href: string, label: string, icon: React.ReactNode, isMobile: boolean = false) => {
@@ -108,22 +119,22 @@ export default function Navbar() {
       <div className={styles.navContainer}>
         {/* Logo and Brand */}
         <Link href="/" className={styles.logoContainer}>
-          <Image
-            src="/logo/logoown.png"
-            alt="CyberFort Logo"
-            width={40}
-            height={40}
-            className={styles.logo}
-            priority
-          />
-          <span className={styles.logoText}>Cyber Fort Tech</span>
-        </Link>
+    <Image
+      src="/logo/logoown.png"
+      alt="CyberFort Logo"
+      width={40}
+      height={40}
+      className={styles.logo}
+      priority
+    />
+    <span className={`${styles.logoText} ${styles.hideMobileText}`}>Cyber Fort Tech</span>
+  </Link>
 
         {/* Desktop Navigation Links */}
         <div className={styles.desktopNav}>
           {renderNavLink("/", "Home", <Home className="h-4 w-4 mr-2" />)}
           {renderNavLink("/courses", "Courses", <BookOpen className="h-4 w-4 mr-2" />)}
-          {renderRoleBasedLinks()}
+          {isAuthenticated && renderRoleBasedLinks()}
           {/* {renderNavLink("/blogs", "Blogs", <FontAwesomeIcon icon={faBlog} className="h-4 w-4 mr-2" />)} */}
           {renderNavLink("/blog", "Blogs", <Rss className="h-4 w-4 mr-2" />)}
           {renderNavLink("/forum", "Forum", <MessageSquare className="h-4 w-4 mr-2" />)}
@@ -201,7 +212,7 @@ export default function Navbar() {
             {/* Mobile Navigation Links */}
             {renderNavLink("/", "Home", <Home className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/courses", "Courses", <BookOpen className="h-5 w-5 mr-3" />, true)}
-            {renderRoleBasedLinks(true)}
+            {isAuthenticated && renderRoleBasedLinks(true)}
             {renderNavLink("/forum", "Forum", <MessageSquare className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/about", "About", <InfoIcon className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-5 w-5 mr-3" />, true)}
