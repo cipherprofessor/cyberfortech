@@ -1,57 +1,9 @@
-// src/app/api/blog/route.ts
+// src/app/api/blog/route.ts - POST Handler
 import { NextResponse } from 'next/server';
 import { validateUserAccess } from '@/lib/clerk';
 import { ROLES } from '@/constants/auth';
-import { 
-  createPost, 
-  ensureUserExists, 
-  getPosts 
-} from '@/services/blog-service';
+import { createPost, ensureUserExists } from '@/services/blog-service';
 
-/**
- * GET handler for fetching blog posts with pagination and filtering
- */
-export async function GET(request: Request): Promise<NextResponse> {
-  try {
-    // Extract query parameters
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const category = searchParams.get('category');
-    const tag = searchParams.get('tag');
-    const search = searchParams.get('search');
-    const status = searchParams.get('status') || 'published'; // Default to published
-    
-    // Fetch posts with filters
-    const result = await getPosts({
-      page,
-      limit,
-      category,
-      tag,
-      search,
-      status
-    });
-
-    if (!result) {
-      return NextResponse.json(
-        { error: 'Failed to fetch blog posts' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json(result);
-  } catch (error) {
-    console.error('Error fetching blog posts:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch blog posts' },
-      { status: 500 }
-    );
-  }
-}
-
-/**
- * POST handler for creating new blog posts
- */
 export async function POST(request: Request) {
   try {
     // Authenticate user

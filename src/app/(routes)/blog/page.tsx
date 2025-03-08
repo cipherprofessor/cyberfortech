@@ -1,18 +1,16 @@
 // src/app/(routes)/blog/page.tsx
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from 'next-themes';
-
-
-
+import BlogProvider from '@/contexts/BlogContext';
+import BlogList from '@/components/blog/BlogList';
+import { useBlog } from '@/contexts/BlogContext';
 import { Moon, Sun } from 'lucide-react';
 import styles from './BlogPage.module.scss';
 import clsx from 'clsx';
-import BlogList from '@/components/blog/BlogList/index';
-import BlogProvider, { useBlog } from '@/contexts/BlogContext';
 
-
+// This is the content component that uses the BlogContext
 function BlogContent() {
   const { 
     posts, 
@@ -30,7 +28,7 @@ function BlogContent() {
   } = useBlog();
 
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -76,6 +74,7 @@ function BlogContent() {
   );
 }
 
+// This is the main page component that provides the BlogContext
 export default function BlogPage() {
   return (
     <BlogProvider>

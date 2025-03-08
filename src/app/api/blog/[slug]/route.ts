@@ -10,12 +10,21 @@ import {
   checkPostPermission 
 } from '@/services/blog-service';
 
+/**
+ * GET handler for fetching a single blog post by slug
+ */
 export async function GET(
   request: Request,
   { params }: { params: { slug: string } }
 ) {
   try {
-    const { isAuthorized, user, error } = await validateUserAccess(request, [ROLES.ADMIN, ROLES.SUPERADMIN]);
+    // Authenticate user
+    const { isAuthorized, user, error } = await validateUserAccess(request, [
+      ROLES.ADMIN, 
+      ROLES.SUPERADMIN,
+      ROLES.STUDENT,
+      ROLES.INSTRUCTOR
+    ]);
     
     if (!isAuthorized || !user) {
       return NextResponse.json(
@@ -25,7 +34,8 @@ export async function GET(
     }
     
     const { slug } = params;
-    const post = await getPostBySlug(slug, true); // true = increment view count
+    // Get post with view count increment
+    const post = await getPostBySlug(slug, true);
 
     if (!post) {
       return NextResponse.json(
@@ -44,12 +54,20 @@ export async function GET(
   }
 }
 
+/**
+ * PUT handler for updating an existing blog post
+ */
 export async function PUT(
   request: Request,
   { params }: { params: { slug: string } }
 ) {
   try {
-    const { isAuthorized, user, error } = await validateUserAccess(request, [ROLES.ADMIN, ROLES.SUPERADMIN]);
+    // Authenticate user
+    const { isAuthorized, user, error } = await validateUserAccess(request, [
+      ROLES.ADMIN, 
+      ROLES.SUPERADMIN,
+      ROLES.INSTRUCTOR
+    ]);
     
     if (!isAuthorized || !user) {
       return NextResponse.json(
@@ -59,9 +77,8 @@ export async function PUT(
     }
 
     const { slug } = params;
-    const body = await request.json();
     
-    // Fetch the post first to get its ID and check permissions
+    // Fetch the post first to check permissions
     const post = await getPostBySlug(slug, false); // false = don't increment view count
     
     if (!post) {
@@ -79,6 +96,9 @@ export async function PUT(
       );
     }
 
+    // Parse request body
+    const body = await request.json();
+    
     // Update the post
     const newSlug = await updatePost(post.id, body, slug);
     
@@ -99,12 +119,19 @@ export async function PUT(
   }
 }
 
+/**
+ * DELETE handler for removing a blog post
+ */
 export async function DELETE(
   request: Request,
   { params }: { params: { slug: string } }
 ) {
   try {
-    const { isAuthorized, user, error } = await validateUserAccess(request, [ROLES.ADMIN, ROLES.SUPERADMIN]);
+    // Authenticate user
+    const { isAuthorized, user, error } = await validateUserAccess(request, [
+      ROLES.ADMIN, 
+      ROLES.SUPERADMIN
+    ]);
     
     if (!isAuthorized || !user) {
       return NextResponse.json(
@@ -115,7 +142,7 @@ export async function DELETE(
 
     const { slug } = params;
     
-    // Fetch the post first to get its ID and check permissions
+    // Fetch the post first to check permissions
     const post = await getPostBySlug(slug, false); // false = don't increment view count
     
     if (!post) {
@@ -133,7 +160,7 @@ export async function DELETE(
       );
     }
 
-    // Delete the post
+    // Delete the post (soft delete)
     const success = await deletePost(post.id);
     
     if (!success) {
