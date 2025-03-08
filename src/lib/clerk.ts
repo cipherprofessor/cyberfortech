@@ -133,15 +133,6 @@ export function getFullNameSync(user: User | null): string {
 }
 
 
-
-
-
-// src/lib/clerk.ts
-
-
-
-
-
 export interface UserData {
   id: string;
   firstName: string;
@@ -192,12 +183,12 @@ export async function validateUserAccess(
 }> {
   try {
     const user = await getCurrentUser(request);
-    
+
     if (!user) {
       return { 
         isAuthorized: false, 
         user: null,
-        error: 'Unauthorized'
+        error: 'Unauthorized Current User'
       };
     }
 
@@ -265,16 +256,4 @@ function transformUserData(user: User): UserData {
   };
 }
 
-// Example usage in API routes:
-// export async function PUT(request: Request) {
-//   const { isAuthorized, user, error } = await validateUserAccess(request, [ROLES.ADMIN, ROLES.SUPERADMIN]);
-//   
-//   if (!isAuthorized) {
-//     return NextResponse.json(
-//       { error }, 
-//       { status: error === 'Unauthorized' ? 401 : 403 }
-//     );
-//   }
-//   // ... rest of your code
-// }
 

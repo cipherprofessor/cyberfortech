@@ -61,6 +61,8 @@ export async function POST(request: Request) {
       ROLES.STUDENT, 
       ROLES.INSTRUCTOR
     ]);
+
+    console.log("Auth result:", { isAuthorized, user: !!user, error, role: user?.role });
     
     if (!isAuthorized || !user) {
       return NextResponse.json(
