@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Lock, Database } from 'lucide-react';
-import ServiceDetail from './ServiceDetail';
+import ServiceDetail from '../ServiceDetail';
 
 const IncidentResponsePage = () => {
   return (

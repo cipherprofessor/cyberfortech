@@ -1,7 +1,11 @@
 .layoutContainer {
     display: flex;
     min-height: calc(100vh - 75px); // Adjust based on your header height
-    background-color: rgb(13, 17, 28);
+    background-color: rgb(249, 250, 251);
+    
+    :global(.dark) & {
+      background-color: rgb(13, 17, 28);
+    }
   }
   
   .sidebarContainer {

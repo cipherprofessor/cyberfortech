@@ -13,13 +13,22 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: rgba(17, 24, 39, 0.9);
+    background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    
+    :global(.dark) & {
+      background-color: rgba(17, 24, 39, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
     
     // Firefox fallback for backdrop-filter
     @supports not (backdrop-filter: blur(10px)) {
-      background-color: rgb(17, 24, 39);
+      background-color: rgb(255, 255, 255);
+      
+      :global(.dark) & {
+        background-color: rgb(17, 24, 39);
+      }
     }
   }
   
@@ -36,8 +45,13 @@
     width: 2rem;
     height: 2rem;
     border-radius: 0.5rem;
-    background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.15);
-    box-shadow: 0 0 10px rgba(var(--service-color-rgb, 0, 123, 255), 0.2);
+    background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.1);
+    box-shadow: 0 0 10px rgba(var(--service-color-rgb, 0, 123, 255), 0.1);
+    
+    :global(.dark) & {
+      background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.15);
+      box-shadow: 0 0 10px rgba(var(--service-color-rgb, 0, 123, 255), 0.2);
+    }
     
     svg {
       color: var(--service-color, #007bff);
@@ -47,8 +61,12 @@
   .serviceName {
     font-size: 1.25rem;
     font-weight: 600;
-    color: white;
+    color: rgb(17, 24, 39);
     margin: 0;
+    
+    :global(.dark) & {
+      color: white;
+    }
   }
   
   .menuButton {
@@ -58,14 +76,24 @@
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: rgb(55, 65, 81);
     cursor: pointer;
     transition: all 0.2s ease;
     
+    :global(.dark) & {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(0, 0, 0, 0.05);
+      
+      :global(.dark) & {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
     }
     
     &:active {
@@ -89,11 +117,16 @@
     width: 80%;
     max-width: 320px;
     height: 100%;
-    background-color: rgb(17, 24, 39);
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgb(255, 255, 255);
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    
+    :global(.dark) & {
+      background-color: rgb(17, 24, 39);
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+    }
   }
   
   .menuHeader {
@@ -101,13 +134,21 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    
+    :global(.dark) & {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
     
     h2 {
       font-size: 1.25rem;
       font-weight: 600;
-      color: white;
+      color: rgb(17, 24, 39);
       margin: 0;
+      
+      :global(.dark) & {
+        color: white;
+      }
     }
   }
   
@@ -120,13 +161,22 @@
     border-radius: 0.5rem;
     background-color: transparent;
     border: none;
-    color: rgb(156, 163, 175);
+    color: rgb(107, 114, 128);
     cursor: pointer;
     transition: all 0.2s ease;
     
+    :global(.dark) & {
+      color: rgb(156, 163, 175);
+    }
+    
     &:hover {
-      color: white;
-      background-color: rgba(255, 255, 255, 0.05);
+      color: rgb(17, 24, 39);
+      background-color: rgba(0, 0, 0, 0.03);
+      
+      :global(.dark) & {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.05);
+      }
     }
     
     &:active {
@@ -147,18 +197,29 @@
     align-items: center;
     padding: 0.875rem 1rem;
     border-radius: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: rgb(209, 213, 219);
+    background-color: rgba(0, 0, 0, 0.01);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    color: rgb(75, 85, 99);
     text-decoration: none;
     transition: all 0.2s ease;
     
+    :global(.dark) & {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: rgb(209, 213, 219);
+    }
+    
     &:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      color: white;
+      background-color: rgba(0, 0, 0, 0.03);
+      color: rgb(17, 24, 39);
+      
+      :global(.dark) & {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: white;
+      }
       
       .serviceIcon {
-        color: var(--service-color, white);
+        color: var(--service-color, #007bff);
       }
       
       .chevron {
@@ -168,21 +229,31 @@
     }
     
     &.active {
-      background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.15);
-      border-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.3);
-      color: white;
+      background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.08);
+      border-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.2);
+      color: rgb(17, 24, 39);
+      
+      :global(.dark) & {
+        background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.15);
+        border-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.3);
+        color: white;
+      }
       
       .serviceIcon {
-        color: var(--service-color, white);
+        color: var(--service-color, #007bff);
       }
       
       .serviceIconContainer {
-        background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.2);
+        background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.1);
+        
+        :global(.dark) & {
+          background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.2);
+        }
       }
       
       .chevron {
         opacity: 1;
-        color: var(--service-color, white);
+        color: var(--service-color, #007bff);
       }
     }
   }
@@ -200,17 +271,29 @@
     width: 2rem;
     height: 2rem;
     border-radius: 0.375rem;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(0, 0, 0, 0.03);
     transition: background-color 0.2s ease;
+    
+    :global(.dark) & {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
   }
   
   .serviceIcon {
-    color: rgb(156, 163, 175);
+    color: rgb(107, 114, 128);
     transition: color 0.2s ease;
+    
+    :global(.dark) & {
+      color: rgb(156, 163, 175);
+    }
   }
   
   .chevron {
     color: rgb(156, 163, 175);
     opacity: 0.5;
     transition: all 0.2s ease;
+    
+    :global(.dark) & {
+      color: rgb(156, 163, 175);
+    }
   }

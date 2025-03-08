@@ -5,7 +5,7 @@ import { Atom, Code, Database, Layout, Globe, Shield, Smartphone } from 'lucide-
 
 import Image from 'next/image';
 import styles from './ServicePages.module.scss';
-import ServiceDetail from './ServiceDetail';
+import ServiceDetail from '../ServiceDetail';
 
 const FullStackDevelopmentPage = () => {
   return (

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Network, CircuitBoard } from 'lucide-react';
-import ServiceDetail from './ServiceDetail';
+import ServiceDetail from '../ServiceDetail';
 
 const NetworkSecurityPage = () => {
   return (

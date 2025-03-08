@@ -1,8 +1,8 @@
 .sidebar {
     width: 280px;
-    background: rgba(17, 24, 39, 0.7);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
     padding: 1.5rem;
     height: calc(100vh - 75px);
     position: sticky;
@@ -11,9 +11,18 @@
     display: flex;
     flex-direction: column;
     
+    :global(.dark) & {
+      background: rgba(17, 24, 39, 0.7);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
     // Firefox fallback for backdrop-filter
     @supports not (backdrop-filter: blur(10px)) {
-      background: rgba(17, 24, 39, 0.95);
+      background: rgba(255, 255, 255, 0.95);
+      
+      :global(.dark) & {
+        background: rgba(17, 24, 39, 0.95);
+      }
     }
     
     // Hide scrollbar for Chrome, Safari and Opera
@@ -22,14 +31,18 @@
     }
     
     // Hide scrollbar for IE, Edge and Firefox
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    // -ms-overflow-style: none;
+    // scrollbar-width: none;
   }
   
   .sidebarHeader {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    
+    :global(.dark) & {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
   }
   
   .backLink {
@@ -37,14 +50,22 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
-    color: rgb(156, 163, 175);
+    color: rgb(107, 114, 128);
     text-decoration: none;
     margin-bottom: 1.25rem;
     padding: 0.5rem 0;
     transition: all 0.2s ease;
     
+    :global(.dark) & {
+      color: rgb(156, 163, 175);
+    }
+    
     &:hover {
-      color: white;
+      color: rgb(17, 24, 39);
+      
+      :global(.dark) & {
+        color: white;
+      }
       
       svg {
         transform: translateX(-2px);
@@ -59,12 +80,16 @@
   .sidebarTitle {
     font-size: 1.25rem;
     font-weight: 600;
-    color: white;
+    color: rgb(17, 24, 39);
     margin: 0;
-    background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.7));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    
+    :global(.dark) & {
+      color: white;
+      background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.7));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
   }
   
   .serviceList {
@@ -79,13 +104,17 @@
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
-    color: rgb(209, 213, 219);
+    color: rgb(75, 85, 99);
     text-decoration: none;
     transition: all 0.2s ease;
     font-size: 0.9375rem;
     border: 1px solid transparent;
     position: relative;
     overflow: hidden;
+    
+    :global(.dark) & {
+      color: rgb(209, 213, 219);
+    }
     
     &::before {
       content: '';
@@ -95,33 +124,52 @@
       width: 0;
       height: 100%;
       background: linear-gradient(90deg, 
-        rgba(var(--service-color-rgb, 255, 255, 255), 0.1), 
+        rgba(var(--service-color-rgb, 0, 123, 255), 0.05), 
         transparent
       );
       transition: width 0.3s ease;
       z-index: -1;
+      
+      :global(.dark) & {
+        background: linear-gradient(90deg, 
+          rgba(var(--service-color-rgb, 0, 123, 255), 0.1), 
+          transparent
+        );
+      }
     }
     
     &:hover {
-      color: white;
-      background-color: rgba(255, 255, 255, 0.05);
+      color: rgb(17, 24, 39);
+      background-color: rgba(0, 0, 0, 0.02);
+      
+      :global(.dark) & {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.05);
+      }
       
       &::before {
         width: 100%;
       }
       
       .serviceIcon {
-        color: var(--service-color, white);
+        color: var(--service-color, #007bff);
       }
     }
     
     &.active {
-      background-color: rgba(var(--service-color-rgb, 255, 255, 255), 0.15);
-      border-color: rgba(var(--service-color-rgb, 255, 255, 255), 0.3);
-      color: white;
+      background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.08);
+      border-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.2);
+      color: rgb(17, 24, 39);
+      font-weight: 500;
+      
+      :global(.dark) & {
+        background-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.15);
+        border-color: rgba(var(--service-color-rgb, 0, 123, 255), 0.3);
+        color: white;
+      }
       
       .serviceIcon {
-        color: var(--service-color, white);
+        color: var(--service-color, #007bff);
       }
       
       .serviceName {
@@ -142,8 +190,12 @@
   
   .serviceIcon {
     transition: color 0.2s ease;
-    color: rgb(156, 163, 175);
+    color: rgb(107, 114, 128);
     z-index: 1;
+    
+    :global(.dark) & {
+      color: rgb(156, 163, 175);
+    }
   }
   
   .activeIndicator {
@@ -155,11 +207,19 @@
     height: 24px;
     background: radial-gradient(
       circle,
-      rgba(var(--service-color-rgb, 255, 255, 255), 0.3),
+      rgba(var(--service-color-rgb, 0, 123, 255), 0.2),
       transparent 70%
     );
     border-radius: 50%;
     animation: pulse 2s infinite;
+    
+    :global(.dark) & {
+      background: radial-gradient(
+        circle,
+        rgba(var(--service-color-rgb, 0, 123, 255), 0.3),
+        transparent 70%
+      );
+    }
   }
   
   .serviceName {
@@ -189,8 +249,12 @@
       height: auto;
       position: static;
       border-right: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       padding: 1rem;
+      
+      :global(.dark) & {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
     }
     
     .serviceList {

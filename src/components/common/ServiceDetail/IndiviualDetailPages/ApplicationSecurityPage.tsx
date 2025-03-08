@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Code2, FileCode2 } from 'lucide-react';
-import ServiceDetail from './ServiceDetail';
+import ServiceDetail from '../ServiceDetail';
 
 const ApplicationSecurityPage = () => {
   return (
