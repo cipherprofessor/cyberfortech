@@ -90,10 +90,7 @@ export function AboutCompany() {
               className={styles.description}
               variants={itemVariants}
             >
-              At CyberFort, we're dedicated to providing world-class cybersecurity education
-              that combines theoretical knowledge with practical skills. Our comprehensive
-              training programs are designed to help you build a successful career in
-              cybersecurity.
+              Cyberfort Technologies excels in delivering cutting-edge cybersecurity solutions to safeguard businesses, individuals, and government agencies against advanced threats. Services include threat detection, incident response, penetration testing, vulnerability assessments, compliance management, and security consulting, ensuring robust data protection and operational resilience.
             </motion.p>
 
             <motion.div 

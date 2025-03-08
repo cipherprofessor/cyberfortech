@@ -27,23 +27,23 @@ export default function AboutPage() {
 
 const teamMembers = [
   {
-    name: "Ayan Ali Dar",
+    name: "Animesh Parhi",
     cardColor: "purple" as 'purple',
-    role: "Founder & CEO",
-    image: "/team/ayan.png",
-    bio: "7+ years of experience in Marketing and Business Development",
+    role: "Head of Cybersecurity",
+    image: "/team/Animesh_Parhi.jpeg",
+    bio: "Head Cybersecurity Consultant & Cybersecurity Testing Specialist With Experience Of Above 7+ Years",
     // experience: "Marketing Expert",
     achievements: [
       "100+ marketing campaigns",
       "Grew business revenue by 200%",
       "Partnerships with 50+ companies"
     ],
-    location: "Cyber City, CC",
-    projects: 150,
-    certifications: [
-      "Digital Marketing Expert",
-      "Business Strategy Specialist"
-    ],
+    // location: "Cyber City, CC",
+    // projects: 150,
+    // certifications: [
+    //   "Digital Marketing Expert",
+    //   "Business Strategy Specialist"
+    // ],
     contactInfo: {
       email: "ayan@CyberFort.com",
       skype: "ayan.skype"
@@ -57,49 +57,19 @@ const teamMembers = [
     }
   },
   {
-    name: "Mohsin Manzoor Bhat",
-    cardColor: "blue" as 'blue',
-    role: "AWS & Full Stack Developer",
-    image: "/team/mohsin.jpg",
-    bio: "5+ Years of Experience in Cloud And Full Stack Development",
-    // experience: "Web Dev Expert",
-    achievements: [
-       "Trained 1000+ Students",
-      "Developed 50+ Full Stack Apps",
-      "AWS Certified Solutions Architect"
-    ],
-    location: "Chennai, India",
-    projects: 100,
-    certifications: [
-      "Digital Marketing Expert",
-      "Business Strategy Specialist"
-    ],
-    contactInfo: {
-      email: "ayan@CyberFort.com",
-      skype: "ayan.skype"
-    },
-    socialLinks: {
-      linkedin: "https://www.linkedin.com/in/CyberFort/",
-      twitter: "https://twitter.com/johndoe",
-      github: "https://github.com/CyberFort",
-      website: "https://CyberFort.com",
-      medium: "https://medium.com/@CyberFort"
-    }
-  },
-  {
-    name: "Arsalan Rayees",
+    name: "Chirag Shah",
     cardColor: "orange" as 'orange',
-    role: "AI & Machine Learning Engineer",
-    image: "/team/arsalan.jpg",
-    bio: "2+ years of experience in AI and Machine Learning",
+    role: "Operations Manager",
+    image: "/team/Chirag_Shah.jpeg",
+    bio: "Operations Manager & IT Security Manager With 20+ Years Of Experience In The IT Industry",
     // experience: "AI Expert",
     achievements: [
       "20+ AI Projects",
       "Developed 15+ AI Models",
       "Published 10+ Research Papers"
     ],
-    location: "Tangmarg",
-    projects: 25,
+    // location: "Tangmarg",
+    // projects: 25,
     certifications: [
       "AWS Solutions Architect",
       "Full Stack Developer"
@@ -117,19 +87,49 @@ const teamMembers = [
     }
   },
   {
-    name: "Areeba Bhat",
+    name: "Mohsin Manzoor Bhat",
+    cardColor: "blue" as 'blue',
+    role: "Technical Lead",
+    image: "/team/mohsin.jpg",
+    bio: "Technical lead,Cloud solutions Architect, Full Stack Developer 4 years + experience",
+    // experience: "Web Dev Expert",
+    achievements: [
+       "Trained 1000+ Students",
+      "Developed 50+ Full Stack Apps",
+      "AWS Certified Solutions Architect"
+    ],
+    // location: "Chennai, India",
+    // projects: 100,
+    certifications: [
+      "Digital Marketing Expert",
+      "Business Strategy Specialist"
+    ],
+    contactInfo: {
+      email: "ayan@CyberFort.com",
+      skype: "ayan.skype"
+    },
+    socialLinks: {
+      linkedin: "https://www.linkedin.com/in/CyberFort/",
+      twitter: "https://twitter.com/johndoe",
+      github: "https://github.com/CyberFort",
+      website: "https://CyberFort.com",
+      medium: "https://medium.com/@CyberFort"
+    }
+  },
+  {
+    name: "Anuj Singh",
     cardColor: "green" as 'green',
-    role: "Cybersecurity Engineer",
-    image: "/testm/testm1.avif",
-    bio: "3+ years of experience in Cybersecurity and Ethical Hacking",
+    role: "Sales and Marketing Manager",
+    image: "/team/Anuj_Singh.jpeg",
+    bio: "Sales and Marketing Manager With Experience Of Above 5+ Years In The IT Industry",
     // experience: "Cybersecurity Expert",
     achievements: [
       "30+ Cybersecurity Projects",
       "Performed 50+ Penetration Tests",
       "Led 10+ Security Audits"
     ],
-    location: "Kashmir, India",
-    projects: 35,
+    // location: "Kashmir, India",
+    // projects: 35,
     certifications: [
       "AWS Solutions Architect",
       "Full Stack Developer"
@@ -208,7 +208,8 @@ const scaleIn = {
             viewport={{ once: true }}
           >
             <p className={styles.missionText}>
-            Cyberfort Technologies excels in delivering cutting-edge cybersecurity solutions to safeguard businesses, individuals, and government agencies against advanced threats. Services include threat detection, incident response, penetration testing, vulnerability assessments, compliance management, and security consulting, ensuring robust data protection and operational resilience.
+            {/* Cyberfort Technologies excels in delivering cutting-edge cybersecurity solutions to safeguard businesses, individuals, and government agencies against advanced threats. Services include threat detection, incident response, penetration testing, vulnerability assessments, compliance management, and security consulting, ensuring robust data protection and operational resilience. */}
+            CyberFort Tech's mission is to provide robust cybersecurity solutions that protect businesses, individuals, and government agencies from evolving cyber threats. Our focus on delivering tailored services like threat detection, incident response, penetration testing, and compliance management. Additionally, they aim to empower organizations and individuals through training programs in areas such as ethical hacking, security awareness, and certifications in various domains of cyber security
             </p>
             <motion.div 
               className={styles.valueCards}
