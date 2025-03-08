@@ -1,26 +1,18 @@
 // src/components/blog/BlogCard/index.tsx
 "use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { useTheme } from 'next-themes';
-import { 
-  Calendar, 
-  User, 
-  Eye, 
-  Star, 
-  Clock, 
-  Tag, 
-  ChevronDown, 
-  ChevronUp,
-  ArrowRight
-} from 'lucide-react';
-import { BlogPost } from '@/types/blog';
+import { ExternalLink } from 'lucide-react';
+
 import styles from './BlogCard.module.scss';
 import clsx from 'clsx';
+import { BlogPost } from '@/types/blog';
+
 
 interface BlogCardProps {
   post: BlogPost;
@@ -29,183 +21,119 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
   const { theme } = useTheme();
-  const [expanded, setExpanded] = useState(false);
   
-  const toggleExpand = () => {
-    setExpanded(!expanded);
-  };
-
-  const truncateText = (text: string, maxLength: number): string => {
-    if (!text) return '';
-    return text.length <= maxLength 
-      ? text 
-      : `${text.substring(0, maxLength)}...`;
-  };
-
   const formatDate = (date: Date): string => {
     try {
-      return format(new Date(date), 'MMM dd, yyyy');
+      return format(new Date(date), 'MMMM d, yyyy');
     } catch (error) {
       return 'Invalid date';
     }
   };
 
-  const formatTime = (date: Date): string => {
-    try {
-      return format(new Date(date), 'HH:mm');
-    } catch (error) {
-      return '';
-    }
+  // Default placeholder image if post doesn't have one
+  const imageUrl = post.featuredImage || '/api/placeholder/400/300';
+  
+  // Get category and tag chips for display
+  const primaryCategory = post.categories && post.categories.length > 0 
+    ? post.categories[0] 
+    : null;
+  
+  const primaryTag = post.tags && post.tags.length > 0 
+    ? post.tags[0] 
+    : null;
+
+  // Calculate read time based on content length (roughly 200 words per minute)
+  const calculateReadTime = () => {
+    if (!post.content) return 1;
+    const wordCount = post.content.trim().split(/\s+/).length;
+    const readTime = Math.ceil(wordCount / 200);
+    return readTime > 0 ? readTime : 1;
   };
 
+  const readTime = calculateReadTime();
+
   return (
-    <motion.div
-      layout
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
       className={clsx(
         styles.card,
-        expanded && styles.expanded,
         theme === 'dark' && styles.dark,
         className
       )}
       data-testid="blog-card"
     >
-      <motion.div 
-        layout="position"
-        className={styles.cardHeader}
-        onClick={toggleExpand}
-      >
-        <div className={styles.titleSection}>
-          <motion.h2 layout="position" className={styles.title}>
-            <Link href={`/blog/${post.slug}`} onClick={(e) => e.stopPropagation()}>
-              {post.title}
+      <div className={styles.imageContainer}>
+        <Image 
+          src={imageUrl} 
+          alt={post.title}
+          className={styles.image}
+          width={400}
+          height={300}
+          priority={post.isFeatured}
+        />
+        
+        <div className={styles.categoryTags}>
+          {primaryCategory && (
+            <Link 
+              href={`/blog/category/${primaryCategory.slug}`}
+              className={styles.categoryTag}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {primaryCategory.name.toUpperCase()}
             </Link>
-          </motion.h2>
-          
-          {!expanded && post.excerpt && (
-            <motion.p layout="position" className={styles.previewExcerpt}>
-              {truncateText(post.excerpt, 150)}
-            </motion.p>
           )}
-
-          <motion.div layout="position" className={styles.chips}>
-            {post.isFeatured && (
-              <span className={clsx(styles.chip, styles.featured)}>
-                <Star size={14} />
-                Featured
-              </span>
-            )}
-            <span className={styles.chip}>
-              <Calendar size={14} />
-              {formatDate(post.publishedAt || post.createdAt)}
-            </span>
-            <span className={styles.chip}>
-              <Clock size={14} />
-              {formatTime(post.publishedAt || post.createdAt)}
-            </span>
-            <span className={styles.chip}>
-              <User size={14} />
-              {post.author.fullName}
-            </span>
-            <span className={styles.chip}>
-              <Eye size={14} />
-              {post.viewCount} views
-            </span>
-          </motion.div>
+          
+          {primaryTag && (
+            <Link 
+              href={`/blog/tag/${primaryTag.slug}`}
+              className={styles.categoryTag}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {primaryTag.name.toUpperCase()}
+            </Link>
+          )}
+          
+          {readTime > 0 && (
+            <span className={styles.readTime}>{readTime} Min Read</span>
+          )}
         </div>
-
-        {post.featuredImage && (
-          <div className={styles.thumbnailContainer}>
-            <Image 
-              src={post.featuredImage} 
-              alt={post.title}
-              className={styles.thumbnail}
-              width={120}
-              height={80}
-              priority={post.isFeatured}
-            />
-          </div>
-        )}
-
-        <button 
-          className={styles.expandButton}
-          onClick={toggleExpand}
-          aria-expanded={expanded}
-          aria-label={expanded ? "Collapse post" : "Expand post"}
-        >
-          {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-        </button>
-      </motion.div>
-
-      <AnimatePresence mode="wait">
-        {expanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            className={styles.expandedContent}
+      </div>
+      
+      <div className={styles.content}>
+        <div className={styles.meta}>
+          <Link 
+            href={`/blog/author/${post.author.id}`}
+            className={styles.author}
           >
-            {post.excerpt && (
-              <p className={styles.excerpt}>{post.excerpt}</p>
-            )}
-
-            <div className={styles.tagsContainer}>
-              {post.categories?.length > 0 && (
-                <div className={styles.tagGroup}>
-                  <span className={styles.tagLabel}>Categories</span>
-                  <div className={styles.tags}>
-                    {post.categories.map(category => (
-                      <Link
-                        key={category.id}
-                        href={`/blog/category/${category.slug}`}
-                        className={clsx(styles.tag, styles.categoryTag)}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {category.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {post.tags?.length > 0 && (
-                <div className={styles.tagGroup}>
-                  <span className={styles.tagLabel}>Tags</span>
-                  <div className={styles.tags}>
-                    {post.tags.map(tag => (
-                      <Link
-                        key={tag.id}
-                        href={`/blog/tag/${tag.slug}`}
-                        className={styles.tag}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Tag size={12} />
-                        <span>{tag.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className={styles.cardActions}>
-              <Link
-                href={`/blog/${post.slug}`}
-                className={styles.readMoreButton}
-                onClick={(e) => e.stopPropagation()}
-              >
-                Read Full Post
-                <ArrowRight size={16} />
-              </Link>
-            </div>
-          </motion.div>
+            {post.author.fullName}
+          </Link>
+          <span className={styles.dateDivider}>on</span>
+          <time className={styles.date}>
+            {formatDate(post.publishedAt || post.createdAt)}
+          </time>
+        </div>
+        
+        <h2 className={styles.title}>
+          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+        </h2>
+        
+        {post.excerpt && (
+          <p className={styles.excerpt}>{post.excerpt}</p>
         )}
-      </AnimatePresence>
-    </motion.div>
+        
+        <div className={styles.footer}>
+          <Link 
+            href={`/blog/${post.slug}`} 
+            className={styles.readMoreButton}
+          >
+            Discover More
+          </Link>
+        </div>
+      </div>
+    </motion.article>
   );
 };
 

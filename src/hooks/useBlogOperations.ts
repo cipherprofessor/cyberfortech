@@ -1,9 +1,11 @@
 // src/hooks/useBlogOperations.ts
 import { useState, useCallback } from 'react';
-import { useBlog } from '@/contexts/BlogContext';
-import { BlogPost } from '@/types/blog';
+
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { useBlog } from '@/contexts/BlogContext';
+import { BlogPost } from '@/types/blog';
+
 
 export const useBlogOperations = () => {
   const router = useRouter();
@@ -22,6 +24,9 @@ export const useBlogOperations = () => {
     try {
       setLocalLoading(true);
       setError(null);
+      if (!createPost) {
+        throw new Error('createPost is undefined');
+      }
       const slug = await createPost(post);
       toast({
         title: "Success",
@@ -46,6 +51,9 @@ export const useBlogOperations = () => {
     try {
       setLocalLoading(true);
       setError(null);
+      if (!updatePost) {
+        throw new Error('updatePost is undefined');
+      }
       const newSlug = await updatePost(slug, post);
       toast({
         title: "Success",
@@ -72,6 +80,9 @@ export const useBlogOperations = () => {
     try {
       setLocalLoading(true);
       setError(null);
+      if (!deletePost) {
+        throw new Error('deletePost is undefined');
+      }
       await deletePost(slug);
       toast({
         title: "Success",

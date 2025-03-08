@@ -18,17 +18,18 @@ const BlogSkeleton: React.FC<BlogSkeletonProps> = ({ count = 3, className }) => 
     <div className={clsx(styles.container, theme === 'dark' && styles.dark, className)}>
       {Array.from({ length: count }).map((_, index) => (
         <div key={index} className={styles.card}>
-          <div className={styles.header}>
-            <div className={styles.content}>
-              <div className={styles.title}></div>
-              <div className={styles.excerpt}></div>
-              <div className={styles.chips}>
-                <div className={styles.chip}></div>
-                <div className={styles.chip}></div>
-                <div className={styles.chip}></div>
-              </div>
+          <div className={styles.imageContainer}>
+            <div className={styles.imageSkeleton}></div>
+            <div className={styles.tagsSkeleton}>
+              <div className={styles.tag}></div>
+              <div className={styles.tag}></div>
             </div>
-            <div className={styles.thumbnail}></div>
+          </div>
+          <div className={styles.content}>
+            <div className={styles.metaSkeleton}></div>
+            <div className={styles.titleSkeleton}></div>
+            <div className={styles.excerptSkeleton}></div>
+            <div className={styles.buttonSkeleton}></div>
           </div>
         </div>
       ))}

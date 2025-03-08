@@ -1,7 +1,9 @@
 // src/app/api/blog/tags/route.ts
+
+import { BlogTag } from '@/types/blog';
 import { createClient } from '@libsql/client';
 import { NextResponse } from 'next/server';
-import { BlogTag } from '@/types/blog';
+
 
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL!,

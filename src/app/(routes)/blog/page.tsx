@@ -3,13 +3,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
-import BlogProvider from '@/contexts/BlogContextNew';
 
-import { useBlog } from '@/contexts/BlogContextNew';
+
+
 import { Moon, Sun } from 'lucide-react';
 import styles from './BlogPage.module.scss';
 import clsx from 'clsx';
 import BlogList from '@/components/blog/BlogList/index';
+import BlogProvider, { useBlog } from '@/contexts/BlogContext';
+
 
 function BlogContent() {
   const { 
