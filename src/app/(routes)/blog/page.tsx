@@ -1,36 +1,75 @@
 // src/app/(routes)/blog/page.tsx
 "use client";
 
-import React, { useEffect } from 'react';
-import BlogProvider from '@/contexts/BlogContext';
-import BlogList from '@/components/blog/BlogList';
-import { useBlog } from '@/contexts/BlogContext';
+import React, { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
+import BlogProvider from '@/contexts/BlogContextNew';
+
+import { useBlog } from '@/contexts/BlogContextNew';
+import { Moon, Sun } from 'lucide-react';
+import styles from './BlogPage.module.scss';
+import clsx from 'clsx';
+import BlogList from '@/components/blog/BlogList/index';
 
 function BlogContent() {
   const { 
     posts, 
+    categories,
+    tags,
     loading, 
     error, 
     currentPage, 
     totalPages, 
     setPage,
+    setSearchQuery,
+    setCategoryFilter,
+    setTagFilter,
     fetchPosts 
   } = useBlog();
 
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     fetchPosts(1); // Fetch posts when component mounts
   }, [fetchPosts]);
 
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <BlogList 
-        posts={posts}
-        loading={loading}
-        error={error || undefined}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setPage}
-      />
+    <div className={clsx(styles.pageContainer, theme === 'dark' && styles.dark)}>
+      <div className={styles.themeToggleWrapper}>
+        <button 
+          onClick={toggleTheme} 
+          className={styles.themeToggle}
+          aria-label={`Toggle to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+        >
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+      </div>
+
+      <div className={styles.contentWrapper}>
+        <BlogList 
+          posts={posts}
+          loading={loading}
+          error={error || undefined}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          categories={categories}
+          tags={tags}
+          onPageChange={setPage}
+          onSearch={setSearchQuery}
+          onCategoryFilter={setCategoryFilter}
+          onTagFilter={setTagFilter}
+        />
+      </div>
     </div>
   );
 }
