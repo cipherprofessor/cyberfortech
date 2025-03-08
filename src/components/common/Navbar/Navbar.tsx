@@ -109,14 +109,14 @@ export default function Navbar() {
         {/* Logo and Brand */}
         <Link href="/" className={styles.logoContainer}>
           <Image
-            src="/logo/cyberlogo2.png"
+            src="/logo/logoown.png"
             alt="CyberFort Logo"
             width={40}
             height={40}
             className={styles.logo}
             priority
           />
-          <span className={styles.logoText}>CyberFort</span>
+          <span className={styles.logoText}>Cyber Fort Tech</span>
         </Link>
 
         {/* Desktop Navigation Links */}

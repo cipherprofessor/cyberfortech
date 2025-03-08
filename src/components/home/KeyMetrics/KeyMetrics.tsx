@@ -15,7 +15,7 @@ import styles from './KeyMetrics.module.scss';
 const metrics = [
   {
     icon: Users,
-    value: 10000,
+    value: 200,
     suffix: '+',
     label: 'Satisfied Students',
     description: 'Globally trained professionals',
@@ -23,7 +23,7 @@ const metrics = [
   },
   {
     icon: Award,
-    value: 50,
+    value: 20,
     suffix: '+',
     label: 'Industry Awards',
     description: 'Recognition for excellence',
@@ -31,7 +31,7 @@ const metrics = [
   },
   {
     icon: BookOpen,
-    value: 100,
+    value: 30,
     suffix: '+',
     label: 'Courses',
     description: 'In-depth learning paths',
@@ -47,7 +47,7 @@ const metrics = [
   },
   {
     icon: GraduationCap,
-    value: 200,
+    value: 20,
     suffix: '+',
     label: 'Expert Trainers',
     description: 'Industry professionals',
