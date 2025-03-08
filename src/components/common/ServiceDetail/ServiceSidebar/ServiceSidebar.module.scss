@@ -1,0 +1,228 @@
+.sidebar {
+    width: 280px;
+    background: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    height: calc(100vh - 75px);
+    position: sticky;
+    top: 75px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    
+    // Firefox fallback for backdrop-filter
+    @supports not (backdrop-filter: blur(10px)) {
+      background: rgba(17, 24, 39, 0.95);
+    }
+    
+    // Hide scrollbar for Chrome, Safari and Opera
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    // Hide scrollbar for IE, Edge and Firefox
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .sidebarHeader {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .backLink {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: rgb(156, 163, 175);
+    text-decoration: none;
+    margin-bottom: 1.25rem;
+    padding: 0.5rem 0;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      color: white;
+      
+      svg {
+        transform: translateX(-2px);
+      }
+    }
+    
+    svg {
+      transition: transform 0.2s ease;
+    }
+  }
+  
+  .sidebarTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .serviceList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+  
+  .serviceItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    color: rgb(209, 213, 219);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9375rem;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        rgba(var(--service-color-rgb, 255, 255, 255), 0.1), 
+        transparent
+      );
+      transition: width 0.3s ease;
+      z-index: -1;
+    }
+    
+    &:hover {
+      color: white;
+      background-color: rgba(255, 255, 255, 0.05);
+      
+      &::before {
+        width: 100%;
+      }
+      
+      .serviceIcon {
+        color: var(--service-color, white);
+      }
+    }
+    
+    &.active {
+      background-color: rgba(var(--service-color-rgb, 255, 255, 255), 0.15);
+      border-color: rgba(var(--service-color-rgb, 255, 255, 255), 0.3);
+      color: white;
+      
+      .serviceIcon {
+        color: var(--service-color, white);
+      }
+      
+      .serviceName {
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .iconWrapper {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .serviceIcon {
+    transition: color 0.2s ease;
+    color: rgb(156, 163, 175);
+    z-index: 1;
+  }
+  
+  .activeIndicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(
+      circle,
+      rgba(var(--service-color-rgb, 255, 255, 255), 0.3),
+      transparent 70%
+    );
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  
+  .serviceName {
+    position: relative;
+    z-index: 1;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: translate(-50%, -50%) scale(0.9);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 0.4;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(0.9);
+      opacity: 0.8;
+    }
+  }
+  
+  // Mobile styling
+  @media (max-width: 1024px) {
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: static;
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+    }
+    
+    .serviceList {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .serviceItem {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      flex: 0 0 auto;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .serviceItem {
+      width: calc(50% - 0.25rem);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .serviceList {
+      flex-direction: column;
+    }
+    
+    .serviceItem {
+      width: 100%;
+    }
+    
+    .sidebarHeader {
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+    }
+  }

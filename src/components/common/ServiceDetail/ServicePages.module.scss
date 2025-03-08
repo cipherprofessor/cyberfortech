@@ -1,0 +1,289 @@
+.servicePage {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  // Background elements
+  .bgElements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  
+  .techIcon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.3);
+    z-index: 1;
+    opacity: 0.7;
+    animation: float 6s ease-in-out infinite;
+    
+    svg {
+      opacity: 0.6;
+    }
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  
+  .codeSnippet {
+    position: absolute;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.4);
+    white-space: pre;
+    max-width: 200px;
+    overflow: hidden;
+    z-index: 1;
+    opacity: 0.4;
+    transform: rotate(-5deg);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    
+    &:nth-of-type(even) {
+      transform: rotate(3deg);
+    }
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  // Showcase section
+  .showcaseSection {
+    margin-top: 4rem;
+    padding: 3rem 2rem;
+    position: relative;
+    background: linear-gradient(to bottom, 
+      rgba(0, 0, 0, 0), 
+      rgba(0, 188, 212, 0.05),
+      rgba(0, 0, 0, 0)
+    );
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 100px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(0, 188, 212, 0.5), transparent);
+      transform: translateX(-50%);
+    }
+    
+    @media (max-width: 768px) {
+      padding: 2rem 1rem;
+    }
+  }
+  
+  .showcaseTitle {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: #fff;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(0, 188, 212, 0.9));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+  }
+  
+  .showcaseGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+  
+  .showcaseItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      background: rgba(0, 188, 212, 0.05);
+      border-color: rgba(0, 188, 212, 0.3);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      
+      .showcaseIconContainer {
+        background: rgba(0, 188, 212, 0.1);
+        border-color: rgba(0, 188, 212, 0.5);
+        
+        .showcaseIcon {
+          color: rgba(0, 188, 212, 1);
+          transform: scale(1.1);
+        }
+      }
+      
+      h3 {
+        color: rgba(0, 188, 212, 1);
+      }
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 1.25rem 0 0.75rem;
+      color: #fff;
+      transition: color 0.3s ease;
+    }
+    
+    p {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+    }
+  }
+  
+  .showcaseIconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .showcaseIcon {
+    color: rgba(255, 255, 255, 0.7);
+    size: 1.75rem;
+    transition: all 0.3s ease;
+  }
+  
+  // Tech stack section
+  .techStackSection {
+    padding: 4rem 2rem;
+    margin-bottom: 3rem;
+    
+    @media (max-width: 768px) {
+      padding: 2rem 1rem;
+    }
+  }
+  
+  .techStackTitle {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: #fff;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(0, 188, 212, 0.9));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+  }
+  
+  .techStackContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .techCategory {
+    h3 {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3rem;
+        height: 2px;
+        background: linear-gradient(to right, transparent, rgba(0, 188, 212, 0.7), transparent);
+      }
+    }
+  }
+  
+  .techLogos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .techLogo {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    height: 5rem;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-3px);
+      background: rgba(0, 188, 212, 0.05);
+      border-color: rgba(0, 188, 212, 0.3);
+    }
+  }
+  
+  .logoPlaceholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: center;
+  }
