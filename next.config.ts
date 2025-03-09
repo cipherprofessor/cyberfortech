@@ -1,3 +1,5 @@
+import { hostname } from "os";
+
 /** @type {import('next').NextConfig} */
 require("dotenv").config();
 
@@ -59,6 +61,12 @@ const nextConfig = {
       },
       {
         hostname: 'i.pravatar.cc'
+      },
+      {
+        hostname: 'elements-resized.envatousercontent.com'
+      },
+      {
+        hostname: 'www.rentallscript.com'
       }
     ],
   },

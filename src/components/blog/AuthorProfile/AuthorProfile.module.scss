@@ -1,0 +1,120 @@
+// src/components/blog/AuthorProfile/AuthorProfile.module.scss
+
+.container {
+    --text-color: #1e293b;
+    --text-secondary: #64748b;
+    --bg-color: #ffffff;
+    --border-color: #e2e8f0;
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    
+    &.dark {
+      --text-color: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --bg-color: #1e293b;
+      --border-color: #334155;
+    }
+  }
+  
+  .sectionHeading {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+  }
+  
+  .authorProfile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .authorAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .authorInfo {
+    flex: 1;
+  }
+  
+  .authorName {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+  }
+  
+  .authorRole {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+  }
+  
+  .authorBio {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+  
+  .authorLocation {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+  
+  .locationIcon {
+    font-size: 1rem;
+  }
+  
+  .socialLinks {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .socialLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .authorAvatar {
+      width: 60px;
+      height: 60px;
+    }
+  }

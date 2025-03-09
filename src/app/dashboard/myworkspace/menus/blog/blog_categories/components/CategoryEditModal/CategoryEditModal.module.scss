@@ -1,0 +1,422 @@
+// src/app/dashboard/myworkspace/menus/blog/blog_categories/components/CategoryEditModal.module.scss
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    color: #111827;
+    
+    &.dark {
+      color: #f9fafb;
+    }
+  }
+  
+  .modal {
+    width: 90%;
+    max-width: 1000px;
+    max-height: 90vh;
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    .dark & {
+      background: #1e293b;
+    }
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .dark & {
+      border-color: #374151;
+    }
+  }
+  
+  .closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+    
+    .dark & {
+      color: #9ca3af;
+      
+      &:hover {
+        background: #374151;
+        color: #f9fafb;
+      }
+    }
+  }
+  
+  .modalContent {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .formContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .formSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .formGroup {
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    small {
+      display: block;
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 0.25rem;
+      
+      .dark & {
+        color: #9ca3af;
+      }
+    }
+  }
+  
+  .required {
+    color: #ef4444;
+    margin-left: 0.25rem;
+  }
+  
+  .disabledNote {
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: #6b7280;
+    margin-left: 0.5rem;
+    font-style: italic;
+    
+    .dark & {
+      color: #9ca3af;
+    }
+  }
+  
+  .formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .input,
+  .textarea,
+  .select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background-color: #f9fafb;
+    color: #111827;
+    transition: all 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 1px #6366f1;
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .dark & {
+      background-color: #1e293b;
+      border-color: #334155;
+      color: #f9fafb;
+      
+      &:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 1px #6366f1;
+      }
+    }
+  }
+  
+  .textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1.5rem;
+    
+    .dark & {
+      border-color: #334155;
+    }
+  }
+  
+  .cancelButton,
+  .submitButton {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .cancelButton {
+    background-color: transparent;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+    
+    &:hover {
+      background-color: #f3f4f6;
+      border-color: #d1d5db;
+    }
+    
+    .dark & {
+      border-color: #334155;
+      color: #e5e7eb;
+      
+      &:hover {
+        background-color: #334155;
+        border-color: #475569;
+      }
+    }
+  }
+  
+  .submitButton {
+    background-color: #6366f1;
+    border: none;
+    color: white;
+    
+    &:hover {
+      background-color: #4f46e5;
+    }
+  }
+  
+  // Icon selector styles
+  .iconTypeSelector {
+    display: flex;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    
+    .dark & {
+      border-color: #334155;
+    }
+  }
+  
+  .iconTypeButton {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    background-color: #f9fafb;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #6b7280;
+    
+    &:first-child {
+      border-right: 1px solid #e5e7eb;
+      
+      .dark & {
+        border-color: #334155;
+      }
+    }
+    
+    &.active {
+      background-color: #6366f1;
+      color: white;
+    }
+    
+    .dark & {
+      background-color: #1e293b;
+      color: #9ca3af;
+    }
+  }
+  
+  .emojiSelector {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .selectedEmoji {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .emojiDisplay {
+    font-size: 2.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 5rem;
+    height: 5rem;
+    
+    .dark & {
+      background-color: #1e293b;
+      border-color: #334155;
+    }
+  }
+  
+  .emojiGrid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0.5rem;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .emojiButton {
+    width: 100%;
+    aspect-ratio: 1/1;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+      background-color: #f3f4f6;
+    }
+    
+    &.activeEmoji {
+      border-color: #6366f1;
+      background-color: rgba(99, 102, 241, 0.1);
+    }
+    
+    .dark & {
+      background-color: #1e293b;
+      border-color: #334155;
+      
+      &:hover {
+        background-color: #334155;
+      }
+      
+      &.activeEmoji {
+        border-color: #6366f1;
+        background-color: rgba(99, 102, 241, 0.2);
+      }
+    }
+  }
+  
+  .urlInput {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .inputWithIcon {
+    position: relative;
+  }
+  
+  .inputIcon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    
+    .dark & {
+      color: #9ca3af;
+    }
+  }
+  
+  .urlInput input {
+    padding-left: 2.5rem;
+  }
+  
+  .imagePreview {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+  
+  .previewImage {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 0.375rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem;
+    
+    .dark & {
+      background-color: #1e293b;
+      border-color: #334155;
+    }
+  }

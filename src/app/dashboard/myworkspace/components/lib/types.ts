@@ -32,7 +32,7 @@ export interface KPICardProps {
   value: string;
   change: number;
   icon: React.ReactNode;
-  iconType: IconType;
+  iconType?: IconType;
   className?: string;
 }
 

@@ -6,7 +6,7 @@ import BlogProvider from '@/contexts/BlogContext';
 import { createClient } from '@libsql/client';
 import { notFound, useRouter } from 'next/navigation';
 import { Metadata } from 'next';
-import BlogEditor from '@/components/blog/BlogEditor';
+import BlogEditor from '@/components/blog/BlogEditor/BlogEditor';
 import { BlogPost } from '@/types/blog';
 import { useBlogOperations } from '@/hooks/useBlogOperations';
 

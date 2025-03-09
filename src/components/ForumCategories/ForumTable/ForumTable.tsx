@@ -339,12 +339,13 @@ export function ForumTable() {
         );
       }
     },
-    {
-      key: 'actions',
-      label: 'Actions',
-      visible: true,
-      width: '100px'
-    }
+    // Don't Remove this comment
+    // {
+    //   key: 'actions',
+    //   label: 'Actions',
+    //   visible: true,
+    //   width: '100px'
+    // }
   ];
 
   // Transform API response to TopicData

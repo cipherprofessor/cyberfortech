@@ -13,7 +13,8 @@ import {
   MessageSquare,
   ArrowRight,
   ExternalLink,
-  Twitter
+  Twitter,
+  Notebook
 } from 'lucide-react';
 import { Accordion, AccordionItem, Avatar, Badge, Tooltip } from "@heroui/react";
 import { ContactForm } from '@/app/(routes)/contact/ContactForm/ContactForm';
@@ -65,9 +66,9 @@ const faqData: { id: string; avatar: string; color: FaqColor; question: string; 
 const quickLinks = [
   {
     icon: <Calendar className={styles.quickIcon} />,
-    title: "Schedule a Demo",
-    description: "See our platform in action",
-    link: ""
+    title: "About Us",
+    description: "Learn more about CyberFort Tech",
+    link: "/about"
   },
   {
     icon: <FileCheck className={styles.quickIcon} />,
@@ -77,15 +78,15 @@ const quickLinks = [
   },
   {
     icon: <BookOpen className={styles.quickIcon} />,
-    title: "Student Resources",
-    description: "Access learning materials",
-    link: ""
+    title: "Forum",
+    description: "Join the community discussion",
+    link: "/forum"
   },
   {
-    icon: <Shield className={styles.quickIcon} />,
-    title: "Certificate Verification",
-    description: "Verify course certificates",
-    link: ""
+    icon: <Notebook className={styles.quickIcon} />,
+    title: "Checkout Blog",
+    description: "Latest news, updates and articles",
+    link: "/blog"
   }
 ];
 
