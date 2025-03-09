@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS blog_categories (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_deleted BOOLEAN DEFAULT FALSE,
     deleted_at DATETIME;
+    image_url TEXT,
     FOREIGN KEY (parent_id) REFERENCES blog_categories(id)
 );
 

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon, DollarSignIcon, NotebookTabs, SquareKanban, ScanEye, Contact, BookUser, Quote, GraduationCap, Cog, Wrench, MessageCircleQuestion, TableOfContents, DollarSign, ReceiptPoundSterlingIcon, Settings2Icon } from 'lucide-react';
+import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon, DollarSignIcon, NotebookTabs, SquareKanban, ScanEye, Contact, BookUser, Quote, GraduationCap, Cog, Wrench, MessageCircleQuestion, TableOfContents, DollarSign, ReceiptPoundSterlingIcon, Settings2Icon, PackageIcon, NotebookPenIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import styles from './Sidebar.module.scss';
@@ -98,6 +98,17 @@ export function SuperAdminSidebar() {
         { label: 'Admins', href: '/dashboard/myworkspace/menus/users/admins', icon: <User size={16} className={styles.userAdminsIcon}/>, labelClassName: styles.subLabel},
         { label: 'Students', href: '/dashboard/myworkspace/menus/users/students', icon: <BookUser size={16} className={styles.userStudentsIcon} />, labelClassName: styles.subLabel},
         { label: 'Instructors', href: '/dashboard/myworkspace/menus/users/instructors', icon: <GraduationCap size={16} className={styles.userInstructorsIcon} />, labelClassName: styles.subLabel},
+      ],
+    },
+    {
+      label: 'Blog',
+      icon: <NotebookPenIcon size={18} className={styles.userIcon} />,
+      labelClassName: styles.mainLabel,
+      subItems: [
+        { label: 'Blog Dashboard', href: '/dashboard/myworkspace/menus/users/all', icon: <Contact size={16} className={styles.userAllusersIcon} />,  labelClassName: styles.subLabel },
+        { label: 'Blog Management', href: '/dashboard/myworkspace/menus/users/admins', icon: <User size={16} className={styles.userAdminsIcon}/>, labelClassName: styles.subLabel},
+        { label: 'Categories', href: '/dashboard/myworkspace/menus/blog/blog_categories', icon: <BookUser size={16} className={styles.userStudentsIcon} />, labelClassName: styles.subLabel},
+        // { label: 'Instructors', href: '/dashboard/myworkspace/menus/users/instructors', icon: <GraduationCap size={16} className={styles.userInstructorsIcon} />, labelClassName: styles.subLabel},
       ],
     },
     {

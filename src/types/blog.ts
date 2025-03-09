@@ -32,6 +32,8 @@ export interface BlogCategory {
   displayOrder: number;
   postCount?: number;
   parent?: CategoryParent;
+  parentId?: string;
+  imageUrl?: string; // New field for category icon
 }
 
 /**

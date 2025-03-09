@@ -1,0 +1,198 @@
+// src/app/dashboard/myworkspace/menus/blog/blog_categories/BlogCategories.module.scss
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 1.5rem 0;
+    
+    // Light mode
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --hover-bg: #f3f4f6;
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --success-color: #10b981;
+    --error-color: #ef4444;
+    --warning-color: #f59e0b;
+    
+    // Integrate with the global dark theme
+    :global(.dark) & {
+      --bg-primary: #1e293b;
+      --bg-secondary: #111827;
+      --text-primary: #f9fafb;
+      --text-secondary: #d1d5db;
+      --border-color: #374151;
+      --hover-bg: #374151;
+    }
+  }
+  
+  .header {
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
+  
+  .statsCards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1.5rem;
+  }
+  
+  .addButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: var(--primary-hover);
+    }
+  }
+  
+  .tableContainer {
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+  
+  .categoriesTable {
+    width: 100%;
+    
+    :global(.dark) & {
+      // Additional dark mode styles for the table if needed
+    }
+  }
+  
+  // Table cell styles
+  .nameCell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .categoryIconContainer {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .categoryIcon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .emojiIcon {
+    font-size: 1.25rem;
+  }
+  
+  .categoryName {
+    font-weight: 500;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+  }
+  
+  .childIndicator {
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+  }
+  
+  .descriptionCell {
+    display: block;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .orderCell {
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  
+  .postCountBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 1.5rem;
+    padding: 0 0.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+  }
+  
+  .parentName {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .emptyValue {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+  
+  @media (max-width: 1024px) {
+    .statsCards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      width: 95%;
+    }
+    
+    .statsCards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      width: 100%;
+      padding: 1rem;
+    }
+    
+    .statsCards {
+      grid-template-columns: 1fr;
+    }
+    
+    .actions {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }

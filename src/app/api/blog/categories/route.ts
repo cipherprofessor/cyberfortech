@@ -32,7 +32,8 @@ export async function GET(request: Request) {
           slug, 
           description,
           parent_id,
-          display_order
+          display_order,
+          image_url
         FROM blog_categories
         WHERE is_deleted = FALSE
         ORDER BY display_order ASC, name ASC
@@ -45,7 +46,8 @@ export async function GET(request: Request) {
       slug: String(row.slug),
       description: row.description ? String(row.description) : undefined,
       parentId: row.parent_id ? String(row.parent_id) : undefined,
-      displayOrder: Number(row.display_order) || 0
+      displayOrder: Number(row.display_order) || 0,
+      imageUrl: row.image_url ? String(row.image_url) : undefined
     }));
 
     return NextResponse.json(categories);
@@ -76,7 +78,14 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, slug, description, parentId, displayOrder = 0 } = body;
+    const { 
+      name, 
+      slug, 
+      description, 
+      parentId, 
+      displayOrder = 0,
+      imageUrl 
+    } = body;
 
     if (!name || !slug) {
       return NextResponse.json(
@@ -111,9 +120,10 @@ export async function POST(request: Request) {
           description,
           parent_id,
           display_order,
+          image_url,
           created_at,
           updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       `,
       args: [
         id,
@@ -121,7 +131,8 @@ export async function POST(request: Request) {
         slug,
         description || null,
         parentId || null,
-        displayOrder
+        displayOrder,
+        imageUrl || null
       ]
     });
 
@@ -131,7 +142,8 @@ export async function POST(request: Request) {
       slug,
       description,
       parentId,
-      displayOrder
+      displayOrder,
+      imageUrl
     });
   } catch (error) {
     console.error('Error creating category:', error);

@@ -7,6 +7,7 @@ import { useTheme } from 'next-themes';
 import axios from 'axios';
 import { BlogCategory } from '@/types/blog';
 import styles from './TrendingTopics.module.scss';
+import next from 'next';
 
 // Map of category slugs to emoji icons
 const CATEGORY_ICONS: Record<string, string> = {
@@ -32,6 +33,11 @@ const CATEGORY_ICONS: Record<string, string> = {
   lifestyle: '🌿',
   management: '📊',
   trends: '🔥',
+  react : '⚛️', // Add more as needed
+  next : '📝', // Add more as needed
+  webdevelopment : '📝', // Add more as needed
+  cybersecurity :   '📝', // Add more as needed
+  
   // Add more as needed
   default: '📝', // Default icon
 };
