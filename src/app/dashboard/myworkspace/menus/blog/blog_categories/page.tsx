@@ -1,7 +1,7 @@
 // src/app/dashboard/myworkspace/menus/blog/blog_categories/BlogCategories.tsx
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef, createRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import axios from 'axios';
 import { 
@@ -23,10 +23,18 @@ import KPICard from '../../../components/ui/KPICard/KPICard';
 import { CategoryEditModal } from './components/CategoryEditModal/CategoryEditModal';
 import { CategoryDeleteConfirmDialog } from './components/CategoryDeleteConfirmation/CategoryDeleteConfirmation';
 
+// Explicitly augment the CategoryWithCount type to include 'icon' as a key
+interface ExtendedColumnKeys extends CategoryWithCount {
+  icon: any;
+  actions: any;
+}
+
 const BlogCategories: React.FC = () => {
   const { theme } = useTheme();
   const { showToast } = useToast();
-  const iconRefs = useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({});
+  
+  // Type-safe refs object
+  const iconRefsMap = useRef<Record<string, HTMLDivElement | null>>({});
   
   // States
   const [categories, setCategories] = useState<CategoryWithCount[]>([]);
@@ -52,8 +60,8 @@ const BlogCategories: React.FC = () => {
   // Effect to render images in their containers after categories are loaded
   useEffect(() => {
     categories.forEach(category => {
-      if (category.imageUrl && !isEmoji(category.imageUrl) && iconRefs.current[category.id]) {
-        const container = iconRefs.current[category.id].current;
+      if (category.imageUrl && !isEmoji(category.imageUrl)) {
+        const container = iconRefsMap.current[category.id];
         if (container) {
           // Clear previous content
           while (container.firstChild) {
@@ -74,15 +82,6 @@ const BlogCategories: React.FC = () => {
           img.src = category.imageUrl || '';
           container.appendChild(img);
         }
-      }
-    });
-  }, [categories]);
-  
-  // Create refs for each category when they change
-  useEffect(() => {
-    categories.forEach(category => {
-      if (!iconRefs.current[category.id]) {
-        iconRefs.current[category.id] = createRef<HTMLDivElement>();
       }
     });
   }, [categories]);
@@ -243,8 +242,13 @@ const BlogCategories: React.FC = () => {
     return /\p{Emoji}/u.test(str) || str.length < 5;
   };
 
+  // Setup icon ref for a category
+  const setIconRef = (id: string, el: HTMLDivElement | null) => {
+    iconRefsMap.current[id] = el;
+  };
+
   // Define table columns
-  const columns: Column<CategoryWithCount>[] = [
+  const columns: Column<ExtendedColumnKeys>[] = [
     {
       key: 'icon',
       label: 'ICON',
@@ -252,29 +256,19 @@ const BlogCategories: React.FC = () => {
       visible: true,
       width: '70px',
       render: (_, category) => {
-        // Create a ref for this category if it doesn't exist
-        if (!iconRefs.current[category.id]) {
-          iconRefs.current[category.id] = createRef<HTMLDivElement>();
-        }
-        
-        if (!category.imageUrl) {
-          return (
-            <div className={styles.iconPlaceholder}>
-              <FilePlus size={16} />
-            </div>
-          );
-        }
-        
-        if (isEmoji(category.imageUrl)) {
-          return <span className={styles.emojiIcon}>{category.imageUrl}</span>;
-        }
-        
         return (
-          <div 
-            className={styles.iconContainer} 
-            ref={iconRefs.current[category.id]}
-          >
-            <ImageIcon size={16} className={styles.placeholderIcon} />
+          <div className={styles.iconContainer}>
+            <img 
+              src={category.imageUrl || '/logocyber4.png'}
+              alt="Category Icon"
+              width={24}
+              height={24}
+              className={styles.imageIcon}
+              onError={(e) => {
+                // Fallback to default image if loading fails
+                (e.target as HTMLImageElement).src = '/logo/cyber4.png';
+              }}
+            />
           </div>
         );
       }
@@ -451,7 +445,7 @@ const BlogCategories: React.FC = () => {
       {/* Categories Data Table */}
       <div className={styles.tableContainer}>
         <DataTable
-          data={filteredCategories}
+          data={filteredCategories as ExtendedColumnKeys[]}
           columns={columns}
           isLoading={loading}
           onEdit={handleEdit}

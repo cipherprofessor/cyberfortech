@@ -19,6 +19,7 @@ import {
 import styles from './CourseSidebar.module.scss';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
+import UnderConstruction from '@/components/ui/ConstructionPage/ConstructionPage';
 
 // Updated interface for the course content API response
 interface CourseContentData {
@@ -120,7 +121,8 @@ export function CourseSidebar({
 
   const handleEnroll = async () => {
     if (!onEnroll) {
-      router.push('/login');
+      // router.push('/login');
+      <UnderConstruction  />
       return;
     }
 
@@ -129,7 +131,8 @@ export function CourseSidebar({
 
     try {
       await onEnroll(course.id);
-      router.push(`/dashboard/courses/${course.id}`);
+      <UnderConstruction  />
+      // router.push(`/dashboard/courses/${course.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to enroll in course');
     } finally {

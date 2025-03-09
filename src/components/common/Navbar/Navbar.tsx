@@ -127,7 +127,7 @@ export default function Navbar() {
       className={styles.logo}
       priority
     />
-    <span className={`${styles.logoText} ${styles.hideMobileText}`}>Cyber Fort Tech</span>
+    <span className={`${styles.logoText} ${styles.hideMobileText}`}>CyberFort Tech</span>
   </Link>
 
         {/* Desktop Navigation Links */}
