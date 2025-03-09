@@ -1,50 +1,32 @@
 // src/app/dashboard/myworkspace/menus/blog/blog_categories/BlogCategories.tsx
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef, createRef } from 'react';
 import { useTheme } from 'next-themes';
 import axios from 'axios';
 import { 
   PlusCircle, 
-  Edit, 
-  Trash2, 
   Pencil,
   Eye,
   BarChart3,
   SortAsc,
+  Trash2,
   FilePlus,
-  ArrowUpDown
+  ImageIcon
 } from 'lucide-react';
 import DataTable, { Column } from '@/app/dashboard/myworkspace/components/ui/DataTable/DataTable';
 
-import { BlogCategory } from '@/types/blog';
+import { CategoryWithCount, CategoryFormData } from './types';
 import { useToast } from './hooks/useToast';
 import styles from './BlogCategories.module.scss';
 import KPICard from '../../../components/ui/KPICard/KPICard';
 import { CategoryEditModal } from './components/CategoryEditModal/CategoryEditModal';
 import { CategoryDeleteConfirmDialog } from './components/CategoryDeleteConfirmation/CategoryDeleteConfirmation';
 
-// Interface for category with post count
-interface CategoryWithCount extends BlogCategory {
-  postCount: number;
-}
-
-// Interface for category form data
-interface CategoryFormData {
-  id?: string;
-  name: string;
-  slug: string;
-  description: string;
-  displayOrder: number;
-  parentId?: string | null;
-  imageUrl?: string | null;
-  imageUrlType: 'emoji' | 'url';
-  emojiIcon?: string;
-}
-
 const BlogCategories: React.FC = () => {
   const { theme } = useTheme();
   const { showToast } = useToast();
+  const iconRefs = useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({});
   
   // States
   const [categories, setCategories] = useState<CategoryWithCount[]>([]);
@@ -67,6 +49,44 @@ const BlogCategories: React.FC = () => {
     fetchCategories();
   }, []);
   
+  // Effect to render images in their containers after categories are loaded
+  useEffect(() => {
+    categories.forEach(category => {
+      if (category.imageUrl && !isEmoji(category.imageUrl) && iconRefs.current[category.id]) {
+        const container = iconRefs.current[category.id].current;
+        if (container) {
+          // Clear previous content
+          while (container.firstChild) {
+            container.removeChild(container.firstChild);
+          }
+          
+          // Create and append new image
+          const img = document.createElement('img');
+          img.className = styles.imageIcon;
+          img.alt = "";
+          img.width = 24;
+          img.height = 24;
+          
+          img.onerror = () => {
+            img.src = '/api/placeholder/24/24';
+          };
+          
+          img.src = category.imageUrl || '';
+          container.appendChild(img);
+        }
+      }
+    });
+  }, [categories]);
+  
+  // Create refs for each category when they change
+  useEffect(() => {
+    categories.forEach(category => {
+      if (!iconRefs.current[category.id]) {
+        iconRefs.current[category.id] = createRef<HTMLDivElement>();
+      }
+    });
+  }, [categories]);
+  
   // Fetch categories function
   const fetchCategories = useCallback(async () => {
     try {
@@ -78,7 +98,7 @@ const BlogCategories: React.FC = () => {
       const postCounts = postCountsResponse.data;
       
       // Merge categories with post counts
-      const categoriesWithCounts = response.data.map((category: BlogCategory) => ({
+      const categoriesWithCounts = response.data.map((category: any) => ({
         ...category,
         postCount: postCounts[category.id] || 0
       }));
@@ -93,33 +113,6 @@ const BlogCategories: React.FC = () => {
       setLoading(false);
     }
   }, [showToast]);
-  
-  // Get emoji icon or image URL for a category
-  const getCategoryIcon = (category: CategoryWithCount): React.ReactNode => {
-    if (!category.imageUrl) {
-      return <FilePlus size={16} />;
-    }
-    
-    // Check if the icon is an emoji or URL
-    if (/\p{Emoji}/u.test(category.imageUrl) || category.imageUrl.length < 5) {
-      // It's an emoji
-      return <span className={styles.emojiIcon}>{category.imageUrl}</span>;
-    } else {
-      // It's an image URL
-      return (
-        <div className={styles.categoryIconContainer}>
-          <img 
-            src={category.imageUrl} 
-            alt="" 
-            className={styles.categoryIcon}
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/api/placeholder/24/24';
-            }}
-          />
-        </div>
-      );
-    }
-  };
   
   // Handle edit action
   const handleEdit = (category: CategoryWithCount) => {
@@ -244,22 +237,60 @@ const BlogCategories: React.FC = () => {
     setSelectedCategories(selected);
   };
   
+  // Check if a string is an emoji
+  const isEmoji = (str: string | null | undefined): boolean => {
+    if (!str) return false;
+    return /\p{Emoji}/u.test(str) || str.length < 5;
+  };
+
   // Define table columns
   const columns: Column<CategoryWithCount>[] = [
+    {
+      key: 'icon',
+      label: 'ICON',
+      sortable: false,
+      visible: true,
+      width: '70px',
+      render: (_, category) => {
+        // Create a ref for this category if it doesn't exist
+        if (!iconRefs.current[category.id]) {
+          iconRefs.current[category.id] = createRef<HTMLDivElement>();
+        }
+        
+        if (!category.imageUrl) {
+          return (
+            <div className={styles.iconPlaceholder}>
+              <FilePlus size={16} />
+            </div>
+          );
+        }
+        
+        if (isEmoji(category.imageUrl)) {
+          return <span className={styles.emojiIcon}>{category.imageUrl}</span>;
+        }
+        
+        return (
+          <div 
+            className={styles.iconContainer} 
+            ref={iconRefs.current[category.id]}
+          >
+            <ImageIcon size={16} className={styles.placeholderIcon} />
+          </div>
+        );
+      }
+    },
     {
       key: 'name',
       label: 'NAME',
       sortable: true,
       visible: true,
       render: (_, category) => (
-        <div className={styles.nameCell}>
-          {getCategoryIcon(category)}
-          <span className={styles.categoryName}>
-            {category.parentId && <span className={styles.childIndicator}>↳</span>}
-            {category.name}
-          </span>
-        </div>
-      )
+        <span className={styles.categoryName}>
+          {category.parentId && <span className={styles.childIndicator}>↳</span>}
+          {category.name}
+        </span>
+      ),
+      width: '200px'
     },
     {
       key: 'slug',
@@ -321,7 +352,26 @@ const BlogCategories: React.FC = () => {
       label: 'ACTIONS',
       sortable: false,
       visible: true,
-      width: '100px'
+      width: '100px',
+      render: (_, category) => (
+        <div className={styles.actions}>
+          <button
+            onClick={() => handleEdit(category)}
+            className={styles.editButton}
+            aria-label={`Edit ${category.name}`}
+          >
+            <Pencil size={16} />
+          </button>
+          <button
+            onClick={() => handleDelete([category])}
+            className={styles.deleteButton}
+            aria-label={`Delete ${category.name}`}
+            disabled={category.postCount > 0}
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      )
     }
   ];
   
@@ -346,7 +396,7 @@ const BlogCategories: React.FC = () => {
   const customProps = {
     onSearchChange: handleSearch,
     searchValue: searchQuery,
-    title: "Recent Orders", // Will be overridden by the title prop in DataTable
+    title: "Blog Categories",
     useCustomDeleteModal: true,
     useCustomEditModal: true
   };

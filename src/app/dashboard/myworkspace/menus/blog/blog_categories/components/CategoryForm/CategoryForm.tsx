@@ -1,8 +1,8 @@
 // src/app/dashboard/myworkspace/menus/blog/blog_categories/components/CategoryForm.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import axios from 'axios';
-import { XCircle, LinkIcon } from 'lucide-react';
+import { XCircle, LinkIcon, AlertTriangle, ImageIcon } from 'lucide-react';
 import clsx from 'clsx';
 import { BlogCategory } from '@/types/blog';
 import styles from './CategoryForm.module.scss';
@@ -42,6 +42,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const imagePreviewRef = useRef<HTMLDivElement>(null);
   
   // Form state
   const [formData, setFormData] = useState<CategoryFormData>({
@@ -54,6 +55,10 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
     imageUrlType: 'emoji',
     emojiIcon: '📝'
   });
+  
+  // Image preview state
+  const [imagePreviewError, setImagePreviewError] = useState<boolean>(false);
+  const [imagePreviewLoading, setImagePreviewLoading] = useState<boolean>(false);
   
   // Set initial form data when category changes
   useEffect(() => {
@@ -74,12 +79,58 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         imageUrlType: isEmoji ? 'emoji' : 'url',
         emojiIcon: isEmoji && category.imageUrl ? category.imageUrl : '📝'
       });
+      
+      // Reset image preview states
+      setImagePreviewError(false);
+      setImagePreviewLoading(false);
     }
   }, [category]);
+  
+  // Effect to update the image preview container when URL changes
+  useEffect(() => {
+    if (formData.imageUrlType === 'url' && formData.imageUrl && imagePreviewRef.current) {
+      // Clear previous content
+      while (imagePreviewRef.current.firstChild) {
+        imagePreviewRef.current.removeChild(imagePreviewRef.current.firstChild);
+      }
+
+      setImagePreviewLoading(true);
+      setImagePreviewError(false);
+      
+      // Create a new image element
+      const img = document.createElement('img');
+      img.className = styles.previewImage;
+      img.alt = 'Icon Preview';
+      
+      // Handle loading and error events
+      img.onload = () => {
+        setImagePreviewLoading(false);
+        setImagePreviewError(false);
+      };
+      
+      img.onerror = () => {
+        setImagePreviewLoading(false);
+        setImagePreviewError(true);
+        img.src = '/api/placeholder/48/48';
+      };
+      
+      // Set the source last to trigger loading
+      img.src = formData.imageUrl;
+      
+      // Append the image to the container
+      imagePreviewRef.current.appendChild(img);
+    }
+  }, [formData.imageUrl, formData.imageUrlType]);
   
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    // Handle image URL changes
+    if (name === 'imageUrl' && formData.imageUrlType === 'url') {
+      setImagePreviewError(false);
+      setImagePreviewLoading(true);
+    }
     
     // Generate slug from name if name field is being edited and not in edit mode
     if (name === 'name' && !isEditing) {
@@ -115,6 +166,10 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       imageUrlType: type,
       imageUrl: type === 'emoji' ? formData.emojiIcon || '📝' : ''
     });
+    
+    // Reset image preview states when changing type
+    setImagePreviewError(false);
+    setImagePreviewLoading(false);
   };
   
   // Handle form submission
@@ -266,18 +321,31 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                     className={styles.input}
                   />
                 </div>
-                {formData.imageUrl && (
-                  <div className={styles.imagePreview}>
-                    <img 
-                      src={formData.imageUrl} 
-                      alt="Icon Preview" 
-                      className={styles.previewImage}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/api/placeholder/48/48';
-                      }}
-                    />
-                  </div>
-                )}
+                
+                <div className={styles.imagePreviewContainer}>
+                  {formData.imageUrl ? (
+                    <div className={styles.imagePreview}>
+                      {imagePreviewError ? (
+                        <div className={styles.imageError}>
+                          <AlertTriangle size={16} />
+                          <span>Invalid image URL</span>
+                        </div>
+                      ) : imagePreviewLoading ? (
+                        <div className={styles.loadingPreview}>
+                          <span>Loading preview...</span>
+                        </div>
+                      ) : (
+                        <div ref={imagePreviewRef} className={styles.imagePreviewContent}></div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className={styles.noImagePreview}>
+                      <ImageIcon size={24} className={styles.placeholderIcon} />
+                      <span>No image URL provided</span>
+                    </div>
+                  )}
+                </div>
+                
                 <small>Enter a URL for your category icon (SVG or PNG recommended)</small>
               </div>
             )}
