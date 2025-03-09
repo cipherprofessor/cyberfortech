@@ -64,6 +64,9 @@ const nextConfig = {
       },
       {
         hostname: 'elements-resized.envatousercontent.com'
+      },
+      {
+        hostname: 'www.rentallscript.com'
       }
     ],
   },

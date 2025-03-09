@@ -13,7 +13,6 @@ import styles from './BlogCard.module.scss';
 import clsx from 'clsx';
 import { BlogPost } from '@/types/blog';
 
-
 interface BlogCardProps {
   post: BlogPost;
   className?: string;
@@ -33,14 +32,14 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
   // Default placeholder image if post doesn't have one
   const imageUrl = post.featuredImage || '/blog/blog.webp';
   
-  // Get category and tag chips for display
-  const primaryCategory = post.categories && post.categories.length > 0 
-    ? post.categories[0] 
-    : null;
+  // Get categories and tags for display (up to 3)
+  const displayCategories = post.categories && post.categories.length > 0 
+    ? post.categories.slice(0, 1) // Show only first category 
+    : [];
   
-  const primaryTag = post.tags && post.tags.length > 0 
-    ? post.tags[0] 
-    : null;
+  const displayTags = post.tags && post.tags.length > 0 
+    ? post.tags.slice(0, 2) // Show up to 2 tags (plus 1 category = 3 chips total)
+    : [];
 
   // Calculate read time based on content length (roughly 200 words per minute)
   const calculateReadTime = () => {
@@ -51,6 +50,12 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
   };
 
   const readTime = calculateReadTime();
+
+  // Truncate excerpt to appropriate length
+  const truncateExcerpt = (text: string, maxLength: number = 150) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
 
   return (
     <motion.article
@@ -76,25 +81,27 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
         />
         
         <div className={styles.categoryTags}>
-          {primaryCategory && (
+          {displayCategories.map((category) => (
             <Link 
-              href={`/blog/category/${primaryCategory.slug}`}
+              key={category.id}
+              href={`/blog/category/${category.slug}`}
               className={styles.categoryTag}
               onClick={(e) => e.stopPropagation()}
             >
-              {primaryCategory.name.toUpperCase()}
+              {category.name.toUpperCase()}
             </Link>
-          )}
+          ))}
           
-          {primaryTag && (
+          {displayTags.map((tag) => (
             <Link 
-              href={`/blog/tag/${primaryTag.slug}`}
-              className={styles.categoryTag}
+              key={tag.id}
+              href={`/blog/tag/${tag.slug}`}
+              className={clsx(styles.categoryTag, styles.tagChip)}
               onClick={(e) => e.stopPropagation()}
             >
-              {primaryTag.name.toUpperCase()}
+              {tag.name.toUpperCase()}
             </Link>
-          )}
+          ))}
           
           {readTime > 0 && (
             <span className={styles.readTime}>{readTime} Min Read</span>
@@ -121,7 +128,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
         </h2>
         
         {post.excerpt && (
-          <p className={styles.excerpt}>{post.excerpt}</p>
+          <p className={styles.excerpt}>
+            {truncateExcerpt(post.excerpt)}
+          </p>
         )}
         
         <div className={styles.footer}>
