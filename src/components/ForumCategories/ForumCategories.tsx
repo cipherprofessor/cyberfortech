@@ -44,7 +44,7 @@ export function ForumCategories({
   currentPage,
   onPageChange,
   totalPages,
-  allCategories
+  allCategories,
 }: ForumCategoriesProps) {
   // Sort all categories by total_topics
   const sortedAllCategories = [...allCategories].sort((a, b) => 

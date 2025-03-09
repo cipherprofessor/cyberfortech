@@ -1,31 +1,56 @@
 // src/components/Forum/ForumCategories/ForumCategories.module.scss
 
+// Define breakpoints for responsive design
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
 .categoriesWrapper {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  width: 100%;
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: 16px;
   border-bottom: 1px solid #e2e8f0;
   background: linear-gradient(to right, #f8fafc, #f1f5f9);
+  flex-wrap: wrap;
+  gap: 10px;
+
+  @media (min-width: $breakpoint-md) {
+    padding: 20px 24px;
+    flex-wrap: nowrap;
+  }
 
   h2 {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #1e293b;
     margin: 0;
 
+    @media (min-width: $breakpoint-md) {
+      font-size: 1.125rem;
+    }
+
     svg {
       color: #6366f1;
+      width: 18px;
+      height: 18px;
+
+      @media (min-width: $breakpoint-md) {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 }
@@ -33,24 +58,34 @@
 .paginationControls {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 4px;
+  gap: 8px;
+  padding: 3px;
   border-radius: 8px;
   background: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  @media (min-width: $breakpoint-md) {
+    gap: 12px;
+    padding: 4px;
+  }
 
   .pageButton {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     border-radius: 6px;
     border: 1px solid #e2e8f0;
     background: white;
     color: #475569;
     cursor: pointer;
     transition: all 0.2s ease;
+
+    @media (min-width: $breakpoint-md) {
+      width: 30px;
+      height: 30px;
+    }
 
     &:hover:not(:disabled) {
       background: #f8fafc;
@@ -62,22 +97,36 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   .pageInfo {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: #475569;
-    min-width: 44px;
+    min-width: 36px;
     text-align: center;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: 0.875rem;
+      min-width: 44px;
+    }
   }
 }
 
 .categoriesContainer {
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  @media (min-width: $breakpoint-md) {
+    padding: 16px;
+  }
 }
 
 .categoryCard {
@@ -127,26 +176,43 @@
 
 .categoryHeader {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
+  align-items: flex-start; // Changed to align-items: flex-start for better mobile layout
+  gap: 12px;
+  padding: 16px;
+  
+  @media (min-width: $breakpoint-md) {
+    gap: 20px;
+    padding: 20px;
+    align-items: center; // Back to center for larger screens
+  }
 }
 
 .categoryIcon {
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 8px;
   background: linear-gradient(135deg, #f1f5f9, #f8fafc);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
+  @media (min-width: $breakpoint-md) {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+  }
+
   .iconSvg, .defaultIcon {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     color: #6366f1;
+
+    @media (min-width: $breakpoint-md) {
+      width: 22px;
+      height: 22px;
+    }
   }
 }
 
@@ -159,10 +225,15 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin: 0 0 6px;
-  font-size: 1rem;
+  margin: 0 0 4px;
+  font-size: 0.938rem;
   font-weight: 600;
   color: #1e293b;
+
+  @media (min-width: $breakpoint-md) {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
 
   .chevron {
     opacity: 0;
@@ -173,45 +244,87 @@
 }
 
 .categoryDescription {
-  font-size: 0.875rem;
+  font-size: 0.813rem;
   color: #64748b;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.4;
+  // Ensure text doesn't overflow on small screens
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; // Show only 2 lines on mobile
+  -webkit-box-orient: vertical;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    -webkit-line-clamp: 3; // Show 3 lines on larger screens
+  }
 }
 
 .categoryStats {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap; // Allow wrapping on small screens
+
+  @media (min-width: $breakpoint-md) {
+    gap: 12px;
+    flex-wrap: nowrap;
+  }
 }
 
 .trending {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 10px;
+  padding: 4px 8px;
   background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: white;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 0.688rem;
   font-weight: 500;
   white-space: nowrap;
   box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
 
+  @media (min-width: $breakpoint-md) {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
   span {
     margin-top: 1px;
+  }
+  
+  svg {
+    width: 12px;
+    height: 12px;
+    
+    @media (min-width: $breakpoint-md) {
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 
 .statItem {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  min-width: 110px;
-  height: 36px;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  min-width: auto; // Remove fixed width on mobile
+  height: 32px;
   transition: all 0.2s ease;
+
+  @media (min-width: $breakpoint-md) {
+    gap: 10px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    min-width: 110px;
+    height: 36px;
+  }
 
   &.topicStat {
     background: rgba(99, 102, 241, 0.1);
@@ -232,24 +345,46 @@
   }
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
+
+    @media (min-width: $breakpoint-md) {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   .statContent {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
+
+    @media (min-width: $breakpoint-md) {
+      gap: 6px;
+    }
   }
 
   .statValue {
-    font-size: 0.938rem;
+    font-size: 0.813rem;
     font-weight: 600;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: 0.938rem;
+    }
   }
 
   .statLabel {
-    font-size: 0.813rem;
-    opacity: 0.9;
+    display: none; // Hide labels on mobile to save space
+
+    @media (min-width: $breakpoint-sm) {
+      display: inline;
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+
+    @media (min-width: $breakpoint-md) {
+      font-size: 0.813rem;
+    }
   }
 }
 
@@ -319,5 +454,15 @@
         background: rgba(16, 185, 129, 0.2);
       }
     }
+  }
+}
+
+// Responsive grid layout for wider screens
+@media (min-width: $breakpoint-lg) {
+  // Apply grid layout for category lists on wide screens
+  .categoriesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
   }
 }
