@@ -1,29 +1,53 @@
 // src/app/(routes)/forum/forum.module.scss
 
+// Define breakpoints for responsive design
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
 .pageContainer {
-  width: 90%;
+  width: 100%;  // Full width on mobile
+  max-width: 1400px; // Maximum width on large screens
   margin: 0 auto;
-  padding: 24px;
+  padding: 16px;  // Smaller padding on mobile
+  
+  @media (min-width: $breakpoint-md) {
+    width: 95%;
+    padding: 24px;
+  }
 }
 
 // Top Section with Forum Title and Stats
 .topSection {
   display: flex;
-  gap: 24px;
-  margin-bottom: 24px;
+  flex-direction: column; // Stack vertically on mobile
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  @media (min-width: $breakpoint-lg) {
+    flex-direction: row;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
 }
 
 // Updated headerSection and related styles
 .headerSection {
-  flex: 1;
+  width: 100%;
   position: relative;
-  padding: 32px;
+  padding: 24px; // Smaller padding on mobile
   border-radius: 16px;
-  min-height: 180px;
+  min-height: 160px; // Reduced height on mobile
   display: flex;
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
   background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
-  isolation: isolate; // Creates new stacking context
+  isolation: isolate;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 32px;
+    min-height: 180px;
+  }
 }
 
 // Background effects container
@@ -69,31 +93,46 @@
 .headerContent {
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 24px;
+  flex-direction: column; // Stack vertically on mobile
+  gap: 16px;
+  z-index: 1;
+  
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+  }
 }
 
 .titleSection {
   flex: 1;
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.5rem; // Smaller font on mobile
     font-weight: 700;
     color: white;
     margin: 0 0 8px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    @media (min-width: $breakpoint-md) {
+      font-size: 2rem;
+    }
   }
 
   p {
-    font-size: 1rem;
+    font-size: 0.875rem; // Smaller font on mobile
     color: rgba(255, 255, 255, 0.9);
     margin: 0;
+    
+    @media (min-width: $breakpoint-md) {
+      font-size: 1rem;
+    }
   }
 }
 
 .newTopicButton {
-  padding: 10px 16px;
+  padding: 8px 12px; // Smaller padding on mobile
   background: white;
   border: none;
   border-radius: 8px;
@@ -106,6 +145,12 @@
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
+  font-size: 0.875rem; // Smaller font on mobile
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 10px 16px;
+    font-size: 1rem;
+  }
 
   &:hover {
     transform: translateY(-1px);
@@ -117,6 +162,22 @@
     width: 16px;
     height: 16px;
   }
+  
+  // Change button text on mobile
+  &::after {
+    content: 'New Topic';
+  }
+  
+  @media (min-width: $breakpoint-md) {
+    &::after {
+      content: 'Create New Topic';
+    }
+  }
+  
+  // Hide icon text to prevent duplication
+  span {
+    display: none;
+  }
 }
 
 @keyframes shimmer {
@@ -124,68 +185,57 @@
   100% { background-position: 200% 200%; }
 }
 
-
-
-
-.headerContent {
-  position: relative;
-  z-index: 3; // Higher z-index to ensure content is above effects
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start; // Changed to flex-start for better alignment
-  width: 100%;
-
-  .titleSection {
-    flex: 1;
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: white;
-      margin: 0 0 8px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    p {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.9);
-      margin: 0;
-    }
-  }
-}
-
-
-
 .statsCard {
-  width: 300px;
+  width: 100%; // Full width on mobile
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  
+  @media (min-width: $breakpoint-lg) {
+    width: 300px;
+    flex-shrink: 0;
+  }
 }
 
 // Middle Section with Categories and Trending
 .middleSection {
   display: flex;
-  gap: 24px;
-  margin-bottom: 24px;
+  flex-direction: column; // Stack vertically on mobile
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  @media (min-width: $breakpoint-lg) {
+    flex-direction: row;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
 }
 
 .categoriesSection {
-  flex: 1;
+  width: 100%; // Full width on mobile
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  
+  @media (min-width: $breakpoint-lg) {
+    flex: 1;
+  }
 }
 
 .trendingSection {
-  width: 300px;
+  width: 100%; // Full width on mobile
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  
+  @media (min-width: $breakpoint-lg) {
+    width: 300px;
+    flex-shrink: 0;
+  }
 }
-
 
 // Loading States
 .skeletonBase {
@@ -208,8 +258,8 @@
 
   .statsCard,
   .categoriesSection,
-  .trendingSection
-   {
+  .trendingSection,
+  .tableSection {
     background: #1e293b;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
@@ -224,98 +274,23 @@
   }
 }
 
-
 .tableSection {
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   width: 100%;
   margin: 14px auto;
-  padding: 24px;
-
-}
-
-
-.pageContainer {
-  width: 90%;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.topSection {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 24px;
-  min-height: 180px; // Fixed height for consistency
-}
-
-
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% -200%;
-  }
-  100% {
-    background-position: 200% 200%;
-  }
-}
-
-// Dark mode support
-:global(.dark) {
-  .headerSection {
-    background: linear-gradient(
-      135deg, 
-      #312e81 0%,
-      #4338ca 50%,
-      #4f46e5 100%
-    );
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
-  }
-}
-
-.headerContent {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .titleSection {
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: white;
-      margin: 0 0 8px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    p {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.9);
-      margin: 0;
-    }
-  }
-}
-
-.statsCard {
-  width: 300px;
+  padding: 16px; // Smaller padding on mobile
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  height: 180px; // Fixed height
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 24px;
+  }
 }
 
 // Loading states
-.skeletonBase {
-  animation: pulse 1.5s infinite;
-  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
-  background-size: 200% 100%;
-  border-radius: 8px;
-}
-
 .statsSkeleton {
-  padding: 20px;
+  padding: 16px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -329,8 +304,12 @@
 
   .skeletonStats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr); // Single column on mobile
     gap: 16px;
+    
+    @media (min-width: $breakpoint-sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
     .skeletonStat {
       @extend .skeletonBase;
@@ -340,11 +319,16 @@
 }
 
 .categorySkeleton {
-  padding: 20px;
-  height: 300px; // Fixed height for category section
+  padding: 16px;
+  min-height: 250px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 20px;
+    min-height: 300px;
+  }
 
   .skeletonHeader {
     @extend .skeletonBase;
@@ -361,15 +345,29 @@
       @extend .skeletonBase;
       height: 80px;
     }
+    
+    // Hide the third skeleton item on mobile
+    .skeletonItem:nth-child(3) {
+      display: none;
+      
+      @media (min-width: $breakpoint-md) {
+        display: block;
+      }
+    }
   }
 }
 
 .trendingSkeleton {
-  padding: 20px;
-  height: 300px;
+  padding: 16px;
+  min-height: 250px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 20px;
+    min-height: 300px;
+  }
 
   .skeletonHeader {
     @extend .skeletonBase;
@@ -389,18 +387,12 @@
   }
 }
 
-
-
-
-
-
-// Add these styles to your existing forum.module.scss file
-
-// Topic cell styling
+// Topic cell styling - make responsive
 .topicCell {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap; // Allow wrapping on small screens
 }
 
 .topicIcon {
@@ -432,11 +424,46 @@
   }
 }
 
-// Table styling
+// Table styling - add responsive adjustments
 .topicsTable {
   width: 100%;
+  overflow-x: auto; // Enable horizontal scrolling for tables on mobile
   
-  :global(.dark) & {
+  // Make table responsive with responsive text
+  th, td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+    
+    @media (min-width: $breakpoint-md) {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+    }
+  }
+  
+  // Fixed width columns on mobile
+  th:first-child, td:first-child {
+    max-width: 160px;
+    min-width: 80px;
+  }
+  
+  // Responsive columns
+  @media (max-width: $breakpoint-sm) {
+    // Hide less important columns on very small screens
+    th:nth-child(3), td:nth-child(3),
+    th:nth-child(4), td:nth-child(4) {
+      display: none;
+    }
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    // Hide less important columns on medium screens
+    th:nth-child(5), td:nth-child(5) {
+      display: none;
+    }
+  }
+
+  
+  .topicsTable:global(.dark) {
     .topicIcon {
       color: #9ca3af;
     }
@@ -458,4 +485,70 @@
       }
     }
   }
+
 }
+
+
+
+.categoryPagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 8px;
+  
+  button {
+    font-size: 0.875rem;
+    padding: 6px 10px;
+    
+    @media (min-width: $breakpoint-md) {
+      font-size: 1rem;
+      padding: 8px 12px;
+    }
+  }
+}
+
+// Apply global className via composes
+.categoryPaginationGlobal {
+  composes: categoryPagination;
+}
+
+// Global responsive utilities using composes pattern
+.responsiveGap {
+  gap: 8px;
+  
+  @media (min-width: $breakpoint-md) {
+    gap: 16px;
+  }
+}
+
+.responsiveText {
+  font-size: 0.875rem;
+  
+  @media (min-width: $breakpoint-md) {
+    font-size: 1rem;
+  }
+}
+
+.responsivePadding {
+  padding: 16px;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 24px;
+  }
+}
+
+// Dynamic row display for categories
+.categoryGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  
+  @media (min-width: $breakpoint-sm) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  
+  @media (min-width: $breakpoint-xl) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+

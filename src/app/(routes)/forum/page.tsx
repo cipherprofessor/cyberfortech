@@ -1,7 +1,7 @@
 //src/app/(routes)/forum/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { 
@@ -22,6 +22,28 @@ import styles from './forum.module.scss';
 import { Button } from '@heroui/button';
 import ForumTable from '@/components/ForumCategories/ForumTable/ForumTable';
 
+// Custom hook for responsive design
+const useResponsiveBreakpoint = (breakpoint = 768) => {
+  const [isBelow, setIsBelow] = useState(false);
+
+  useEffect(() => {
+    const checkBreakpoint = () => {
+      setIsBelow(window.innerWidth < breakpoint);
+    };
+    
+    // Initial check
+    checkBreakpoint();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkBreakpoint);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkBreakpoint);
+  }, [breakpoint]);
+
+  return isBelow;
+};
+
 export default function ForumPage() {
   const { isAuthenticated } = useAuth();
   const [isTopicFormOpen, setIsTopicFormOpen] = useState(false);
@@ -33,18 +55,22 @@ export default function ForumPage() {
     stats: true,
   });
   const [error, setError] = useState('');
-  const CATEGORIES_PER_PAGE = 3;
+  
+  // Get responsive breakpoints without needing to pass them to components
+  const isMobile = useResponsiveBreakpoint(768);
+  const isSmallScreen = useResponsiveBreakpoint(576);
+  
+  // Adjust categories per page based on screen size
+  const CATEGORIES_PER_PAGE = isSmallScreen ? 2 : 3;
+  
   const totalPages = Math.ceil((categories?.length || 0) / CATEGORIES_PER_PAGE);
   const paginatedCategories = categories.slice(
     (categoryPage - 1) * CATEGORIES_PER_PAGE,
     categoryPage * CATEGORIES_PER_PAGE
   );
 
-  // Calculate category pagination
-  const totalCategoryPages = Math.ceil((categories?.length || 0) / CATEGORIES_PER_PAGE);
-
   // Fetch Categories
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       console.log('Fetching categories...');
       const response = await axios.get('/api/forum/categories');
@@ -56,12 +82,12 @@ export default function ForumPage() {
     } finally {
       setLoading(prev => ({ ...prev, categories: false }));
     }
-  };
+  }, []);
 
   // Initial fetch
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   // Handler for new topic creation
   const handleTopicCreated = async () => {
@@ -92,6 +118,11 @@ export default function ForumPage() {
     fetchStats();
   }, [loading.categories]);
 
+  // Animations scaled for responsive layout
+  const getAnimationDelay = (index) => {
+    return isMobile ? 0.1 * index : 0.2 + (0.1 * index);
+  };
+
   return (
     <motion.div 
       className={styles.pageContainer}
@@ -115,30 +146,30 @@ export default function ForumPage() {
               <motion.h1
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.4 }}
+                transition={{ delay: getAnimationDelay(0), duration: 0.4 }}
               >
                 Community Forum
               </motion.h1>
               <motion.p
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.4 }}
+                transition={{ delay: getAnimationDelay(1), duration: 0.4 }}
               >
                 Join the discussion with our community members
               </motion.p>
             </div>
             {isAuthenticated && (
               <motion.div
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.4 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: getAnimationDelay(2), duration: 0.4 }}
               >
                 <Button 
                   onClick={() => setIsTopicFormOpen(true)}
                   className={styles.newTopicButton}
                 >
                   <PlusCircle size={16} />
-                  Create New Topic
+                  <span className="sr-only">Create New Topic</span>
                 </Button>
               </motion.div>
             )}
@@ -148,9 +179,9 @@ export default function ForumPage() {
         {/* Forum Stats with Skeleton */}
         <motion.div 
           className={styles.statsCard}
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: getAnimationDelay(3), duration: 0.4 }}
         >
           {loading.stats ? (
             <div className={styles.statsSkeleton}>
@@ -173,7 +204,7 @@ export default function ForumPage() {
         className={styles.middleSection}
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.4 }}
+        transition={{ delay: 0.2, duration: 0.4 }}
       >
         {/* Categories with Skeleton */}
         <div className={styles.categoriesSection}>
@@ -220,7 +251,7 @@ export default function ForumPage() {
         className={styles.tableSection}
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.4 }}
+        transition={{ delay: 0.3, duration: 0.4 }}
       >
         <ForumTable />
       </motion.div>

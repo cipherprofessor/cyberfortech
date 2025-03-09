@@ -1,307 +1,543 @@
+// Define breakpoints for responsive design
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
 .pageContainer {
-    padding: 1.5rem;
-    width: 100%;
-  }
+  padding: 1rem;
+  width: 100%;
   
-  .forumTable {
+  @media (min-width: $breakpoint-md) {
+    padding: 1.5rem;
+  }
+}
+
+.forumTable {
+  margin-top: 0.75rem;
+  width: 100%;
+  
+  @media (min-width: $breakpoint-md) {
     margin-top: 1rem;
-    width: 100%;
   }
   
-  .topicCell {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding-right: 1rem;
+  // Make table responsive
+  overflow-x: auto;
+  display: block;
+  
+  @media (min-width: $breakpoint-lg) {
+    display: table;
   }
   
-  .topicIcon {
-    color: var(--text-secondary);
-  }
-  
-  .topicTitle {
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .authorCell {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding-right: 1rem;
-  }
-  
-  .authorInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    min-width: 0;
-  }
-  
-  .authorName {
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .authorEmail {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .repliesCount {
-    font-variant-numeric: tabular-nums;
-    font-weight: 500;
-  }
-  
-  .status {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.375rem 0.75rem;
-    border-radius: 2rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    line-height: 1;
-    white-space: nowrap;
-  
-    &.inProgress {
-      background: rgba(59, 130, 246, 0.1);
-      color: #3b82f6;
-    }
-  
-    &.pending {
-      background: rgba(245, 158, 11, 0.1);
-      color: #f59e0b;
-    }
-  
-    &.success {
-      background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
-    }
-  }
-  
-  .accessDenied {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    background: var(--bg-secondary);
-    border-radius: 0.75rem;
-    border: 1px solid var(--border-color);
-  }
-  
-  /* Custom modal styling */
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .modalContent {
-    background: var(--bg-primary, white);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    width: 100%;
-    max-width: 550px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-  
-  .modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.25rem;
-  }
-  
-  .modalTitle {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text-primary, #111827);
-    margin: 0;
-  }
-  
-  .closeButton {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary, #6b7280);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 0.375rem;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      background: var(--bg-secondary, #f3f4f6);
-      color: var(--text-primary, #111827);
-    }
-  }
-  
-  .modalBody {
-    margin-bottom: 1.5rem;
-  }
-  
-  .modalMessage {
-    color: var(--text-secondary, #6b7280);
-    margin-bottom: 1.5rem;
-  }
-  
-  .formGroup {
-    margin-bottom: 1.25rem;
-  }
-  
-  .formRow {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1.25rem;
-  }
-  
-  .formLabel {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary, #111827);
-  }
-  
-  .formInput, .formTextarea {
-    width: 100%;
-    padding: 0.625rem 0.75rem;
-    border-radius: 0.375rem;
-    border: 1px solid var(--border-color, #e5e7eb);
-    background-color: var(--bg-secondary, #f9fafb);
-    color: var(--text-primary, #111827);
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-    
-    &:focus {
-      outline: none;
-      border-color: var(--primary-color, #3b82f6);
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
-    }
-  }
-  
-  .formTextarea {
-    resize: vertical;
-  }
-  
-  .formCheckboxLabel {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    color: var(--text-primary, #111827);
-    font-weight: 500;
-  }
-  
-  .formCheckbox {
-    width: 1rem;
-    height: 1rem;
-    accent-color: var(--primary-color, #3b82f6);
-    cursor: pointer;
-  }
-  
-  .modalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-  }
-  
-  .cancelButton {
-    padding: 0.5rem 1rem;
-    background: var(--bg-secondary, #f3f4f6);
-    color: var(--text-primary, #111827);
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      background: var(--bg-hover, #e5e7eb);
-    }
-  }
-  
-  .saveButton, .deleteButton {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .saveButton {
-    background: var(--primary-color, #3b82f6);
-    color: white;
-    
-    &:hover {
-      background: var(--primary-hover, #2563eb);
-    }
-  }
-  
-  .deleteButton {
-    background: var(--delete-color, #ef4444);
-    color: white;
-    
-    &:hover {
-      background: var(--delete-hover, #dc2626);
-    }
-  }
-  
-  /* Dark mode support */
-  :global(.dark) {
-    .modalContent {
-      background: var(--bg-primary, #1a1b1e);
-    }
-    
-    .modalTitle {
-      color: var(--text-primary, white);
-    }
-    
-    .modalMessage {
-      color: var(--text-secondary, #9ca3af);
-    }
-    
-    .formLabel,
-    .formCheckboxLabel {
-      color: var(--text-primary, white);
-    }
-    
-    .formInput, .formTextarea {
-      background: var(--bg-secondary, #2d3748);
-      color: var(--text-primary, white);
-      border-color: var(--border-color, #4a5568);
-    }
-    
-    .closeButton:hover {
-      background: var(--bg-hover, #2d3748);
-    }
-    
-    .cancelButton {
-      background: var(--bg-secondary, #2d3748);
-      color: var(--text-primary, white);
-      border-color: var(--border-color, #4a5568);
+  // Table card view for mobile
+  &.mobileCardView {
+    @media (max-width: $breakpoint-md) {
+      // Hide the table header on mobile
+      thead {
+        display: none;
+      }
       
-      &:hover {
-        background: var(--bg-hover, #4a5568);
+      // Convert rows to cards
+      tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color, #e5e7eb);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      
+      // Display each cell as a block
+      td {
+        display: block;
+        text-align: right;
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--border-color, #e5e7eb);
+        position: relative;
+        
+        // Add data label before content
+        &:before {
+          content: attr(data-label);
+          float: left;
+          font-weight: 600;
+          color: var(--text-secondary);
+        }
+        
+        // Remove border from last cell
+        &:last-child {
+          border-bottom: none;
+        }
       }
     }
   }
+  
+  // Responsive table cells
+  th, td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+    
+    @media (min-width: $breakpoint-md) {
+      padding: 0.75rem;
+      font-size: 0.875rem;
+    }
+    
+    @media (min-width: $breakpoint-lg) {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+    }
+  }
+  
+  // Hide less important columns on smaller screens
+  .hiddenOnMobile {
+    @media (max-width: $breakpoint-sm) {
+      display: none;
+    }
+  }
+  
+  .hiddenOnTablet {
+    @media (max-width: $breakpoint-md) {
+      display: none;
+    }
+  }
+}
+
+.topicCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-right: 0.5rem;
+  
+  @media (min-width: $breakpoint-md) {
+    gap: 0.75rem;
+    padding-right: 1rem;
+  }
+}
+
+.topicIcon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  
+  @media (min-width: $breakpoint-md) {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.topicTitle {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px; // Limit width on small screens
+  
+  @media (min-width: $breakpoint-md) {
+    max-width: 240px;
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    max-width: 320px;
+  }
+  
+  @media (min-width: $breakpoint-xl) {
+    max-width: 400px;
+  }
+}
+
+.authorCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-right: 0.5rem;
+  
+  @media (min-width: $breakpoint-md) {
+    gap: 0.75rem;
+    padding-right: 1rem;
+  }
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.authorName {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.authorEmail {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: none; // Hide email on mobile
+  
+  @media (min-width: $breakpoint-md) {
+    display: block;
+  }
+}
+
+.repliesCount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0.375rem 0.75rem;
+  }
+
+  &.inProgress {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+
+  &.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+  }
+
+  &.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+  }
+}
+
+.accessDenied {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px; // Smaller height on mobile
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  text-align: center;
+  
+  @media (min-width: $breakpoint-md) {
+    height: 200px;
+  }
+}
+
+/* Custom modal styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem; // Add padding for mobile
+}
+
+.modalContent {
+  background: var(--bg-primary, white);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 90%; // Smaller on mobile
+  max-height: 90vh; // Limit height and enable scrolling
+  overflow-y: auto;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  
+  @media (min-width: $breakpoint-sm) {
+    padding: 1.25rem;
+    max-width: 500px;
+  }
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 1.5rem;
+    max-width: 550px;
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  
+  @media (min-width: $breakpoint-md) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.modalTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0;
+  
+  @media (min-width: $breakpoint-md) {
+    font-size: 1.25rem;
+  }
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary, #6b7280);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--bg-secondary, #f3f4f6);
+    color: var(--text-primary, #111827);
+  }
+}
+
+.modalBody {
+  margin-bottom: 1.25rem;
+  
+  @media (min-width: $breakpoint-md) {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.modalMessage {
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  
+  @media (min-width: $breakpoint-md) {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+  
+  @media (min-width: $breakpoint-md) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column; // Stack on mobile
+  gap: 1rem;
+  margin-bottom: 1rem;
+  
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
+.formLabel {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.375rem;
+  color: var(--text-primary, #111827);
+  font-size: 0.875rem;
+  
+  @media (min-width: $breakpoint-md) {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+}
+
+.formInput, .formTextarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background-color: var(--bg-secondary, #f9fafb);
+  color: var(--text-primary, #111827);
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0.625rem 0.75rem;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color, #3b82f6);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+  }
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 100px; // Set minimum height
+}
+
+.formCheckboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: var(--text-primary, #111827);
+  font-weight: 500;
+  font-size: 0.875rem;
+  
+  @media (min-width: $breakpoint-md) {
+    font-size: 1rem;
+  }
+}
+
+.formCheckbox {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--primary-color, #3b82f6);
+  cursor: pointer;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between; // Space between on mobile
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  
+  @media (min-width: $breakpoint-sm) {
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+}
+
+.cancelButton {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-secondary, #f3f4f6);
+  color: var(--text-primary, #111827);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1; // Take equal space on mobile
+  
+  @media (min-width: $breakpoint-sm) {
+    padding: 0.5rem 1rem;
+    flex: none;
+  }
+  
+  &:hover {
+    background: var(--bg-hover, #e5e7eb);
+  }
+}
+
+.saveButton, .deleteButton {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1; // Take equal space on mobile
+  
+  @media (min-width: $breakpoint-sm) {
+    padding: 0.5rem 1rem;
+    flex: none;
+  }
+}
+
+.saveButton {
+  background: var(--primary-color, #3b82f6);
+  color: white;
+  
+  &:hover {
+    background: var(--primary-hover, #2563eb);
+  }
+}
+
+.deleteButton {
+  background: var(--delete-color, #ef4444);
+  color: white;
+  
+  &:hover {
+    background: var(--delete-hover, #dc2626);
+  }
+}
+
+/* Dark mode support */
+:global(.dark) {
+  .modalContent {
+    background: var(--bg-primary, #1a1b1e);
+  }
+  
+  .modalTitle {
+    color: var(--text-primary, white);
+  }
+  
+  .modalMessage {
+    color: var(--text-secondary, #9ca3af);
+  }
+  
+  .formLabel,
+  .formCheckboxLabel {
+    color: var(--text-primary, white);
+  }
+  
+  .formInput, .formTextarea {
+    background: var(--bg-secondary, #2d3748);
+    color: var(--text-primary, white);
+    border-color: var(--border-color, #4a5568);
+  }
+  
+  .closeButton:hover {
+    background: var(--bg-hover, #2d3748);
+  }
+  
+  .cancelButton {
+    background: var(--bg-secondary, #2d3748);
+    color: var(--text-primary, white);
+    border-color: var(--border-color, #4a5568);
+    
+    &:hover {
+      background: var(--bg-hover, #4a5568);
+    }
+  }
+}
+
+// Optional helper class for card-style rows on tablet
+.cardRow {
+  @media (min-width: $breakpoint-sm) and (max-width: $breakpoint-lg) {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color, #e5e7eb);
+    margin-bottom: 0.75rem;
+    
+    .topicCell, .authorCell {
+      padding: 0.5rem 0;
+      width: 100%;
+    }
+    
+    .topicTitle {
+      max-width: none;
+    }
+  }
+}

@@ -1,465 +1,776 @@
 //src/app/dashboard/myworkspace/components/ui/DataTable/DataTable.module.scss
+
+// Define breakpoints for responsive design
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
 .container {
-    background: var(--bg-primary);
-    border-radius: 1rem;
-    width: 76%;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    transition: all 0.2s ease;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+  background: var(--bg-primary);
+  border-radius: 1rem;
+  width: 100%; // Full width on mobile
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
   
-    // Light mode
-    --bg-primary: #ffffff;
-    --bg-secondary: #f9fafb;
-    --text-primary: #111827;
-    --text-secondary: #6b7280;
-    --border-color: #e5e7eb;
-    --hover-bg: #f3f4f6;
-    --edit-color: #3b82f6;
-    --edit-hover: #2563eb;
-    --delete-color: #ef4444;
-    --delete-hover: #dc2626;
-    --edit-bg: rgba(59, 130, 246, 0.1);
-    --delete-bg: rgba(239, 68, 68, 0.1);
-    --checkbox-border: #d1d5db;
-    --pagination-bg: #f3f4f6;
+  @media (min-width: $breakpoint-lg) {
+    width: 96%; // Slightly narrower on larger screens
+  }
   
-    // Dark mode
-    :global(.dark) & {
-      --bg-primary: #1a1b1e;
-      --bg-secondary: #25262b;
-      --text-primary: #ffffff;
-      --text-secondary: #9ca3af;
-      --border-color: #2c2e33;
-      --hover-bg: rgba(255, 255, 255, 0.05);
-      --edit-color: #60a5fa;
-      --edit-hover: #3b82f6;
-      --delete-color: #f87171;
-      --delete-hover: #ef4444;
-      --edit-bg: rgba(96, 165, 250, 0.1);
-      --delete-bg: rgba(248, 113, 113, 0.1);
-      --checkbox-border: #4b5563;
-      --pagination-bg: #25262b;
+  @media (min-width: $breakpoint-xl) {
+    width: 76%; // Original width on extra large screens
+  }
+
+  // Light mode
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --hover-bg: #f3f4f6;
+  --edit-color: #3b82f6;
+  --edit-hover: #2563eb;
+  --delete-color: #ef4444;
+  --delete-hover: #dc2626;
+  --edit-bg: rgba(59, 130, 246, 0.1);
+  --delete-bg: rgba(239, 68, 68, 0.1);
+  --checkbox-border: #d1d5db;
+  --pagination-bg: #f3f4f6;
+
+  // Dark mode
+  :global(.dark) & {
+    --bg-primary: #1a1b1e;
+    --bg-secondary: #25262b;
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
+    --border-color: #2c2e33;
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --edit-color: #60a5fa;
+    --edit-hover: #3b82f6;
+    --delete-color: #f87171;
+    --delete-hover: #ef4444;
+    --edit-bg: rgba(96, 165, 250, 0.1);
+    --delete-bg: rgba(248, 113, 113, 0.1);
+    --checkbox-border: #4b5563;
+    --pagination-bg: #25262b;
+  }
+}
+
+.bulkDeleteButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem; // Smaller on mobile
+  border-radius: 0.5rem;
+  background: var(--delete-bg);
+  color: var(--delete-color);
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem; // Smaller font on mobile
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-left: 0.5rem; // Less margin on mobile
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    margin-left: 1.5rem;
+  }
+
+  &:hover {
+    background: var(--delete-hover);
+    color: white;
+  }
+  
+  // Hide text on very small screens, show only icon
+  span {
+    display: none;
+    
+    @media (min-width: $breakpoint-sm) {
+      display: inline;
+    }
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column; // Stack on mobile
+  gap: 0.75rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+  }
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.headerRight {
+  display: flex;
+  flex-direction: column; // Stack on mobile
+  gap: 0.75rem;
+  width: 100%; // Full width on mobile
+  
+  @media (min-width: $breakpoint-sm) {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    width: auto;
+  }
+}
+
+.title {
+  color: var(--text-primary);
+  font-size: 1rem; // Smaller on mobile
+  font-weight: 600;
+  
+  @media (min-width: $breakpoint-md) {
+    font-size: 1.125rem;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%; // Full width on mobile
+  
+  @media (min-width: $breakpoint-sm) {
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    width: auto;
+  }
+}
+
+.searchWrapper {
+  position: relative;
+  width: 100%; // Full width on mobile
+  
+  @media (min-width: $breakpoint-sm) {
+    width: 220px;
+  }
+  
+  @media (min-width: $breakpoint-md) {
+    width: 300px;
+  }
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 1rem 0.5rem 2.25rem; // Smaller padding on mobile
+  border-radius: 0.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--edit-color);
+    box-shadow: 0 0 0 2px var(--edit-bg);
+  }
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0.625rem 1rem 0.625rem 2.5rem;
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  width: 0.875rem; // Smaller on mobile
+  height: 0.875rem;
+  
+  @media (min-width: $breakpoint-md) {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  background: var(--pagination-bg);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  width: auto; // Allow width to adjust on mobile
+}
+
+.paginationButton {
+  padding: 0.375rem; // Smaller on mobile
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0.5rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--hover-bg);
+    color: var(--edit-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.paginationInfo {
+  padding: 0 0.5rem; // Less padding on mobile
+  color: var(--text-secondary);
+  font-size: 0.75rem; // Smaller on mobile
+  user-select: none;
+  white-space: nowrap; // Prevent wrapping
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+.columnToggle {
+  position: relative;
+}
+
+.columnToggleButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem; // Smaller on mobile
+  border-radius: 0.5rem;
+  background: #25262B;
+  border: 1px solid #2C2E33;
+  color: #ffffff;
+  font-size: 0.75rem; // Smaller on mobile
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap; // Prevent text wrapping
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  &:hover {
+    background: #2C2E33;
+  }
+  
+  // Hide text on very small screens
+  span {
+    display: none;
+    
+    @media (min-width: $breakpoint-sm) {
+      display: inline;
+    }
+  }
+  
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.tableWrapper {
+  overflow-x: auto; // Enable horizontal scrolling for tables
+  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 640px; // Ensure minimum width for small screens
+}
+
+.headerRow {
+  border-bottom: 1px solid #2C2E33;
+}
+
+.headerCell {
+  padding: 0.75rem 0.75rem; // Smaller padding on mobile
+  text-align: left;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.75rem; // Smaller on mobile
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+  }
+  
+  &:first-child {
+    padding-left: 1rem;
+    
+    @media (min-width: $breakpoint-md) {
+      padding-left: 1.5rem;
     }
   }
 
-  .bulkDeleteButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+  &.sortable {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+  
+  // Hide less important columns on smaller screens
+  &.hideMobile {
+    display: none;
+    
+    @media (min-width: $breakpoint-md) {
+      display: table-cell;
+    }
+  }
+  
+  &.hideTablet {
+    display: none;
+    
+    @media (min-width: $breakpoint-lg) {
+      display: table-cell;
+    }
+  }
+}
+
+.tableRow {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--hover-bg);
+  }
+}
+
+.tableCell {
+  padding: 0.75rem 0.75rem; // Smaller padding on mobile
+  color: var(--text-primary);
+  font-size: 0.75rem; // Smaller on mobile
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+  }
+
+  &:first-child {
+    padding-left: 1rem;
+    
+    @media (min-width: $breakpoint-md) {
+      padding-left: 1.5rem;
+    }
+  }
+  
+  // Column divider
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--border-color);
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+  
+  // Hide less important columns on smaller screens
+  &.hideMobile {
+    display: none;
+    
+    @media (min-width: $breakpoint-md) {
+      display: table-cell;
+    }
+  }
+  
+  &.hideTablet {
+    display: none;
+    
+    @media (min-width: $breakpoint-lg) {
+      display: table-cell;
+    }
+  }
+}
+
+.customerCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; // Less gap on mobile
+  
+  @media (min-width: $breakpoint-md) {
+    gap: 0.75rem;
+  }
+}
+
+.avatar {
+  width: 1.5rem; // Smaller on mobile
+  height: 1.5rem;
+  border-radius: 0.375rem; // Smaller radius on mobile
+  overflow: hidden;
+  
+  @media (min-width: $breakpoint-md) {
+    width: 2rem;
+    height: 2rem;
     border-radius: 0.5rem;
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.customerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0; // Allow text truncation
+}
+
+.customerName {
+  color: #ffffff;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px; // Limit width on mobile
+  
+  @media (min-width: $breakpoint-sm) {
+    max-width: 180px;
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    max-width: none;
+  }
+}
+
+.customerEmail {
+  color: #686B6F;
+  font-size: 0.625rem; // Smaller on mobile
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px; // Limit width on mobile
+  
+  @media (min-width: $breakpoint-sm) {
+    font-size: 0.75rem;
+    max-width: 180px;
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    max-width: none;
+  }
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem; // Smaller on mobile
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0.375rem 0.75rem;
+  }
+
+  &.inProgress {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+
+  &.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+  }
+
+  &.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+  }
+}
+
+.checkboxCell {
+  padding: 0.75rem 0.75rem;
+  width: 1rem;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 1rem 1.5rem;
+  }
+}
+
+.checkbox {
+  width: 1rem; // Smaller on mobile
+  height: 1rem;
+  border: 2px solid var(--checkbox-border);
+  border-radius: 0.25rem;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0;
+  
+  @media (min-width: $breakpoint-md) {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  &:checked {
+    background-color: var(--edit-color);
+    border-color: var(--edit-color);
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  }
+
+  &:hover {
+    border-color: var(--edit-color);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.25rem; // Less gap on mobile
+  justify-content: flex-end;
+  
+  @media (min-width: $breakpoint-md) {
+    gap: 0.5rem;
+  }
+}
+
+.actionButton {
+  padding: 0.25rem; // Smaller on mobile
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  @media (min-width: $breakpoint-md) {
+    padding: 0.375rem;
+  }
+  
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  &.editButton {
+    background: var(--edit-bg);
+    color: var(--edit-color);
+    
+    &:hover {
+      background: var(--edit-hover);
+      color: white;
+    }
+  }
+
+  &.deleteButton {
     background: var(--delete-bg);
     color: var(--delete-color);
-    border: none;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    margin-left: 1.5rem;
-  
+    
     &:hover {
       background: var(--delete-hover);
       color: white;
     }
   }
+}
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .headerLeft {
-    display: flex;
-    align-items: center;
-  }
-  
-  .headerRight {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  
- 
-  
-  .title {
-    color: var(--text-primary);
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
-  
-  .controls {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-  }
-  
-  .searchWrapper {
-    position: relative;
-    width: 300px;
-  }
-
-  .searchInput {
-    width: 100%;
-    padding: 0.625rem 1rem 0.625rem 2.5rem;
-    border-radius: 0.5rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-  
-    &::placeholder {
-      color: var(--text-secondary);
-    }
-  
-    &:focus {
-      outline: none;
-      border-color: var(--edit-color);
-      box-shadow: 0 0 0 2px var(--edit-bg);
-    }
-  }
-  
-  .searchIcon {
-    position: absolute;
-    left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-secondary);
-    width: 1rem;
-    height: 1rem;
-  }
-
-  .pagination {
-    display: flex;
-    align-items: center;
-    padding: 0.25rem;
-    background: var(--pagination-bg);
-    border-radius: 0.75rem;
-    border: 1px solid var(--border-color);
-  }
-
-  
-  .pagination {
-    display: flex;
-    align-items: center;
-    padding: 0.25rem;
-    background: var(--pagination-bg);
-    border-radius: 0.75rem;
-    border: 1px solid var(--border-color);
-  }
-  
-  .paginationButton {
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    background: transparent;
-    border: none;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  
-    &:hover:not(:disabled) {
-      background: var(--hover-bg);
-      color: var(--edit-color);
-    }
-  
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  }
-  
-  .paginationInfo {
-    padding: 0 0.75rem;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    user-select: none;
-  }
-
-  
-
-  .columnToggle {
-    position: relative;
-  }
-  
-  .columnToggleButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    background: #25262B;
-    border: 1px solid #2C2E33;
-    color: #ffffff;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  
-    &:hover {
-      background: #2C2E33;
-    }
-  }
-  
-  .tableWrapper {
-    overflow-x: auto;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-  
-  .headerRow {
-    border-bottom: 1px solid #2C2E33;
-  }
-  
-  .headerCell {
-    padding: 1rem 1.5rem;
-    text-align: left;
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.875rem;
-    border-bottom: 1px solid var(--border-color);
-    white-space: nowrap;
-    
-    &:first-child {
-      padding-left: 1.5rem;
-    }
-  
-    &.sortable {
-      cursor: pointer;
-      user-select: none;
-  
-      &:hover {
-        color: var(--text-primary);
-      }
-    }
-  }
-  
-  
-  .tableRow {
-    transition: all 0.2s ease;
-  
-    &:hover {
-      background: var(--hover-bg);
-    }
-  }
-  
-  .tableCell {
-    padding: 1rem 1.5rem;
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    border-bottom: 1px solid var(--border-color);
-  
-    &:first-child {
-      padding-left: 1.5rem;
-    }
-  }
-  
-  .customerCell {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  
-  .avatar {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    
-    img {
+// Mobile card view option
+.mobileCardView {
+  @media (max-width: $breakpoint-md) {
+    .table, .headerRow, .tableRow, .headerCell, .tableCell {
+      display: block;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
-  }
-  
-  .customerInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-  }
-  
-  .customerName {
-    color: #ffffff;
-    font-weight: 500;
-  }
-  
-  .customerEmail {
-    color: #686B6F;
-    font-size: 0.75rem;
-  }
-  
-  .status {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-  
-    &.inProgress {
-      background: rgba(59, 98, 227, 0.1);
-      color: #3B62E3;
-    }
-  
-    &.pending {
-      background: rgba(234, 179, 8, 0.1);
-      color: #EAB308;
-    }
-  
-    &.success {
-      background: rgba(236, 72, 153, 0.1);
-      color: #EC4899;
-    }
-  }
-  
-  .checkboxCell {
-    padding: 1rem 1.5rem;
-    width: 1rem;
-  }
-  
-  .checkbox {
-    width: 1.125rem;
-    height: 1.125rem;
-    border: 2px solid var(--checkbox-border);
-    border-radius: 0.25rem;
-    appearance: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin: 0;
-  
-    &:checked {
-      background-color: var(--edit-color);
-      border-color: var(--edit-color);
-      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
-    }
-  
-    &:hover {
-      border-color: var(--edit-color);
-    }
-  }
-  
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-  }
-  
- 
-.actionButton {
-    opacity: 0.7;
-    transition: all 0.2s ease;
-    color: var(--text-secondary);
-  
-    &.editButton {
-      color: var(--edit-color);
-      
-      &:hover {
-        color: var(--edit-hover);
-        background: rgba(59, 130, 246, 0.1);
-      }
-    }
-  
-    &.deleteButton {
-      color: var(--delete-color);
-      
-      &:hover {
-        color: var(--delete-hover);
-        background: rgba(239, 68, 68, 0.1);
-      }
-    }
-  }
-  
-  .status {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.375rem 0.75rem;
-    border-radius: 2rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    line-height: 1;
-    white-space: nowrap;
-  
-    &.inProgress {
-      background: rgba(59, 130, 246, 0.1);
-      color: #3b82f6;
-    }
-  
-    &.pending {
-      background: rgba(245, 158, 11, 0.1);
-      color: #f59e0b;
-    }
-  
-    &.success {
-      background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
-    }
-  }
-  
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-  }
-  
-  .actionButton {
-    padding: 0.375rem;
-    border-radius: 0.375rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
     
-    &.editButton {
-      background: var(--edit-bg);
-      color: var(--edit-color);
-      
-      &:hover {
-        background: var(--edit-hover);
-        color: white;
-      }
+    // Hide headers
+    .headerRow {
+      display: none;
     }
-  
-    &.deleteButton {
-      background: var(--delete-bg);
-      color: var(--delete-color);
-      
-      &:hover {
-        background: var(--delete-hover);
-        color: white;
-      }
-    }
-  }
-  
-  .checkboxCell {
-    width: 1rem;
-    padding-right: 0;
-  }
-
-
-  .tableCell {
-    position: relative;
     
-    &::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 0.5rem;
-      bottom: 0.5rem;
-      width: 1px;
-      background: var(--border-color);
+    // Convert rows to cards
+    .tableRow {
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
     }
-  
-    &:last-child::after {
+    
+    // Add data labels
+    .tableCell {
+      position: relative;
+      padding: 0.75rem 1rem 0.75rem 8rem; // Space for label
+      text-align: right;
+      border: none;
+      border-bottom: 1px solid var(--border-color);
+      
+      &:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 1rem;
+        top: 0.75rem;
+        width: 6rem;
+        font-weight: 500;
+        text-align: left;
+        color: var(--text-secondary);
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      // Remove divider
+      &::after {
+        display: none;
+      }
+      
+      // Show all cells
+      &.hideMobile, &.hideTablet {
+        display: block;
+      }
+    }
+    
+    // Special formatting for specific cells
+    .checkboxCell {
+      text-align: left;
+      padding-left: 1rem;
+      
+      &:before {
+        display: none;
+      }
+    }
+    
+    .customerCell, .actions {
+      justify-content: flex-end;
+    }
+  }
+}
+
+// Responsive option to show the table as a simplified list on small screens
+.responsiveList {
+  @media (max-width: $breakpoint-md) {
+    .tableWrapper {
+      overflow-x: hidden; // Disable horizontal scrolling
+    }
+    
+    .table {
+      min-width: 0; // Remove minimum width
+    }
+    
+    // Hide table header
+    .headerRow {
+      display: none;
+    }
+    
+    // Convert rows to list items
+    .tableRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    // Primary info takes full width
+    .primaryInfo {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    // Secondary info takes partial width
+    .secondaryInfo {
+      display: flex;
+      gap: 1rem;
+      width: auto;
+      margin-top: 0.5rem;
+    }
+    
+    // Adjust cells
+    .tableCell {
+      padding: 0;
+      border: none;
+      width: auto;
+      
+      &::after {
+        display: none;
+      }
+    }
+    
+    // Hide less important cells
+    .hideOnList {
       display: none;
     }
   }
+}
+
+// Empty state
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  
+  .emptyIcon {
+    color: var(--text-secondary);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+    
+    svg {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+  
+  .emptyTitle {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .emptyMessage {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    max-width: 24rem;
+  }
+}

@@ -213,6 +213,7 @@ export default function Navbar() {
             {renderNavLink("/", "Home", <Home className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/courses", "Courses", <BookOpen className="h-5 w-5 mr-3" />, true)}
             {isAuthenticated && renderRoleBasedLinks(true)}
+            {renderNavLink("/blog", "Blogs", <Rss className="h-4 w-4 mr-2" />)}
             {renderNavLink("/forum", "Forum", <MessageSquare className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/about", "About", <InfoIcon className="h-5 w-5 mr-3" />, true)}
             {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-5 w-5 mr-3" />, true)}
