@@ -10,19 +10,9 @@ import {
   X, Upload, Link as LinkIcon, Image as ImageIcon, 
   Info, AlertCircle, Check, Loader2 
 } from 'lucide-react';
-import { BlogCategory, BlogEditorProps } from '@/types/blog';
+import { BlogEditorProps, BlogCategory, BlogTag } from '@/types/blog';
 import styles from './BlogEditor.module.scss';
 import clsx from 'clsx';
-
-import type { BlogTag } from '@/types/blog';
-
-
-interface Tag {
-  id: string;
-  slug: string;
-  name: string;
-}
-
 
 const BlogEditor: React.FC<BlogEditorProps> = ({
   post,
@@ -34,7 +24,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
   const editorRef = useRef<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [mounted, setMounted] = useState(false);
-  const [categories, setCategories] = useState<Array<{id: string, name: string}>>([]);
+  const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
   
@@ -54,8 +44,6 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
     metaDescription: post?.metaDescription || '',
     isFeatured: post?.isFeatured || false,
     featuredImage: post?.featuredImage || '',
-    categories: post?.categories?.map(c => c.id) || [],
-    tags: post?.tags?.map(t => t.name) || []
   });
 
   const [saving, setSaving] = useState(false);
@@ -79,6 +67,13 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
       console.error('Failed to fetch categories:', err);
     }
   };
+
+  // Initialize tags from post if available
+  useEffect(() => {
+    if (post?.tags && post.tags.length > 0) {
+      setTags(post.tags.map(tag => tag.name));
+    }
+  }, [post]);
 
   const editorConfig = {
     height: 500,
@@ -124,57 +119,52 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
     }
   };
 
- 
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    setSaving(true);
-    setError(null);
-    const content = editorRef.current ? editorRef.current.getContent() : formData.content;
-    
-    // Process tags to extract names
-    const tagNames = tags
-      .filter((tag): tag is string => typeof tag === 'string' && tag.trim().length > 0)
-      .map(tag => tag.trim());
-
-    // Type assertion for formData.tags
-    const existingTags = formData.tags as (string | { name: string })[];
-    
-    // Get final tag names
-    const rawTagNames = tagNames.length > 0 
-      ? tagNames 
-      : existingTags.map(tag => 
-          typeof tag === 'string' ? tag : tag.name
-        );
-
-    // Convert to proper BlogTag objects with required fields
-    const finalTags: BlogTag[] = rawTagNames.map(tagName => {
-      const slug = tagName.toLowerCase().replace(/\s+/g, '-');
-      return {
-        id: crypto.randomUUID(),
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setSaving(true);
+      setError(null);
+      const content = editorRef.current ? editorRef.current.getContent() : formData.content;
+      
+      // Convert selected category IDs to the format expected by the API
+      const categoryObjects: BlogCategory[] = selectedCategories.map(categoryId => {
+        const category = categories.find(c => c.id === categoryId);
+        if (!category) {
+          // This should never happen, but just in case
+          return {
+            id: categoryId,
+            name: 'Unknown',
+            slug: 'unknown',
+            displayOrder: 0
+          };
+        }
+        return {
+          id: category.id,
+          name: category.name,
+          slug: category.slug,
+          displayOrder: category.displayOrder
+        };
+      });
+      
+      // Convert tag names to the format expected by the API
+      const tagObjects: BlogTag[] = tags.map(tagName => ({
+        id: '', // ID will be generated on the server
         name: tagName,
-        slug: slug || 'default-slug' // Ensure slug is always defined
-      };
-    });
-
-    await onSave({ 
-      ...formData, 
-      content,
-      categories: selectedCategories
-        .map(id => categories.find(category => category.id === id))
-        .filter(Boolean) as BlogCategory[],
-      tags: finalTags
-    });
-  } catch (err) {
-    setError(err instanceof Error ? err.message : 'Failed to save post');
-  } finally {
-    setSaving(false);
-  }
-};
-
-
-
+        slug: '' // Slug will be generated on the server
+      }));
+      
+      await onSave({ 
+        ...formData, 
+        content,
+        categories: categoryObjects,
+        tags: tagObjects
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save post');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -527,27 +517,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                         <button
                           type="button"
                           onClick={() => removeTag(tag)}
-                          className={styles.removeTagButton}
-                          aria-label={`Remove ${tag}`}
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : formData.tags.length > 0 ? (
-                  <div className={styles.tagsList}>
-                    {formData.tags.map(tag => (
-                      <div key={tag} className={styles.tag}>
-                        <span>{tag}</span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFormData(prev => ({
-                              ...prev,
-                              tags: prev.tags.filter(t => t !== tag)
-                            }));
-                          }}
                           className={styles.removeTagButton}
                           aria-label={`Remove ${tag}`}
                         >

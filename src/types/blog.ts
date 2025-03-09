@@ -63,7 +63,7 @@ export interface BlogPost {
   createdAt: Date;
   updatedAt: Date;
   categories: BlogCategory[];
-  tags: BlogTag[] | undefined;
+  tags: BlogTag[] ;
   author: Author;
   comments?: BlogComment[];
 }

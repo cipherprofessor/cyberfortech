@@ -22,7 +22,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const search = searchParams.get('search');
     const status = searchParams.get('status') || 'published'; // Default to published
     
-    // Fetch posts with filters
+    // Use the getPosts service function to fetch and process posts
     const result = await getPosts({
       page,
       limit,
@@ -62,6 +62,10 @@ export async function POST(request: Request) {
       ROLES.INSTRUCTOR
     ]);
 
+
+    console.log("Auth result:", { isAuthorized, user: !!user, error, role: user?.role });
+    
+    
     console.log("Auth result:", { isAuthorized, user: !!user, error, role: user?.role });
     
     if (!isAuthorized || !user) {
@@ -92,6 +96,7 @@ export async function POST(request: Request) {
       isFeatured = false,
       metaTitle,
       metaDescription,
+      featuredImage,
       categories = [],
       tags = []
     } = body;
@@ -113,6 +118,7 @@ export async function POST(request: Request) {
       isFeatured,
       metaTitle,
       metaDescription,
+      featuredImage,
       categories,
       tags,
       authorId: user.id

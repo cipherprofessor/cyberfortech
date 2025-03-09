@@ -13,12 +13,12 @@ import {
 /**
  * GET handler for fetching a single blog post by slug
  */
+
 export async function GET(
   request: Request,
   { params }: { params: { slug: string } }
 ) {
   try {
-    // Authenticate user
     const { isAuthorized, user, error } = await validateUserAccess(request, [
       ROLES.ADMIN, 
       ROLES.SUPERADMIN,
