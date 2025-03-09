@@ -1,0 +1,206 @@
+// src/components/blog/BlogSkeleton/BlogCardSkeleton.module.scss
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.card {
+  --skeleton-base: #e2e8f0;
+  --skeleton-highlight: #f8fafc;
+  --border-color: #e2e8f0;
+  --card-radius: 0.75rem;
+  --card-shadow: 0 4px 12px rgba(59, 131, 246, 0.1);
+
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  height: 250px;
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  background-color: white;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 2rem;
+}
+
+.dark {
+  .card {
+    --skeleton-base: #334155;
+    --skeleton-highlight: #475569;
+    --border-color: #334155;
+    background-color: #1e293b;
+  }
+}
+
+.imageContainer {
+  position: relative;
+  width: 350px;
+  min-width: 350px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.imageSkeleton {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.categoryTags {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  z-index: 2;
+}
+
+.categoryTag, .tagChip, .readTime {
+  height: 24px;
+  border-radius: 0.3rem;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.categoryTag {
+  width: 80px;
+}
+
+.tagChip {
+  width: 70px;
+}
+
+.readTime {
+  width: 90px;
+}
+
+.content {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.authorSkeleton {
+  width: 120px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.dateSkeleton {
+  width: 100px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.titleSkeleton {
+  width: 90%;
+  height: 24px;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.excerptSkeleton {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  flex-grow: 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: auto;
+}
+
+.buttonSkeleton {
+  width: 120px;
+  height: 40px;
+  border-radius: 0.5rem;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+// Responsive styles
+@media (max-width: 1024px) {
+  .card {
+    flex-direction: row;
+  }
+  
+  .imageContainer {
+    width: 300px;
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .imageContainer {
+    width: 100%;
+    min-width: 100%;
+    height: 220px;
+  }
+  
+  .content {
+    padding: 1.25rem;
+  }
+  
+  .excerptSkeleton {
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titleSkeleton {
+    height: 20px;
+  }
+  
+  .excerptSkeleton {
+    height: 40px;
+  }
+  
+  .categoryTags {
+    flex-wrap: wrap;
+  }
+}

@@ -7,10 +7,10 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { PlusCircle, Search, X, FilterIcon, ChevronUp } from 'lucide-react';
 
-import BlogCard from '../BlogCard';
-import BlogSkeleton from '../BlogSkeleton';
+import BlogCard from '../BlogCard/BlogCard';
+import BlogSkeleton from '../BlogCard/CardSkelton/BlogCardSkeleton';
 import clsx from 'clsx';
-import styles from './BlogList.module.scss';
+import styles from './BlogPage.module.scss';
 import { BlogListProps } from '@/types/blog';
 
 

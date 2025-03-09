@@ -4,7 +4,7 @@
 import React, { useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import BlogProvider from '@/contexts/BlogContext';
-import BlogList from '@/components/blog/BlogList';
+import BlogList from '@/components/blog/BlogList/BlogPage';
 import { useBlog } from '@/contexts/BlogContext';
 import { Moon, Sun } from 'lucide-react';
 import styles from './BlogPage.module.scss';
