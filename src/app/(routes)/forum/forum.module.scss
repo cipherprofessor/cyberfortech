@@ -461,8 +461,9 @@ $breakpoint-xl: 1200px;
       display: none;
     }
   }
+
   
-  :global(.dark) & {
+  .topicsTable:global(.dark) {
     .topicIcon {
       color: #9ca3af;
     }
@@ -484,10 +485,12 @@ $breakpoint-xl: 1200px;
       }
     }
   }
+
 }
 
-// Category pagination - make responsive
-:global(.categoryPagination) {
+
+
+.categoryPagination {
   display: flex;
   justify-content: center;
   margin-top: 16px;
@@ -504,8 +507,13 @@ $breakpoint-xl: 1200px;
   }
 }
 
-// Global responsive utilities
-:global(.responsive-gap) {
+// Apply global className via composes
+.categoryPaginationGlobal {
+  composes: categoryPagination;
+}
+
+// Global responsive utilities using composes pattern
+.responsiveGap {
   gap: 8px;
   
   @media (min-width: $breakpoint-md) {
@@ -513,7 +521,7 @@ $breakpoint-xl: 1200px;
   }
 }
 
-:global(.responsive-text) {
+.responsiveText {
   font-size: 0.875rem;
   
   @media (min-width: $breakpoint-md) {
@@ -521,7 +529,7 @@ $breakpoint-xl: 1200px;
   }
 }
 
-:global(.responsive-padding) {
+.responsivePadding {
   padding: 16px;
   
   @media (min-width: $breakpoint-md) {
@@ -530,7 +538,7 @@ $breakpoint-xl: 1200px;
 }
 
 // Dynamic row display for categories
-:global(.category-grid) {
+.categoryGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
@@ -543,3 +551,4 @@ $breakpoint-xl: 1200px;
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
