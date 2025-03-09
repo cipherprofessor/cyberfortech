@@ -31,7 +31,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
   };
 
   // Default placeholder image if post doesn't have one
-  const imageUrl = post.featuredImage || '/api/placeholder/400/300';
+  const imageUrl = post.featuredImage || '/blog/blog.webp';
   
   // Get category and tag chips for display
   const primaryCategory = post.categories && post.categories.length > 0 
