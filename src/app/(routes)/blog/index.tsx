@@ -2,7 +2,7 @@
 "use client";
 
 import React from 'react';
-import BlogList from '@/components/blog/BlogList/BlogPage';
+import BlogList from '@/components/blog/BlogPage/BlogPage';
 import BlogProvider, { useBlog } from '@/contexts/BlogContext';
 
 function BlogPageContent() {

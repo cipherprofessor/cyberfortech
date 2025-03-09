@@ -108,7 +108,7 @@ export interface BlogComment {
 export interface BlogListProps {
   posts: BlogPost[];
   loading: boolean;
-  error?: string;
+  error?: string | null;
   currentPage?: number;
   totalPages?: number;
   categories?: BlogCategory[];
