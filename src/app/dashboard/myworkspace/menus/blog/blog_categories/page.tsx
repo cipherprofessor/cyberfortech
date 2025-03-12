@@ -153,34 +153,35 @@ const BlogCategories: React.FC = () => {
     setShowDeleteModal(true);
   };
   
-  // Handle confirm delete
-  const handleConfirmDelete = async () => {
-    try {
-      setLoading(true);
-      
-      // Loop through categories and delete each one
-      for (const category of selectedCategories) {
-        await axios.delete(`/api/blog/categories/${category.slug}`);
-      }
-      
-      showToast(
-        'Success', 
-        selectedCategories.length === 1 
-          ? `Category "${selectedCategories[0].name}" deleted successfully` 
-          : `${selectedCategories.length} categories deleted successfully`
-      );
-      
-      // Reset state and refresh categories
-      setShowDeleteModal(false);
-      setSelectedCategories([]);
-      await fetchCategories();
-    } catch (err) {
-      console.error('Error deleting categories:', err);
-      showToast('Error', 'Failed to delete categories', 'destructive');
-    } finally {
-      setLoading(false);
+// Handle confirm delete
+const handleConfirmDelete = async () => {
+  try {
+    setLoading(true);
+    
+    // Loop through categories and delete each one
+    for (const category of selectedCategories) {
+      await axios.delete(`/api/blog/categories/${category.slug}`);
     }
-  };
+    
+    // Show toast notification with appropriate message
+    const message = selectedCategories.length === 1 
+      ? `Category "${selectedCategories[0].name}" deleted successfully` 
+      : `${selectedCategories.length} categories deleted successfully`;
+    
+    showToast('Success', message);
+    
+    // Reset state and refresh categories
+    setShowDeleteModal(false);
+    setSelectedCategories([]);
+    await fetchCategories();
+  } catch (err: any) {
+    console.error('Error deleting categories:', err);
+    const errorMessage = err.response?.data?.error || 'Failed to delete categories';
+    showToast('Error', errorMessage, 'destructive');
+  } finally {
+    setLoading(false);
+  }
+};
   
   // Handle save category
   const handleSaveCategory = async (formData: CategoryFormData) => {

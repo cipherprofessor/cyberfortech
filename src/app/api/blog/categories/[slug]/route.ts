@@ -117,15 +117,25 @@ export async function DELETE(
       );
     }
 
-    // Soft delete the category
-    await client.execute({
-      sql: `
-        UPDATE blog_categories
-        SET is_deleted = TRUE,
-            deleted_at = CURRENT_TIMESTAMP
-        WHERE slug = ? AND is_deleted = FALSE
-      `,
+    // Get the category ID for reference
+    const categoryResult = await client.execute({
+      sql: 'SELECT id FROM blog_categories WHERE slug = ? AND is_deleted = FALSE',
       args: [slug]
+    });
+    
+    if (!categoryResult.rows.length) {
+      return NextResponse.json(
+        { error: 'Category not found' },
+        { status: 404 }
+      );
+    }
+    
+    const categoryId = categoryResult.rows[0].id;
+
+    // Hard delete the category (completely remove from database)
+    await client.execute({
+      sql: 'DELETE FROM blog_categories WHERE id = ?',
+      args: [categoryId]
     });
 
     return NextResponse.json({ success: true });

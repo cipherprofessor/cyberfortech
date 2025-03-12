@@ -9,7 +9,7 @@ interface CategoryRowProps {
   category: CategoryWithCount;
 }
 
-export const CategoryRow: React.FC<CategoryRowProps> = ({ category }) => {
+ const CategoryRow: React.FC<CategoryRowProps> = ({ category }) => {
   // Check if a string is an emoji
   const isEmoji = (str: string | null | undefined): boolean => {
     if (!str) return false;

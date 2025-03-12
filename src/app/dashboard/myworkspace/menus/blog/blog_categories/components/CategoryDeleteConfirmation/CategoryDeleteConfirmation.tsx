@@ -23,6 +23,11 @@ export function CategoryDeleteConfirmDialog({
     ? categoryNames[0]
     : `${categoryNames.length} categories`;
 
+  const handleConfirm = () => {
+    // Call the onConfirm function that will trigger the handleConfirmDelete in the parent
+    onConfirm();
+  };
+
   return (
     <AnimatePresence>
       {show && (
@@ -57,8 +62,9 @@ export function CategoryDeleteConfirmDialog({
                   Cancel
                 </button>
                 <button
-                  onClick={onConfirm}
+                  onClick={handleConfirm}
                   className={styles.deleteButton}
+                  data-testid="confirm-delete-button"
                 >
                   Delete {isSingleDelete ? 'Category' : 'Categories'}
                 </button>
