@@ -1,37 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, LinkIcon, AlertTriangle, ImageIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import clsx from 'clsx';
 import { BlogCategory } from '@/types/blog';
 import styles from './CategoryEditModal.module.scss';
+import { CategoryEditModalProps, CategoryFormData } from '../../types';
 
-// Default category emoji icons
-const popularEmojis = [
-  '📝', '💻', '🎨', '📚', '🔍', '🚀', '💼', '📊',
-  '🎓', '💡', '🌟', '🔧', '🏆', '📱', '🌐', '🎬'
-];
 
-interface CategoryFormData {
-  id?: string;
-  name: string;
-  slug: string;
-  description: string;
-  displayOrder: number;
-  parentId?: string | null;
-  imageUrl?: string | null;
-  imageUrlType: 'emoji' | 'url';
-  emojiIcon?: string;
-}
-
-interface CategoryEditModalProps {
-  show: boolean;
-  category: BlogCategory | null;
-  isEditing: boolean;
-  parentOptions: BlogCategory[];
-  onClose: () => void;
-  onSave: (formData: CategoryFormData) => void;
-}
 
 export function CategoryEditModal({
   show,
@@ -43,7 +19,6 @@ export function CategoryEditModal({
 }: CategoryEditModalProps) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const imagePreviewRef = useRef<HTMLDivElement>(null);
   
   // Form state
   const [formData, setFormData] = useState<CategoryFormData>({
@@ -52,9 +27,7 @@ export function CategoryEditModal({
     description: '',
     displayOrder: 0,
     parentId: null,
-    imageUrl: null,
-    imageUrlType: 'emoji',
-    emojiIcon: '📝'
+    imageUrl: null
   });
   
   // Image preview state
@@ -64,11 +37,6 @@ export function CategoryEditModal({
   // Set initial form data when category changes
   useEffect(() => {
     if (category) {
-      // Determine if the image URL is an emoji or external URL
-      const isEmoji = category.imageUrl 
-        ? /\p{Emoji}/u.test(category.imageUrl) || category.imageUrl.length < 5
-        : true;
-      
       setFormData({
         id: category.id,
         name: category.name,
@@ -76,9 +44,7 @@ export function CategoryEditModal({
         description: category.description || '',
         displayOrder: category.displayOrder,
         parentId: category.parentId,
-        imageUrl: category.imageUrl || null,
-        imageUrlType: isEmoji ? 'emoji' : 'url',
-        emojiIcon: isEmoji && category.imageUrl ? category.imageUrl : '📝'
+        imageUrl: category.imageUrl || null
       });
       
       // Reset image preview states
@@ -92,9 +58,7 @@ export function CategoryEditModal({
         description: '',
         displayOrder: 0,
         parentId: null,
-        imageUrl: null,
-        imageUrlType: 'emoji',
-        emojiIcon: '📝'
+        imageUrl: null
       });
       
       // Reset image preview states
@@ -103,48 +67,12 @@ export function CategoryEditModal({
     }
   }, [category, show]);
   
-  // Effect to update the image preview container when URL changes
-  useEffect(() => {
-    if (formData.imageUrlType === 'url' && formData.imageUrl && imagePreviewRef.current) {
-      // Clear previous content
-      while (imagePreviewRef.current.firstChild) {
-        imagePreviewRef.current.removeChild(imagePreviewRef.current.firstChild);
-      }
-
-      setImagePreviewLoading(true);
-      setImagePreviewError(false);
-      
-      // Create a new image element
-      const img = document.createElement('img');
-      img.className = styles.previewImage;
-      img.alt = 'Icon Preview';
-      
-      // Handle loading and error events
-      img.onload = () => {
-        setImagePreviewLoading(false);
-        setImagePreviewError(false);
-      };
-      
-      img.onerror = () => {
-        setImagePreviewLoading(false);
-        setImagePreviewError(true);
-        img.src = '/api/placeholder/48/48';
-      };
-      
-      // Set the source last to trigger loading
-      img.src = formData.imageUrl;
-      
-      // Append the image to the container
-      imagePreviewRef.current.appendChild(img);
-    }
-  }, [formData.imageUrl, formData.imageUrlType]);
-  
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
     // Handle image URL changes
-    if (name === 'imageUrl' && formData.imageUrlType === 'url') {
+    if (name === 'imageUrl') {
       setImagePreviewError(false);
       setImagePreviewLoading(true);
     }
@@ -167,26 +95,16 @@ export function CategoryEditModal({
     }
   };
   
-  // Handle emoji icon selection
-  const handleEmojiSelect = (emoji: string) => {
-    setFormData({
-      ...formData,
-      emojiIcon: emoji,
-      imageUrl: emoji
-    });
+  // Handle image load
+  const handleImageLoad = () => {
+    setImagePreviewLoading(false);
+    setImagePreviewError(false);
   };
   
-  // Handle image URL type change
-  const handleImageTypeChange = (type: 'emoji' | 'url') => {
-    setFormData({
-      ...formData,
-      imageUrlType: type,
-      imageUrl: type === 'emoji' ? formData.emojiIcon || '📝' : ''
-    });
-    
-    // Reset image preview states when changing type
-    setImagePreviewError(false);
+  // Handle image error
+  const handleImageError = () => {
     setImagePreviewLoading(false);
+    setImagePreviewError(true);
   };
   
   // Handle form submission
@@ -311,94 +229,55 @@ export function CategoryEditModal({
                   
                   <div className={styles.formSection}>
                     <div className={styles.formGroup}>
-                      <label>Category Icon</label>
-                      <div className={styles.iconTypeSelector}>
-                        <button
-                          type="button"
-                          className={clsx(
-                            styles.iconTypeButton,
-                            formData.imageUrlType === 'emoji' && styles.active
+                      <label>Category Icon URL</label>
+                      <div className={styles.urlInput}>
+                        <div className={styles.inputWithIcon}>
+                          <LinkIcon size={16} className={styles.inputIcon} />
+                          <input
+                            type="url"
+                            name="imageUrl"
+                            value={formData.imageUrl || ''}
+                            onChange={handleInputChange}
+                            placeholder="https://example.com/icon.png"
+                            className={styles.input}
+                          />
+                        </div>
+                        
+                        <div className={styles.imagePreviewContainer}>
+                          {formData.imageUrl ? (
+                            <div className={styles.imagePreview}>
+                              {imagePreviewError ? (
+                                <div className={styles.imageError}>
+                                  <AlertTriangle size={16} />
+                                  <span>Invalid image URL</span>
+                                </div>
+                              ) : (
+                                <>
+                                  {imagePreviewLoading && (
+                                    <div className={styles.loadingOverlay}>
+                                      <span>Loading...</span>
+                                    </div>
+                                  )}
+                                  <img 
+                                    src={formData.imageUrl}
+                                    alt="Icon Preview"
+                                    className={styles.previewImage}
+                                    onError={handleImageError}
+                                    onLoad={handleImageLoad}
+                                  />
+                                </>
+                              )}
+                            </div>
+                          ) : (
+                            <div className={styles.noImagePreview}>
+                              <ImageIcon size={24} className={styles.placeholderIcon} />
+                              <span>No image URL provided</span>
+                            </div>
                           )}
-                          onClick={() => handleImageTypeChange('emoji')}
-                        >
-                          Emoji Icon
-                        </button>
-                        <button
-                          type="button"
-                          className={clsx(
-                            styles.iconTypeButton,
-                            formData.imageUrlType === 'url' && styles.active
-                          )}
-                          onClick={() => handleImageTypeChange('url')}
-                        >
-                          Custom URL
-                        </button>
+                        </div>
+                        
+                        <small>Enter a URL for your category icon (SVG or PNG recommended)</small>
                       </div>
-                      
-                      {formData.imageUrlType === 'emoji' ? (
-                        <div className={styles.emojiSelector}>
-                          <div className={styles.selectedEmoji}>
-                            <span className={styles.emojiDisplay}>
-                              {formData.emojiIcon || '📝'}
-                            </span>
-                          </div>
-                          <div className={styles.emojiGrid}>
-                            {popularEmojis.map(emoji => (
-                              <button
-                                key={emoji}
-                                type="button"
-                                className={clsx(
-                                  styles.emojiButton,
-                                  formData.emojiIcon === emoji && styles.activeEmoji
-                                )}
-                                onClick={() => handleEmojiSelect(emoji)}
-                              >
-                                {emoji}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className={styles.urlInput}>
-                          <div className={styles.inputWithIcon}>
-                            <LinkIcon size={16} className={styles.inputIcon} />
-                            <input
-                              type="url"
-                              name="imageUrl"
-                              value={formData.imageUrl || ''}
-                              onChange={handleInputChange}
-                              placeholder="https://example.com/icon.png"
-                              className={styles.input}
-                            />
-                          </div>
-                          
-                          <div className={styles.imagePreviewContainer}>
-                            {formData.imageUrl ? (
-                              <div className={styles.imagePreview}>
-                                {imagePreviewError ? (
-                                  <div className={styles.imageError}>
-                                    <AlertTriangle size={16} />
-                                    <span>Invalid image URL</span>
-                                  </div>
-                                ) : imagePreviewLoading ? (
-                                  <div className={styles.loadingPreview}>
-                                    <span>Loading preview...</span>
-                                  </div>
-                                ) : (
-                                  <div ref={imagePreviewRef} className={styles.imagePreviewContent}></div>
-                                )}
-                              </div>
-                            ) : (
-                              <div className={styles.noImagePreview}>
-                                <ImageIcon size={24} className={styles.placeholderIcon} />
-                                <span>No image URL provided</span>
-                              </div>
-                            )}
-                          </div>
-                          
-                          <small>Enter a URL for your category icon (SVG or PNG recommended)</small>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>

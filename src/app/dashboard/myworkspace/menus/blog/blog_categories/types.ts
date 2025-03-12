@@ -13,6 +13,13 @@ export interface CategoryFormData {
   displayOrder: number;
   parentId?: string | null;
   imageUrl?: string | null;
-  imageUrlType: 'emoji' | 'url';
-  emojiIcon?: string;
+}
+
+export interface CategoryEditModalProps {
+  show: boolean;
+  category: BlogCategory | null;
+  isEditing: boolean;
+  parentOptions: BlogCategory[];
+  onClose: () => void;
+  onSave: (formData: CategoryFormData) => void;
 }
