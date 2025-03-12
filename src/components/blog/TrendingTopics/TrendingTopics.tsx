@@ -2,45 +2,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import clsx from 'clsx';
 import { useTheme } from 'next-themes';
 import axios from 'axios';
 import { BlogCategory } from '@/types/blog';
 import styles from './TrendingTopics.module.scss';
-import next from 'next';
-
-// Map of category slugs to emoji icons
-const CATEGORY_ICONS: Record<string, string> = {
-  technology: '💻',
-  business: '💼',
-  design: '🎨',
-  development: '⚙️',
-  marketing: '📈',
-  productivity: '⏱️',
-  finance: '💰',
-  health: '🏥',
-  travel: '✈️',
-  food: '🍔',
-  fashion: '👗',
-  sports: '⚽',
-  music: '🎵',
-  movies: '🎬',
-  books: '📚',
-  news: '📰',
-  startups: '🚀',
-  education: '🎓',
-  personal: '👤',
-  lifestyle: '🌿',
-  management: '📊',
-  trends: '🔥',
-  react : '⚛️', // Add more as needed
-  next : '📝', // Add more as needed
-  webdevelopment : '📝', // Add more as needed
-  cybersecurity :   '📝', // Add more as needed
-  
-  // Add more as needed
-  default: '📝', // Default icon
-};
 
 interface TrendingTopicsProps {
   initialCategories?: BlogCategory[];
@@ -59,6 +26,7 @@ const TrendingTopics: React.FC<TrendingTopicsProps> = ({
   const [categories, setCategories] = useState<BlogCategory[]>(initialCategories);
   const [loading, setLoading] = useState<boolean>(initialCategories.length === 0);
   const [error, setError] = useState<string | null>(null);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     // Only fetch if we don't have initial categories
@@ -81,34 +49,24 @@ const TrendingTopics: React.FC<TrendingTopicsProps> = ({
     }
   };
 
-  // Helper to get appropriate icon for a category
-  const getCategoryIcon = (slug: string): string => {
-    const normalizedSlug = slug.toLowerCase();
-    
-    // Try to find an exact match first
-    if (CATEGORY_ICONS[normalizedSlug]) {
-      return CATEGORY_ICONS[normalizedSlug];
-    }
-    
-    // Try to find a partial match
-    const matchingKey = Object.keys(CATEGORY_ICONS).find(key => 
-      normalizedSlug.includes(key) || key.includes(normalizedSlug)
-    );
-    
-    return matchingKey ? CATEGORY_ICONS[matchingKey] : CATEGORY_ICONS.default;
+  // Handle image error
+  const handleImageError = (categoryId: string) => {
+    setImageErrors(prev => ({
+      ...prev,
+      [categoryId]: true
+    }));
+  };
+
+  // Get default image path
+  const getDefaultImage = (categorySlug: string) => {
+    return '/logocyber4.png'; // Your default fallback image
   };
 
   return (
-    <div className={clsx(
-      styles.container,
-      theme === 'dark' && styles.dark,
-      className
-    )}>
+    <div className={clsx(styles.container, theme === 'dark' && styles.dark, className)}>
       <h2 className={styles.sectionTitle}>EXPLORE TRENDING TOPICS</h2>
-      
       <div className={styles.topicsGrid}>
         {loading ? (
-          // Skeleton loaders for categories
           Array.from({ length: 8 }).map((_, index) => (
             <div key={`skeleton-${index}`} className={styles.topicButtonSkeleton}></div>
           ))
@@ -117,19 +75,24 @@ const TrendingTopics: React.FC<TrendingTopicsProps> = ({
         ) : categories.length === 0 ? (
           <div className={styles.empty}>No categories available</div>
         ) : (
-          // Actual categories
           categories.map(category => (
             <button
               key={category.id}
+              onClick={() => onCategorySelect(category.slug)}
               className={clsx(
                 styles.topicButton,
                 selectedCategory === category.slug && styles.active
               )}
-              onClick={() => onCategorySelect(category.slug)}
-              aria-pressed={selectedCategory === category.slug}
             >
               <span className={styles.topicIcon}>
-                {getCategoryIcon(category.slug)}
+                <Image 
+                  src={imageErrors[category.id] ? getDefaultImage(category.slug) : (category.imageUrl || getDefaultImage(category.slug))}
+                  alt=""
+                  width={24}
+                  height={24}
+                  onError={() => handleImageError(category.id)}
+                  className={styles.categoryImage}
+                />
               </span>
               <span className={styles.topicName}>{category.name}</span>
             </button>
@@ -138,6 +101,6 @@ const TrendingTopics: React.FC<TrendingTopicsProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default TrendingTopics;
