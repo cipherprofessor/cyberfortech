@@ -17,11 +17,15 @@ import {
 import DataTable, { Column } from '@/app/dashboard/myworkspace/components/ui/DataTable/DataTable';
 
 import { CategoryWithCount, CategoryFormData } from './types';
-import { useToast } from './hooks/useToast';
+
 import styles from './BlogCategories.module.scss';
 import KPICard from '../../../components/ui/KPICard/KPICard';
 import { CategoryEditModal } from './components/CategoryEditModal/CategoryEditModal';
 import { CategoryDeleteConfirmDialog } from './components/CategoryDeleteConfirmation/CategoryDeleteConfirmation';
+
+import { showToast } from "@/components/ui/mohsin-toast";
+// or use your custom useToast hook if you prefer
+import { useToast } from "./hooks/useToast";
 
 // Explicitly augment the CategoryWithCount type to include 'icon' as a key
 interface ExtendedColumnKeys extends CategoryWithCount {
@@ -51,6 +55,9 @@ const BlogCategories: React.FC = () => {
   // Search and pagination states
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
+// In your component:
+
   
   // Fetch categories on component mount
   useEffect(() => {
@@ -107,7 +114,7 @@ const BlogCategories: React.FC = () => {
     } catch (err) {
       console.error('Error fetching categories:', err);
       setError('Failed to load categories. Please try again.');
-      showToast('Error', 'Failed to load categories', 'destructive');
+      showToast('Error', 'Failed to load categories', 'error');
     } finally {
       setLoading(false);
     }
@@ -134,9 +141,9 @@ const BlogCategories: React.FC = () => {
     
     if (hasPostsCategories.length > 0) {
       if (hasPostsCategories.length === 1) {
-        showToast('Cannot Delete', `The category "${hasPostsCategories[0].name}" has posts and cannot be deleted.`, 'destructive');
+        showToast('Warning', `The category "${hasPostsCategories[0].name}" has posts and cannot be deleted.`, 'warning');
       } else {
-        showToast('Cannot Delete', `${hasPostsCategories.length} categories have posts and cannot be deleted.`, 'destructive');
+        showToast('Warning', `${hasPostsCategories.length} categories have posts and cannot be deleted.`, 'warning');
       }
       
       // Filter out categories with posts
@@ -154,6 +161,11 @@ const BlogCategories: React.FC = () => {
   };
   
 // Handle confirm delete
+// In src/app/dashboard/myworkspace/menus/blog/blog_categories/BlogCategories.tsx
+
+
+
+// Update the handleConfirmDelete function:
 const handleConfirmDelete = async () => {
   try {
     setLoading(true);
@@ -168,7 +180,7 @@ const handleConfirmDelete = async () => {
       ? `Category "${selectedCategories[0].name}" deleted successfully` 
       : `${selectedCategories.length} categories deleted successfully`;
     
-    showToast('Success', message);
+    showToast('Success', message, 'success');
     
     // Reset state and refresh categories
     setShowDeleteModal(false);
@@ -177,12 +189,11 @@ const handleConfirmDelete = async () => {
   } catch (err: any) {
     console.error('Error deleting categories:', err);
     const errorMessage = err.response?.data?.error || 'Failed to delete categories';
-    showToast('Error', errorMessage, 'destructive');
+    showToast('Error', errorMessage, 'error');
   } finally {
     setLoading(false);
   }
 };
-  
   // Handle save category
   const handleSaveCategory = async (formData: CategoryFormData) => {
     try {
@@ -200,11 +211,11 @@ const handleConfirmDelete = async () => {
       if (isEditing && currentCategory) {
         // Update existing category
         await axios.put(`/api/blog/categories/${currentCategory.slug}`, apiData);
-        showToast('Success', `Category "${formData.name}" updated successfully`);
+        showToast('Success', `Category "${formData.name}" updated successfully`, 'success');
       } else {
         // Create new category
         await axios.post('/api/blog/categories', apiData);
-        showToast('Success', `Category "${formData.name}" created successfully`);
+        showToast('Success', `Category "${formData.name}" created successfully`, 'success');
       }
       
       // Reset state and refresh categories
@@ -215,7 +226,7 @@ const handleConfirmDelete = async () => {
     } catch (err: any) {
       console.error('Error saving category:', err);
       const errorMessage = err.response?.data?.error || 'Failed to save category';
-      showToast('Error', errorMessage, 'destructive');
+      showToast('Error', errorMessage, 'error');
     } finally {
       setLoading(false);
     }

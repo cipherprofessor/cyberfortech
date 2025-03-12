@@ -13,6 +13,7 @@ import { ourFileRouter } from "./api/uploadthing/core";
 
 import Script from "next/script";
 import { ToastProvider } from "@/components/ui/toast";
+import { MohsinToaster } from "@/components/ui/mohsin-toast";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -46,7 +47,7 @@ export default function RootLayout({
           // className={`${inter.className} antialiased`}
           suppressHydrationWarning
         >
-          <ToastProvider>
+         
 
         
           <Providers>
@@ -54,6 +55,13 @@ export default function RootLayout({
             <main className="mt-16 light text-foreground bg-background">{children}
             <SpeedInsights/>
             <Analytics />
+            <MohsinToaster 
+          position="bottom-right" 
+          defaultStyle="glass" 
+          defaultSize="md"
+          showIcons={true}
+          showProgress={true}
+        />
             </main>
             {/* <Footer /> */}
           </Providers>
@@ -66,7 +74,7 @@ export default function RootLayout({
            
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-          </ToastProvider>
+          
         </body>
       </html>
     </ClerkProvider>
