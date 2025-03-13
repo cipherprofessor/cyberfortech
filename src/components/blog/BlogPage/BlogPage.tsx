@@ -356,25 +356,25 @@ const BlogPage: React.FC<BlogListProps> = ({
               </div>
               
               {/* Explore All Link */}
-              <div className={styles.exploreAllLink}>
+              {/* <div className={styles.exploreAllLink}>
                 <Link href="/blog/archive" className={styles.exploreLink}>
                   <span>Explore All Articles</span>
                   <ArrowUpRight size={16} />
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
 
           {/* Sidebar on desktop only */}
           <div className={styles.sideColumnDesktop}>
             {/* Author Profile Component */}
-            <AuthorProfile 
+            {/* <AuthorProfile 
               name="Mohsin Manzoor Bhat"
               role="REFLECTIVE BLOGGER"
               bio="Mohsin shares thoughtful insights and reflections on life, culture, and personal growth. His work explores the intersections of creativity and experience, offering readers unique perspectives."
               location="Paris, France"
               socialLinks={socialLinks}
-            />
+            /> */}
             
             {/* Blog Stats Component */}
             <BlogStats

@@ -11,6 +11,7 @@ import { ExternalLink } from 'lucide-react';
 import styles from './BlogCard.module.scss';
 import clsx from 'clsx';
 import { BlogPost } from '@/types/blog';
+import ReadingTimeEstimator from '../ReadingTimeEstimator/ReadingTimeEstimator';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -20,7 +21,7 @@ interface BlogCardProps {
 const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
   const { theme } = useTheme();
   
-  const formatDate = (date: Date): string => {
+  const formatDate = (date: Date | string): string => {
     try {
       return format(new Date(date), 'MMMM d, yyyy');
     } catch (error) {
@@ -40,16 +41,6 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
     ? post.tags.slice(0, 2) // Show up to 2 tags (plus 1 category = 3 chips total)
     : [];
 
-  // Calculate read time based on content length (roughly 200 words per minute)
-  const calculateReadTime = () => {
-    if (!post.content) return 1;
-    const wordCount = post.content.trim().split(/\s+/).length;
-    const readTime = Math.ceil(wordCount / 200);
-    return readTime > 0 ? readTime : 1;
-  };
-
-  const readTime = calculateReadTime();
-
   // Truncate excerpt to appropriate length
   const truncateExcerpt = (text: string, maxLength: number = 150) => {
     if (!text || text.length <= maxLength) return text;
@@ -57,7 +48,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
   };
 
   // Get author avatar URL with fallback
-  const avatarUrl = post.author.avatarUrl || '/fallback/user.png';
+  const avatarUrl = post.author.avatarUrl || '/default-avatar.png';
 
   return (
     <motion.article
@@ -105,9 +96,14 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
             </Link>
           ))}
           
-          {readTime > 0 && (
-            <span className={styles.readTime}>{readTime} MIN READ</span>
-          )}
+          {/* Replace the manual read time calculation with ReadingTimeEstimator */}
+          <span className={styles.readTime}>
+            <ReadingTimeEstimator 
+              content={post.content} 
+              className={styles.readingTimeEstimator}
+              minLength={1}
+            />
+          </span>
         </div>
       </div>
       
@@ -123,7 +119,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
               className={styles.authorAvatar}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.src = '/fallback/user.png'; // Fallback avatar
+                target.src = '/default-avatar.png'; // Fallback avatar
               }}
             />
           </Link>

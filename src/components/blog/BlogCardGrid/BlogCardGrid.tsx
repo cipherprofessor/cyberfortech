@@ -1,7 +1,6 @@
 import React from 'react';
 import { Calendar, User, Clock, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import styles from './BlogCardGrid.module.scss';
@@ -51,16 +50,6 @@ const BlogCardGrid: React.FC<BlogCardGridProps> = ({
   };
 
   const formattedDate = formatDate(post.publishedAt || post.createdAt || new Date());
-  
-  // Calculate read time based on content length (roughly 200 words per minute)
-  const calculateReadTime = () => {
-    if (!post.content) return 1;
-    const wordCount = post.content.trim().split(/\s+/).length;
-    const readTime = Math.ceil(wordCount / 200);
-    return readTime > 0 ? readTime : 1;
-  };
-
-  const readTime = calculateReadTime();
 
   // Get the author's name, handling different possible structures
   const authorName = post.author.fullName || 
@@ -88,7 +77,7 @@ const BlogCardGrid: React.FC<BlogCardGridProps> = ({
     : [];
 
   // Get author avatar URL with fallback
-  const avatarUrl = post.author.avatarUrl || '/fallback/user.png';
+  const avatarUrl = post.author.avatarUrl || '/default-avatar.png';
 
   return (
     <motion.article 
@@ -123,9 +112,15 @@ const BlogCardGrid: React.FC<BlogCardGridProps> = ({
             </Link>
           ))}
           
-          {readTime > 0 && (
-            <span className={styles.readTime}>{readTime} MIN READ</span>
-          )}
+          {/* Use ReadingTimeEstimator instead of manual calculation */}
+          <span className={styles.readTime}>
+            <ReadingTimeEstimator 
+              content={post.content} 
+              className={styles.readingTimeEstimator}
+              minLength={1}
+            />
+            
+          </span>
         </div>
       </div>
       
@@ -143,7 +138,7 @@ const BlogCardGrid: React.FC<BlogCardGridProps> = ({
                 className={styles.authorAvatar}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/fallback/user.png'; // Fallback avatar
+                  target.src = '/default-avatar.png'; // Fallback avatar
                 }}
               />
             </Link>

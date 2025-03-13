@@ -101,6 +101,19 @@
     font-weight: 600;
     border-radius: 0.25rem;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  
+  .readingTimeEstimator {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: white;
+    
+    /* Override any existing ReadingTimeEstimator styles that might conflict */
+    svg {
+      color: white;
+    }
   }
   
   .content {
