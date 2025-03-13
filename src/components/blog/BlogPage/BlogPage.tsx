@@ -90,8 +90,6 @@ const BlogPage: React.FC<BlogListProps> = ({
     { platform: 'LinkedIn', url: '#', icon: 'in' },
   ];
 
-  // Get featured posts (first 2 featured posts)
-  const featuredPosts = posts.filter(post => post.isFeatured).slice(0, 2);
   
   // Convert tags for the popular tags component
   const popularTags = transformTags(tags);

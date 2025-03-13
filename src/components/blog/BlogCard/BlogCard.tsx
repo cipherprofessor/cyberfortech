@@ -1,4 +1,3 @@
-// src/components/blog/BlogCard/index.tsx
 "use client";
 
 import React from 'react';
@@ -57,6 +56,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
     return text.substring(0, maxLength).trim() + '...';
   };
 
+  // Get author avatar URL with fallback
+  const avatarUrl = post.author.avatarUrl || '/fallback/user.png';
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -104,23 +106,40 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className }) => {
           ))}
           
           {readTime > 0 && (
-            <span className={styles.readTime}>{readTime} Min Read</span>
+            <span className={styles.readTime}>{readTime} MIN READ</span>
           )}
         </div>
       </div>
       
       <div className={styles.content}>
-        <div className={styles.meta}>
+        <div className={styles.authorContainer}>
           <Link 
             href={`/blog/author/${post.author.id}`}
-            className={styles.author}
+            className={styles.authorAvatarLink}
           >
-            {post.author.fullName}
+            <img 
+              src={avatarUrl} 
+              alt={post.author.fullName} 
+              className={styles.authorAvatar}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/fallback/user.png'; // Fallback avatar
+              }}
+            />
           </Link>
-          <span className={styles.dateDivider}>on</span>
-          <time className={styles.date}>
-            {formatDate(post.publishedAt || post.createdAt)}
-          </time>
+          
+          <div className={styles.meta}>
+            <Link 
+              href={`/blog/author/${post.author.id}`}
+              className={styles.author}
+            >
+              {post.author.fullName}
+            </Link>
+            <span className={styles.dateDivider}>on</span>
+            <time className={styles.date}>
+              {formatDate(post.publishedAt || post.createdAt)}
+            </time>
+          </div>
         </div>
         
         <h2 className={styles.title}>

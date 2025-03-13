@@ -39,7 +39,7 @@ const BlogAuthorsGrid: React.FC<BlogAuthorsGridProps> = ({
                 className={styles.avatar}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/default-avatar.png'; // Fallback avatar
+                  target.src = '/fallback/user.png'; // Fallback avatar
                 }}
               />
             </div>

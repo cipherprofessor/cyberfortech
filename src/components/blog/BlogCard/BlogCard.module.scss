@@ -309,3 +309,80 @@
     flex-direction: row-reverse;
   }
 }
+
+
+/* Add these styles to your existing BlogCard.module.scss */
+
+.authorContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.authorAvatarLink {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--primary-color);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.authorAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* If you already have meta styles, you can keep them or update them: */
+.meta {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.author {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.dateDivider {
+  margin: 0 0.5rem;
+  color: var(--text-secondary);
+}
+
+.date {
+  color: var(--text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .authorContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .dateDivider {
+    display: none;
+  }
+}

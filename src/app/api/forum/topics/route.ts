@@ -100,7 +100,7 @@ async function getUserAuth(req: NextRequest): Promise<UserAuth> {
         id: 'test_user_id',
         firstName: 'Test',
         lastName: 'User',
-        imageUrl: '/default-avatar.png'
+        imageUrl: '/fallback/user.png'
       };
     }
   } catch (error) {
@@ -112,7 +112,7 @@ async function getUserAuth(req: NextRequest): Promise<UserAuth> {
       id: 'test_user_id',
       firstName: 'Test',
       lastName: 'User',
-      imageUrl: '/default-avatar.png'
+      imageUrl: '/fallback/user.png'
     };
   }
 
