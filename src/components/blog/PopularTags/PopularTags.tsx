@@ -27,7 +27,7 @@ const PopularTags: React.FC<PopularTagsProps> = ({
   return (
     <div className={`${styles.container} ${className || ''}`}>
       <div className={styles.header}>
-        <Tag size={16} className={styles.icon} />
+        <Tag size={18} className={styles.icon} />
         <h3 className={styles.title}>Popular Tags</h3>
       </div>
       

@@ -4,72 +4,26 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { PlusCircle, Filter, ArrowUpRight } from 'lucide-react';
+import { PlusCircle, Filter, ArrowUpRight, Search } from 'lucide-react';
 import clsx from 'clsx';
 
 import styles from './BlogPage.module.scss';
-import { BlogListProps,BlogPost } from '@/types/blog';
+import { BlogListProps } from '@/types/blog';
 import AuthorProfile from '../AuthorProfile/AuthorProfile';
 import BlogCard from '../BlogCard/BlogCard';
 import BlogCardGrid from '../BlogCardGrid/BlogCardGrid';
 import BlogSkeleton from '../BlogCard/CardSkelton/BlogCardSkeleton';
-import BlogSearch from '../BlogSearch/BlogSearch';
-import FeaturedPosts from '../FeaturedPosts/FeaturedPosts';
-import TrendingTopics from '../TrendingTopics/TrendingTopics';
 import BlogViewOptions from '../BlogViewOptions/BlogViewOptions';
 import PopularTags from '../PopularTags/PopularTags';
 import NewsletterSubscribe from '../NewsletterSubscribe/NewsletterSubscribe';
 import BlogStats from '../BlogStats/BlogStats';
 import BlogAuthorsGrid from '../BlogAuthorsGrid/BlogAuthorsGrid';
+import TrendingTopics from '../TrendingTopics/TrendingTopics';
 
-// Mock authors data for the authors grid
-const mockAuthors = [
-  {
-    id: '1',
-    name: 'Mohsin Manzoor Bhat',
-    avatar: '/avatars/mohsin.jpg',
-    role: 'Lead Developer',
-    postCount: 24
-  },
-  {
-    id: '2',
-    name: 'Sarah Johnson',
-    avatar: '/avatars/sarah.jpg',
-    role: 'Security Expert',
-    postCount: 18
-  },
-  {
-    id: '3',
-    name: 'Alex Chen',
-    avatar: '/avatars/alex.jpg',
-    role: 'UI/UX Designer',
-    postCount: 15
-  },
-  {
-    id: '4',
-    name: 'Jessica Williams',
-    avatar: '/avatars/jessica.jpg',
-    role: 'Data Scientist',
-    postCount: 12
-  },
-  {
-    id: '5',
-    name: 'David Kim',
-    avatar: '/avatars/david.jpg',
-    role: 'Backend Developer',
-    postCount: 9
-  },
-  {
-    id: '6',
-    name: 'Emma Martinez',
-    avatar: '/avatars/emma.jpg',
-    role: 'Content Creator',
-    postCount: 7
-  },
-];
+// Mock authors data remains the same
 
 // Transform tags data for the PopularTags component
-const transformTags = (tags: Array<any>) => {
+const transformTags = (tags: Array<any> = []) => {
   return tags.map(tag => ({
     ...tag,
     count: Math.floor(Math.random() * 50) + 1 // Mock count for demonstration
@@ -95,6 +49,8 @@ const BlogPage: React.FC<BlogListProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -116,6 +72,7 @@ const BlogPage: React.FC<BlogListProps> = ({
   };
 
   const handleSearch = (query: string) => {
+    setSearchQuery(query);
     if (onSearch) {
       onSearch(query);
     }
@@ -139,6 +96,52 @@ const BlogPage: React.FC<BlogListProps> = ({
   // Convert tags for the popular tags component
   const popularTags = transformTags(tags);
 
+  // Mock authors data for the authors grid
+  const mockAuthors = [
+    {
+      id: '1',
+      name: 'Mohsin Manzoor Bhat',
+      avatar: '/avatars/mohsin.jpg',
+      role: 'LEAD DEVELOPER',
+      postCount: 24
+    },
+    {
+      id: '2',
+      name: 'Sarah Johnson',
+      avatar: '/avatars/sarah.jpg',
+      role: 'SECURITY EXPERT',
+      postCount: 18
+    },
+    {
+      id: '3',
+      name: 'Alex Chen',
+      avatar: '/avatars/alex.jpg',
+      role: 'UI/UX DESIGNER',
+      postCount: 15
+    },
+    {
+      id: '4',
+      name: 'Jessica Williams',
+      avatar: '/avatars/jessica.jpg',
+      role: 'DATA SCIENTIST',
+      postCount: 12
+    },
+    {
+      id: '5',
+      name: 'David Kim',
+      avatar: '/avatars/david.jpg',
+      role: 'BACKEND DEVELOPER',
+      postCount: 9
+    },
+    {
+      id: '6',
+      name: 'Emma Martinez',
+      avatar: '/avatars/emma.jpg',
+      role: 'CONTENT CREATOR',
+      postCount: 7
+    },
+  ];
+
   if (!mounted) {
     return null;
   }
@@ -156,14 +159,13 @@ const BlogPage: React.FC<BlogListProps> = ({
         </div>
       </div>
 
-      {/* Trending Topics Component */}
       <TrendingTopics 
-        initialCategories={categories}
-        selectedCategory={selectedCategory}
-        onCategorySelect={handleCategorySelect}
-      />
+  initialCategories={categories}
+  selectedCategory={selectedCategory}
+  onCategorySelect={handleCategorySelect}
+/>
 
-      {/* Action Bar with Create Post Button */}
+      {/* Action Bar with toggles, search and create post button */}
       <div className={styles.actionBar}>
         <div className={styles.actionBarLeft}>
           <BlogViewOptions
@@ -172,24 +174,74 @@ const BlogPage: React.FC<BlogListProps> = ({
           />
         </div>
         
+        <div className={styles.searchFilterArea}>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch(searchQuery);
+                }
+              }}
+            />
+            <button 
+              className={styles.searchButton}
+              onClick={() => handleSearch(searchQuery)}
+            >
+              <Search size={16} />
+            </button>
+          </div>
+          
+          <div className={styles.filterButton}>
+            <button 
+              onClick={() => setShowFilters(!showFilters)} 
+              className={clsx(
+                styles.filterToggle, 
+                showFilters && styles.active,
+                selectedTag && styles.hasFilter
+              )}
+            >
+              <Filter size={16} />
+              <span>Filters</span>
+              {selectedTag && <span className={styles.filterBadge}>1</span>}
+            </button>
+          </div>
+        </div>
+        
         <Link href="/blog/new" className={styles.createPostButton}>
           <PlusCircle size={18} />
           <span>Create New Post</span>
         </Link>
-        
-        <div className={styles.actionBarRight}>
-          {/* Additional action buttons can go here */}
-        </div>
       </div>
 
-      {/* Search and Filters Component */}
-      <BlogSearch 
-        onSearch={handleSearch}
-        onTagFilter={handleTagSelect}
-        tags={tags}
-        selectedTag={selectedTag}
-      />
+      {/* Filters dropdown section */}
+      {showFilters && (
+        <div className={styles.filtersSection}>
+          <div className={styles.filterTagsContainer}>
+            <h3 className={styles.filterTitle}>Filter by Tags</h3>
+            <div className={styles.tagsList}>
+              {tags.map(tag => (
+                <button
+                  key={tag.slug}
+                  className={clsx(
+                    styles.tagButton,
+                    selectedTag === tag.slug && styles.active
+                  )}
+                  onClick={() => handleTagSelect(selectedTag === tag.slug ? null : tag.slug)}
+                >
+                  {tag.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
+      {/* Main content section */}
       {loading ? (
         <div className={styles.skeletonList}>
           <BlogSkeleton count={5} />
@@ -215,6 +267,7 @@ const BlogPage: React.FC<BlogListProps> = ({
         </div>
       ) : (
         <div className={styles.contentSection}>
+          {/* Main content column with posts */}
           <div className={styles.mainColumn}>
             <AnimatePresence mode="wait">
               {viewMode === 'list' ? (
@@ -242,15 +295,16 @@ const BlogPage: React.FC<BlogListProps> = ({
                 >
                   {posts.map((post, index) => (
                     <BlogCardGrid 
-                    key={post.id} 
-                    post={post as any} // Type assertion
-                    index={index}
-                  />
+                      key={post.id} 
+                      post={post as any} // Type assertion for TypeScript
+                      index={index}
+                    />
                   ))}
                 </motion.div>
               )}
             </AnimatePresence>
 
+            {/* Pagination */}
             {!loading && !error && totalPages > 1 && (
               <div className={styles.pagination}>
                 <button
@@ -287,9 +341,34 @@ const BlogPage: React.FC<BlogListProps> = ({
                 </button>
               </div>
             )}
+            
+            {/* Bottom section with Tags and Authors - AFTER posts */}
+            <div className={styles.bottomSection}>
+              <h2 className={styles.bottomSectionTitle}>Explore More</h2>
+              <div className={styles.bottomWidgets}>
+                {/* Popular Tags Component */}
+                <PopularTags
+                  tags={popularTags}
+                  selectedTag={selectedTag}
+                  onTagSelect={handleTagSelect}
+                />
+                
+                {/* Popular Authors Component */}
+                <BlogAuthorsGrid authors={mockAuthors} />
+              </div>
+              
+              {/* Explore All Link */}
+              <div className={styles.exploreAllLink}>
+                <Link href="/blog/archive" className={styles.exploreLink}>
+                  <span>Explore All Articles</span>
+                  <ArrowUpRight size={16} />
+                </Link>
+              </div>
+            </div>
           </div>
 
-          <div className={styles.sideColumn}>
+          {/* Sidebar on desktop only */}
+          <div className={styles.sideColumnDesktop}>
             {/* Author Profile Component */}
             <AuthorProfile 
               name="Mohsin Manzoor Bhat"
@@ -309,27 +388,6 @@ const BlogPage: React.FC<BlogListProps> = ({
             
             {/* Newsletter Subscribe Component */}
             <NewsletterSubscribe />
-            
-            {/* Featured Posts Component */}
-            <FeaturedPosts posts={featuredPosts} />
-            
-            {/* Popular Tags Component */}
-            <PopularTags
-              tags={popularTags}
-              selectedTag={selectedTag}
-              onTagSelect={handleTagSelect}
-            />
-            
-            {/* Blog Authors Grid Component */}
-            <BlogAuthorsGrid authors={mockAuthors} />
-            
-            {/* Explore All link */}
-            <div className={styles.exploreAllLink}>
-              <Link href="/blog/archive" className={styles.exploreLink}>
-                <span>Explore All Articles</span>
-                <ArrowUpRight size={16} />
-              </Link>
-            </div>
           </div>
         </div>
       )}

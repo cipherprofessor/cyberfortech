@@ -25,7 +25,7 @@ const BlogAuthorsGrid: React.FC<BlogAuthorsGridProps> = ({
   return (
     <div className={`${styles.container} ${className || ''}`}>
       <div className={styles.header}>
-        <Users size={16} className={styles.icon} />
+        <Users size={18} className={styles.icon} />
         <h3 className={styles.title}>Popular Authors</h3>
       </div>
       
