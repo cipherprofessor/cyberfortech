@@ -617,3 +617,105 @@ interface MohsinToasterProps {
 MohsinToaster provides a beautiful, flexible, and powerful toast notification system for your React and Next.js applications. With its rich set of features and customization options, it can handle everything from simple notifications to complex interactive dialogues.
 
 Created by Mohsin
+
+
+
+
+
+Installation and Setup
+The documentation details how to add the MohsinToaster to your project and integrate it into your layout file.
+Basic Usage Examples
+tsxCopyimport { showToast } from "@/components/ui/mohsin-toast";
+
+// Success toast
+showToast("Success!", "Your changes have been saved successfully.", "success");
+
+// Error toast
+showToast("Error!", "Failed to connect to the server.", "error");
+
+// Warning toast
+showToast("Warning!", "This action cannot be undone.", "warning");
+Advanced Use Cases
+The documentation includes examples for:
+
+Forms and validation feedback
+API calls and data fetching
+Authentication flows
+CRUD operations
+Feature announcements
+Interactive confirmations
+
+Example: Form Submission
+tsxCopyimport { showToast } from "@/components/ui/mohsin-toast";
+
+async function handleSubmit(event) {
+  event.preventDefault();
+  
+  try {
+    // Form validation
+    if (!isValid) {
+      showToast("Warning", "Please fill in all required fields", "warning");
+      return;
+    }
+    
+    // API call
+    await submitForm(formData);
+    
+    // Success message
+    showToast("Success", "Form submitted successfully", "success");
+    
+  } catch (error) {
+    // Error handling
+    showToast("Error", error.message || "Failed to submit form", "error");
+  }
+}
+Example: Delete Confirmation
+tsxCopyimport { toast } from "@/components/ui/mohsin-toast";
+
+function confirmDelete(itemId) {
+  const { dismiss } = toast({
+    title: "Confirm Deletion",
+    description: "Are you sure you want to delete this item?",
+    variant: "warning",
+    duration: Infinity,
+    action: (
+      <div className="flex gap-2 mt-2">
+        <button 
+          onClick={async () => {
+            dismiss();
+            try {
+              await deleteItem(itemId);
+              showToast("Item Deleted", "Successfully deleted", "success");
+            } catch (error) {
+              showToast("Failed", "Could not delete item", "error");
+            }
+          }}
+          className="px-3 py-1 bg-white bg-opacity-20 rounded-md"
+        >
+          Yes, Delete
+        </button>
+        <button 
+          onClick={() => dismiss()}
+          className="px-3 py-1 border border-current rounded-md"
+        >
+          Cancel
+        </button>
+      </div>
+    )
+  });
+}
+Custom Styling Options
+The documentation covers all the available customization options:
+
+8 different variants (default, success, error, warning, info, discovery, notification, update)
+3 style options (solid, outline, glass)
+3 size options (small, medium, large)
+6 position options
+Custom icons and actions
+
+TypeScript Support
+The documentation includes all TypeScript type definitions for perfect type safety and autocompletion.
+Migration Guide
+There's a section dedicated to migrating from existing toast systems, including how to maintain backward compatibility with your current code.
+
+These examples and documentation should help you seamlessly integrate MohsinToaster throughout your application. Feel free to refer to the full documentation file for more detailed information and implementation examples.

@@ -1,22 +1,80 @@
-// src/components/blog/BlogPage/BlogPage.tsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { PlusCircle } from 'lucide-react';
-
-
+import { PlusCircle, Filter, ArrowUpRight } from 'lucide-react';
 import clsx from 'clsx';
+
 import styles from './BlogPage.module.scss';
-import { BlogListProps } from '@/types/blog';
+import { BlogListProps,BlogPost } from '@/types/blog';
 import AuthorProfile from '../AuthorProfile/AuthorProfile';
 import BlogCard from '../BlogCard/BlogCard';
+import BlogCardGrid from '../BlogCardGrid/BlogCardGrid';
 import BlogSkeleton from '../BlogCard/CardSkelton/BlogCardSkeleton';
 import BlogSearch from '../BlogSearch/BlogSearch';
 import FeaturedPosts from '../FeaturedPosts/FeaturedPosts';
 import TrendingTopics from '../TrendingTopics/TrendingTopics';
+import BlogViewOptions from '../BlogViewOptions/BlogViewOptions';
+import PopularTags from '../PopularTags/PopularTags';
+import NewsletterSubscribe from '../NewsletterSubscribe/NewsletterSubscribe';
+import BlogStats from '../BlogStats/BlogStats';
+import BlogAuthorsGrid from '../BlogAuthorsGrid/BlogAuthorsGrid';
+
+// Mock authors data for the authors grid
+const mockAuthors = [
+  {
+    id: '1',
+    name: 'Mohsin Manzoor Bhat',
+    avatar: '/avatars/mohsin.jpg',
+    role: 'Lead Developer',
+    postCount: 24
+  },
+  {
+    id: '2',
+    name: 'Sarah Johnson',
+    avatar: '/avatars/sarah.jpg',
+    role: 'Security Expert',
+    postCount: 18
+  },
+  {
+    id: '3',
+    name: 'Alex Chen',
+    avatar: '/avatars/alex.jpg',
+    role: 'UI/UX Designer',
+    postCount: 15
+  },
+  {
+    id: '4',
+    name: 'Jessica Williams',
+    avatar: '/avatars/jessica.jpg',
+    role: 'Data Scientist',
+    postCount: 12
+  },
+  {
+    id: '5',
+    name: 'David Kim',
+    avatar: '/avatars/david.jpg',
+    role: 'Backend Developer',
+    postCount: 9
+  },
+  {
+    id: '6',
+    name: 'Emma Martinez',
+    avatar: '/avatars/emma.jpg',
+    role: 'Content Creator',
+    postCount: 7
+  },
+];
+
+// Transform tags data for the PopularTags component
+const transformTags = (tags: Array<any>) => {
+  return tags.map(tag => ({
+    ...tag,
+    count: Math.floor(Math.random() * 50) + 1 // Mock count for demonstration
+  }));
+};
 
 const BlogPage: React.FC<BlogListProps> = ({
   posts,
@@ -36,6 +94,7 @@ const BlogPage: React.FC<BlogListProps> = ({
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
   useEffect(() => {
     setMounted(true);
@@ -62,6 +121,10 @@ const BlogPage: React.FC<BlogListProps> = ({
     }
   };
 
+  const handleViewChange = (view: 'list' | 'grid') => {
+    setViewMode(view);
+  };
+
   // Social links for the author profile
   const socialLinks = [
     { platform: 'Twitter', url: '#', icon: '𝕏' },
@@ -72,6 +135,9 @@ const BlogPage: React.FC<BlogListProps> = ({
 
   // Get featured posts (first 2 featured posts)
   const featuredPosts = posts.filter(post => post.isFeatured).slice(0, 2);
+  
+  // Convert tags for the popular tags component
+  const popularTags = transformTags(tags);
 
   if (!mounted) {
     return null;
@@ -82,7 +148,7 @@ const BlogPage: React.FC<BlogListProps> = ({
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <h1 className={styles.mainTitle}>
-            Heartfelt <span>Reflections</span>: Stories of Love, Loss, and Growth
+            Heartfelt <span>Reflections</span>: Stories of CyberSecurity, Web Development, and Other Tech.
           </h1>
           <p className={styles.subTitle}>
             Explore fresh perspectives! Discover curated content to enlighten, entertain and engage.
@@ -96,6 +162,25 @@ const BlogPage: React.FC<BlogListProps> = ({
         selectedCategory={selectedCategory}
         onCategorySelect={handleCategorySelect}
       />
+
+      {/* Action Bar with Create Post Button */}
+      <div className={styles.actionBar}>
+        <div className={styles.actionBarLeft}>
+          <BlogViewOptions
+            currentView={viewMode}
+            onViewChange={handleViewChange}
+          />
+        </div>
+        
+        <Link href="/blog/new" className={styles.createPostButton}>
+          <PlusCircle size={18} />
+          <span>Create New Post</span>
+        </Link>
+        
+        <div className={styles.actionBarRight}>
+          {/* Additional action buttons can go here */}
+        </div>
+      </div>
 
       {/* Search and Filters Component */}
       <BlogSearch 
@@ -132,9 +217,38 @@ const BlogPage: React.FC<BlogListProps> = ({
         <div className={styles.contentSection}>
           <div className={styles.mainColumn}>
             <AnimatePresence mode="wait">
-              {posts.map((post) => (
-                <BlogCard key={post.id} post={post} />
-              ))}
+              {viewMode === 'list' ? (
+                // List View
+                <motion.div
+                  key="list-view"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {posts.map((post) => (
+                    <BlogCard key={post.id} post={post} />
+                  ))}
+                </motion.div>
+              ) : (
+                // Grid View
+                <motion.div
+                  key="grid-view"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className={styles.gridContainer}
+                >
+                  {posts.map((post, index) => (
+                    <BlogCardGrid 
+                    key={post.id} 
+                    post={post as any} // Type assertion
+                    index={index}
+                  />
+                  ))}
+                </motion.div>
+              )}
             </AnimatePresence>
 
             {!loading && !error && totalPages > 1 && (
@@ -178,20 +292,42 @@ const BlogPage: React.FC<BlogListProps> = ({
           <div className={styles.sideColumn}>
             {/* Author Profile Component */}
             <AuthorProfile 
-              name="Ethan Caldwell"
+              name="Mohsin Manzoor Bhat"
               role="REFLECTIVE BLOGGER"
-              bio="Ethan Caldwell shares thoughtful insights and reflections on life, culture, and personal growth. His work explores the intersections of creativity and experience, offering readers unique perspectives."
+              bio="Mohsin shares thoughtful insights and reflections on life, culture, and personal growth. His work explores the intersections of creativity and experience, offering readers unique perspectives."
               location="Paris, France"
               socialLinks={socialLinks}
             />
             
+            {/* Blog Stats Component */}
+            <BlogStats
+              totalPosts={posts.length}
+              totalAuthors={mockAuthors.length}
+              totalCategories={categories.length}
+              lastUpdated={new Date()} // Use actual last updated date if available
+            />
+            
+            {/* Newsletter Subscribe Component */}
+            <NewsletterSubscribe />
+            
             {/* Featured Posts Component */}
             <FeaturedPosts posts={featuredPosts} />
             
-            <div className={styles.createPostButton}>
-              <Link href="/blog/new">
-                <PlusCircle size={18} />
-                <span>Create New Post</span>
+            {/* Popular Tags Component */}
+            <PopularTags
+              tags={popularTags}
+              selectedTag={selectedTag}
+              onTagSelect={handleTagSelect}
+            />
+            
+            {/* Blog Authors Grid Component */}
+            <BlogAuthorsGrid authors={mockAuthors} />
+            
+            {/* Explore All link */}
+            <div className={styles.exploreAllLink}>
+              <Link href="/blog/archive" className={styles.exploreLink}>
+                <span>Explore All Articles</span>
+                <ArrowUpRight size={16} />
               </Link>
             </div>
           </div>
