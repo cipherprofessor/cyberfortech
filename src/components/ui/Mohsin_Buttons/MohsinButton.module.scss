@@ -1,0 +1,258 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+  
+  // Size variants
+  .sm {
+    height: 36px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  
+  .md {
+    height: 44px;
+    padding: 0 16px;
+    font-size: 1rem;
+    
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .lg {
+    height: 52px;
+    padding: 0 20px;
+    font-size: 1.125rem;
+    
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  
+  // Color variants
+  .primary {
+    --bg-color: #00953B;
+    --text-color: white;
+    --border-color: #00953B;
+    --hover-bg: #00953B;
+    --hover-border: #00953B;
+    --hover-text: white;
+    --ripple-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .secondary {
+    --bg-color: #17A2B8;
+    --text-color: white;
+    --border-color: #17A2B8;
+    --hover-bg: #17A2B8;
+    --hover-border: #17A2B8;
+    --hover-text: white;
+    --ripple-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .warning {
+    --bg-color: #FBBC05;
+    --text-color: #272727;
+    --border-color: #FBBC05;
+    --hover-bg: #FBBC05;
+    --hover-border: #FBBC05;
+    --hover-text: #272727;
+    --ripple-color: rgba(39, 39, 39, 0.2);
+  }
+  
+  .danger {
+    --bg-color: #D74343;
+    --text-color: white;
+    --border-color: #D74343;
+    --hover-bg: #D74343;
+    --hover-border: #D74343;
+    --hover-text: white;
+    --ripple-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .info {
+    --bg-color: #0D5AB4;
+    --text-color: white;
+    --border-color: #0D5AB4;
+    --hover-bg: #0D5AB4;
+    --hover-border: #0D5AB4;
+    --hover-text: white;
+    --ripple-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .default {
+    --bg-color: #f1f5f9;
+    --text-color: #334155;
+    --border-color: #cbd5e1;
+    --hover-bg: #e2e8f0;
+    --hover-border: #94a3b8;
+    --hover-text: #1e293b;
+    --ripple-color: rgba(51, 65, 85, 0.1);
+  }
+  
+  // Variant styles
+  .filled {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--hover-bg);
+      border-color: var(--hover-border);
+      color: var(--hover-text);
+    }
+  }
+  
+  .outline {
+    background-color: transparent;
+    color: var(--bg-color);
+    border-color: var(--border-color);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+  }
+  
+  // Icon positioning
+  .iconLeft {
+    flex-direction: row;
+  }
+  
+  .iconRight {
+    flex-direction: row-reverse;
+  }
+  
+  // Animation classes
+  .bounce {
+    &:active:not(:disabled) .iconWrapper {
+      animation: bounce 0.4s;
+    }
+  }
+  
+  .pulse {
+    &:active:not(:disabled) {
+      animation: pulse 0.4s;
+    }
+  }
+  
+  .rotate {
+    &:active:not(:disabled) .iconWrapper {
+      animation: rotate 0.6s;
+    }
+  }
+  
+  .scale {
+    &:active:not(:disabled) .iconWrapper {
+      animation: scale 0.4s;
+    }
+  }
+  
+  // Animation keyframes
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(20deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-20deg); }
+    100% { transform: rotate(0deg); }
+  }
+  
+  @keyframes scale {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+  
+  // Loading spinner
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid currentColor;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    margin-right: 0.5rem;
+  }
+  
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  // Ripple effect
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    background-color: var(--ripple-color);
+    pointer-events: none;
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+  }
+  
+  @keyframes ripple {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    25% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2);
+    }
+  }
+  
+  // Icon wrapper for animations
+  .iconWrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center;
+  }

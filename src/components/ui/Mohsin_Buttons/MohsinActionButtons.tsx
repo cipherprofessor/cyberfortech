@@ -11,8 +11,7 @@ import {
   Bookmark,
   Share2
 } from 'lucide-react';
-import { Button, ButtonProps } from './Buttons';
-
+import { MohsinButton, ButtonProps } from './MohsinButtons';
 
 // Base action button type
 type ActionButtonBaseProps = Omit<ButtonProps, 'icon'> & {
@@ -21,84 +20,91 @@ type ActionButtonBaseProps = Omit<ButtonProps, 'icon'> & {
 
 // Download Button
 export const MohsinDownloadButton: React.FC<ActionButtonBaseProps> = ({ children = 'Download', ...props }) => (
-  <Button 
+  <MohsinButton 
     icon={Download} 
     iconPosition="left" 
     color="primary" 
+    animation="pulse"
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );
 
 // Learn More Button
 export const MohsinLearnMoreButton: React.FC<ActionButtonBaseProps> = ({ children = 'Learn More', ...props }) => (
-  <Button 
+  <MohsinButton 
     icon={HelpCircle} 
     iconPosition="right" 
-    color="secondary" 
+    color="secondary"
+    animation="scale" 
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );
 
 // Start Over Button
 export const MohsinStartOverButton: React.FC<ActionButtonBaseProps> = ({ children = 'Start Over', ...props }) => (
-  <Button 
+  <MohsinButton 
     icon={RotateCcw} 
     iconPosition="left" 
-    color="warning" 
+    color="warning"
+    animation="rotate" 
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );
 
 // Delete Button
 export const MohsinDeleteButton: React.FC<ActionButtonBaseProps> = ({ children = 'Delete', ...props }) => (
-  <Button 
+  <MohsinButton 
     icon={Trash2} 
     iconPosition="right" 
-    color="danger" 
+    color="danger"
+    animation="scale" 
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );
 
 // Open Button
 export const MohsinOpenButton: React.FC<ActionButtonBaseProps> = ({ children = 'Open', ...props }) => (
-  <Button 
+  <MohsinButton 
     icon={ExternalLink} 
     iconPosition="right" 
-    color="info" 
+    color="info"
+    animation="pulse" 
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );
 
 // Cancel Button
 export const MohsinCancelButton: React.FC<ActionButtonBaseProps> = ({ children = 'Cancel', ...props }) => (
-  <Button 
-    color="default" 
+  <MohsinButton 
+    color="default"
+    animation="pulse" 
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );
 
 // Edit Button
 export const MohsinEditButton: React.FC<ActionButtonBaseProps> = ({ children = 'Edit', ...props }) => (
-  <Button 
+  <MohsinButton 
     icon={Edit} 
     iconPosition="left" 
-    color="info" 
+    color="info"
+    animation="bounce" 
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );
 
 // Like Button
@@ -111,16 +117,18 @@ export const MohsinLikeButton: React.FC<LikeButtonProps> = ({
   children, 
   count, 
   isLiked = false,
+  animation = 'scale',
   ...props 
 }) => (
-  <Button 
+  <MohsinButton 
     icon={ThumbsUp} 
     color="primary" 
     variant={isLiked ? "filled" : "outline"}
+    animation={animation}
     {...props}
   >
     {count !== undefined ? count : children || 'Like'}
-  </Button>
+  </MohsinButton>
 );
 
 // Bookmark Button
@@ -131,25 +139,32 @@ type BookmarkButtonProps = ActionButtonBaseProps & {
 export const MohsinBookmarkButton: React.FC<BookmarkButtonProps> = ({ 
   children = 'Bookmark', 
   isBookmarked = false,
+  animation = 'bounce',
   ...props 
 }) => (
-  <Button 
+  <MohsinButton 
     icon={Bookmark} 
     color="warning" 
     variant={isBookmarked ? "filled" : "outline"}
+    animation={animation}
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );
 
 // Share Button
-export const MohsinShareButton: React.FC<ActionButtonBaseProps> = ({ children = 'Share', ...props }) => (
-  <Button 
+export const MohsinShareButton: React.FC<ActionButtonBaseProps> = ({ 
+  children = 'Share',
+  animation = 'pulse',
+  ...props 
+}) => (
+  <MohsinButton 
     icon={Share2} 
     color="secondary" 
+    animation={animation}
     {...props}
   >
     {children}
-  </Button>
+  </MohsinButton>
 );

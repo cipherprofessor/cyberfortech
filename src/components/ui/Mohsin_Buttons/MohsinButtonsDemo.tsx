@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useTheme } from 'next-themes';
 
-import styles from './ButtonsDemo.module.scss';
-import { MohsinBookmarkButton, MohsinCancelButton, MohsinDeleteButton, MohsinDownloadButton, MohsinEditButton, MohsinLearnMoreButton, MohsinLikeButton, MohsinOpenButton, MohsinShareButton, MohsinStartOverButton } from './ActionButtons';
-import { Button } from '@heroui/react';
+import styles from './MohsinButtonsDemo.module.scss';
+import { MohsinDownloadButton, MohsinLearnMoreButton, MohsinStartOverButton, MohsinDeleteButton, MohsinOpenButton, MohsinCancelButton, MohsinEditButton, MohsinLikeButton, MohsinBookmarkButton, MohsinShareButton } from './MohsinActionButtons';
+import { MohsinButton } from './MohsinButtons';
 
-const ButtonsDemo: React.FC = () => {
+const MohsinButtonsDemo: React.FC = () => {
   const { theme } = useTheme();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(42);
@@ -28,7 +28,7 @@ const ButtonsDemo: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Button Components</h1>
+      <h1>Mohsin Button Components</h1>
       
       <section className={styles.section}>
         <h2>Standard Buttons</h2>
@@ -44,7 +44,7 @@ const ButtonsDemo: React.FC = () => {
           <div className={styles.buttonGroup}>
             <h3>Learn More Button</h3>
             <div className={styles.buttons}>
-              <MohsinDownloadButton variant="outline" />
+              <MohsinLearnMoreButton variant="outline" />
               <MohsinLearnMoreButton variant="filled" />
             </div>
           </div>
@@ -84,7 +84,7 @@ const ButtonsDemo: React.FC = () => {
       </section>
 
       <section className={styles.section}>
-        <h2>Action Buttons</h2>
+        <h2>Interactive Action Buttons</h2>
         <div className={styles.buttonGrid}>
           <div className={styles.buttonGroup}>
             <h3>Edit Button</h3>
@@ -102,6 +102,9 @@ const ButtonsDemo: React.FC = () => {
                 count={likeCount} 
                 onClick={handleLike} 
               />
+              <p className={styles.interactionStatus}>
+                Status: {isLiked ? 'Liked' : 'Not liked'} | Count: {likeCount}
+              </p>
             </div>
           </div>
 
@@ -112,6 +115,9 @@ const ButtonsDemo: React.FC = () => {
                 isBookmarked={isBookmarked} 
                 onClick={handleBookmark} 
               />
+              <p className={styles.interactionStatus}>
+                Status: {isBookmarked ? 'Bookmarked' : 'Not bookmarked'}
+              </p>
             </div>
           </div>
 
@@ -128,28 +134,65 @@ const ButtonsDemo: React.FC = () => {
       <section className={styles.section}>
         <h2>Button Sizes</h2>
         <div className={styles.sizes}>
-          <Button size="sm" color="primary" variant="flat">Small</Button>
-          <Button size="md" color="primary" variant="flat">Medium</Button>
-          <Button size="lg" color="primary" variant="flat">Large</Button>
+          <MohsinButton size="sm" color="primary" variant="filled">Small</MohsinButton>
+          <MohsinButton size="md" color="primary" variant="filled">Medium</MohsinButton>
+          <MohsinButton size="lg" color="primary" variant="filled">Large</MohsinButton>
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <h2>Animation Types</h2>
+        <div className={styles.animations}>
+          <MohsinButton 
+            color="primary" 
+            variant="filled" 
+            animation="bounce"
+          >
+            Bounce
+          </MohsinButton>
+          
+          <MohsinButton 
+            color="secondary" 
+            variant="filled" 
+            animation="pulse"
+          >
+            Pulse
+          </MohsinButton>
+          
+          <MohsinButton 
+            color="info" 
+            variant="filled" 
+            animation="rotate"
+          >
+            Rotate
+          </MohsinButton>
+          
+          <MohsinButton 
+            color="warning" 
+            variant="filled" 
+            animation="scale"
+          >
+            Scale
+          </MohsinButton>
         </div>
       </section>
 
       <section className={styles.section}>
         <h2>Loading State</h2>
         <div className={styles.loadingDemo}>
-          <Button 
+          <MohsinButton 
             color="primary" 
-            variant="flat" 
+            variant="filled" 
             isLoading={isLoading} 
-            // loadingText="Loading..." 
+            loadingText="Loading..." 
             onClick={simulateLoading}
           >
             Click to Load
-          </Button>
+          </MohsinButton>
         </div>
       </section>
     </div>
   );
 };
 
-export default ButtonsDemo;
+export default MohsinButtonsDemo;
