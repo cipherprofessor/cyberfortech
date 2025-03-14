@@ -25,9 +25,14 @@ import clsx from 'clsx';
 import styles from './BlogPostDetail.module.scss';
 import { BlogPost } from '@/types/blog';
 
-import { Toast } from '@radix-ui/react-toast';
 import { toast } from 'sonner';
 import Comments from '@/app/api/blog/comments/Comments';
+import BlogSidebar from './BlogSideBar/BlogSidebar';
+import PostActions from './PostActions/PostActions';
+import PostMeta from './PostMeta/PostMeta';
+import PostTaxonomy from './PostTaxonomy/PostTaxonomy';
+
+// Import components
 
 
 interface BlogPostDetailProps {
@@ -42,27 +47,57 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
   isAuthor
 }) => {
   const router = useRouter();
-  const { theme} = useTheme();
+  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [readingTime] = useState(
     Math.ceil(post.content.split(' ').length / 200)
   );
+  const [authorPosts, setAuthorPosts] = useState<BlogPost[]>([]);
+  const [trendingPosts, setTrendingPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    
+    // Fetch author's other posts
+    const fetchAuthorPosts = async () => {
+      try {
+        const response = await fetch(`/api/blog/author/${post.author.id}/posts?limit=3&exclude=${post.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setAuthorPosts(data.posts);
+        }
+      } catch (error) {
+        console.error('Error fetching author posts:', error);
+      }
+    };
+
+    // Fetch trending posts
+    const fetchTrendingPosts = async () => {
+      try {
+        const response = await fetch(`/api/blog/trending?limit=5&exclude=${post.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setTrendingPosts(data.posts);
+        }
+      } catch (error) {
+        console.error('Error fetching trending posts:', error);
+      }
+    };
+
+    fetchAuthorPosts();
+    fetchTrendingPosts();
+  }, [post.id, post.author.id]);
 
   // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
     return (
-      <article className={styles.container}>
+      <div className={styles.container}>
         <div className={styles.loading}>Loading...</div>
-      </article>
+      </div>
     );
   }
-
 
   const handleEdit = () => {
     router.push(`/blog/${post.slug}/edit`);
@@ -83,17 +118,19 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
         }
       } catch (error) {
         console.error('Error deleting post:', error);
-        alert('Failed to delete post');
+        toast.error('Failed to delete post');
       }
     }
   };
 
   const handleBookmark = () => {
     setIsBookmarked(!isBookmarked);
+    toast.success(isBookmarked ? 'Removed from bookmarks' : 'Added to bookmarks');
   };
 
   const handleLike = () => {
     setLikeCount(prev => prev + 1);
+    toast.success('Thanks for liking this post!');
   };
 
   const handleShare = async () => {
@@ -107,190 +144,121 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
       } catch (err) {
         console.error('Error sharing:', err);
       }
+    } else {
+      // Fallback for browsers that don't support navigator.share
+      navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copied to clipboard!');
     }
   };
 
   return (
-    <article className={clsx(styles.container, theme === 'dark' && styles.dark)}>
-      {/* Featured Image */}
-      {post.featuredImage && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={styles.featuredImage}
-        >
-          <Image
-            src={post.featuredImage}
-            alt={post.title}
-            width={1200}
-            height={600}
-            className={styles.image}
-            priority
-          />
-        </motion.div>
-      )}
-
-      {/* Hero Section */}
-      <div className={styles.hero}>
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={styles.title}
-        >
-          {post.title}
-        </motion.h1>
-
-        <motion.div 
+    <div className={clsx(styles.pageContainer, theme === 'dark' && styles.dark)}>
+      <div className={styles.contentWrapper}>
+        {/* Main Content */}
+        <motion.article 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className={styles.metadata}
+          className={styles.mainContent}
         >
-          <div className={styles.authorInfo}>
-            {post.author.avatarUrl && (
+          {/* Featured Image */}
+          {post.featuredImage && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={styles.featuredImage}
+            >
               <Image
-                src={post.author.avatarUrl}
-                alt={post.author.fullName || 'Author'}
-                width={40}
-                height={40}
-                className={styles.authorAvatar}
+                src={post.featuredImage}
+                alt={post.title}
+                width={1200}
+                height={600}
+                className={styles.image}
+                priority
               />
-            )}
-            <div className={styles.authorMeta}>
-              <span className={styles.authorName}>
-                By {post.author.fullName || 'Anonymous'}
-              </span>
-              <div className={styles.postMeta}>
-                <span className={styles.metaItem}>
-                  <Calendar size={14} />
-                  {format(new Date(post.publishedAt || post.createdAt), 'MMMM d, yyyy')}
-                </span>
-                <span className={styles.metaItem}>
-                  <Clock size={14} />
-                  {format(new Date(post.publishedAt || post.createdAt), 'HH:mm')}
-                </span>
-                <span className={styles.metaItem}>
-                  <BookOpen size={14} />
-                  {readingTime} min read
-                </span>
-                <span className={styles.metaItem}>
-                  <Eye size={14} />
-                  {post.viewCount} views
-                </span>
-              </div>
-            </div>
+            </motion.div>
+          )}
+
+          {/* Hero Section */}
+          <div className={styles.hero}>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={styles.title}
+            >
+              {post.title}
+            </motion.h1>
+
+            <PostMeta 
+              author={post.author}
+              publishedAt={post.publishedAt || post.createdAt}
+              readingTime={readingTime}
+              viewCount={post.viewCount}
+            />
+
+            <PostActions 
+              isAuthor={isAuthor}
+              currentUserRole={currentUserRole}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onBookmark={handleBookmark}
+              isBookmarked={isBookmarked}
+              likeCount={likeCount}
+              onLike={handleLike}
+              onShare={handleShare}
+            />
           </div>
 
-          <div className={styles.actions}>
-            {(isAuthor || currentUserRole === 'admin' || currentUserRole === 'superadmin') && (
-              <div className={styles.adminActions}>
-                <button onClick={handleEdit} className={clsx(styles.actionButton, styles.editButton)}>
-                  <Edit size={18} />
-                  Edit
-                </button>
-                <button onClick={handleDelete} className={clsx(styles.actionButton, styles.deleteButton)}>
-                  <Trash2 size={18} />
-                  Delete
-                </button>
-              </div>
+          {/* Content */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className={styles.content}
+          >
+            {post.excerpt && (
+              <p className={styles.excerpt}>{post.excerpt}</p>
             )}
-            {/* <div className={styles.userActions}>
-              <button 
-                onClick={handleLike}
-                className={clsx(styles.actionButton, likeCount > 0 && styles.liked)}
-              >
-                <ThumbsUp size={18} />
-                {likeCount > 0 && <span>{likeCount}</span>}
-              </button>
-              <button 
-                onClick={handleBookmark}
-                className={clsx(styles.actionButton, isBookmarked && styles.bookmarked)}
-              >
-                <Bookmark size={18} />
-              </button>
-              <button onClick={handleShare} className={styles.actionButton}>
-                <Share2 size={18} />
-              </button>
-            </div> */}
-          </div>
-        </motion.div>
-      </div>
 
-      {/* Content */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className={styles.content}
-      >
-        {post.excerpt && (
-          <p className={styles.excerpt}>{post.excerpt}</p>
-        )}
+            <div 
+              className={styles.body}
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          </motion.div>
 
-        <div 
-          className={styles.body}
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          {/* Tags and Categories */}
+          <PostTaxonomy 
+            categories={post.categories}
+            tags={post.tags}
+          />
+
+          {/* Comments Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.6,
+              delay: 0.5,
+              ease: "easeOut"
+            }}
+            className={styles.commentsWrapper}
+          >
+            <h3 className={styles.commentsTitle}>
+              <MessageCircle size={18} />
+              Comments
+            </h3>
+            <Comments postId={post.id} />
+          </motion.div>
+        </motion.article>
+
+        {/* Sidebar */}
+        <BlogSidebar 
+          author={post.author}
+          authorPosts={authorPosts}
+          trendingPosts={trendingPosts}
+          currentPostId={post.id}
         />
-      </motion.div>
-
-      {/* Tags and Categories */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className={styles.taxonomy}
-      >
-        {post.categories.length > 0 && (
-          <div className={styles.categories}>
-            <h3>Categories</h3>
-            <div className={styles.tagList}>
-              {post.categories.map(category => (
-                <Link
-                  key={category.id}
-                  href={`/blog/category/${category.slug}`}
-                  className={styles.categoryLink}
-                >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {post.tags.length > 0 && (
-          <div className={styles.tags}>
-            <h3>Tags</h3>
-            <div className={styles.tagList}>
-              {post.tags.map(tag => (
-                <Link
-                  key={tag.id}
-                  href={`/blog/tag/${tag.slug}`}
-                  className={styles.tagLink}
-                >
-                  <Tag size={14} />
-                  {tag.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-      </motion.div>
-
-    {/* Comments Section */}
-    <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ 
-          duration: 0.6,
-          delay: 0.5,
-          ease: "easeOut"
-        }}
-        className={styles.commentsWrapper}
-      >
-        <Comments postId={post.id} />
-      </motion.div>
-      
-    </article>
+      </div>
+    </div>
   );
 };
 

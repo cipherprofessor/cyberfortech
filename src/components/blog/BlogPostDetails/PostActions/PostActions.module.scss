@@ -1,0 +1,87 @@
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    
+    :global(.dark) & {
+      border-top-color: #334155;
+    }
+  }
+  
+  .adminActions {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .userActions {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .actionButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 0.375rem;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #64748b;
+    
+    &:hover {
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+    
+    :global(.dark) &:hover {
+      background-color: #1e293b;
+      color: #f8fafc;
+    }
+  }
+  
+  .actionLabel {
+    font-size: 0.875rem;
+    font-weight: 500;
+    
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+  
+  .actionCount {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .editButton {
+    &:hover {
+      color: #3b82f6;
+    }
+  }
+  
+  .deleteButton {
+    &:hover {
+      color: #ef4444;
+    }
+  }
+  
+  .liked {
+    color: #3b82f6;
+    
+    svg {
+      fill: #3b82f6;
+    }
+  }
+  
+  .bookmarked {
+    color: #f59e0b;
+    
+    svg {
+      fill: #f59e0b;
+    }
+  }

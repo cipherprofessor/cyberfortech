@@ -1,0 +1,70 @@
+.metadata {
+    margin-bottom: 1.5rem;
+  }
+  
+  .authorInfo {
+    display: flex;
+  }
+  
+  .authorLink {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+  
+  .authorAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.75rem;
+  }
+  
+  .avatarPlaceholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #6366f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 0.75rem;
+  }
+  
+  .authorMeta {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .authorName {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .postMeta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+  
+  .metaItem {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  @media (max-width: 640px) {
+    .postMeta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }

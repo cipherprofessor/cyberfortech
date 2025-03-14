@@ -1,0 +1,30 @@
+.sidebar {
+    --text-color: #1e293b;
+    --text-secondary: #64748b;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --heading-color: #0f172a;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: fit-content;
+    
+    &.dark {
+      --text-color: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --heading-color: #f1f5f9;
+    }
+  }
+  
+  @media (max-width: 1023px) {
+    .sidebar {
+      margin-top: 1.5rem;
+    }
+  }

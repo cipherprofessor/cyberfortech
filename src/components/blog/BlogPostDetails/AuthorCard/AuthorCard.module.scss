@@ -1,0 +1,132 @@
+.authorCard {
+    --text-color: #1e293b;
+    --text-secondary: #64748b;
+    --bg-color: #ffffff;
+    --border-color: #e2e8f0;
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --heading-color: #0f172a;
+    
+    background-color: var(--bg-color);
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    
+    &.dark {
+      --text-color: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --bg-color: #1e293b;
+      --border-color: #334155;
+      --heading-color: #f1f5f9;
+    }
+  }
+  
+  .authorHeader {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--heading-color);
+    margin: 0;
+  }
+  
+  .authorProfile {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .avatarWrapper {
+    margin-bottom: 1rem;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--bg-color);
+    box-shadow: 0 0 0 3px var(--primary-color);
+  }
+  
+  .avatarPlaceholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  
+  .authorInfo {
+    width: 100%;
+  }
+  
+  .authorName {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--heading-color);
+    margin: 0 0 0.5rem;
+  }
+  
+  .authorStats {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .authorBio {
+    color: var(--text-color);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .socialLinks {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  
+  .socialLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+  }
+  
+  .viewProfileButton {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    
+    &:hover {
+      background-color: var(--primary-hover);
+    }
+  }
