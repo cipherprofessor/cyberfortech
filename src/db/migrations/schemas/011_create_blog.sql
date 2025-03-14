@@ -84,22 +84,6 @@ CREATE TABLE IF NOT EXISTS blog_comments (
 );
 
 
--- Create newsletter subscribers table
-CREATE TABLE IF NOT EXISTS newsletter_subscribers (
-  id TEXT PRIMARY KEY,
-  email TEXT UNIQUE NOT NULL,
-  name TEXT,
-  is_active BOOLEAN DEFAULT TRUE,
-  subscribed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  unsubscribed_at DATETIME,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-
-
-
-
 -- Create indexes
 CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_status ON blog_posts(status);
@@ -107,7 +91,7 @@ CREATE INDEX IF NOT EXISTS idx_blog_posts_author ON blog_posts(author_id);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_published ON blog_posts(published_at);
 CREATE INDEX IF NOT EXISTS idx_blog_categories_slug ON blog_categories(slug);
 CREATE INDEX IF NOT EXISTS idx_blog_tags_slug ON blog_tags(slug);
-CREATE INDEX IF NOT EXISTS idx_newsletter_email ON newsletter_subscribers(email);
+
 
 -- Create triggers for updated_at timestamps
 CREATE TRIGGER IF NOT EXISTS trig_blog_posts_updated_at 
@@ -124,16 +108,4 @@ FOR EACH ROW
 WHEN (NEW.updated_at <= OLD.updated_at OR NEW.updated_at IS NULL)
 BEGIN
     UPDATE blog_categories SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
-END;
-
-
-
-
--- Create trigger for updated_at
-CREATE TRIGGER IF NOT EXISTS trig_newsletter_subscribers_updated_at 
-AFTER UPDATE ON newsletter_subscribers 
-FOR EACH ROW 
-WHEN (NEW.updated_at <= OLD.updated_at OR NEW.updated_at IS NULL)
-BEGIN
-  UPDATE newsletter_subscribers SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
 END;

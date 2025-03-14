@@ -624,6 +624,7 @@ Created by Mohsin
 
 Installation and Setup
 The documentation details how to add the MohsinToaster to your project and integrate it into your layout file.
+
 Basic Usage Examples
 tsxCopyimport { showToast } from "@/components/ui/mohsin-toast";
 
@@ -719,3 +720,51 @@ Migration Guide
 There's a section dedicated to migrating from existing toast systems, including how to maintain backward compatibility with your current code.
 
 These examples and documentation should help you seamlessly integrate MohsinToaster throughout your application. Feel free to refer to the full documentation file for more detailed information and implementation examples.
+
+
+
+Here's a quick guide to using the toast system in any file:
+
+1. Basic Usage - Simple Toast
+
+import { showToast } from "@/components/ui/mohsin-toast";
+
+// Basic toast with title, message, and variant
+showToast("Title", "Your message here", "success");
+
+2. Advanced Usage - Toast with Options
+
+import { toast } from "@/components/ui/mohsin-toast";
+
+// Using the toast function with more options
+toast({
+  title: "Hello",
+  description: "Detailed message here",
+  variant: "success", // "success" | "error" | "warning" | "info" | "discovery" | "notification" | "update"
+  duration: 5000, // milliseconds
+  style: "glass", // "solid" | "outline" | "glass"
+  size: "md" // "sm" | "md" | "lg"
+});
+
+
+3. Shorthand Methods
+
+import { toast } from "@/components/ui/mohsin-toast";
+
+// Success toast
+toast.success({
+  title: "Success!",
+  description: "Operation completed"
+});
+
+// Error toast
+toast.error({
+  title: "Error!",
+  description: "Something went wrong"
+});
+
+// Warning toast
+toast.warning({
+  title: "Warning",
+  description: "Please check your input"
+});

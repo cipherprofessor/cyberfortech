@@ -22,7 +22,9 @@ const SCHEMA_FILES = [
   '008_create_forum_analytics.sql',
   '009_create_contacts.sql',
   '010_create_triggers_utils.sql',
-  '011_create_blog.sql'
+  '011_create_blog.sql',
+  '012_likes_bookmarks_schema.sql',
+  '013_newsletter_subscribers_schema.sql'
 ];
 
 function cleanSQLStatement(sql: string): string {

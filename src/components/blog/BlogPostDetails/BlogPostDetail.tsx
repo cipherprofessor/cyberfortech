@@ -27,12 +27,11 @@ import { BlogPost } from '@/types/blog';
 
 import { toast } from 'sonner';
 import Comments from '@/app/api/blog/comments/Comments';
+import BlogActions from './BlogActions/BlogActions';
 import BlogSidebar from './BlogSideBar/BlogSidebar';
-import PostActions from './PostActions/PostActions';
 import PostMeta from './PostMeta/PostMeta';
 import PostTaxonomy from './PostTaxonomy/PostTaxonomy';
 
-// Import components
 
 
 interface BlogPostDetailProps {
@@ -49,8 +48,6 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
   const router = useRouter();
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
   const [readingTime] = useState(
     Math.ceil(post.content.split(' ').length / 200)
   );
@@ -99,57 +96,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
     );
   }
 
-  const handleEdit = () => {
-    router.push(`/blog/${post.slug}/edit`);
-  };
-
-  const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this post?')) {
-      try {
-        const response = await fetch(`/api/blog/${post.slug}`, {
-          method: 'DELETE',
-        });
-
-        if (response.ok) {
-          router.push('/blog');
-          router.refresh();
-        } else {
-          throw new Error('Failed to delete post');
-        }
-      } catch (error) {
-        console.error('Error deleting post:', error);
-        toast.error('Failed to delete post');
-      }
-    }
-  };
-
-  const handleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
-    toast.success(isBookmarked ? 'Removed from bookmarks' : 'Added to bookmarks');
-  };
-
-  const handleLike = () => {
-    setLikeCount(prev => prev + 1);
-    toast.success('Thanks for liking this post!');
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: post.title,
-          text: post.excerpt,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.error('Error sharing:', err);
-      }
-    } else {
-      // Fallback for browsers that don't support navigator.share
-      navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard!');
-    }
-  };
+  // Post viewing logic only - actions handled by BlogActions component
 
   return (
     <div className={clsx(styles.pageContainer, theme === 'dark' && styles.dark)}>
@@ -195,16 +142,13 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
               viewCount={post.viewCount}
             />
 
-            <PostActions 
+            <BlogActions
+              postId={post.id}
+              postSlug={post.slug}
+              postTitle={post.title}
               isAuthor={isAuthor}
-              currentUserRole={currentUserRole}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onBookmark={handleBookmark}
-              isBookmarked={isBookmarked}
-              likeCount={likeCount}
-              onLike={handleLike}
-              onShare={handleShare}
+              currentUserRole={currentUserRole} 
+              currentUserId={post.author.id} // or use actual current user ID from auth context
             />
           </div>
 
