@@ -1,14 +1,13 @@
-"use client";
+// src/components/blog/BlogPostDetails/BlogPostDetail.tsx
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { 
-  MessageCircle,
-  
+  MessageCircle
 } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import clsx from 'clsx';
@@ -17,15 +16,18 @@ import { BlogPost } from '@/types/blog';
 
 import { toast } from 'sonner';
 import Comments from '@/app/api/blog/comments/Comments';
-import BlogSidebar from './BlogSideBar/BlogSidebar';
-import PostContentSkeleton from './PostContentSkeleton';
-import PostMeta from './PostMeta/PostMeta';
-import PostTaxonomy from './PostTaxonomy/PostTaxonomy';
-import BlogActions from './BlogActions/BlogActions';
-import BlogPostDetailSkeleton from './BlogPostDetailSkeleton';
 
 // Import components
+import BlogPostDetailSkeleton from './BlogPostDetailSkeleton';
 
+
+// Import Redux hooks and action
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { resetBlogState } from '@/store/slices/blogSlice';
+import BlogActions from './BlogActions/BlogActions';
+import BlogSidebar from './BlogSideBar/BlogSidebar';
+import PostMeta from './PostMeta/PostMeta';
+import PostTaxonomy from './PostTaxonomy/PostTaxonomy';
 
 interface BlogPostDetailProps {
   post: BlogPost;
@@ -40,58 +42,25 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
 }) => {
   const router = useRouter();
   const { theme } = useTheme();
+  const dispatch = useAppDispatch();
   const [mounted, setMounted] = useState(false);
   const [readingTime] = useState(
     Math.ceil(post.content.split(' ').length / 200)
   );
-  const [loading, setLoading] = useState(true);
-  const [authorPosts, setAuthorPosts] = useState<BlogPost[]>([]);
-  const [trendingPosts, setTrendingPosts] = useState<BlogPost[]>([]);
 
+  // Reset blog state when component unmounts
   useEffect(() => {
     setMounted(true);
     
-    // Fetch author's other posts
-    const fetchAuthorPosts = async () => {
-      try {
-        const response = await fetch(`/api/blog/author/${post.author.id}/posts?limit=3&exclude=${post.id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setAuthorPosts(data.posts);
-        }
-      } catch (error) {
-        console.error('Error fetching author posts:', error);
-      }
+    return () => {
+      dispatch(resetBlogState());
     };
-
-    // Fetch trending posts
-    const fetchTrendingPosts = async () => {
-      try {
-        const response = await fetch(`/api/blog/trending?limit=5&exclude=${post.id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setTrendingPosts(data.posts);
-        }
-      } catch (error) {
-        console.error('Error fetching trending posts:', error);
-      }
-    };
-
-    const fetchData = async () => {
-      setLoading(true);
-      await Promise.all([fetchAuthorPosts(), fetchTrendingPosts()]);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [post.id, post.author.id]);
+  }, [dispatch]);
 
   // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
     return <BlogPostDetailSkeleton />;
   }
-
-  // Post viewing logic only - actions handled by BlogActions component
 
   return (
     <div className={clsx(styles.pageContainer, theme === 'dark' && styles.dark)}>
@@ -102,110 +71,103 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
           animate={{ opacity: 1 }}
           className={styles.mainContent}
         >
-          {loading ? (
-            <PostContentSkeleton />
-          ) : (
-            <>
-              {/* Featured Image */}
-              {post.featuredImage && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={styles.featuredImage}
-                >
-                  <Image
-                    src={post.featuredImage}
-                    alt={post.title}
-                    width={1200}
-                    height={600}
-                    className={styles.image}
-                    priority
-                  />
-                </motion.div>
-              )}
-
-              {/* Hero Section */}
-              <div className={styles.hero}>
-                <motion.h1 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={styles.title}
-                >
-                  {post.title}
-                </motion.h1>
-
-                <PostMeta 
-                  author={post.author}
-                  publishedAt={post.publishedAt || post.createdAt}
-                  readingTime={readingTime}
-                  viewCount={post.viewCount}
-                />
-
-                <BlogActions
-                  postId={post.id}
-                  postSlug={post.slug}
-                  postTitle={post.title}
-                  isAuthor={isAuthor}
-                  currentUserRole={currentUserRole} 
-                  currentUserId={post.author.id} // or use actual current user ID from auth context
-                />
-              </div>
-
-              {/* Content */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className={styles.content}
-              >
-                {post.excerpt && (
-                  <p className={styles.excerpt}>{post.excerpt}</p>
-                )}
-
-                <div 
-                  className={styles.body}
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
-              </motion.div>
-
-              {/* Tags and Categories */}
-              <PostTaxonomy 
-                categories={post.categories}
-                tags={post.tags}
+          {/* Featured Image */}
+          {post.featuredImage && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={styles.featuredImage}
+            >
+              <Image
+                src={post.featuredImage}
+                alt={post.title}
+                width={1200}
+                height={600}
+                className={styles.image}
+                priority
               />
-
-              {/* Comments Section */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 0.6,
-                  delay: 0.5,
-                  ease: "easeOut"
-                }}
-                className={styles.commentsWrapper}
-              >
-                <h3 className={styles.commentsTitle}>
-                  <MessageCircle size={18} />
-                  Comments
-                </h3>
-                <Comments postId={post.id} />
-              </motion.div>
-            </>
+            </motion.div>
           )}
-        </motion.article>
 
-        {/* Sidebar */}
-        <BlogSidebar 
-          author={post.author}
-          authorPosts={authorPosts}
-          trendingPosts={trendingPosts}
-          currentPostId={post.id}
-          loading={loading}
-        />
-      </div>
-    </div>
-  );
+          {/* Hero Section */}
+          <div className={styles.hero}>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={styles.title}
+            >
+              {post.title}
+            </motion.h1>
+
+            <PostMeta 
+              author={post.author}
+              publishedAt={post.publishedAt || post.createdAt}
+              readingTime={readingTime}
+              viewCount={post.viewCount}
+            />
+
+            <BlogActions
+              postId={post.id}
+              postSlug={post.slug}
+              postTitle={post.title}
+              isAuthor={isAuthor}
+              currentUserRole={currentUserRole} 
+              currentUserId={post.author.id} // or use actual current user ID from auth context
+            />
+          </div>
+
+          {/* Content */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className={styles.content}
+          >
+            {post.excerpt && (
+              <p className={styles.excerpt}>{post.excerpt}</p>
+            )}
+
+            <div 
+              className={styles.body}
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          </motion.div>
+
+          {/* Tags and Categories */}
+          <PostTaxonomy 
+            categories={post.categories}
+            tags={post.tags}
+          />
+
+
+
+{/* Comments Section */}
+<motion.div 
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ 
+    duration: 0.6,
+    delay: 0.5,
+    ease: "easeOut"
+  }}
+  className={styles.commentsWrapper}
+>
+  <h3 className={styles.commentsTitle}>
+    <MessageCircle size={18} />
+    Comments
+  </h3>
+  <Comments postId={post.id} />
+</motion.div>
+</motion.article>
+
+{/* Sidebar */}
+<BlogSidebar 
+author={post.author}
+currentPostId={post.id}
+/>
+</div>
+</div>
+);
 };
 
 export default BlogPostDetail;

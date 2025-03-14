@@ -1,9 +1,9 @@
 // src/types/blog.ts
 
 /**
- * Author interface representing a user who can create blog posts
+ * BlogAuthor interface representing a user who can create blog posts
  */
-export interface Author {
+export interface BlogAuthor {
   id: string;
   firstName: string;
   lastName: string;
@@ -13,9 +13,9 @@ export interface Author {
 }
 
 /**
- * Category parent for hierarchical category structure
+ * BlogCategoryParent for hierarchical category structure
  */
-export interface CategoryParent {
+export interface BlogCategoryParent {
   id: string;
   name: string;
   slug: string;
@@ -31,7 +31,7 @@ export interface BlogCategory {
   description?: string;
   displayOrder: number;
   postCount?: number;
-  parent?: CategoryParent;
+  parent?: BlogCategoryParent;
   parentId?: string;
   imageUrl?: string; // New field for category icon
 }
@@ -66,7 +66,7 @@ export interface BlogPost {
   updatedAt: Date;
   categories: BlogCategory[];
   tags: BlogTag[] ;
-  author: Author;
+  author: BlogAuthor;
   comments?: BlogComment[];
 }
 
@@ -101,7 +101,7 @@ export interface BlogComment {
   isApproved: boolean;
   createdAt: Date;
   updatedAt: Date;
-  user: Author;
+  user: BlogAuthor;
 }
 
 /**
@@ -165,7 +165,7 @@ export interface BlogApiResponse<T> {
 /**
  * Input types for creating and updating categories
  */
-export interface CreateCategoryInput {
+export interface BlogCreateCategoryInput {
   name: string;
   slug?: string;
   description?: string;
@@ -173,6 +173,43 @@ export interface CreateCategoryInput {
   displayOrder?: number;
 }
 
-export interface UpdateCategoryInput extends Partial<CreateCategoryInput> {
+export interface BlogUpdateCategoryInput extends Partial<BlogCreateCategoryInput> {
   id: string;
+}
+
+// Additional types for Redux integration
+
+/**
+ * Blog interaction status
+ */
+export interface BlogInteractionStatus {
+  isLiked: boolean;
+  isBookmarked: boolean;
+  likeCount: number;
+}
+
+/**
+ * Blog loading state
+ */
+export interface BlogLoadingState {
+  post: boolean;
+  authorPosts: boolean;
+  trendingPosts: boolean;
+  interactions: boolean;
+  likeAction: boolean;
+  bookmarkAction: boolean;
+}
+
+/**
+ * Blog state for Redux
+ */
+export interface BlogState {
+  currentPost: BlogPost | null;
+  authorPosts: BlogPost[];
+  trendingPosts: BlogPost[];
+  likeCount: number;
+  isLiked: boolean;
+  isBookmarked: boolean;
+  loading: BlogLoadingState;
+  error: string | null;
 }

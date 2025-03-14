@@ -3,7 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/common/Navbar/Navbar";
 import { Footer } from "@/components/common/Footer/Footer";
-import { Providers } from "./providers";
+import { ThemeProviders } from "./providers";
 import "./globals.css"; // Make sure to create this file for global styles
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
@@ -12,8 +12,10 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { ourFileRouter } from "./api/uploadthing/core";
 
 import Script from "next/script";
-import { ToastProvider } from "@/components/ui/toast";
+
 import { MohsinToaster } from "@/components/ui/mohsin-toast";
+import { ReduxStoreProviders } from "@/store/provider";
+import StatusIndicator from "@/components/ui/StatusIndicator/StatusIndicator";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -50,7 +52,9 @@ export default function RootLayout({
          
 
         
-          <Providers>
+          <ThemeProviders>
+            <ReduxStoreProviders>
+            <StatusIndicator />
             <Navbar />
             <main className="mt-16 light text-foreground bg-background">{children}
             <SpeedInsights/>
@@ -64,7 +68,8 @@ export default function RootLayout({
         />
             </main>
             {/* <Footer /> */}
-          </Providers>
+            </ReduxStoreProviders>
+          </ThemeProviders>
           <NextSSRPlugin
           
           //  * The `extractRouterConfig` will extract **only** the route configs
