@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Edit, Trash2, ThumbsUp, Bookmark, Share2, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import clsx from 'clsx';
-import styles from './BlogActions.module.scss';
+
 import { showToast, toast } from '@/components/ui/mohsin-toast';
+import styles from './BlogActions.module.scss';
+import { MohsinBookmarkButton, MohsinCancelButton, MohsinDeleteButton, MohsinEditButton, MohsinLikeButton, MohsinShareButton } from '@/components/ui/Mohsin_Buttons';
 
 interface BlogActionsProps {
   postId: string;
@@ -248,67 +250,47 @@ const BlogActions: React.FC<BlogActionsProps> = ({
         <div className={styles.actionGroup}>
           {showAdminActions && (
             <>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <MohsinEditButton
+                size="sm"
+                variant="outline"
                 onClick={handleEdit}
-                className={clsx(styles.actionButton, styles.editButton)}
                 disabled={isProcessing}
-              >
-                <Edit size={18} />
-                <span className={styles.actionLabel}>Edit</span>
-              </motion.button>
+              />
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <MohsinDeleteButton 
+                size="sm"
+                variant="outline"
                 onClick={handleDeleteClick}
-                className={clsx(styles.actionButton, styles.deleteButton)}
                 disabled={isProcessing}
-              >
-                <Trash2 size={18} />
-                <span className={styles.actionLabel}>Delete</span>
-              </motion.button>
+              />
             </>
           )}
         </div>
         
         <div className={styles.actionGroup}>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <MohsinLikeButton 
+            size="sm"
+            count={likeCount} 
+            isLiked={isLiked}
             onClick={handleLike}
-            className={clsx(styles.actionButton, isLiked && styles.liked)}
             disabled={isProcessing}
-            aria-label={isLiked ? "Unlike post" : "Like post"}
-          >
-            <ThumbsUp size={18} />
-            {likeCount > 0 && (
-              <span className={styles.actionCount}>{likeCount}</span>
-            )}
-          </motion.button>
+          />
           
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <MohsinBookmarkButton 
+            size="sm"
+            isBookmarked={isBookmarked}
             onClick={handleBookmark}
-            className={clsx(styles.actionButton, isBookmarked && styles.bookmarked)}
             disabled={isProcessing}
-            aria-label={isBookmarked ? "Remove bookmark" : "Bookmark post"}
           >
-            <Bookmark size={18} />
-          </motion.button>
+            {isBookmarked ? 'Saved' : 'Save'}
+          </MohsinBookmarkButton>
           
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <MohsinShareButton 
+            size="sm"
+            variant="outline"
             onClick={handleShare}
-            className={styles.actionButton}
             disabled={isProcessing}
-            aria-label="Share post"
-          >
-            <Share2 size={18} />
-          </motion.button>
+          />
         </div>
       </div>
 
@@ -369,24 +351,16 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
             This action cannot be undone.
           </p>
           <div className={styles.dialogActions}>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <MohsinCancelButton 
               onClick={onCancel}
-              className={styles.cancelButton}
               disabled={isProcessing}
-            >
-              Cancel
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            />
+            <MohsinDeleteButton 
+              variant="filled"
               onClick={onConfirm}
-              className={styles.confirmDeleteButton}
-              disabled={isProcessing}
-            >
-              {isProcessing ? 'Deleting...' : 'Delete Post'}
-            </motion.button>
+              isLoading={isProcessing}
+              loadingText="Deleting..."
+            />
           </div>
         </div>
       </motion.div>
