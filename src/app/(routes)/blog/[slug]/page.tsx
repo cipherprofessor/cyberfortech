@@ -1,10 +1,11 @@
-// src/app/(routes)/blog/[slug]/page.tsx
 import React, { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { getPostBySlug } from '@/services/blog-service';
 import BlogPostDetail from '@/components/blog/BlogPostDetails/BlogPostDetail';
+
 import { getCurrentUser } from '@/lib/clerk';
+import BlogPostDetailSkeleton from '@/components/blog/BlogPostDetails/BlogPostDetailSkeleton';
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -37,6 +38,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
+// Loading component that uses our skeleton
+function BlogPostLoading() {
+  return <BlogPostDetailSkeleton />;
+}
+
 // The main page component
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const [post, currentUser] = await Promise.all([
@@ -52,7 +58,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const userRole = currentUser?.role;
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<BlogPostLoading />}>
       <BlogPostDetail 
         post={post} 
         currentUserRole={userRole} 

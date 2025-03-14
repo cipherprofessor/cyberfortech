@@ -4,18 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { 
-  Calendar, 
-  Clock, 
-  Eye, 
-  User, 
-  Tag,
-  BookOpen,
-  Share2,
   MessageCircle,
-  ThumbsUp,
-  Bookmark,
-  Edit,
-  Trash2
+  
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -27,11 +17,14 @@ import { BlogPost } from '@/types/blog';
 
 import { toast } from 'sonner';
 import Comments from '@/app/api/blog/comments/Comments';
-import BlogActions from './BlogActions/BlogActions';
 import BlogSidebar from './BlogSideBar/BlogSidebar';
+import PostContentSkeleton from './PostContentSkeleton';
 import PostMeta from './PostMeta/PostMeta';
 import PostTaxonomy from './PostTaxonomy/PostTaxonomy';
+import BlogActions from './BlogActions/BlogActions';
+import BlogPostDetailSkeleton from './BlogPostDetailSkeleton';
 
+// Import components
 
 
 interface BlogPostDetailProps {
@@ -51,6 +44,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
   const [readingTime] = useState(
     Math.ceil(post.content.split(' ').length / 200)
   );
+  const [loading, setLoading] = useState(true);
   const [authorPosts, setAuthorPosts] = useState<BlogPost[]>([]);
   const [trendingPosts, setTrendingPosts] = useState<BlogPost[]>([]);
 
@@ -83,17 +77,18 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
       }
     };
 
-    fetchAuthorPosts();
-    fetchTrendingPosts();
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchAuthorPosts(), fetchTrendingPosts()]);
+      setLoading(false);
+    };
+
+    fetchData();
   }, [post.id, post.author.id]);
 
   // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.loading}>Loading...</div>
-      </div>
-    );
+    return <BlogPostDetailSkeleton />;
   }
 
   // Post viewing logic only - actions handled by BlogActions component
@@ -107,91 +102,97 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
           animate={{ opacity: 1 }}
           className={styles.mainContent}
         >
-          {/* Featured Image */}
-          {post.featuredImage && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={styles.featuredImage}
-            >
-              <Image
-                src={post.featuredImage}
-                alt={post.title}
-                width={1200}
-                height={600}
-                className={styles.image}
-                priority
+          {loading ? (
+            <PostContentSkeleton />
+          ) : (
+            <>
+              {/* Featured Image */}
+              {post.featuredImage && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={styles.featuredImage}
+                >
+                  <Image
+                    src={post.featuredImage}
+                    alt={post.title}
+                    width={1200}
+                    height={600}
+                    className={styles.image}
+                    priority
+                  />
+                </motion.div>
+              )}
+
+              {/* Hero Section */}
+              <div className={styles.hero}>
+                <motion.h1 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={styles.title}
+                >
+                  {post.title}
+                </motion.h1>
+
+                <PostMeta 
+                  author={post.author}
+                  publishedAt={post.publishedAt || post.createdAt}
+                  readingTime={readingTime}
+                  viewCount={post.viewCount}
+                />
+
+                <BlogActions
+                  postId={post.id}
+                  postSlug={post.slug}
+                  postTitle={post.title}
+                  isAuthor={isAuthor}
+                  currentUserRole={currentUserRole} 
+                  currentUserId={post.author.id} // or use actual current user ID from auth context
+                />
+              </div>
+
+              {/* Content */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className={styles.content}
+              >
+                {post.excerpt && (
+                  <p className={styles.excerpt}>{post.excerpt}</p>
+                )}
+
+                <div 
+                  className={styles.body}
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
+              </motion.div>
+
+              {/* Tags and Categories */}
+              <PostTaxonomy 
+                categories={post.categories}
+                tags={post.tags}
               />
-            </motion.div>
+
+              {/* Comments Section */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.6,
+                  delay: 0.5,
+                  ease: "easeOut"
+                }}
+                className={styles.commentsWrapper}
+              >
+                <h3 className={styles.commentsTitle}>
+                  <MessageCircle size={18} />
+                  Comments
+                </h3>
+                <Comments postId={post.id} />
+              </motion.div>
+            </>
           )}
-
-          {/* Hero Section */}
-          <div className={styles.hero}>
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={styles.title}
-            >
-              {post.title}
-            </motion.h1>
-
-            <PostMeta 
-              author={post.author}
-              publishedAt={post.publishedAt || post.createdAt}
-              readingTime={readingTime}
-              viewCount={post.viewCount}
-            />
-
-            <BlogActions
-              postId={post.id}
-              postSlug={post.slug}
-              postTitle={post.title}
-              isAuthor={isAuthor}
-              currentUserRole={currentUserRole} 
-              currentUserId={post.author.id} // or use actual current user ID from auth context
-            />
-          </div>
-
-          {/* Content */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className={styles.content}
-          >
-            {post.excerpt && (
-              <p className={styles.excerpt}>{post.excerpt}</p>
-            )}
-
-            <div 
-              className={styles.body}
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
-          </motion.div>
-
-          {/* Tags and Categories */}
-          <PostTaxonomy 
-            categories={post.categories}
-            tags={post.tags}
-          />
-
-          {/* Comments Section */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 0.5,
-              ease: "easeOut"
-            }}
-            className={styles.commentsWrapper}
-          >
-            <h3 className={styles.commentsTitle}>
-              <MessageCircle size={18} />
-              Comments
-            </h3>
-            <Comments postId={post.id} />
-          </motion.div>
         </motion.article>
 
         {/* Sidebar */}
@@ -200,6 +201,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
           authorPosts={authorPosts}
           trendingPosts={trendingPosts}
           currentPostId={post.id}
+          loading={loading}
         />
       </div>
     </div>
