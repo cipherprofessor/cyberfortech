@@ -38,47 +38,15 @@ const BlogActions: React.FC<BlogActionsProps> = ({
   const isAdmin = currentUserRole === 'admin' || currentUserRole === 'superadmin';
   const showAdminActions = isAuthor || isAdmin;
   const { isAuthenticated, user } = useAuth();
-  // const currentUserId = user?.id; // Get current user ID from auth
-
-  // Add this to your BlogActions component
-
-// Fetch initial like status and count
-useEffect(() => {
-  const fetchInitialData = async () => {
-    if (!postId) return;
-    
-    try {
-      // Get like count regardless of authentication
-      const countResponse = await fetch(`/api/blog/posts/${postId}/likes/count`);
-      if (countResponse.ok) {
-        const countData = await countResponse.json();
-        setLikeCount(countData.count);
-      }
-      
-      // Get like status only if authenticated
-      if (isAuthenticated && currentUserId) {
-        const statusResponse = await fetch(`/api/blog/posts/${postId}/likes/status?userId=${currentUserId}`);
-        if (statusResponse.ok) {
-          const statusData = await statusResponse.json();
-          setIsLiked(statusData.isLiked);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching like data:', error);
-    }
-  };
-  
-  fetchInitialData();
-}, [postId, isAuthenticated, currentUserId]);
-
+  const authenticatedUserId = user?.id; // Get current user ID from auth
 
   // Load initial like status
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchLikeStatus = async () => {
-      if (!currentUserId) return;
+      if (!authenticatedUserId) return;
       
       try {
-        const response = await fetch(`/api/blog/posts/${postId}/likes/status?userId=${currentUserId}`);
+        const response = await fetch(`/api/blog/posts/${postId}/likes/status?userId=${authenticatedUserId}`);
         if (response.ok) {
           const data = await response.json();
           setIsLiked(data.isLiked);
@@ -101,10 +69,10 @@ useEffect(() => {
     };
 
     const fetchBookmarkStatus = async () => {
-      if (!currentUserId) return;
+      if (!authenticatedUserId) return;
       
       try {
-        const response = await fetch(`/api/blog/posts/${postId}/bookmarks/status?userId=${currentUserId}`);
+        const response = await fetch(`/api/blog/posts/${postId}/bookmarks/status?userId=${authenticatedUserId}`);
         if (response.ok) {
           const data = await response.json();
           setIsBookmarked(data.isBookmarked);
@@ -117,7 +85,7 @@ useEffect(() => {
     fetchLikeStatus();
     fetchLikeCount();
     fetchBookmarkStatus();
-  }, [postId, currentUserId]);
+  }, [postId, authenticatedUserId]);
 
   const handleEdit = () => {
     router.push(`/blog/${postSlug}/edit`);
@@ -180,17 +148,18 @@ useEffect(() => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: currentUserId }),
+        body: JSON.stringify({ userId: authenticatedUserId }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        const newIsLiked = !isLiked;
-        setIsLiked(newIsLiked);
-        // Use the server-provided like count
+        
+        // Always use the server's values instead of calculating locally
+        setIsLiked(data.isLiked);
         setLikeCount(data.likeCount);
         
-        if (newIsLiked) {
+        // Show toast only if appropriate
+        if (data.isLiked && !isLiked) {
           toast.success({
             title: "Liked",
             description: "You've liked this post"
@@ -212,7 +181,7 @@ useEffect(() => {
   };
 
   const handleBookmark = async () => {
-    if (!currentUserId) {
+    if (!isAuthenticated) {
       toast.warning({
         title: "Authentication Required",
         description: "Please sign in to bookmark posts"
@@ -229,16 +198,26 @@ useEffect(() => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: currentUserId }),
+        body: JSON.stringify({ userId: authenticatedUserId }),
       });
 
       if (response.ok) {
-        setIsBookmarked(!isBookmarked);
+        const data = await response.json();
         
-        if (!isBookmarked) {
-          showToast("Bookmarked", "Post added to your bookmarks", "success");
+        // Use server's values
+        setIsBookmarked(data.isBookmarked);
+        
+        // Show toast based on server response
+        if (data.isBookmarked) {
+          toast.success({
+            title: "Bookmarked",
+            description: "Post added to your bookmarks"
+          });
         } else {
-          showToast("Removed", "Post removed from your bookmarks", "info");
+          toast.info({
+            title: "Removed",
+            description: "Post removed from your bookmarks"
+          });
         }
       } else {
         const data = await response.json();

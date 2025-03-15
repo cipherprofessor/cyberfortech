@@ -1,3 +1,5 @@
+// src/app/api/blog/posts/[id]/likes/route.ts
+
 import { createClient } from '@libsql/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,15 +9,14 @@ const client = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN!,
 });
 
-// src/app/api/blog/posts/[id]/likes/route.ts
-
 // Add a like to a post
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
     const { userId } = await request.json();
 
     if (!userId) {
@@ -32,61 +33,46 @@ export async function POST(
     });
 
     if (existingLike.rows.length > 0) {
-      // Get the current like count
-      const postData = await client.execute({
-        sql: 'SELECT like_count FROM blog_posts WHERE id = ?',
+      // Already liked - get current count and return
+      const likeCount = await client.execute({
+        sql: 'SELECT COUNT(*) as count FROM blog_post_likes WHERE post_id = ?',
         args: [id]
       });
       
       return NextResponse.json({
         success: true,
-        likeCount: Number(postData.rows[0].like_count || 0),
-        message: 'Post already liked'
+        likeCount: Number(likeCount.rows[0].count),
+        isLiked: true,
+        message: 'Already liked'
       });
     }
 
-    // Use a transaction to ensure data consistency
-    await client.execute({ sql: 'BEGIN TRANSACTION',  args: [] });
+    // Add the like - no transaction needed for this simple operation
+    const likeId = uuidv4();
+    await client.execute({
+      sql: `
+        INSERT INTO blog_post_likes (
+          id,
+          post_id,
+          user_id,
+          created_at
+        ) VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+      `,
+      args: [likeId, id, userId]
+    });
     
-    try {
-      // Add the like
-      const likeId = uuidv4();
-      await client.execute({
-        sql: `
-          INSERT INTO blog_post_likes (
-            id,
-            post_id,
-            user_id,
-            created_at
-          ) VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-        `,
-        args: [likeId, id, userId]
-      });
-      
-      // Increment the like_count in the blog_posts table
-      await client.execute({
-        sql: 'UPDATE blog_posts SET like_count = like_count + 1 WHERE id = ?',
-        args: [id]
-      });
-      
-      // Commit the transaction
-      await client.execute({ sql: 'COMMIT', args: [] });
-      
-      // Get the updated count
-      const postData = await client.execute({
-        sql: 'SELECT like_count FROM blog_posts WHERE id = ?',
-        args: [id]
-      });
-      
-      return NextResponse.json({
-        success: true,
-        likeCount: Number(postData.rows[0].like_count)
-      });
-    } catch (error) {
-      // Rollback on error
-      await client.execute({ sql: 'ROLLBACK', args: [] });
-      throw error;
-    }
+    // Get the updated like count
+    const likeCount = await client.execute({
+      sql: 'SELECT COUNT(*) as count FROM blog_post_likes WHERE post_id = ?',
+      args: [id]
+    });
+
+    return NextResponse.json({
+      success: true,
+      likeCount: Number(likeCount.rows[0].count),
+      isLiked: true
+    });
+
   } catch (error) {
     console.error('Error adding like:', error);
     return NextResponse.json(
@@ -99,10 +85,11 @@ export async function POST(
 // Remove a like from a post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
     const { userId } = await request.json();
 
     if (!userId) {
@@ -119,53 +106,38 @@ export async function DELETE(
     });
 
     if (existingLike.rows.length === 0) {
-      // Get the current like count
-      const postData = await client.execute({
-        sql: 'SELECT like_count FROM blog_posts WHERE id = ?',
+      // Not liked - get current count and return
+      const likeCount = await client.execute({
+        sql: 'SELECT COUNT(*) as count FROM blog_post_likes WHERE post_id = ?',
         args: [id]
       });
       
       return NextResponse.json({
         success: true,
-        likeCount: Number(postData.rows[0].like_count || 0),
-        message: 'Like not found'
+        likeCount: Number(likeCount.rows[0].count),
+        isLiked: false,
+        message: 'Not liked'
       });
     }
 
-    // Use a transaction
-    await client.execute({ sql: 'BEGIN TRANSACTION', args: [] });
+    // Remove the like - no transaction needed
+    await client.execute({
+      sql: 'DELETE FROM blog_post_likes WHERE post_id = ? AND user_id = ?',
+      args: [id, userId]
+    });
     
-    try {
-      // Remove the like
-      await client.execute({
-        sql: 'DELETE FROM blog_post_likes WHERE post_id = ? AND user_id = ?',
-        args: [id, userId]
-      });
-      
-      // Decrement the like_count in the blog_posts table
-      await client.execute({
-        sql: 'UPDATE blog_posts SET like_count = MAX(0, like_count - 1) WHERE id = ?',
-        args: [id]
-      });
-      
-      // Commit the transaction
-      await client.execute({ sql: 'COMMIT', args: [] });
-      
-      // Get the updated count
-      const postData = await client.execute({
-        sql: 'SELECT like_count FROM blog_posts WHERE id = ?',
-        args: [id]
-      });
-      
-      return NextResponse.json({
-        success: true,
-        likeCount: Number(postData.rows[0].like_count)
-      });
-    } catch (error) {
-      // Rollback on error
-      await client.execute({ sql: 'ROLLBACK', args: [] });
-      throw error;
-    }
+    // Get the updated like count
+    const likeCount = await client.execute({
+      sql: 'SELECT COUNT(*) as count FROM blog_post_likes WHERE post_id = ?',
+      args: [id]
+    });
+
+    return NextResponse.json({
+      success: true,
+      likeCount: Number(likeCount.rows[0].count),
+      isLiked: false
+    });
+
   } catch (error) {
     console.error('Error removing like:', error);
     return NextResponse.json(

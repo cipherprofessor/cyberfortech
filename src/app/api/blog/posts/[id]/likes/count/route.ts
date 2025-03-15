@@ -1,4 +1,5 @@
-//src/app/api/blog/posts/[id]/likes/count/route.ts
+// src/app/api/blog/posts/[id]/likes/count/route.ts
+
 import { createClient } from '@libsql/client';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,25 +9,28 @@ const client = createClient({
 });
 
 // Get the like count for a post
-// src/app/api/blog/posts/[id]/likes/count/route.ts
-
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> } // Note the Promise type here
+  { params }: { params: Promise<{ id: string }> } 
 ) {
   try {
-    const resolvedParams = await params; // Await the params
-    const { id } = resolvedParams; // Now destructure from resolved params
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
 
-    // Get the like count from the blog_posts table directly
+    // Get the like count by counting rows in the likes table
     const result = await client.execute({
-      sql: 'SELECT like_count FROM blog_posts WHERE id = ?',
+      sql: 'SELECT COUNT(*) as count FROM blog_post_likes WHERE post_id = ?',
       args: [id]
     });
 
+    // Add cache control headers to prevent stale data
+    const headers = new Headers();
+    headers.set('Cache-Control', 'no-store, max-age=0');
+
     return NextResponse.json({ 
-      count: Number(result.rows[0].like_count || 0) 
-    });
+      count: Number(result.rows[0].count) 
+    }, { headers });
+
   } catch (error) {
     console.error('Error getting like count:', error);
     return NextResponse.json(

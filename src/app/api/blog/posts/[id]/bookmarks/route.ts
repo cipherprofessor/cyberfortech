@@ -10,10 +10,11 @@ const client = createClient({
 // Add a bookmark
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } // Note the Promise type here
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
     const { userId } = await request.json();
 
     if (!userId) {

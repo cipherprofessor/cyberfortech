@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useTheme } from 'next-themes';
 
 import styles from './CourseManagement.module.scss';
-import Loading from '@/app/(routes)/blog/[slug]/loading';
+// import Loading from '@/app/(routes)/blog/[slug]/loading';
 
 import { SuccessAlert, ErrorAlert } from '@/components/ui/Mine/Alert/Alert';
 
@@ -18,6 +18,7 @@ import { Header } from './components/Header/Header';
 import { CourseCreatePage } from './CourseCreatePage/CourseCreatePage';
 import { Course } from '@/components/courses/types';
 import { CourseCard } from '@/components/courses/ResuableCourseCard/CourseCard';
+import LoadingSpinner from '@/components/ui/HeroUI/Spinner/Spinner';
 
 
 export function CourseManagement() {
@@ -177,7 +178,10 @@ const handleCourseSubmit = async (courseData: Partial<Course>): Promise<{ id: st
   };
 
   if (loading) {
-    return <Loading />;
+    return <>
+    <LoadingSpinner />
+    </>
+    
   }
 
   if (showCreatePage) {
