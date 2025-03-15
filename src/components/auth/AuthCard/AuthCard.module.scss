@@ -1,0 +1,77 @@
+.authCard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1000px;
+    min-height: 600px;
+    margin: 2rem auto;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    
+    @media (min-width: 768px) {
+      flex-direction: row;
+      height: auto;
+    }
+    
+    &.darkTheme {
+      background-color: #1e1e2d;
+      color: white;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  .formSide {
+    flex: 1;
+    padding: 2rem 1.5rem;
+    background-color: white;
+    
+    @media (min-width: 768px) {
+      padding: 3rem 2rem;
+      max-width: 500px;
+    }
+    
+    &.darkTheme {
+      background-color: #1e1e2d;
+      color: white;
+    }
+  }
+  
+  .brandContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .brandLogo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 0.75rem;
+    object-fit: contain;
+  }
+  
+  .brandName {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    
+    .darkTheme & {
+      color: white;
+    }
+  }
+  
+  // Responsive Styles for Mobile
+  @media (max-width: 767px) {
+    .authCard {
+      margin: 0;
+      border-radius: 0;
+      min-height: 100vh;
+      box-shadow: none;
+    }
+    
+    .formSide {
+      padding: 1.5rem 1rem;
+    }
+  }

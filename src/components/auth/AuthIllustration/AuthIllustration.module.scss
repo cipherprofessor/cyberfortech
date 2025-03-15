@@ -1,0 +1,54 @@
+.imageSide {
+    display: none;
+    position: relative;
+    flex: 1;
+    
+    @media (min-width: 768px) {
+      display: block;
+    }
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.85);
+    
+    .darkTheme & {
+      background-color: rgba(17, 24, 39, 0.85);
+    }
+  }
+  
+  .content {
+    position: relative;
+    z-index: 10;
+    padding: 3rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .tagline {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #6366f1;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    
+    .darkTheme & {
+      color: #818cf8;
+    }
+  }
+  
+  .description {
+    font-size: 1rem;
+    color: #111827;
+    max-width: 400px;
+    
+    .darkTheme & {
+      color: #f3f4f6;
+    }
+  }

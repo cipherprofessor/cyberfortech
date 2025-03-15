@@ -1,0 +1,484 @@
+/* Shared form styles to be imported by each form component */
+
+// Variables for light theme
+:root {
+  --auth-bg-primary: #ffffff;
+  --auth-bg-secondary: #f8fafc;
+  --auth-text-primary: #111827;
+  --auth-text-secondary: #4b5563;
+  --auth-text-muted: #9ca3af;
+  --auth-border: rgba(226, 232, 240, 0.8);
+  --auth-input-bg: #f9fafb;
+  --auth-accent: #6366f1;
+  --auth-accent-hover: #4f46e5;
+  --auth-error: #ef4444;
+  --auth-success: #22c55e;
+  --auth-shadow: rgba(0, 0, 0, 0.05);
+  --auth-overlay: rgba(255, 255, 255, 0.85);
+  --auth-google-bg: #ffffff;
+  --auth-google-border: #e5e7eb;
+  --auth-apple-bg: #000000;
+  --auth-apple-text: #ffffff;
+  --auth-divider: #e5e7eb;
+}
+
+// Exporting shared styles as classes
+.formContainer {
+  width: 100%;
+}
+
+.authTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--auth-text-primary);
+  margin-bottom: 0.5rem;
+  
+  .darkTheme & {
+    color: #f3f4f6;
+  }
+}
+
+.authSubtitle {
+  font-size: 0.875rem;
+  color: var(--auth-text-secondary);
+  margin-bottom: 2rem;
+  
+  .darkTheme & {
+    color: #d1d5db;
+  }
+}
+
+.form {
+  width: 100%;
+}
+
+.nameRow {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
+}
+
+.inputGroup {
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+.inputLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--auth-text-primary);
+  margin-bottom: 0.5rem;
+  
+  .darkTheme & {
+    color: #f3f4f6;
+  }
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  color: var(--auth-text-muted);
+  
+  .darkTheme & {
+    color: #9ca3af;
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid var(--auth-border);
+  border-radius: 0.75rem;
+  background-color: var(--auth-input-bg);
+  color: var(--auth-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  
+  &::placeholder {
+    color: var(--auth-text-muted);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--auth-accent);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  }
+  
+  .darkTheme & {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #f3f4f6;
+    
+    &::placeholder {
+      color: #9ca3af;
+    }
+    
+    &:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2);
+    }
+  }
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--auth-text-muted);
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+  
+  &:hover {
+    color: var(--auth-text-secondary);
+  }
+  
+  .darkTheme & {
+    color: #9ca3af;
+    
+    &:hover {
+      color: #d1d5db;
+    }
+  }
+}
+
+.errorMessage, .successMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.errorMessage {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--auth-error);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  
+  .darkTheme & {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+  }
+}
+
+.successMessage {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: var(--auth-success);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  
+  .darkTheme & {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+  }
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--auth-accent);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  gap: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: var(--auth-accent-hover);
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .darkTheme & {
+    background-color: #818cf8;
+    
+    &:hover {
+      background-color: #6366f1;
+    }
+  }
+}
+
+.buttonIcon {
+  transition: transform 0.2s ease;
+}
+
+.submitButton:hover .buttonIcon {
+  transform: translateX(2px);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: var(--auth-divider);
+  
+  .darkTheme & {
+    background-color: #374151;
+  }
+}
+
+.dividerText {
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  color: var(--auth-text-muted);
+  
+  .darkTheme & {
+    color: #9ca3af;
+  }
+}
+
+.switchMode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--auth-text-secondary);
+  
+  .darkTheme & {
+    color: #d1d5db;
+  }
+}
+
+.switchModeButton {
+  background: none;
+  border: none;
+  color: var(--auth-accent);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+  
+  .darkTheme & {
+    color: #818cf8;
+  }
+}
+
+.forgotPassword {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.forgotPasswordLink {
+  font-size: 0.75rem;
+  color: var(--auth-accent);
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+  
+  .darkTheme & {
+    color: #818cf8;
+  }
+}
+
+/* Password Requirements */
+.passwordRequirements {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--auth-bg-secondary);
+  border: 1px solid var(--auth-border);
+  
+  .darkTheme & {
+    background-color: #141421;
+    border-color: #374151;
+  }
+}
+
+.requirementsTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--auth-text-primary);
+  margin-bottom: 0.75rem;
+  
+  .darkTheme & {
+    color: #f3f4f6;
+  }
+}
+
+.requirementsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.requirementsList li {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+  color: var(--auth-text-secondary);
+  
+  .darkTheme & {
+    color: #d1d5db;
+  }
+}
+
+.validationIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+}
+
+.valid {
+  color: var(--auth-success);
+  
+  .darkTheme & {
+    color: #4ade80;
+  }
+}
+
+.invalid {
+  color: var(--auth-text-muted);
+  
+  .darkTheme & {
+    color: #9ca3af;
+  }
+}
+
+/* Verification form styles */
+.verificationInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--auth-border);
+  border-radius: 0.75rem;
+  background-color: var(--auth-input-bg);
+  color: var(--auth-text-primary);
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  
+  &::placeholder {
+    font-size: 0.875rem;
+    letter-spacing: normal;
+    font-weight: normal;
+    color: var(--auth-text-muted);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--auth-accent);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  }
+  
+  .darkTheme & {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #f3f4f6;
+    
+    &::placeholder {
+      color: #9ca3af;
+    }
+    
+    &:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2);
+    }
+  }
+}
+
+.resendCode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--auth-text-secondary);
+  
+  .darkTheme & {
+    color: #d1d5db;
+  }
+}
+
+.resendButton {
+  background: none;
+  border: none;
+  color: var(--auth-accent);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.875rem;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .darkTheme & {
+    color: #818cf8;
+  }
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--auth-text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: var(--auth-text-primary);
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .darkTheme & {
+    color: #9ca3af;
+    
+    &:hover {
+      color: #f3f4f6;
+    }
+  }
+}

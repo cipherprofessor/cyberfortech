@@ -6,7 +6,8 @@ import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 
 import styles from './AuthPage.module.scss';
-import AuthCard from '../dashboard/myworkspace/components/ui/AuthCard/AuthCard';
+import AuthCard from '@/components/auth/AuthCard';
+
 
 export default function AuthPage() {
   const searchParams = useSearchParams();
