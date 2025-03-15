@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+// import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from '@heroui/react';
 import { 
   Moon, 
@@ -34,6 +34,8 @@ import Image from 'next/image';
 import SwitchDarkLightModeIcon from '@/components/ui/HeroUI/Switch/SwitchDarkLightModeIcon';
 import { IconLayoutDashboardFilled } from '@tabler/icons-react';
 import DarkLightThemeButton from '@/components/darklightthemebutton';
+import SignInPage from '@/app/(auth)/sign-in/page';
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -156,32 +158,47 @@ export default function Navbar() {
           />
           {/* <DarkLightThemeButton /> */}
 
-          {/* Desktop Auth Buttons */}
-          <SignedOut>
-            <div className={styles.authButtons}>
-              <SignInButton>
-                <Button variant="ghost" size="sm" className={styles.signInButton}>
-                  Sign In
-                </Button>
-              </SignInButton>
-              <SignUpButton>
-                <Button variant="solid" size="sm" className={styles.signUpButton}>
-                  Sign Up
-                </Button>
-              </SignUpButton>
-            </div>
-          </SignedOut>
+           {/* Desktop Auth Buttons */}
+  <SignedOut>
+    <div className={styles.authButtons}>
+      <Link href="/sign-in">
+        <Button variant="ghost" size="sm" className={styles.signInButton}>
+          Sign In
+        </Button>
+      </Link>
+      <Link href="/sign-up">
+        <Button variant="solid" size="sm" className={styles.signUpButton}>
+          Sign Up
+        </Button>
+      </Link>
+    </div>
+  </SignedOut>
 
-          <SignedIn>
-            <UserButton 
-              afterSignOutUrl="/"
-              appearance={{
-                elements: {
-                  avatarBox: styles.userButton
-                }
-              }}
-            />
-          </SignedIn>
+  <SignedIn>
+    <UserButton 
+      afterSignOutUrl="/"
+      appearance={{
+        elements: {
+          avatarBox: styles.userButton
+        }
+      }}
+    />
+  </SignedIn>
+
+  {/* Mobile Menu Button */}
+  <button
+    className={styles.mobileMenuButton}
+    onClick={() => setIsOpen(!isOpen)}
+    aria-label="Toggle menu"
+  >
+    <motion.div
+      animate={{ rotate: isOpen ? 90 : 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+    </motion.div>
+  </button>
+</div>
 
           {/* Mobile Menu Button */}
           <button
@@ -197,7 +214,7 @@ export default function Navbar() {
             </motion.div>
           </button>
         </div>
-      </div>
+      
 
       {/* Mobile Navigation */}
       <AnimatePresence>
