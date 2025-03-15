@@ -58,6 +58,7 @@ export interface BlogPost {
   authorId: string;
   status: 'draft' | 'published' | 'archived';
   viewCount: number;
+  likeCount: number;
   isFeatured: boolean;
   metaTitle?: string;
   metaDescription?: string;

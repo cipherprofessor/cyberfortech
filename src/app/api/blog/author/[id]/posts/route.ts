@@ -8,10 +8,11 @@ const client = createClient({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } // Note the Promise type here
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params; // Await the params
+    const { id } = resolvedParams; // Now destructure from resolved params
     const { searchParams } = new URL(request.url);
     
     const limit = parseInt(searchParams.get('limit') || '3', 10);

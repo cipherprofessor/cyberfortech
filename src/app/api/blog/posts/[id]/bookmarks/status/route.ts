@@ -1,3 +1,5 @@
+// src/app/api/blog/posts/[id]/likes/status/route.ts
+
 import { createClient } from '@libsql/client';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -6,13 +8,15 @@ const client = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN!,
 });
 
-// Check if a user has bookmarked a post
+// Check if a user has liked a post
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } // Note the Promise type here
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params; // Await the params
+    const { id } = resolvedParams; // Now destructure from resolved params
+    
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
 
@@ -23,20 +27,20 @@ export async function GET(
       );
     }
 
-    // Check if the user has bookmarked the post
+    // Check if the user has liked the post
     const result = await client.execute({
-      sql: 'SELECT id FROM blog_post_bookmarks WHERE post_id = ? AND user_id = ?',
+      sql: 'SELECT id FROM blog_post_likes WHERE post_id = ? AND user_id = ?',
       args: [id, userId]
     });
 
     return NextResponse.json({ 
-      isBookmarked: result.rows.length > 0 
+      isLiked: result.rows.length > 0 
     });
 
   } catch (error) {
-    console.error('Error checking bookmark status:', error);
+    console.error('Error checking like status:', error);
     return NextResponse.json(
-      { error: 'Failed to check bookmark status' },
+      { error: 'Failed to check like status' },
       { status: 500 }
     );
   }

@@ -92,13 +92,15 @@ export const fetchPostInteractions = createAsyncThunk<
   }
 );
 
-export const toggleLike = createAsyncThunk<
-  { isLiked: boolean },
-  { postId: string; userId: string; isLiked: boolean }
->(
+export const toggleLike = createAsyncThunk(
   'blog/toggleLike',
-  async ({ postId, userId, isLiked }, { rejectWithValue }) => {
+  async ({ postId, userId, isLiked }: { postId: string; userId: string; isLiked: boolean }, { rejectWithValue }) => {
     try {
+      // Check if user is authenticated
+      if (!userId) {
+        return rejectWithValue('Authentication required to like posts');
+      }
+      
       const response = await fetch(`/api/blog/posts/${postId}/likes`, {
         method: isLiked ? 'DELETE' : 'POST',
         headers: {
@@ -112,7 +114,11 @@ export const toggleLike = createAsyncThunk<
         return rejectWithValue(errorData.error || 'Failed to update like status');
       }
       
-      return { isLiked: !isLiked };
+      const data = await response.json();
+      return { 
+        isLiked: !isLiked,
+        likeCount: data.likeCount
+      };
     } catch (error) {
       return rejectWithValue('Network error occurred');
     }
@@ -214,17 +220,12 @@ const blogSlice = createSlice({
       .addCase(fetchPostInteractions.rejected, (state) => {
         state.loading.interactions = false;
       })
-      // Toggle like
-      .addCase(toggleLike.pending, (state) => {
-        state.loading.likeAction = true;
-      })
+      //Toggle like
       .addCase(toggleLike.fulfilled, (state, action) => {
         state.loading.likeAction = false;
         state.isLiked = action.payload.isLiked;
-        state.likeCount = state.isLiked ? state.likeCount + 1 : Math.max(0, state.likeCount - 1);
-      })
-      .addCase(toggleLike.rejected, (state) => {
-        state.loading.likeAction = false;
+        // Use the server-provided like count
+        state.likeCount = action.payload.likeCount;
       })
       // Toggle bookmark
       .addCase(toggleBookmark.pending, (state) => {

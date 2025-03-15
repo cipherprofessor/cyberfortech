@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { showToast, toast } from '@/components/ui/mohsin-toast';
 import styles from './BlogActions.module.scss';
 import { MohsinBookmarkButton, MohsinCancelButton, MohsinDeleteButton, MohsinEditButton, MohsinLikeButton, MohsinShareButton } from '@/components/ui/Mohsin_Buttons';
+import { useAuth } from '@/hooks/useAuth';
 
 interface BlogActionsProps {
   postId: string;
@@ -36,6 +37,40 @@ const BlogActions: React.FC<BlogActionsProps> = ({
 
   const isAdmin = currentUserRole === 'admin' || currentUserRole === 'superadmin';
   const showAdminActions = isAuthor || isAdmin;
+  const { isAuthenticated, user } = useAuth();
+  // const currentUserId = user?.id; // Get current user ID from auth
+
+  // Add this to your BlogActions component
+
+// Fetch initial like status and count
+useEffect(() => {
+  const fetchInitialData = async () => {
+    if (!postId) return;
+    
+    try {
+      // Get like count regardless of authentication
+      const countResponse = await fetch(`/api/blog/posts/${postId}/likes/count`);
+      if (countResponse.ok) {
+        const countData = await countResponse.json();
+        setLikeCount(countData.count);
+      }
+      
+      // Get like status only if authenticated
+      if (isAuthenticated && currentUserId) {
+        const statusResponse = await fetch(`/api/blog/posts/${postId}/likes/status?userId=${currentUserId}`);
+        if (statusResponse.ok) {
+          const statusData = await statusResponse.json();
+          setIsLiked(statusData.isLiked);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching like data:', error);
+    }
+  };
+  
+  fetchInitialData();
+}, [postId, isAuthenticated, currentUserId]);
+
 
   // Load initial like status
   React.useEffect(() => {
@@ -128,7 +163,7 @@ const BlogActions: React.FC<BlogActionsProps> = ({
   };
 
   const handleLike = async () => {
-    if (!currentUserId) {
+    if (!isAuthenticated) {
       toast.warning({
         title: "Authentication Required",
         description: "Please sign in to like posts"
@@ -149,12 +184,17 @@ const BlogActions: React.FC<BlogActionsProps> = ({
       });
 
       if (response.ok) {
+        const data = await response.json();
         const newIsLiked = !isLiked;
         setIsLiked(newIsLiked);
-        setLikeCount(prev => newIsLiked ? prev + 1 : Math.max(0, prev - 1));
+        // Use the server-provided like count
+        setLikeCount(data.likeCount);
         
         if (newIsLiked) {
-          showToast("Liked", "You've liked this post", "success");
+          toast.success({
+            title: "Liked",
+            description: "You've liked this post"
+          });
         }
       } else {
         const data = await response.json();

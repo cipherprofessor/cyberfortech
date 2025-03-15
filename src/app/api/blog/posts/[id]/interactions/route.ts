@@ -9,10 +9,11 @@ const client = createClient({
 // Get all interactions for a post (like count, like status, bookmark status)
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } // Note the Promise type here
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params; // Await the params
+    const { id } = resolvedParams; // Now destructure from resolved params
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
 

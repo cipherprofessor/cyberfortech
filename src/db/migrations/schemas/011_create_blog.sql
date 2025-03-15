@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_deleted BOOLEAN DEFAULT FALSE,
     deleted_at DATETIME,
+    like_count INTEGER DEFAULT 0,
     FOREIGN KEY (author_id) REFERENCES users(id)
 );
 

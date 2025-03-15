@@ -29,6 +29,7 @@ export async function getOptimizedPostBySlug(slug: string): Promise<BlogPost | n
           p.author_id as post_author_id, 
           p.status as post_status, 
           p.view_count as post_view_count, 
+          p.like_count as post_like_count,
           p.is_featured as post_is_featured,
           p.meta_title as post_meta_title,
           p.meta_description as post_meta_description,
@@ -124,6 +125,7 @@ export async function getOptimizedPostBySlug(slug: string): Promise<BlogPost | n
       authorId: postData.post_author_id as string,
       status: (postData.post_status as string || 'draft') as 'draft' | 'published' | 'archived',
       viewCount: Number(postData.post_view_count || 0),
+      likeCount: Number(postData.post_like_count || 0),
       isFeatured: Boolean(postData.post_is_featured),
       metaTitle: postData.post_meta_title as string || undefined,
       metaDescription: postData.post_meta_description as string || undefined,
@@ -187,6 +189,7 @@ export async function getOptimizedTrendingPosts(limit = 5, excludeId?: string): 
       excerpt: row.post_excerpt as string || undefined,
       featuredImage: row.post_featured_image as string || undefined,
       viewCount: Number(row.post_view_count || 0),
+      likeCount: Number(row.post_like_count || 0),
       status: (row.post_status as string || 'published') as 'draft' | 'published' | 'archived',
       isFeatured: Boolean(row.post_is_featured),
       authorId: row.post_author_id as string,
@@ -260,6 +263,7 @@ export async function getOptimizedAuthorPosts(authorId: string, limit = 3, exclu
       createdAt: new Date(row.post_created_at as string),
       updatedAt: new Date(row.post_updated_at as string),
       viewCount: Number(row.post_view_count || 0),
+      likeCount: Number(row.post_like_count || 0),
       isFeatured: Boolean(row.post_is_featured),
       status: (row.post_status as string || 'published') as 'draft' | 'published' | 'archived',
       authorId: row.post_author_id as string,
@@ -328,5 +332,36 @@ export async function getPostInteractions(postId: string, userId?: string) {
       isLiked: false,
       isBookmarked: false
     };
+  }
+}
+
+
+// This could run as a cron job or maintenance task
+export async function validateLikeCounts() {
+  try {
+    const posts = await client.execute({
+      sql: 'SELECT id, like_count FROM blog_posts WHERE is_deleted = FALSE', args: []
+    });
+
+    for (const post of posts.rows) {
+      const likesResult = await client.execute({
+        sql: 'SELECT COUNT(*) as actual_count FROM blog_post_likes WHERE post_id = ?',
+        args: [post.id]
+      });
+      
+      const actualCount = Number(likesResult.rows[0].actual_count);
+      
+      if (Number(post.like_count) !== actualCount) {
+        console.log(`Fixing like count for post ${post.id}: ${post.like_count} → ${actualCount}`);
+        await client.execute({
+          sql: 'UPDATE blog_posts SET like_count = ? WHERE id = ?',
+          args: [actualCount, post.id]
+        });
+      }
+    }
+    
+    console.log('Like count validation completed');
+  } catch (error) {
+    console.error('Error validating like counts:', error);
   }
 }

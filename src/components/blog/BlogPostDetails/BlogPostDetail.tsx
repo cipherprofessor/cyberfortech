@@ -60,10 +60,11 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
   // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
     return <BlogPostDetailSkeleton />;
+    // return null;
   }
 
   return (
-    <div className={clsx(styles.pageContainer, theme === 'dark' && styles.dark)}>
+    <div className={clsx(styles.pageContainer, theme === 'dark' && styles.dark)} suppressHydrationWarning>
       <div className={styles.contentWrapper}>
         {/* Main Content */}
         <motion.article 
