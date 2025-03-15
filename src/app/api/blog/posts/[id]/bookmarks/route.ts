@@ -64,7 +64,10 @@ export async function POST(
       args: [bookmarkId, id, userId]
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true ,
+      isBookmarked: true
+    });
 
   } catch (error) {
     console.error('Error adding bookmark:', error);
@@ -110,7 +113,7 @@ export async function DELETE(
       args: [id, userId]
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true,isBookmarked: false  });
 
   } catch (error) {
     console.error('Error removing bookmark:', error);

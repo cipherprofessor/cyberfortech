@@ -136,8 +136,10 @@ type BookmarkButtonProps = ActionButtonBaseProps & {
   isBookmarked?: boolean;
 };
 
+// In your MohsinActionButtons.tsx
+
 export const MohsinBookmarkButton: React.FC<BookmarkButtonProps> = ({ 
-  children = 'Bookmark', 
+  children, 
   isBookmarked = false,
   animation = 'bounce',
   ...props 
@@ -149,7 +151,8 @@ export const MohsinBookmarkButton: React.FC<BookmarkButtonProps> = ({
     animation={animation}
     {...props}
   >
-    {children}
+    {/* Show "Saved" when bookmarked, otherwise use provided children or default to "Save" */}
+    {isBookmarked ? 'Saved' : (children || 'Save')}
   </MohsinButton>
 );
 

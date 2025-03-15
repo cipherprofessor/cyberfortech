@@ -180,59 +180,60 @@ const BlogActions: React.FC<BlogActionsProps> = ({
     }
   };
 
-  const handleBookmark = async () => {
-    if (!isAuthenticated) {
-      toast.warning({
-        title: "Authentication Required",
-        description: "Please sign in to bookmark posts"
-      });
-      return;
-    }
+  // Update the handleBookmark function to use server response similar to handleLike
+const handleBookmark = async () => {
+  if (!isAuthenticated) {
+    toast.warning({
+      title: "Authentication Required",
+      description: "Please sign in to bookmark posts"
+    });
+    return;
+  }
 
-    setIsProcessing(true);
-    
-    try {
-      const method = isBookmarked ? 'DELETE' : 'POST';
-      const response = await fetch(`/api/blog/posts/${postId}/bookmarks`, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: authenticatedUserId }),
-      });
+  setIsProcessing(true);
+  
+  try {
+    const method = isBookmarked ? 'DELETE' : 'POST';
+    const response = await fetch(`/api/blog/posts/${postId}/bookmarks`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId: authenticatedUserId }),
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Use server's values
-        setIsBookmarked(data.isBookmarked);
-        
-        // Show toast based on server response
-        if (data.isBookmarked) {
-          toast.success({
-            title: "Bookmarked",
-            description: "Post added to your bookmarks"
-          });
-        } else {
-          toast.info({
-            title: "Removed",
-            description: "Post removed from your bookmarks"
-          });
-        }
+    if (response.ok) {
+      const data = await response.json();
+      
+      // Use server's values instead of toggling locally
+      setIsBookmarked(data.isBookmarked);
+      
+      // Show toast based on server response
+      if (data.isBookmarked) {
+        toast.success({
+          title: "Bookmarked",
+          description: "Post added to your bookmarks"
+        });
       } else {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to update bookmark');
+        toast.info({
+          title: "Removed",
+          description: "Post removed from your bookmarks"
+        });
       }
-    } catch (error) {
-      console.error('Error updating bookmark:', error);
-      toast.error({
-        title: "Action Failed",
-        description: error instanceof Error ? error.message : "Failed to update bookmark"
-      });
-    } finally {
-      setIsProcessing(false);
+    } else {
+      const data = await response.json();
+      throw new Error(data.error || 'Failed to update bookmark');
     }
-  };
+  } catch (error) {
+    console.error('Error updating bookmark:', error);
+    toast.error({
+      title: "Action Failed",
+      description: error instanceof Error ? error.message : "Failed to update bookmark"
+    });
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -296,13 +297,11 @@ const BlogActions: React.FC<BlogActionsProps> = ({
           />
           
           <MohsinBookmarkButton 
-            size="sm"
-            isBookmarked={isBookmarked}
-            onClick={handleBookmark}
-            disabled={isProcessing}
-          >
-            {isBookmarked ? 'Saved' : 'Save'}
-          </MohsinBookmarkButton>
+  size="sm"
+  isBookmarked={isBookmarked}
+  onClick={handleBookmark}
+  disabled={isProcessing}
+/>
           
           <MohsinShareButton 
             size="sm"

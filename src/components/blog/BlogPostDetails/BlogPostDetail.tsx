@@ -1,6 +1,6 @@
 // src/components/blog/BlogPostDetails/BlogPostDetail.tsx
 'use client';
-
+'use client';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
@@ -28,6 +28,8 @@ import BlogActions from './BlogActions/BlogActions';
 import BlogSidebar from './BlogSideBar/BlogSidebar';
 import PostMeta from './PostMeta/PostMeta';
 import PostTaxonomy from './PostTaxonomy/PostTaxonomy';
+import dynamic from 'next/dynamic';
+import BlogActionsSkeleton from './BlogActions/BlogActionsSkeleton';
 
 interface BlogPostDetailProps {
   post: BlogPost;
@@ -40,13 +42,13 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
   currentUserRole,
   isAuthor
 }) => {
-  const router = useRouter();
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const [mounted, setMounted] = useState(false);
   const [readingTime] = useState(
     Math.ceil(post.content.split(' ').length / 200)
   );
+  const [actionsLoaded, setActionsLoaded] = useState(false);
 
   // Reset blog state when component unmounts
   useEffect(() => {
@@ -57,10 +59,25 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    // If we're mounted, after a short delay consider actions loaded
+    if (mounted) {
+      const timer = setTimeout(() => {
+        setActionsLoaded(true);
+      }, 300); // Short delay for smoother transition
+      
+      return () => clearTimeout(timer);
+    }
+  }, [mounted]);
+
+  const DynamicBlogPostDetailSkeleton = dynamic(
+    () => import('./BlogPostDetailSkeleton'),
+    { ssr: false }
+  );
+
   // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
-    return <BlogPostDetailSkeleton />;
-    // return null;
+    return <DynamicBlogPostDetailSkeleton />;
   }
 
   return (
@@ -107,14 +124,19 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
               viewCount={post.viewCount}
             />
 
-            <BlogActions
-              postId={post.id}
-              postSlug={post.slug}
-              postTitle={post.title}
-              isAuthor={isAuthor}
-              currentUserRole={currentUserRole} 
-              currentUserId={post.author.id} // or use actual current user ID from auth context
-            />
+            {/* Use the skeleton during loading */}
+            {!actionsLoaded ? (
+              <BlogActionsSkeleton />
+            ) : (
+              <BlogActions
+                postId={post.id}
+                postSlug={post.slug}
+                postTitle={post.title}
+                isAuthor={isAuthor}
+                currentUserRole={currentUserRole} 
+                currentUserId={post.author.id}
+              />
+            )}
           </div>
 
           {/* Content */}
@@ -153,10 +175,10 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
   }}
   className={styles.commentsWrapper}
 >
-  <h3 className={styles.commentsTitle}>
+  {/* <h3 className={styles.commentsTitle}>
     <MessageCircle size={18} />
     Comments
-  </h3>
+  </h3> */}
   <Comments postId={post.id} />
 </motion.div>
 </motion.article>
