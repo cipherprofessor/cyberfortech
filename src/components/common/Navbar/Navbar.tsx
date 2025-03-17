@@ -34,7 +34,7 @@ import Image from 'next/image';
 import SwitchDarkLightModeIcon from '@/components/ui/HeroUI/Switch/SwitchDarkLightModeIcon';
 import { IconLayoutDashboardFilled } from '@tabler/icons-react';
 import DarkLightThemeButton from '@/components/darklightthemebutton';
-import SignInPage from '@/app/(auth)/sign-in/page';
+import SignInPage from '@/app/(auth)/sign-in/[[...rest]]/page';
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export default function Navbar() {
@@ -159,20 +159,20 @@ export default function Navbar() {
           {/* <DarkLightThemeButton /> */}
 
            {/* Desktop Auth Buttons */}
-  <SignedOut>
-    <div className={styles.authButtons}>
-      <Link href="/sign-in">
-        <Button variant="ghost" size="sm" className={styles.signInButton}>
-          Sign In
-        </Button>
-      </Link>
-      <Link href="/sign-up">
-        <Button variant="solid" size="sm" className={styles.signUpButton}>
-          Sign Up
-        </Button>
-      </Link>
-    </div>
-  </SignedOut>
+           <SignedOut>
+  <div className={styles.authButtons}>
+    <Link href="/sign-in">
+      <Button variant="ghost" size="sm" className={styles.signInButton}>
+        Sign In
+      </Button>
+    </Link>
+    <Link href="/sign-up">
+      <Button variant="flat" size="sm" className={styles.signUpButton}>
+        Sign Up
+      </Button>
+    </Link>
+  </div>
+</SignedOut>
 
   <SignedIn>
     <UserButton 

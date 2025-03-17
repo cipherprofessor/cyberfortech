@@ -26,13 +26,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
       </header> */}
       
-      <main className="flex-1 flex items-center justify-center py-8">
+      <main className="flex-1 flex items-center justify-center">
         {children}
       </main>
       
-      <footer className="py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+      {/* <footer className="py-4 text-center text-sm text-gray-500 dark:text-gray-400">
         <p>© {new Date().getFullYear()} CyberFort Tech. All rights reserved.</p>
-      </footer>
+      </footer> */}
     </div>
   );
-}
+}   
