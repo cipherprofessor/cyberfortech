@@ -1,10 +1,7 @@
 // src/app/(auth)/layout.tsx
 import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
-// import '/src/app/globals.css';
-import "../globals.css";
+import '../clerk-auth.scss';
+
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
