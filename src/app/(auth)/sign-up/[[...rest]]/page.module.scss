@@ -1,257 +1,548 @@
 .signupContainer {
-    display: flex;
-    flex-direction: column-reverse;
-    min-height: 100vh;
-    width: 100%;
-    background-color: white;
-    
-    @media (min-width: 768px) {
-      flex-direction: row;
-    }
-    
-    [data-theme='dark'] & {
-      background-color: #1e1e2d;
-      color: white;
-    }
+  display: flex;
+  flex-direction: column-reverse;
+  min-height: 100vh;
+  width: 100%;
+  background-color: rgb(25, 25, 28);
+  overflow: hidden;
+  position: relative;
+  color: white;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.formSide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  z-index: 10;
+  overflow-y: auto;
+  max-height: 100vh;
+  position: relative;
+  
+  @media (min-width: 768px) {
+    padding: 2rem 3rem;
+    max-height: 100vh;
   }
   
-  .formSide {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0.3));
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #818cf8;
+    transform: translateX(-3px);
+  }
+}
+
+.alreadyMember {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #ffffff;
+}
+
+.signInLink {
+  color: #6366f1;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  
+  &:hover {
+    color: #818cf8;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #818cf8;
+    transition: width 0.2s ease;
+  }
+  
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  position: relative;
+  background-color: rgba(40, 40, 45, 0.6);
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(59, 131, 246, 0.2);
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+  backdrop-filter: blur(5px);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0), rgba(99, 102, 241, 0.7), rgba(99, 102, 241, 0));
+  }
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fbfbfb;
+  margin-bottom: 0.5rem;
+  align-self: flex-start;
+  background: linear-gradient(to right, #f3f4f6, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #b4b4b8;
+  margin-bottom: 2rem;
+  align-self: flex-start;
+}
+
+.clerkSignUpWrapper {
+  width: 100%;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+
+.illustrationSide {
+  position: relative;
+  background-image: linear-gradient(rgba(25, 25, 28, 0), rgba(25, 25, 28, 0)), url('/cyberbg/cyberbg3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  max-height: 50vh;
+  width: 100%;
+  
+  @media (min-width: 768px) {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem;
-    
-    @media (min-width: 768px) {
-      padding: 2rem 3rem;
-    }
+    min-height: 100vh;
+    max-height: 100vh;
   }
   
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, rgba(25, 25, 28, 0) 70%);
+    z-index: 1;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(99, 102, 241, 0), rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0));
+    
+    @media (max-width: 767px) {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, rgba(99, 102, 241, 0), rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0));
+    }
+  }
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  padding: 1.5rem;
+  z-index: 10;
+  
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
+}
+
+// Dashboard metrics visualization
+.metricsCard {
+  background-color: rgba(27, 26, 26, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(59, 131, 246, 0.2);
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(59, 131, 246, 0.3);
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+}
+
+.metricsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.metricsTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+}
+
+.metricsValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #818cf8;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
     width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, #4f46e5, #818cf8);
+    opacity: 0.6;
   }
+}
+
+.chart {
+  position: relative;
+  height: 80px;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.chartLine {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.chartBadge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(99, 102, 241, 0.9);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+  z-index: 2;
   
-  .backLink {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #6b7280;
-    text-decoration: none;
-    font-size: 0.875rem;
-    
-    &:hover {
-      color: #111827;
-    }
-    
-    [data-theme='dark'] & {
-      color: #9ca3af;
-      
-      &:hover {
-        color: #f9fafb;
-      }
-    }
+  &::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    animation: pulse 2s infinite;
   }
+}
+
+.socialIcons {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  justify-content: flex-end;
+}
+
+.iconCircle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: rgba(40, 40, 45, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(59, 131, 246, 0.2);
   
-  .alreadyMember {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    color: #6b7280;
-    
-    [data-theme='dark'] & {
-      color: #9ca3af;
-    }
+  &:hover {
+    transform: translateY(-5px) rotate(10deg);
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+    border-color: rgba(99, 102, 241, 0.4);
   }
+}
+
+.dataCard {
+  background-color: rgba(27, 26, 26, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(59, 131, 246, 0.2);
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213);
+  transition: all 0.3s ease;
   
-  .signInLink {
-    color: #6366f1;
-    font-weight: 500;
-    text-decoration: none;
-    
-    &:hover {
-      text-decoration: underline;
-    }
-    
-    [data-theme='dark'] & {
-      color: #818cf8;
-    }
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(59, 131, 246, 0.3);
+    border-color: rgba(99, 102, 241, 0.3);
   }
+}
+
+.dataCardIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.75rem;
+  background-color: rgba(99, 102, 241, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
   
-  .formWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 450px;
-    margin: 0 auto;
+  .dataCard:hover & {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
   }
-  
-  .title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 0.5rem;
-    align-self: flex-start;
-    
-    [data-theme='dark'] & {
-      color: #f9fafb;
-    }
-  }
-  
-  .subtitle {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-bottom: 2rem;
-    align-self: flex-start;
-    
-    [data-theme='dark'] & {
-      color: #9ca3af;
-    }
-  }
-  
-  .clerkSignUpWrapper {
-    width: 100%;
+}
+
+.dataCardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(to right, #f3f4f6, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dataCardText {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (max-width: 767px) {
+  .signupContainer {
+    min-height: 100%;
+    height: auto;
   }
   
   .illustrationSide {
-    position: relative;
-    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-    color: white;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 250px;
-    
-    @media (min-width: 768px) {
-      flex: 1;
-      min-height: auto;
-      padding: 3rem;
-    }
+    padding: 2rem 1rem;
   }
   
   .content {
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    z-index: 10;
+    padding: 1rem;
   }
   
-  .metrics {
-    margin-bottom: 2rem;
+  .formSide {
+    padding: 1.5rem 1rem;
   }
   
-  .inbox {
-    background-color: white;
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    width: 100%;
-    max-width: 250px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    position: relative;
+  .formWrapper {
+    padding: 1.5rem;
+  }
+}
+
+// Animation classes
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+}
+
+.fadeIn {
+  animation: fadeIn 0.5s ease;
+}
+
+.slideUp {
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+@media (max-width: 767px) {
+  .signupContainer {
+    min-height: 100%;
+    height: auto;
   }
   
-  .label {
-    font-size: 0.875rem;
-    color: #f59e0b;
-    font-weight: 500;
-    display: block;
-    margin-bottom: 0.5rem;
+  .illustrationSide {
+    padding: 1.5rem 1rem;
+    min-height: auto;
   }
   
-  .value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #111827;
-    display: block;
+  .content {
+    padding: 0.75rem;
+    max-width: 100%;
+  }
+  
+  .formSide {
+    padding: 1.5rem 1rem;
+    order: 2;
+  }
+  
+  .formWrapper {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+  }
+  
+  .header {
     margin-bottom: 1.5rem;
   }
   
-  .chart {
-    position: relative;
-    height: 60px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .title {
+    font-size: 1.75rem;
   }
   
-  .chartLine {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  .subtitle {
+    font-size: 0.8125rem;
+    margin-bottom: 1.5rem;
   }
   
-  .chartBadge {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #111827;
-    color: white;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 600;
+  .metricsCard {
+    margin-bottom: 1rem;
   }
   
   .socialIcons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    margin-left: auto;
-    width: fit-content;
+    margin: 1rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .signupContainer {
+    min-height: 100vh;
   }
   
-  .iconCircle {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  .illustrationSide {
+    padding: 1.25rem 0.75rem;
+    min-height: 500px; // Taller for sign-up to accommodate all elements
   }
   
-  .dataCard {
-    background-color: white;
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    margin-top: 2rem;
+  .formSide {
+    padding: 1.25rem 0.75rem;
   }
   
-  .dataCardIcon {
-    width: 48px;
-    height: 48px;
-    border-radius: 0.5rem;
-    background-color: rgba(99, 102, 241, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
+  .formWrapper {
+    padding: 1.25rem 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .subtitle {
+    font-size: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .header {
+    margin-bottom: 1.25rem;
+  }
+  
+  .chart {
+    height: 60px; // Smaller chart on mobile
+  }
+  
+  .chartBadge {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+  }
+  
+  .metricsValue {
+    font-size: 1.5rem;
+  }
+  
+  .metricsTitle {
+    font-size: 1rem;
   }
   
   .dataCardTitle {
     font-size: 1.125rem;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 0.5rem;
   }
   
   .dataCardText {
-    font-size: 0.875rem;
-    color: #6b7280;
-    line-height: 1.5;
+    font-size: 0.75rem;
   }
+}
