@@ -158,27 +158,60 @@ My workspace is set up as follows: */
 
 
 
+/* Enhanced Clerk component customization */
 
-/* Clerk component customization */
-.cl-card {
-  background-color: transparent !important;
+/* Hide unwanted elements */
+.cl-footerAction,
+.cl-footerText,
+.cl-authButtonPrimitive[data-localization-key="formButtonPrimary.signUp"],
+.cl-internal-b3fm6y, /* Development mode tag */
+.cl-internal-wkkub3 {
+  display: none !important;
 }
 
+/* Cards and backgrounds */
+.cl-card {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Main action button */
 .cl-formButtonPrimary {
   background: linear-gradient(to right, #4f46e5, #6366f1) !important;
   transition: all 0.3s ease !important;
+  border-radius: 0.75rem !important;
+  height: 44px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213) !important;
 }
 
 .cl-formButtonPrimary:hover {
   background: linear-gradient(to right, #4338ca, #4f46e5) !important;
   transform: translateY(-2px) !important;
+  box-shadow: 0 6px 15px rgba(59, 131, 246, 0.3) !important;
 }
 
+/* Form inputs */
 .cl-formFieldInput {
   background-color: rgba(30, 30, 35, 0.6) !important;
   color: white !important;
   border: 1px solid rgba(59, 131, 246, 0.2) !important;
+  border-radius: 0.75rem !important;
   transition: all 0.3s ease !important;
+  padding: 0.75rem 1rem !important;
+  height: 44px !important;
+}
+
+/* Fix autofill background and text color */
+.cl-formFieldInput:-webkit-autofill,
+.cl-formFieldInput:-webkit-autofill:hover,
+.cl-formFieldInput:-webkit-autofill:focus,
+.cl-formFieldInput:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgb(30, 30, 35) inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  caret-color: white !important;
 }
 
 .cl-formFieldInput:focus {
@@ -188,35 +221,102 @@ My workspace is set up as follows: */
 
 .cl-formFieldLabel {
   color: #b4b4b8 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* Password toggle button */
+.cl-formFieldAction__password > button {
+  color: white !important;
+}
+
+.cl-formFieldActionIcon, 
+.cl-formFieldVisibilityToggle {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Social auth buttons */
+.cl-socialButtonsIconButton {
+  border: none !important;
 }
 
 .cl-socialButtonsBlockButton {
   background-color: rgba(30, 30, 35, 0.6) !important;
   border: 1px solid rgba(59, 131, 246, 0.2) !important;
   transition: all 0.3s ease !important;
+  border-radius: 0.75rem !important;
+  height: 44px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
 .cl-socialButtonsBlockButton:hover {
   transform: translateY(-2px) !important;
   border-color: rgba(99, 102, 241, 0.5) !important;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15) !important;
 }
 
 .cl-socialButtonsBlockButtonText {
   color: white !important;
+  font-weight: 500 !important;
 }
 
+.cl-socialButtonsBlockButtonArrow {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Dividers */
 .cl-dividerText {
   color: #b4b4b8 !important;
+  font-size: 0.75rem !important;
 }
 
 .cl-dividerLine {
   background-color: rgba(59, 131, 246, 0.2) !important;
 }
 
+/* Footer action links */
 .cl-footerActionLink {
   color: #6366f1 !important;
 }
 
 .cl-footerActionText {
   color: #b4b4b8 !important;
+}
+
+/* Icons */
+.cl-socialButtonsIconButton__apple {
+  background-color: #000000 !important;
+}
+
+.cl-socialButtonsIconButton__google {
+  background-color: #ffffff !important;
+}
+
+.cl-socialButtonsIconButton__facebook {
+  background-color: #1877f2 !important;
+}
+
+/* Continue button */
+.cl-active > button {
+  background: linear-gradient(to right, #4f46e5, #6366f1) !important;
+  border-radius: 0.75rem !important;
+  height: 44px !important;
+  box-shadow: 0 4px 12px rgba(59, 131, 246, 0.213) !important;
+  transition: all 0.3s ease !important;
+}
+
+.cl-active > button:hover {
+  background: linear-gradient(to right, #4338ca, #4f46e5) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 15px rgba(59, 131, 246, 0.3) !important;
+}
+
+/* Additional form input styles to ensure dark background on all states */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgb(30, 30, 35) inset !important;
+  -webkit-text-fill-color: white !important;
 }

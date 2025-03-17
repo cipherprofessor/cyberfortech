@@ -41,7 +41,7 @@ export default function SignUpPage() {
           <p className={styles.subtitle}>Secure Your Cybersecurity Journey with CyberFort</p>
           
           <div className={styles.clerkSignUpWrapper}>
-            <SignUp 
+          <SignUp 
               appearance={{
                 elements: {
                   rootBox: {
@@ -63,14 +63,24 @@ export default function SignUpPage() {
                   formButtonPrimary: {
                     boxShadow: '0 4px 6px rgba(59, 131, 246, 0.2)',
                   },
-                  footerAction: {
-                    marginTop: '1.5rem',
+                  footer: {
+                    display: 'none', // Hide the entire footer
+                  },
+                  socialButtonsBlockButton: {
+                    borderRadius: '0.75rem',
+                    height: '44px',
+                  },
+                  dividerText: {
+                    fontSize: '0.75rem',
+                  },
+                  formFieldInput: {
+                    height: '44px',
                   },
                 }
               }}
               routing="path"
               path="/sign-up"
-              redirectUrl="/dashboard"
+              fallbackRedirectUrl="/home"
               signInUrl="/sign-in"
             />
           </div>
