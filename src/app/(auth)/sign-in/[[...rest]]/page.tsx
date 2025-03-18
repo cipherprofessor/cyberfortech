@@ -11,10 +11,18 @@ import FeatureCard from '../../FeatureCard/FeatureCard';
 
 export default function SignInPage() {
   const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Handle hydration issues
+  // Handle hydration issues and loading state
   useEffect(() => {
     setIsMounted(true);
+    
+    // Simulate loading time or wait for clerk to be ready
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800); // Adjust this time as needed
+    
+    return () => clearTimeout(timer);
   }, []);
   
   if (!isMounted) {
@@ -48,49 +56,66 @@ export default function SignInPage() {
           <h1 className={styles.title}>Sign In</h1>
           <p className={styles.subtitle}>Welcome back to CyberFort</p>
           
-          <div className={styles.clerkSignInWrapper}>
-            <SignIn 
-              appearance={{
-                elements: {
-                  rootBox: {
-                    width: '100%',
-                    boxShadow: 'none',
-                  },
-                  card: {
-                    boxShadow: 'none',
-                    backgroundColor: 'transparent',
-                    width: '100%',
-                    border: 'none',
-                  },
-                  headerTitle: {
-                    display: 'none',
-                  },
-                  headerSubtitle: {
-                    display: 'none',
-                  },
-                  formButtonPrimary: {
-                    boxShadow: '0 4px 6px rgba(59, 131, 246, 0.2)',
-                  },
-                  footer: {
-                    display: 'none', // Hide the entire footer
-                  },
-                  socialButtonsBlockButton: {
-                    borderRadius: '0.75rem',
-                    height: '44px',
-                  },
-                  dividerText: {
-                    fontSize: '0.75rem',
-                  },
-                  formFieldInput: {
-                    height: '44px',
-                  },
-                }
-              }}
-              routing="path"
-              path="/sign-in"
-              redirectUrl="/dashboard"
-              signUpUrl="/sign-up"
-            />
+          <div className={`${styles.clerkSignInWrapper} ${styles.signInSpacing}`}>
+            {isLoading ? (
+              <div className={styles.skeletonLoader}>
+                <div className={styles.socialButtonsSkeleton}>
+                  <div className={styles.buttonSkeleton}></div>
+                  <div className={styles.buttonSkeleton}></div>
+                  <div className={styles.buttonSkeleton}></div>
+                </div>
+                <div className={styles.dividerSkeleton}>
+                  <div className={styles.dividerLine}></div>
+                  <div className={styles.dividerText}></div>
+                  <div className={styles.dividerLine}></div>
+                </div>
+                <div className={styles.inputSkeleton}></div>
+                <div className={styles.buttonSkeleton}></div>
+              </div>
+            ) : (
+              <SignIn 
+                appearance={{
+                  elements: {
+                    rootBox: {
+                      width: '100%',
+                      boxShadow: 'none',
+                    },
+                    card: {
+                      boxShadow: 'none',
+                      backgroundColor: 'transparent',
+                      width: '100%',
+                      border: 'none',
+                    },
+                    headerTitle: {
+                      display: 'none',
+                    },
+                    headerSubtitle: {
+                      display: 'none',
+                    },
+                    formButtonPrimary: {
+                      boxShadow: '0 4px 6px rgba(59, 131, 246, 0.2)',
+                    },
+                    footer: {
+                      display: 'none', // Hide the entire footer
+                    },
+                    socialButtonsBlockButton: {
+                      borderRadius: '0.75rem',
+                      height: '44px',
+                    },
+                    dividerText: {
+                      fontSize: '0.75rem',
+                    },
+                    formFieldInput: {
+                      height: '44px',
+                    },
+                  }
+                }}
+                routing="path"
+                path="/sign-in"
+                redirectUrl="/dashboard"
+                signUpUrl="/sign-up"
+              />
+            )}
           </div>
         </div>
       </div>
