@@ -30,6 +30,7 @@ import SwitchDarkLightModeIcon from '@/components/ui/HeroUI/Switch/SwitchDarkLig
 
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { MohsinSignInButton, MohsinSignUpButton } from '@/components/ui/Mohsin_Buttons/MohsinActionButtons';
+import { ResponsiveMohsinSignInButton, ResponsiveMohsinSignUpButton } from '@/components/ui/Mohsin_Buttons/ResponsiveAuthButtons';
 
 
 export default function Navbar() {
@@ -163,7 +164,8 @@ export default function Navbar() {
       {/* <Button variant="ghost" size="sm" className={styles.signInButton}>
         Sign In
       </Button> */}
-     <MohsinSignInButton />
+     {/* <MohsinSignInButton /> */}
+     <ResponsiveMohsinSignInButton />
      
          
      
@@ -172,7 +174,8 @@ export default function Navbar() {
       {/* <Button variant="flat" size="sm" className={styles.signUpButton}>
         Sign Up
       </Button> */}
-        <MohsinSignUpButton />
+        {/* <MohsinSignUpButton /> */}
+        <ResponsiveMohsinSignUpButton />
     </Link>
   </div>
 </SignedOut>
