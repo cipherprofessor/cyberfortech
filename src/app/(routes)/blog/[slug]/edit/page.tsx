@@ -67,6 +67,7 @@ async function getPost(slug: string): Promise<BlogPost | null> {
       publishedAt: row.published_at ? new Date(row.published_at as string) : undefined,
       createdAt: new Date(row.created_at as string),
       updatedAt: new Date(row.updated_at as string),
+      likeCount: Number(row.like_count || 0), // Added likeCount property
       categories: row.categories ? (row.categories as string).split(',').map((cat: string) => {
         const [id, name, slug] = cat.split('::');
         return { id, name, slug, displayOrder: 0 };

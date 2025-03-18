@@ -3,14 +3,9 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { 
   BookOpen, 
-  Award, 
   Users, 
   Shield, 
   Zap, 
-  Code, 
-  Globe, 
-  Clock,
-  UserCheck
 } from 'lucide-react';
 
 
@@ -22,6 +17,7 @@ import styles from './about.module.scss';
 import { FeatureCards } from '@/components/aboutus/FeatureCards/FeatureCards';
 import { CyberFortTimeline } from '@/components/ui/AcUI/TimeLine/TimeLineDemo';
 import { TeamGrid } from '@/components/aboutus/TeamCard/TeamGrid';
+import { PrivacyPolicy } from '@/components/aboutus/PrivacyPolicy/PrivacyPolicy';
 
 export default function AboutPage() {
 
@@ -346,6 +342,23 @@ const scaleIn = {
           centered={false} // Set to true if you want centered layout
         />
       </section>
+
+
+      {/* Privacy Policy Section */}
+      <section className={styles.privacySection}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={styles.sectionHeader}
+        >
+          <PrivacyPolicy />
+        </motion.div>
+        
+        
+      </section>
+
+      
     </div>
   );
 }

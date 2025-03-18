@@ -1,0 +1,213 @@
+// components/aboutus/PrivacyPolicy/PrivacyPolicy.module.scss
+
+.privacyContainer {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  .privacyHeader {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    
+    .headerIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      border-radius: 16px;
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+      transition: all 0.3s ease;
+  
+      &:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
+      }
+    }
+  
+    h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #1f2937;
+      background: linear-gradient(45deg, #3b82f6, #60a5fa);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  
+    .lastUpdated {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+  
+    p {
+      font-size: 1rem;
+      color: #4b5563;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+  }
+  
+  // Grid layout for policy sections
+  .policySectionsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    
+    @media (max-width: 940px) {
+      grid-template-columns: 1fr;
+      width: 92%;
+      margin: 0 auto;
+    }
+  }
+  
+  .policySection {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    
+    &.expanded {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+  
+    .sectionHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+  
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+  
+      .headerLeft {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+      }
+  
+      .iconContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+  
+      h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+        transition: color 0.2s ease;
+      }
+    }
+  
+    .sectionContent {
+      padding: 1.25rem;
+      background-color: white;
+      color: #4b5563;
+      line-height: 1.6;
+      overflow: hidden;
+      border-top: 1px solid #f0f0f0;
+  
+      p {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+      }
+  
+      ul {
+        margin: 0.5rem 0 1rem 1.5rem;
+        padding: 0;
+        
+        li {
+          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
+        }
+      }
+  
+      strong {
+        color: #1f2937;
+        font-weight: 600;
+      }
+    }
+  
+    &:hover {
+      .sectionHeader {
+        .iconContainer {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+  
+  // Dark mode styles
+  :global(.dark) {
+    .privacyContainer {
+      .privacyHeader {
+        .headerIcon {
+          background: rgba(96, 165, 250, 0.2);
+          color: #60a5fa;
+          box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
+        }
+  
+        h2 {
+          background: linear-gradient(45deg, #60a5fa, #93c5fd);
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+  
+        p {
+          color: #d1d5db;
+        }
+      }
+  
+      .policySection {
+        background-color: #1f2937;
+        border-color: #374151;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  
+        &.expanded {
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+  
+        .sectionHeader {
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+          }
+  
+          h3 {
+            color: #f3f4f6;
+          }
+        }
+  
+        .sectionContent {
+          background-color: #1f2937;
+          color: #d1d5db;
+          border-top: 1px solid #374151;
+  
+          strong {
+            color: #f3f4f6;
+          }
+        }
+      }
+    }
+  }
