@@ -1,0 +1,239 @@
+.testimonialsContainer {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    position: relative;
+  }
+  
+  .testimonialsWrapper {
+    position: relative;
+    padding: 3rem 0;
+  }
+  
+  .quoteIconWrapper {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 80px;
+    height: 80px;
+    background-color: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+  }
+  
+  .quoteIcon {
+    color: white;
+  }
+  
+  .testimonialCard {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #f3f4f6;
+  
+    @media (max-width: 768px) {
+      padding: 2rem 1.5rem;
+    }
+  }
+  
+  .testimonialContent {
+    margin-bottom: 2rem;
+  }
+  
+  .quote {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: #4b5563;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+  
+  .ratingContainer {
+    display: flex;
+    gap: 0.25rem;
+  }
+  
+  .starFilled {
+    color: #F59E0B;
+  }
+  
+  .starEmpty {
+    color: #E5E7EB;
+  }
+  
+  .testimonialFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 1.5rem;
+  
+    @media (max-width: 640px) {
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+  }
+  
+  .personInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .personImage {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #3b82f6;
+  }
+  
+  .avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .personDetails {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .personName {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.25rem;
+  }
+  
+  .personTitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0 0 0.25rem;
+  }
+  
+  .companyName {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #3b82f6;
+    margin: 0;
+  }
+  
+  .companyLogo {
+    max-width: 120px;
+    height: auto;
+  
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  
+  .navigationControls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2.5rem;
+    gap: 1.5rem;
+  }
+  
+  .navButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  
+    &:hover {
+      background-color: #f3f4f6;
+      color: #1f2937;
+    }
+  }
+  
+  .indicators {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &.active {
+      background-color: #3b82f6;
+      transform: scale(1.2);
+    }
+  }
+  
+  // Dark mode styles
+  :global(.dark) {
+    .testimonialCard {
+      background-color: #1f2937;
+      border-color: #374151;
+    }
+  
+    .quote {
+      color: #d1d5db;
+    }
+  
+    .testimonialFooter {
+      border-color: #374151;
+    }
+  
+    .personName {
+      color: #f3f4f6;
+    }
+  
+    .personTitle {
+      color: #9ca3af;
+    }
+  
+    .companyName {
+      color: #60a5fa;
+    }
+  
+    .navButton {
+      background-color: #1f2937;
+      border-color: #374151;
+      color: #d1d5db;
+  
+      &:hover {
+        background-color: #374151;
+        color: #f3f4f6;
+      }
+    }
+  
+    .indicator {
+      background-color: #4b5563;
+  
+      &.active {
+        background-color: #60a5fa;
+      }
+    }
+  }

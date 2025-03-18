@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { clerkClient, clerkMiddleware } from "@clerk/nextjs/server";
 
-const publicRoutes = ["/", "/sign-in",  "/sign-in(.*)", "/sign-up(.*)", "/sign-up", "/about", "/contact", "/courses", "/blog", "/api/courses", "/api/contact", "/api/blog"];
+const publicRoutes = ["/", "/sign-in",  "/sign-in(.*)", "/sign-up(.*)", "/sign-up", "/about", "/partners", "/contact", "/courses", "/blog", "/api/courses", "/api/contact", "/api/blog"];
 const adminRoutes = ["/admin", "/dashboard/admin", "/api/admin"];
 const superAdminRoutes = ["/superadmin", "/dashboard/superadmin", "/api/superadmin"];
 
