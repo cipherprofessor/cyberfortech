@@ -3,13 +3,12 @@ import { motion } from 'framer-motion';
 import { Handshake } from 'lucide-react';
 
 import styles from './partners.module.scss';
-import { PartnerContactForm } from '@/components/partners/PartnerContactForm/PartnerContactForm';
+import { PartnersList } from '@/components/partners/PartnersList/PartnersList';
 import { PartnershipBenefits } from '@/components/partners/PartnershipBenefits/PartnershipBenefits';
+import { PartnerTestimonials } from '@/components/partners/PartnerTestimonials/PartnerTestimonials';
 import { PartnershipProcess } from '@/components/partners/PartnershipProcess/PartnershipProcess';
 import { PartnershipTypeCards } from '@/components/partners/PartnershipTypeCards/PartnershipTypeCards';
-import { PartnersList } from '@/components/partners/PartnersList/PartnersList';
-import { PartnerTestimonials } from '@/components/partners/PartnerTestimonials/PartnerTestimonials';
-
+import { PartnerContactForm } from '@/components/partners/PartnerContactForm/PartnerContactForm';
 
 export default function PartnersPage() {
   return (
@@ -28,7 +27,7 @@ export default function PartnersPage() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <Handshake size={48} className={styles.heroIcon} />
+            <Handshake size={32} className={styles.heroIcon} />
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -45,6 +44,17 @@ export default function PartnersPage() {
           >
             Join forces with us to create a more secure digital future. Our partnership program offers collaboration opportunities for businesses, educational institutions, and cybersecurity experts.
           </motion.p>
+          <motion.a
+            href="#contact-form"
+            className={styles.contactButton}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            whileHover={{ y: -3, boxShadow: '0 6px 20px rgba(59, 130, 246, 0.4)' }}
+            whileTap={{ y: 0 }}
+          >
+            Contact Us
+          </motion.a>
         </motion.div>
       </section>
 
@@ -94,7 +104,7 @@ export default function PartnersPage() {
       </section>
 
       {/* Contact Form Section */}
-      <section className={styles.contactSection}>
+      <section id="contact-form" className={styles.contactSection}>
         <div className={styles.sectionHeader}>
           <h2>Become a Partner</h2>
           <p>Interested in partnering with us? Fill out the form below to get started</p>

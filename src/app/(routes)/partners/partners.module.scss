@@ -15,9 +15,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 4rem 0;
+    padding: 2.5rem 0;
     margin-bottom: 2rem;
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     background: linear-gradient(135deg, #1a2e44 0%, #0d1f32 100%);
     color: white;
     position: relative;
@@ -38,8 +38,8 @@
     }
   
     @media (max-width: 768px) {
-      padding: 3rem 1rem;
-      border-radius: 1rem;
+      padding: 2rem 1rem;
+      border-radius: 0.75rem;
     }
   }
   
@@ -55,9 +55,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 1.5rem;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1rem;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -68,28 +68,45 @@
   }
   
   .heroSection h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     background: linear-gradient(45deg, #60a5fa, #e879f9);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   
     @media (max-width: 768px) {
-      font-size: 2.25rem;
+      font-size: 2rem;
     }
   }
   
   .heroSubtext {
-    font-size: 1.25rem;
-    line-height: 1.7;
+    font-size: 1.125rem;
+    line-height: 1.6;
     color: rgba(255, 255, 255, 0.9);
     max-width: 700px;
-    margin: 0 auto;
+    margin: 0 auto 1.5rem;
   
     @media (max-width: 768px) {
-      font-size: 1.125rem;
+      font-size: 1rem;
+      margin-bottom: 1.25rem;
+    }
+  }
+  
+  .contactButton {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(45deg, #3b82f6, #60a5fa);
+    color: white;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: linear-gradient(45deg, #2563eb, #3b82f6);
     }
   }
   
