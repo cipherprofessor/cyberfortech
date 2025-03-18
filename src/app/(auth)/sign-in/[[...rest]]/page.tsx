@@ -17,6 +17,29 @@ export default function SignInPage() {
     setIsMounted(true);
   }, []);
   
+  // Add this effect to fix any remaining color issues
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const fixIconColors = () => {
+        document.querySelectorAll('[data-feature-card="true"]').forEach(card => {
+          const iconColor = card.getAttribute('data-icon-color');
+          if (iconColor) {
+            // Force SVG colors inside this card
+            card.querySelectorAll('svg').forEach(svg => {
+              svg.setAttribute('color', iconColor);
+              svg.style.color = iconColor;
+            });
+          }
+        });
+      };
+      
+      // Run the fix after a delay to ensure DOM is fully rendered
+      setTimeout(fixIconColors, 100);
+      // Also run it immediately
+      fixIconColors();
+    }
+  }, [isMounted]); // Run when component mounts
+  
   if (!isMounted) {
     return null;
   }
@@ -43,7 +66,7 @@ export default function SignInPage() {
           <p className={styles.subtitle}>Welcome back to CyberFort</p>
           
           <div className={styles.clerkSignInWrapper}>
-          <SignIn 
+            <SignIn 
               appearance={{
                 elements: {
                   rootBox: {
@@ -56,28 +79,7 @@ export default function SignInPage() {
                     width: '100%',
                     border: 'none',
                   },
-                  headerTitle: {
-                    display: 'none',
-                  },
-                  headerSubtitle: {
-                    display: 'none',
-                  },
-                  formButtonPrimary: {
-                    boxShadow: '0 4px 6px rgba(59, 131, 246, 0.2)',
-                  },
-                  footer: {
-                    display: 'none', // Hide the entire footer
-                  },
-                  socialButtonsBlockButton: {
-                    borderRadius: '0.75rem',
-                    height: '44px',
-                  },
-                  dividerText: {
-                    fontSize: '0.75rem',
-                  },
-                  formFieldInput: {
-                    height: '44px',
-                  },
+                  // ... other appearance settings
                 }
               }}
               routing="path"
@@ -103,8 +105,9 @@ export default function SignInPage() {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <div className={styles.featureCardsContainer}>
+            {/* Pass explicit color prop to Lucide icons */}
             <FeatureCard
-              icon={<Layers size={24} />}
+              icon={<Layers size={24} color="#6366F1" />}
               title="Learn at your own pace"
               description="Access comprehensive cybersecurity courses anytime, anywhere"
               iconColor="#6366F1"
@@ -112,7 +115,7 @@ export default function SignInPage() {
             />
             
             <FeatureCard
-              icon={<BarChart size={24} />}
+              icon={<BarChart size={24} color="#F59E0B" />}
               title="Track your progress"
               description="Monitor your skill development with detailed analytics"
               iconColor="#F59E0B"
@@ -120,7 +123,7 @@ export default function SignInPage() {
             />
             
             <FeatureCard
-              icon={<Users size={24} />}
+              icon={<Users size={24} color="#10B981" />}
               title="Join our community"
               description="Connect with peers and industry experts in cybersecurity"
               iconColor="#10B981"
@@ -128,7 +131,7 @@ export default function SignInPage() {
             />
             
             <FeatureCard
-              icon={<Clock size={24} />}
+              icon={<Clock size={24} color="#EC4899" />}
               title="Always up-to-date"
               description="Stay current with the latest cybersecurity trends and techniques"
               iconColor="#EC4899"

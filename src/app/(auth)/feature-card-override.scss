@@ -1,0 +1,29 @@
+/* Create a new file called feature-card-override.scss in your auth folder */
+
+/* High-specificity override for FeatureCard colors */
+.featureCardsContainer .featureCard,
+[class*="featureCardsContainer"] [class*="featureCard"],
+div[class*="featureCardsContainer"] div[class*="featureCard"] {
+  color: inherit !important;
+
+  .icon, .iconContainer, svg {
+    color: inherit !important;
+  }
+  
+  h3.title {
+    color: white !important;
+  }
+  
+  p.description {
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+}
+
+/* This is a nuclear option if the above doesn't work */
+div[style*="--icon-rgb"] {
+  color: inherit !important;
+  
+  svg, [class*="icon"] {
+    color: inherit !important;
+  }
+}
