@@ -11,7 +11,6 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import phoneStyles from './ContactForm.PhoneInput.module.scss';
 
-
 type FormData = {
   name: string;
   email: string;
@@ -19,7 +18,11 @@ type FormData = {
   message: string;
 };
 
-export function ContactForm() {
+interface ContactFormProps {
+  enhanceFormData?: (data: any) => any;
+}
+
+export function ContactForm({ enhanceFormData }: ContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -37,14 +40,23 @@ export function ContactForm() {
     setSubmitStatus(null);
 
     try {
-      await axios.post('/api/contact', {
+      // Add phone number to the form data
+      let formData = {
         ...data,
-        phoneNumber // Include phone number in submission
-      });
+        phoneNumber
+      };
+      
+      // Apply the enhanceFormData function if provided
+      if (enhanceFormData) {
+        formData = enhanceFormData(formData);
+      }
+      
+      await axios.post('/api/contact', formData);
       setSubmitStatus('success');
       reset();
       setPhoneNumber(""); // Reset phone number
     } catch (error) {
+      console.error('Error submitting form:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -159,32 +171,31 @@ export function ContactForm() {
 
         {/* Phone Input */}
                
-
         <motion.div 
-  className={styles.formGroup}
-  initial={{ opacity: 0, x: -20 }}
-  animate={{ opacity: 1, x: 0 }}
-  transition={{ delay: 0.25 }}
->
-  <label>
-    <User size={18} className={styles.icon} />
-    Phone Number (Optional)
-  </label>
-  <div className={`${styles.inputWrapper} ${styles.phoneWrapper} ${focusedField === 'phone' ? styles.focused : ''} ${phoneStyles.phoneInputWrapper}`}>
-    <PhoneInput
-      defaultCountry="IN"
-      value={phoneNumber}
-      onChange={setPhoneNumber}
-      onFocus={() => handleFocus('phone')}
-      onBlur={handleBlur}
-      placeholder="Enter phone number"
-      international
-      countryCallingCodeEditable={false}
-      limitMaxLength={true}
-      addInternationalOption={false}
-    />
-  </div>
-</motion.div>
+          className={styles.formGroup}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <label>
+            <User size={18} className={styles.icon} />
+            Phone Number (Optional)
+          </label>
+          <div className={`${styles.inputWrapper} ${styles.phoneWrapper} ${focusedField === 'phone' ? styles.focused : ''} ${phoneStyles.phoneInputWrapper}`}>
+            <PhoneInput
+              defaultCountry="IN"
+              value={phoneNumber}
+              onChange={setPhoneNumber}
+              onFocus={() => handleFocus('phone')}
+              onBlur={handleBlur}
+              placeholder="Enter phone number"
+              international
+              countryCallingCodeEditable={false}
+              limitMaxLength={true}
+              addInternationalOption={false}
+            />
+          </div>
+        </motion.div>
 
         <motion.div 
           className={styles.formGroup}

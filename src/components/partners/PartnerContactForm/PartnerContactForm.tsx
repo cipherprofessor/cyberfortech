@@ -1,5 +1,5 @@
 "use client"
-import { JSX, useState } from 'react';
+import { useState, useEffect, JSX } from 'react';
 
 import { motion } from 'framer-motion';
 import { Building2, GraduationCap, ShieldCheck, Globe } from 'lucide-react';
@@ -15,6 +15,25 @@ interface PartnershipTypeOptionProps {
 
 export function PartnerContactForm() {
   const [selectedPartnerType, setSelectedPartnerType] = useState<string | null>(null);
+
+  // Function to be passed to the ContactForm to modify the submission data
+  const enhanceFormData = (formData: any) => {
+    return {
+      ...formData,
+      sourcePage: 'partners',
+      metadata: JSON.stringify({
+        partnerType: selectedPartnerType || 'not_specified',
+        partnerPageSubmission: true,
+        submittedAt: new Date().toISOString()
+      })
+    };
+  };
+
+  const handleSelectPartnerType = (id: string) => {
+    setSelectedPartnerType(id);
+    // Log selection for debugging
+    console.log(`Selected partnership type: ${id}`);
+  };
 
   const partnershipTypes: PartnershipTypeOptionProps[] = [
     {
@@ -43,9 +62,9 @@ export function PartnerContactForm() {
     }
   ];
 
-  const handleSelectPartnerType = (id: string) => {
-    setSelectedPartnerType(id);
-  };
+//   const handleSelectPartnerType = (id: string) => {
+//     setSelectedPartnerType(id);
+//   };
 
   return (
     <div className={styles.partnerContactContainer}>
@@ -87,7 +106,7 @@ export function PartnerContactForm() {
         </div>
         
         <div className={styles.contactFormWrapper}>
-          <ContactForm />
+          <ContactForm enhanceFormData={enhanceFormData} />
         </div>
       </div>
       
