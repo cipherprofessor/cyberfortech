@@ -17,32 +17,15 @@ export default function SignInPage() {
     setIsMounted(true);
   }, []);
   
-  // Add this effect to fix any remaining color issues
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const fixIconColors = () => {
-        document.querySelectorAll('[data-feature-card="true"]').forEach(card => {
-          const iconColor = card.getAttribute('data-icon-color');
-          if (iconColor) {
-            // Force SVG colors inside this card
-            card.querySelectorAll('svg').forEach(svg => {
-              svg.setAttribute('color', iconColor);
-              svg.style.color = iconColor;
-            });
-          }
-        });
-      };
-      
-      // Run the fix after a delay to ensure DOM is fully rendered
-      setTimeout(fixIconColors, 100);
-      // Also run it immediately
-      fixIconColors();
-    }
-  }, [isMounted]); // Run when component mounts
-  
   if (!isMounted) {
     return null;
   }
+  
+  // Define colors for better consistency
+  const purpleColor = "#6366F1";
+  const yellowColor = "#F59E0B";
+  const greenColor = "#10B981";
+  const pinkColor = "#EC4899";
   
   return (
     <div className={styles.signinContainer}>
@@ -79,7 +62,28 @@ export default function SignInPage() {
                     width: '100%',
                     border: 'none',
                   },
-                  // ... other appearance settings
+                  headerTitle: {
+                    display: 'none',
+                  },
+                  headerSubtitle: {
+                    display: 'none',
+                  },
+                  formButtonPrimary: {
+                    boxShadow: '0 4px 6px rgba(59, 131, 246, 0.2)',
+                  },
+                  footer: {
+                    display: 'none', // Hide the entire footer
+                  },
+                  socialButtonsBlockButton: {
+                    borderRadius: '0.75rem',
+                    height: '44px',
+                  },
+                  dividerText: {
+                    fontSize: '0.75rem',
+                  },
+                  formFieldInput: {
+                    height: '44px',
+                  },
                 }
               }}
               routing="path"
@@ -105,36 +109,36 @@ export default function SignInPage() {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <div className={styles.featureCardsContainer}>
-            {/* Pass explicit color prop to Lucide icons */}
+            {/* Pass colors directly to both the icon and the FeatureCard */}
             <FeatureCard
-              icon={<Layers size={24} color="#6366F1" />}
+              icon={<Layers size={24} color={purpleColor} />}
               title="Learn at your own pace"
               description="Access comprehensive cybersecurity courses anytime, anywhere"
-              iconColor="#6366F1"
+              iconColor={purpleColor}
               delay={0.5}
             />
             
             <FeatureCard
-              icon={<BarChart size={24} color="#F59E0B" />}
+              icon={<BarChart size={24} color={yellowColor} />}
               title="Track your progress"
               description="Monitor your skill development with detailed analytics"
-              iconColor="#F59E0B"
+              iconColor={yellowColor}
               delay={0.7}
             />
             
             <FeatureCard
-              icon={<Users size={24} color="#10B981" />}
+              icon={<Users size={24} color={greenColor} />}
               title="Join our community"
               description="Connect with peers and industry experts in cybersecurity"
-              iconColor="#10B981"
+              iconColor={greenColor}
               delay={0.9}
             />
             
             <FeatureCard
-              icon={<Clock size={24} color="#EC4899" />}
+              icon={<Clock size={24} color={pinkColor} />}
               title="Always up-to-date"
               description="Stay current with the latest cybersecurity trends and techniques"
-              iconColor="#EC4899"
+              iconColor={pinkColor}
               delay={1.1}
             />
           </div>
