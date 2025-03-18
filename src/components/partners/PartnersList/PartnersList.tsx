@@ -22,7 +22,7 @@ export function PartnersList() {
     {
       id: 1,
       name: 'TechShield Security',
-      logo: '/partners/tech_schield.jpg',
+      logo: '/partners/schield.jpg',
       description: 'A leading provider of enterprise-grade security solutions',
       category: 'Technology',
       partnerSince: '2020',
@@ -57,22 +57,13 @@ export function PartnersList() {
     },
     {
       id: 5,
-      name: 'SafetyNet Corporation',
-      logo: '/partners/securenet.jpg',
+      name: 'Umbrella Corporation',
+      logo: '/partners/uc1.jpg',
       description: 'Enterprise solutions for network security and monitoring',
       category: 'Corporate',
       partnerSince: '2018',
       website: 'https://safetynet.example.com'
     },
-    // {
-    //   id: 6,
-    //   name: 'Digital Fortress',
-    //   logo: '/partners/partner-logo-6.svg',
-    //   description: 'Cloud security and infrastructure protection services',
-    //   category: 'Technology',
-    //   partnerSince: '2021',
-    //   website: 'https://digitalfortress.example.com'
-    // },
     {
       id: 6,
       name: 'Cyber Intelligence Agency',
@@ -236,8 +227,8 @@ export function PartnersList() {
                     <Image 
                       src={partner.logo || '/partners/placeholder-logo.svg'} 
                       alt={partner.name} 
-                      width={160} 
-                      height={80} 
+                      fill
+                      style={{ objectFit: 'cover' }}
                     />
                   </div>
                 </div>
