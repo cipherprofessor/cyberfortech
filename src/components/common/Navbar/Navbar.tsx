@@ -4,12 +4,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-// import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+
 import { Button } from '@heroui/react';
 import { 
-  Moon, 
-  Sun, 
-  Monitor, 
   Menu, 
   X,
   Home,
@@ -18,24 +15,22 @@ import {
   MessageSquare,
   InfoIcon,
   PhoneCall,
-  GraduationCap,
-  Library,
-  ChartSplineIcon,
-  PodcastIcon,
-  Rss
+  Rss,
+  Handshake,
+  Calendar
 } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { useTheme } from 'next-themes';
-import { faBlog } from '@fortawesome/free-solid-svg-icons';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Navbar.module.scss';
 import { useAuth } from '@/hooks/useAuth';
 import Image from 'next/image';
 import SwitchDarkLightModeIcon from '@/components/ui/HeroUI/Switch/SwitchDarkLightModeIcon';
-import { IconLayoutDashboardFilled } from '@tabler/icons-react';
-import DarkLightThemeButton from '@/components/darklightthemebutton';
-import SignInPage from '@/app/(auth)/sign-in/[[...rest]]/page';
+
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { MohsinSignInButton, MohsinSignUpButton } from '@/components/ui/Mohsin_Buttons/MohsinActionButtons';
+
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -135,12 +130,15 @@ export default function Navbar() {
         {/* Desktop Navigation Links */}
         <div className={styles.desktopNav}>
           {renderNavLink("/", "Home", <Home className="h-4 w-4 mr-2" />)}
+          {renderNavLink("/about", "About", <InfoIcon className="h-4 w-4 mr-2" />)}
           {renderNavLink("/courses", "Courses", <BookOpen className="h-4 w-4 mr-2" />)}
+          {renderNavLink("/partners", "Partners", <Handshake className="h-4 w-4 mr-2" />)}
+          {renderNavLink("/trainingcalender", "Calendar", <Calendar className="h-4 w-4 mr-2" />)}
           {isAuthenticated && renderRoleBasedLinks()}
           {/* {renderNavLink("/blogs", "Blogs", <FontAwesomeIcon icon={faBlog} className="h-4 w-4 mr-2" />)} */}
           {renderNavLink("/blog", "Blogs", <Rss className="h-4 w-4 mr-2" />)}
           {renderNavLink("/forum", "Forum", <MessageSquare className="h-4 w-4 mr-2" />)}
-          {renderNavLink("/about", "About", <InfoIcon className="h-4 w-4 mr-2" />)}
+          
           {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-4 w-4 mr-2" />)}
           {/* {renderNavLink("/tabs", "My tabs", <PhoneCall className="h-4 w-4 mr-2" />)}
           {renderNavLink("/apache-charts", "Charts", <ChartSplineIcon className="h-4 w-4 mr-2" />)} */}
@@ -149,27 +147,32 @@ export default function Navbar() {
 
         {/* Right Side Actions */}
         <div className={styles.navActions}>
-          <SwitchDarkLightModeIcon 
+          {/* <SwitchDarkLightModeIcon 
             className={styles.themeToggle}
             defaultSelected={theme === 'dark'}
             onChange={(isSelected) => {
               setTheme(isSelected ? 'dark' : 'light')
             }}
-          />
+          /> */}
           {/* <DarkLightThemeButton /> */}
 
            {/* Desktop Auth Buttons */}
            <SignedOut>
   <div className={styles.authButtons}>
     <Link href="/sign-in">
-      <Button variant="ghost" size="sm" className={styles.signInButton}>
+      {/* <Button variant="ghost" size="sm" className={styles.signInButton}>
         Sign In
-      </Button>
+      </Button> */}
+     <MohsinSignInButton />
+     
+         
+     
     </Link>
     <Link href="/sign-up">
-      <Button variant="flat" size="sm" className={styles.signUpButton}>
+      {/* <Button variant="flat" size="sm" className={styles.signUpButton}>
         Sign Up
-      </Button>
+      </Button> */}
+        <MohsinSignUpButton />
     </Link>
   </div>
 </SignedOut>
@@ -199,20 +202,7 @@ export default function Navbar() {
     </motion.div>
   </button>
 </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className={styles.mobileMenuButton}
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            <motion.div
-              animate={{ rotate: isOpen ? 90 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </motion.div>
-          </button>
+          
         </div>
       
 
@@ -227,13 +217,17 @@ export default function Navbar() {
             className={styles.mobileNav}
           >
             {/* Mobile Navigation Links */}
-            {renderNavLink("/", "Home", <Home className="h-5 w-5 mr-3" />, true)}
-            {renderNavLink("/courses", "Courses", <BookOpen className="h-5 w-5 mr-3" />, true)}
-            {isAuthenticated && renderRoleBasedLinks(true)}
-            {renderNavLink("/blog", "Blogs", <Rss className="h-4 w-4 mr-2" />)}
-            {renderNavLink("/forum", "Forum", <MessageSquare className="h-5 w-5 mr-3" />, true)}
-            {renderNavLink("/about", "About", <InfoIcon className="h-5 w-5 mr-3" />, true)}
-            {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-5 w-5 mr-3" />, true)}
+            {renderNavLink("/", "Home", <Home className="h-4 w-4 mr-2" />,true)}
+          {renderNavLink("/about", "About", <InfoIcon className="h-4 w-4 mr-2" />,true)}
+          {renderNavLink("/courses", "Courses", <BookOpen className="h-4 w-4 mr-2" />,true)}
+          {renderNavLink("/partners", "Partners", <Handshake className="h-4 w-4 mr-2" />,true)}
+          {renderNavLink("/trainingcalender", "Calendar", <Calendar className="h-4 w-4 mr-2" />,true)}
+          {isAuthenticated && renderRoleBasedLinks()}
+          {/* {renderNavLink("/blogs", "Blogs", <FontAwesomeIcon icon={faBlog} className="h-4 w-4 mr-2" />)} */}
+          {renderNavLink("/blog", "Blogs", <Rss className="h-4 w-4 mr-2" />,true)}
+          {renderNavLink("/forum", "Forum", <MessageSquare className="h-4 w-4 mr-2" />,true)}
+          
+          {renderNavLink("/contact", "Contact Us", <PhoneCall className="h-4 w-4 mr-2" />,true)}
             
           </motion.div>
         )}

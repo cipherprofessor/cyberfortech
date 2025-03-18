@@ -9,7 +9,9 @@ import {
   Edit,
   ThumbsUp,
   Bookmark,
-  Share2
+  Share2,
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { MohsinButton, ButtonProps } from './MohsinButtons';
 
@@ -166,6 +168,53 @@ export const MohsinShareButton: React.FC<ActionButtonBaseProps> = ({
     icon={Share2} 
     color="secondary" 
     animation={animation}
+    {...props}
+  >
+    {children}
+  </MohsinButton>
+);
+
+
+// Sign In Button - with styling to match the CyberFort Tech website
+export const MohsinSignInButton: React.FC<ActionButtonBaseProps> = ({ 
+  children = 'Sign In', 
+  variant = 'outline',
+  size = 'xs',
+  color = 'blue',
+  className = '',
+  ...props 
+}) => (
+  <MohsinButton 
+    icon={LogIn} 
+    iconPosition="left" 
+    variant={variant}
+    color={color}
+    size={size}
+    animation="pulse" 
+    className={`!rounded-md ${className}`}
+    {...props}
+  >
+    {children}
+  </MohsinButton>
+);
+
+// Sign Up Button - with styling to match the CyberFort Tech website
+export const MohsinSignUpButton: React.FC<ActionButtonBaseProps> = ({ 
+  children = 'Sign Up', 
+  variant = 'outline',
+  size = 'xs',
+  color = 'secondary',
+  className = '',
+  ...props 
+}) => (
+  <MohsinButton 
+    icon={UserPlus} 
+    iconPosition="left" 
+    variant={variant}
+    color={color}
+    size={size}
+    animation="scale"
+    className={`!rounded-md ${className}`}
     {...props}
   >
     {children}

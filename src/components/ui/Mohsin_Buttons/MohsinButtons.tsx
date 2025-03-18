@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useRef } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, X } from 'lucide-react';
 import styles from './MohsinButton.module.scss';
 
 // Define button variants and sizes
@@ -17,8 +17,10 @@ const buttonVariants = {
     danger: styles.danger,        // Red
     info: styles.info,            // Blue
     default: styles.default,      // Gray
+    blue: styles.blue,            // Blue
   },
   size: {
+    xs: styles.xs,
     sm: styles.sm,
     md: styles.md,
     lg: styles.lg,
@@ -33,8 +35,8 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, 'color'> {
   children?: React.ReactNode;
   className?: string;
   variant?: 'filled' | 'outline';
-  color?: 'primary' | 'secondary' | 'warning' | 'danger' | 'info' | 'default';
-  size?: 'sm' | 'md' | 'lg';
+  color?: 'primary' | 'secondary' | 'warning' | 'danger' | 'info' | 'default' | 'blue';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
   isLoading?: boolean;
@@ -55,8 +57,40 @@ const MohsinButton = forwardRef<HTMLButtonElement, ButtonProps>(
     children,
     disabled,
     animation = 'none',
+    onClick,
     ...props
   }, ref) => {
+    const rippleRef = useRef<HTMLSpanElement>(null);
+
+    // Enhanced ripple effect handler
+    const handleRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (!rippleRef.current) return;
+
+      const button = event.currentTarget;
+      const ripple = rippleRef.current;
+      
+      // Reset the animation
+      ripple.style.animation = 'none';
+      
+      // Calculate position
+      const rect = button.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      // Position the ripple at the click point
+      ripple.style.top = `${y}px`;
+      ripple.style.left = `${x}px`;
+      ripple.style.marginLeft = '0';
+      ripple.style.marginTop = '0';
+      
+      // Force reflow and restart animation
+      void ripple.offsetWidth; // Trigger reflow
+      ripple.style.animation = 'ripple 0.6s linear';
+      
+      // Call the original onClick handler
+      if (onClick) onClick(event);
+    };
+
     // Combine all the classes based on props
     const buttonClass = cn(
       styles.button,
@@ -125,6 +159,7 @@ const MohsinButton = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         whileHover={!disabled ? buttonAnimation.hover : undefined}
         whileTap={!disabled ? getWhileTap() : undefined}
+        onClick={!disabled ? handleRipple : undefined}
         {...props}
       >
         {isLoading ? (
@@ -148,8 +183,8 @@ const MohsinButton = forwardRef<HTMLButtonElement, ButtonProps>(
           </>
         )}
 
-        {/* Optional ripple effect overlay */}
-        <span className={styles.ripple}></span>
+        {/* Enhanced ripple effect overlay */}
+        <span ref={rippleRef} className={styles.ripple}></span>
       </motion.button>
     );
   }

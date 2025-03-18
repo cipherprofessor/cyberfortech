@@ -17,6 +17,20 @@
       cursor: not-allowed;
     }
   }
+
+
+  .xs{
+    height: 28px;
+    padding: 12 12px;
+    font-size: 0.9rem;
+    
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+ 
   
   // Size variants
   .sm {
@@ -111,6 +125,16 @@
     --hover-border: #94a3b8;
     --hover-text: #1e293b;
     --ripple-color: rgba(51, 65, 85, 0.1);
+  }
+
+  .blue {
+    --bg-color: #006FEE;
+    --text-color: white;
+    --border-color: #2563EB;
+    --hover-bg: #2563EB;
+    --hover-border: #2563EB;
+    --hover-text: white;
+    --ripple-color: rgba(255, 255, 255, 0.4);
   }
   
   // Variant styles
@@ -256,3 +280,7 @@
     justify-content: center;
     transform-origin: center;
   }
+
+
+
+  
