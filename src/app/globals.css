@@ -34,6 +34,31 @@
     --chart-5: hsl(340 75% 55%);
     --primary-alpha: rgba(255, 255, 255, 0.1);
     --border-hover: hsl(217.2 32.6% 27.5%);
+    /* background: rgb(89,82,89);
+background: -moz-linear-gradient(159deg, rgba(89,82,89,1) 0%, rgba(47,48,62,1) 49%, rgba(38,14,50,1) 100%);
+background: -webkit-linear-gradient(159deg, rgba(89,82,89,1) 0%, rgba(47,48,62,1) 49%, rgba(38,14,50,1) 100%);
+background: linear-gradient(159deg, rgba(89,82,89,1) 0%, rgba(47,48,62,1) 49%, rgba(38,14,50,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#595259",endColorstr="#260e32",GradientType=1); */
+
+/* dark grey space grey  */
+
+/* background: #000000; 
+background: -webkit-linear-gradient(to right, #434343, #000000);  
+background: linear-gradient(to right, #434343, #000000); */
+
+
+/* Sea Blue good */
+/* background: #2b5876; 
+background: -webkit-linear-gradient(to right, #4e4376, #2b5876);  
+background: linear-gradient(to right, #4e4376, #2b5876);  */
+
+/* Royal Blue good */
+background: #536976;  
+background: -webkit-linear-gradient(to right, #292E49, #536976);  
+background: linear-gradient(to right, #292E49, #536976); 
+
+
+
   }
 
   * {

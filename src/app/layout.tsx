@@ -16,6 +16,7 @@ import Script from "next/script";
 import { MohsinToaster } from "@/components/ui/mohsin-toast";
 import { ReduxStoreProviders } from "@/store/provider";
 import StatusIndicator from "@/components/ui/StatusIndicator/StatusIndicator";
+import { BackgroundBeams } from "@/components/ui/AcUI/BackgroundBeams/background-beams";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -46,13 +47,15 @@ export default function RootLayout({
       </head>
       
         <body 
+
+        
           // className={`${inter.className} antialiased`}
           suppressHydrationWarning
         >
-         
-
         
-       
+        
+         
+         
             <ReduxStoreProviders>
             <StatusIndicator />
             <Navbar />
@@ -78,7 +81,7 @@ export default function RootLayout({
            
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-          
+      
         </body>
       </html>
     </ClerkProvider>
