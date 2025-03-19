@@ -91,7 +91,7 @@ export default function MessagesInsightCards({ stats }: MessagesStatsProps) {
           value={`${stats.responseTime} hrs`}
           change={responseTimeChange}
           icon={<Clock size={24} />}
-        //   iconType="info"
+        //   iconType={stats.iconType}
         />
       </motion.div>
       

@@ -24,8 +24,8 @@ export function PartnerTestimonials() {
       name: "Sarah Johnson",
       title: "VP of Strategic Partnerships",
       company: "TechShield Security",
-      logo: "/partners/partner-logo-1.svg",
-      image: "/partners/testimonial-1.jpg",
+      logo: "/partners/tech_schield.jpg",
+      image: "/testm/testm1.avif",
       rating: 5
     },
     {
@@ -34,8 +34,8 @@ export function PartnerTestimonials() {
       name: "Michael Chen",
       title: "Director of Technology Programs",
       company: "SecureNet Academy",
-      logo: "/partners/partner-logo-2.svg",
-      image: "/partners/testimonial-2.jpg",
+      logo: "/partners/securenet.jpg",
+      image: "/testm/testm2.avif",
       rating: 5
     },
     {
@@ -44,9 +44,9 @@ export function PartnerTestimonials() {
       name: "Alex Rivera",
       title: "Chief Security Officer",
       company: "DataGuard Solutions",
-      logo: "/partners/partner-logo-3.svg",
-      image: "/partners/testimonial-3.jpg",
-      rating: 5
+      logo: "/partners/data_security.jpg",
+      image: "/testm/testm3.webp",
+      rating: 4.5
     }
   ];
 
@@ -162,7 +162,7 @@ export function PartnerTestimonials() {
               <div className={styles.personInfo}>
                 <div className={styles.personImage}>
                   <Image 
-                    src={currentTestimonial.image || "/partners/placeholder-avatar.jpg"} 
+                    src={currentTestimonial.image || "/testm/testm1.avif"} 
                     alt={currentTestimonial.name}
                     width={60}
                     height={60}
@@ -178,7 +178,7 @@ export function PartnerTestimonials() {
               
               <div className={styles.companyLogo}>
                 <Image 
-                  src={currentTestimonial.logo || "/partners/placeholder-logo.svg"} 
+                  src={currentTestimonial.logo || "/testm/testm1.avif"} 
                   alt={currentTestimonial.company}
                   width={100}
                   height={40}
