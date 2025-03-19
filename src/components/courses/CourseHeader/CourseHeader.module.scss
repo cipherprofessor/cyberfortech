@@ -39,7 +39,7 @@
     --text-secondary: #94a3b8;
     --text-tertiary: #64748b;
     --border: #334155;
-    --background: rgba(15, 23, 42, 0.4);
+    --background: rgba(13, 21, 37, 0.809);
     --stat-bg: rgba(30, 41, 59, 0.5);
     --stat-border: #334155;
     --stat-hover: rgba(51, 65, 85, 0.7);
@@ -53,18 +53,33 @@
     // }
   }
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
-  --border: #e2e8f0;
-  --background: #ffffff;
-  --stat-bg: #f8fafc;
-  --stat-border: #e2e8f0;
-  --stat-hover: #f1f5f9;
-  --instructor-bg: #f1f5f9;
-  --rating-fill: #eab308;
-  --icon-wrapper-bg: #f1f5f9;
-  --badge-bg: #f1f5f9;
+  // --text-primary: #0f172a;
+  // --text-secondary: #475569;
+  // --text-tertiary: #64748b;
+  // --border: #e2e8f0;
+  // --background: #ffffff;
+  // --stat-bg: #f8fafc;
+  // --stat-border: #e2e8f0;
+  // --stat-hover: #f1f5f9;
+  // --instructor-bg: #f1f5f9;
+  // --rating-fill: #eab308;
+  // --icon-wrapper-bg: #f1f5f9;
+  // --badge-bg: #f1f5f9;
+
+
+  --text-primary: #f1f5f9;
+    --text-secondary: #fdfeff;
+    --text-tertiary: #64748b;
+    --border: #334155;
+    --background: rgba(5, 9, 18, 0.16);
+    --stat-bg: rgba(30, 41, 59, 0.5);
+    --stat-border: #334155;
+    --stat-hover: rgba(51, 65, 85, 0.7);
+    --instructor-bg: rgba(30, 41, 59, 0.7);
+    --rating-fill: #eab308;
+    --icon-wrapper-bg: rgba(30, 41, 59, 0.8);
+    --badge-bg: rgba(30, 41, 59, 0.5);
+    
 }
 
 .content {

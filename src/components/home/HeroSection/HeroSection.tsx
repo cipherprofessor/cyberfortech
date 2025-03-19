@@ -11,19 +11,19 @@ import { useRouter } from "next/navigation";
 const words = [
   {
     text: "Transform",
-    className: "text-zinc-900 dark:text-white",
+    className: "text-zinc-100 dark:text-white",
   },
   {
     text: "Your",
-    className: "text-zinc-900 dark:text-white",
+    className: "text-zinc-200 dark:text-white",
   },
   {
     text: "Career",
-    className: "text-zinc-900 dark:text-white",
+    className: "text-zinc-300 dark:text-white",
   },
   {
     text: "with",
-    className: "text-zinc-900 dark:text-white",
+    className: "text-zinc-400 dark:text-white",
   },
   {
     text: "CyberFort Tech",

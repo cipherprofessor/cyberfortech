@@ -28,6 +28,18 @@
   --button-dark-text: #ffffff;
   --button-border: transparent;
   --button-radius: 0.5rem;
+
+  --border-color: #334155;
+  --text-color: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --bg-color: #1e293b;
+  --tag-bg: #334155;
+  --tag-text: #cbd5e1;
+  --tag-bg-primary: #6366f1;
+  --tag-text-primary: #ffffff;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --button-bg: var(--button-dark-bg);
+  --button-text: var(--button-dark-text);
   
   display: flex;
   flex-direction: row;
