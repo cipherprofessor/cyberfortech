@@ -8,7 +8,8 @@ import LoadingState from './components/LoadingState/LoadingState';
 import MessagesFilters from './components/MessagesFilters/MessagesFilters';
 import MessagesInsightCards from './components/MessagesInsightCards/MessagesInsightCards';
 import MessagesTable from './components/MessagesTable/MessagesTable';
-import ErrorStateInbox from './components/ErrorState/page';
+import ErrorStateInbox from './components/ErrorState/ErrorState';
+import ErrorState from './components/ErrorState/ErrorState';
 
 export default function MessagesDashboard() {
   const [messagesData, setMessagesData] = useState<any[]>([]);
@@ -220,7 +221,7 @@ export default function MessagesDashboard() {
       {loading ? (
         <LoadingState />
       ) : error ? (
-        <ErrorStateInbox  />
+        <ErrorState message={error} />
       ) : (
         <MessagesTable 
           messages={filteredData}
