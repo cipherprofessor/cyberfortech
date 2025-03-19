@@ -35,7 +35,7 @@ export default function RootLayout({
       <html 
         lang="en" 
         suppressHydrationWarning
-        className="light"
+        className="dark"
       >
         <head>
         <Script
@@ -52,7 +52,7 @@ export default function RootLayout({
          
 
         
-          <ThemeProviders>
+       
             <ReduxStoreProviders>
             <StatusIndicator />
             <Navbar />
@@ -69,7 +69,6 @@ export default function RootLayout({
             </main>
             {/* <Footer /> */}
             </ReduxStoreProviders>
-          </ThemeProviders>
           <NextSSRPlugin
           
           //  * The `extractRouterConfig` will extract **only** the route configs

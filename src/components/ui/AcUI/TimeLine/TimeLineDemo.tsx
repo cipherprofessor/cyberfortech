@@ -9,7 +9,7 @@ export function CyberFortTimeline() {
       title: "2024",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="text-white dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             Expanded our services with advanced cybersecurity training programs and launched enterprise security solutions
           </p>
           <div className="grid grid-cols-2 gap-4">
@@ -35,20 +35,20 @@ export function CyberFortTimeline() {
       title: "2023",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="text-neutral-100 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             Successfully trained over 1000 students in cybersecurity fundamentals and launched corporate training programs
           </p>
           <div className="mb-8">
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               ✅ Established Cybersecurity Training Center
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               ✅ Launched Web Development Bootcamp
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               ✅ Started Corporate Security Consulting
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               ✅ Introduced Ethical Hacking Course
             </div>
           </div>
@@ -59,23 +59,23 @@ export function CyberFortTimeline() {
       title: "Our Services",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-4">
+          <p className="text-white dark:text-neutral-200 text-xs md:text-sm font-normal mb-4">
             Comprehensive Tech Education & Security Solutions
           </p>
           <div className="mb-8">
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               🔒 Advanced Cybersecurity Training
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               💻 Full-Stack Web Development Courses
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               🛡️ Enterprise Security Solutions
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               🌐 Custom Website Development
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-neutral-100 dark:text-neutral-300 text-xs md:text-sm">
               👥 Corporate Training Programs
             </div>
           </div>
