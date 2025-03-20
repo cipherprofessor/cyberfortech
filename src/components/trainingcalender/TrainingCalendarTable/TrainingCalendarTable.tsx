@@ -1,9 +1,8 @@
 "use client"
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, Users, Monitor, Briefcase, MapPin, Clock, CalendarClock, Zap } from 'lucide-react';
+import { ChevronRight, Users, Monitor, Briefcase, MapPin, Clock, CalendarClock, Zap, Tag } from 'lucide-react';
 import styles from './TrainingCalendarTable.module.scss';
-
 
 // Interface for training course data
 interface TrainingCourse {
@@ -124,6 +123,7 @@ export function TrainingCalendarTable({
       <div className={styles.tableHeader}>
         <div className={styles.column}>Course Details</div>
         <div className={styles.column}>Category</div>
+        <div className={styles.column}>Level</div>
         <div className={styles.column}>Schedule</div>
         <div className={styles.column}>Availability</div>
         <div className={styles.column}>Price</div>
@@ -137,13 +137,11 @@ export function TrainingCalendarTable({
             className={`${styles.courseRow} ${expandedCourseId === course.id ? styles.expanded : ''}`}
             variants={rowVariants}
           >
+            {/* Desktop View */}
             <div className={styles.mainRow} onClick={() => handleToggleExpand(course.id)}>
               <div className={styles.column}>
                 <div className={styles.courseTitle}>
                   <span className={styles.title}>{course.title}</span>
-                  <span className={`${styles.levelBadge} ${getLevelBadge(course.level)}`}>
-                    {course.level}
-                  </span>
                 </div>
               </div>
               
@@ -151,6 +149,12 @@ export function TrainingCalendarTable({
                 <div className={styles.courseCategory}>
                   <span className={styles.categoryLabel}>{course.category}</span>
                 </div>
+              </div>
+              
+              <div className={styles.column}>
+                <span className={`${styles.levelBadge} ${getLevelBadge(course.level)}`}>
+                  {course.level}
+                </span>
               </div>
               
               <div className={styles.column}>
@@ -206,6 +210,75 @@ export function TrainingCalendarTable({
                     />
                   </button>
                 </div>
+              </div>
+            </div>
+
+            {/* Mobile View */}
+            <div className={styles.mobileView} onClick={() => handleToggleExpand(course.id)}>
+              <div className={styles.mobileHeader}>
+                <div className={styles.mobileTitleSection}>
+                  <h3 className={styles.mobileTitle}>{course.title}</h3>
+                </div>
+                <div className={styles.mobileBadges}>
+                  <span className={`${styles.levelBadge} ${getLevelBadge(course.level)}`}>
+                    {course.level}
+                  </span>
+                </div>
+              </div>
+              
+              <div className={styles.mobileMeta}>
+                <div className={styles.mobileCategory}>
+                  <Tag size={14} />
+                  <span>{course.category}</span>
+                </div>
+                <div className={styles.mobileScheduleItem}>
+                  <CalendarClock size={14} />
+                  <span>{course.dates}</span>
+                </div>
+                <div className={styles.mobileScheduleItem}>
+                  <Clock size={14} />
+                  <span>{course.time}</span>
+                </div>
+              </div>
+              
+              <div className={styles.mobileDetails}>
+                <div className={`${styles.availabilityIndicator} ${getAvailabilityStatus(course.availability)}`}>
+                  <span className={styles.availabilityText}>
+                    <Users size={14} />
+                    <span>{course.availability} seats left</span>
+                  </span>
+                </div>
+                
+                <div className={styles.mobilePriceTag}>
+                  <span className={styles.mobilePrice}>
+                    <span className={styles.currency}>₹</span>
+                    <span className={styles.amount}>{course.price}</span>
+                  </span>
+                </div>
+              </div>
+              
+              <div className={styles.mobileActions}>
+                <button 
+                  className={styles.mobileEnrollButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEnroll(course);
+                  }}
+                >
+                  Enroll Now
+                </button>
+                <button 
+                  className={styles.mobileExpandButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleExpand(course.id);
+                  }}
+                >
+                  <ChevronRight 
+                    size={18} 
+                    className={expandedCourseId === course.id ? styles.rotated : ''}
+                  />
+                </button>
               </div>
             </div>
             
@@ -290,7 +363,10 @@ export function TrainingCalendarTable({
                   <div className={styles.expandedActions}>
                     <button 
                       className={styles.enrollButtonLarge}
-                      onClick={() => onEnroll(course)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEnroll(course);
+                      }}
                     >
                       Enroll in this Course
                     </button>
