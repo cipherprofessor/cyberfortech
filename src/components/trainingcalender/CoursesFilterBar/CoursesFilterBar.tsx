@@ -116,7 +116,7 @@ export function CoursesFilterBar({
                 className={`${styles.modeToggleButton} ${mode === 'in-person' ? styles.activeMode : ''}`}
                 onClick={() => setMode('in-person')}
               >
-                In Person
+                Offline
               </button>
             </div>
           </div>

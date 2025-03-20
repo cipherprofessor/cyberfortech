@@ -5,8 +5,10 @@ $breakpoint-md: 768px;
 $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 
+
 .tableContainer {
-  background-color: var(--bg-secondary, #1f2937);
+  background-color: #1a1b1e;
+  background-color: rgb(25, 25, 28);
   border-radius: 0.75rem;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -528,43 +530,46 @@ $breakpoint-xl: 1200px;
 // Light mode overrides
 :global(.light) {
   .tableContainer {
-    background-color: var(--bg-secondary, #f3f4f6);
+    // background-color: var(--bg-secondary, #f3f4f6);
+    background-color: #1a1b1e;
+    color: #e5e7eb;
   }
   
   .tableHeader {
-    background-color: var(--bg-hover, #e5e7eb);
+    background-color: #1a1b1e;
     border-bottom: 1px solid var(--border-color, #d1d5db);
-    color: var(--text-primary, #111827);
+    color: var(--text-primary, #fefefe);
   }
   
   .tableBody {
     &::-webkit-scrollbar-track {
-      background: var(--bg-secondary, #f3f4f6);
+    //   background: var(--bg-secondary, #f3f4f6);
+      background-color: #1a1b1e;
     }
     
     &::-webkit-scrollbar-thumb {
-      background-color: var(--border-color, #d1d5db);
+      background-color: #1a1b1e;
     }
   }
   
   .courseRow {
-    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    border-bottom: 1px solid #403e3e;
     
     &:hover {
-      background-color: var(--bg-hover, #f9fafb);
+      background-color: #1a1b1e;
     }
     
     &.expanded {
-      background-color: var(--bg-hover, #f9fafb);
+      background-color: #1a1b1e;
     }
   }
   
   .title {
-    color: var(--text-primary, #111827);
+    color: var(--text-primary, #ffffff);
   }
   
   .expandedContent {
-    background-color: var(--bg-primary, white);
+    background-color: #1a1b1e;
     border-top: 1px solid var(--border-color, #e5e7eb);
   }
   
@@ -578,7 +583,8 @@ $breakpoint-xl: 1200px;
   }
   
   .sectionTitle {
-    color: var(--text-primary, #111827);
+    color: var(--text-primary, #fbfbfb);
+    
   }
   
   .loadingContainer, .noCoursesContainer {

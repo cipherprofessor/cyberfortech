@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ChevronRight, Users, Monitor, Briefcase, MapPin, Clock, CalendarClock, Zap } from 'lucide-react';
 import styles from './TrainingCalendarTable.module.scss';
 
+
 // Interface for training course data
 interface TrainingCourse {
   id: string;
