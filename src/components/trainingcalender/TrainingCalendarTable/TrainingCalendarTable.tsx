@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, Users, Monitor, Briefcase, MapPin, Clock, CalendarClock, Zap, Tag } from 'lucide-react';
 import styles from './TrainingCalendarTable.module.scss';
+import TrainingCalendarSkeleton from './TrainingCalendarSkeleton/TrainingCalendarSkeleton';
 
 // Interface for training course data
 interface TrainingCourse {
@@ -98,10 +99,7 @@ export function TrainingCalendarTable({
 
   if (isLoading) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner}></div>
-        <p>Loading courses...</p>
-      </div>
+        <TrainingCalendarSkeleton rows={7} />
     );
   }
 

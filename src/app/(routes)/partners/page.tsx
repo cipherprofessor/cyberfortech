@@ -1,116 +1,269 @@
 "use client"
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Handshake } from 'lucide-react';
 
-import styles from './partners.module.scss';
-import { PartnersList } from '@/components/partners/PartnersList/PartnersList';
-import { PartnershipBenefits } from '@/components/partners/PartnershipBenefits/PartnershipBenefits';
-import { PartnerTestimonials } from '@/components/partners/PartnerTestimonials/PartnerTestimonials';
-import { PartnershipProcess } from '@/components/partners/PartnershipProcess/PartnershipProcess';
-import { PartnershipTypeCards } from '@/components/partners/PartnershipTypeCards/PartnershipTypeCards';
-import { PartnerContactForm } from '@/components/partners/PartnerContactForm/PartnerContactForm';
+import styles from './page.module.scss';
+import TrainingHeader from '@/components/trainingcalender/TrainingHeader/TrainingHeader';
+import CoursesFilterBar from '@/components/trainingcalender/CoursesFilterBar/CoursesFilterBar';
+import TrainingCalendarTable from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarTable';
 
-export default function PartnersPage() {
+import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal';
+import UpcomingHighlights from '@/components/trainingcalender/UpcomingHighlights/UpcomingHighlights';
+import TrainingStatistics from '@/components/trainingcalender/TrainingStatistics/TrainingStatistics';
+import TrainingCalendarSkeleton from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarSkeleton/TrainingCalendarSkeleton';
+
+// Interface for training course data
+interface TrainingCourse {
+  id: string;
+  title: string;
+  dates: string;
+  time: string;
+  duration: string;
+  mode: 'online' | 'in-person' | 'hybrid';
+  location?: string;
+  instructor: string;
+  availability: number;
+  price: number;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  category: string;
+  description: string;
+  prerequisites?: string[];
+  certification?: string;
+  language: string;
+}
+
+export default function TrainingCalendarPage() {
+  const [courses, setCourses] = useState<TrainingCourse[]>([]);
+  const [filteredCourses, setFilteredCourses] = useState<TrainingCourse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedMode, setSelectedMode] = useState('all');
+  const [selectedMonth, setSelectedMonth] = useState('all');
+  const [selectedLevel, setSelectedLevel] = useState('all');
+  const [showEnrollModal, setShowEnrollModal] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<TrainingCourse | null>(null);
+
+  // Simulated fetch of training courses data
+  useEffect(() => {
+    // This would be an API call in a real application
+    const fetchCourses = async () => {
+      setIsLoading(true);
+      
+      // Simulated delay for API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Sample training course data
+      const sampleCourses: TrainingCourse[] = [
+        {
+          id: 'course-001',
+          title: 'Cybersecurity Fundamentals',
+          dates: '22 Mar - 20 Apr',
+          time: '19:00 - 23:00 IST',
+          duration: '4 weeks',
+          mode: 'online',
+          instructor: 'John Smith',
+          availability: 15,
+          price: 599,
+          level: 'beginner',
+          category: 'Security',
+          description: 'Learn the essential concepts and practices of cybersecurity.',
+          prerequisites: ['Basic IT knowledge'],
+          certification: 'CyberFort Security Fundamentals',
+          language: 'English'
+        },
+        {
+          id: 'course-002',
+          title: 'Advanced Penetration Testing',
+          dates: '23 Mar - 03 May',
+          time: '09:00 - 13:00 IST',
+          duration: '6 weeks',
+          mode: 'online',
+          instructor: 'Sarah Johnson',
+          availability: 5,
+          price: 1299,
+          level: 'advanced',
+          category: 'Security',
+          description: 'Master the art of ethical hacking and penetration testing.',
+          prerequisites: ['Basic network knowledge', 'Linux command line experience'],
+          certification: 'CyberFort Advanced Penetration Tester',
+          language: 'English'
+        },
+        {
+          id: 'course-003',
+          title: 'Cloud Security Architecture',
+          dates: '29 Mar - 20 Apr',
+          time: '19:00 - 23:00 IST',
+          duration: '4 weeks',
+          mode: 'hybrid',
+          location: 'New York & Online',
+          instructor: 'Michael Chen',
+          availability: 20,
+          price: 899,
+          level: 'intermediate',
+          category: 'Cloud',
+          description: 'Design and implement secure cloud architectures.',
+          prerequisites: ['Cloud computing basics', 'Basic security knowledge'],
+          certification: 'CyberFort Cloud Security Architect',
+          language: 'English'
+        },
+        // More course data...
+      ];
+      
+      setCourses(sampleCourses);
+      setFilteredCourses(sampleCourses);
+      setIsLoading(false);
+    };
+    
+    fetchCourses();
+  }, []);
+
+  // Filter courses based on search term and filters
+  useEffect(() => {
+    let result = [...courses];
+    
+    // Apply search term filter
+    if (searchTerm) {
+      result = result.filter(course => 
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    // Apply category filter
+    if (selectedCategory !== 'all') {
+      result = result.filter(course => course.category === selectedCategory);
+    }
+    
+    // Apply mode filter
+    if (selectedMode !== 'all') {
+      result = result.filter(course => course.mode === selectedMode);
+    }
+    
+    // Apply level filter
+    if (selectedLevel !== 'all') {
+      result = result.filter(course => course.level === selectedLevel);
+    }
+    
+    // Apply month filter
+    if (selectedMonth !== 'all') {
+      // Extract month from the start date
+      result = result.filter(course => {
+        const dateStr = course.dates.split(' - ')[0]; // Get the start date
+        const month = dateStr.split(' ')[1]; // Get the month abbreviation
+        return month.toLowerCase() === selectedMonth.toLowerCase();
+      });
+    }
+    
+    setFilteredCourses(result);
+  }, [courses, searchTerm, selectedCategory, selectedMode, selectedMonth, selectedLevel]);
+
+  // Function to handle course enrollment
+  const handleEnroll = (course: TrainingCourse) => {
+    setSelectedCourse(course);
+    setShowEnrollModal(true);
+  };
+
+  // Function to handle search term change
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
+  // Function to handle filter changes
+  const handleFilterChange = (
+    category: string,
+    mode: string,
+    month: string,
+    level: string
+  ) => {
+    setSelectedCategory(category);
+    setSelectedMode(mode);
+    setSelectedMonth(month);
+    setSelectedLevel(level);
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
   return (
-    <div className={styles.partnersContainer}>
-      {/* Hero Section */}
-      <section className={styles.heroSection}>
-        <motion.div
-          className={styles.heroContent}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.div 
-            className={styles.heroIconWrapper}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <Handshake size={24} className={styles.heroIcon} />
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            Partner With CyberFort
-          </motion.h1>
-          <motion.p
-            className={styles.heroSubtext}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            Join forces with us to create a more secure digital future. Our partnership program offers collaboration opportunities for businesses, educational institutions, and cybersecurity experts.
-          </motion.p>
-          <motion.a
-            href="#contact-form"
-            className={styles.contactButton}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            whileHover={{ y: -3, boxShadow: '0 6px 20px rgba(59, 130, 246, 0.4)' }}
-            whileTap={{ y: 0 }}
-          >
-            Contact Us
-          </motion.a>
-        </motion.div>
-      </section>
-
-      {/* Current Partners Section */}
-      <section className={styles.partnersSection}>
-        <div className={styles.sectionHeader}>
-          <h2>Our Trusted Partners</h2>
-          <p>Collaborating with industry leaders to deliver exceptional cybersecurity solutions</p>
+    <motion.div 
+      className={styles.calendarPage}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Header Section */}
+      <TrainingHeader 
+        totalCourses={courses.length} 
+        availableCourses={filteredCourses.length} 
+      />
+      
+      {/* Main Content */}
+      <div className={styles.contentLayout}>
+        {/* Main Section */}
+        <div className={styles.mainSection}>
+          {/* Filter Bar */}
+          <CoursesFilterBar 
+            onSearch={handleSearch}
+            onFilterChange={handleFilterChange}
+            selectedCategory={selectedCategory}
+            selectedMode={selectedMode}
+            selectedMonth={selectedMonth}
+            selectedLevel={selectedLevel}
+          />
+          
+          {/* Training Calendar Table or Skeleton */}
+          {isLoading ? (
+            <TrainingCalendarSkeleton rows={5} />
+          ) : (
+            <TrainingCalendarTable 
+              courses={filteredCourses}
+              isLoading={false}
+              onEnroll={handleEnroll}
+            />
+          )}
         </div>
-        <PartnersList />
-      </section>
-
-      {/* Partnership Types Section */}
-      <section className={styles.partnershipTypesSection}>
-        <div className={styles.sectionHeader}>
-          <h2>Partnership Opportunities</h2>
-          <p>Explore the different ways to partner with CyberFort</p>
+        
+        {/* Side Section */}
+        <div className={styles.sideSection}>
+          {/* Training Statistics */}
+          <TrainingStatistics 
+            totalCourses={courses.length}
+            onlineCourses={courses.filter(c => c.mode === 'online').length}
+            hybridCourses={courses.filter(c => c.mode === 'hybrid').length}
+            beginnerCourses={courses.filter(c => c.level === 'beginner').length}
+            intermediateCourses={courses.filter(c => c.level === 'intermediate').length}
+            advancedCourses={courses.filter(c => c.level === 'advanced').length}
+          />
+          
+          {/* Upcoming Highlights */}
+          <UpcomingHighlights 
+            upcomingCourses={courses.slice(0, 3)} 
+          />
         </div>
-        <PartnershipTypeCards />
-      </section>
-
-      {/* Benefits Section */}
-      <section className={styles.benefitsSection}>
-        <div className={styles.sectionHeader}>
-          <h2>Partnership Benefits</h2>
-          <p>Why partnering with CyberFort is a smart business decision</p>
-        </div>
-        <PartnershipBenefits />
-      </section>
-
-      {/* Partnership Process Section */}
-      <section className={styles.processSection}>
-        <div className={styles.sectionHeader}>
-          <h2>How Our Partnership Works</h2>
-          <p>A simple process to establish a successful collaboration</p>
-        </div>
-        <PartnershipProcess />
-      </section>
-
-      {/* Testimonials Section */}
-      <section className={styles.testimonialsSection}>
-        <div className={styles.sectionHeader}>
-          <h2>Partner Success Stories</h2>
-          <p>Hear what our partners have to say about working with us</p>
-        </div>
-        <PartnerTestimonials />
-      </section>
-
-      {/* Contact Form Section */}
-      <section id="contact-form" className={styles.contactSection}>
-        <div className={styles.sectionHeader}>
-          <h2>Become a Partner</h2>
-          <p>Interested in partnering with us? Fill out the form below to get started</p>
-        </div>
-        <PartnerContactForm />
-      </section>
-    </div>
+      </div>
+      
+      {/* Enrollment Modal */}
+      {showEnrollModal && selectedCourse && (
+        <EnrollmentModal 
+          course={selectedCourse}
+          onClose={() => setShowEnrollModal(false)}
+          onSubmit={(formData) => {
+            console.log('Enrollment data:', formData);
+            setShowEnrollModal(false);
+            // In a real app, this would submit to an API
+          }}
+        />
+      )}
+    </motion.div>
   );
 }
