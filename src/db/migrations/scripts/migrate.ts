@@ -24,7 +24,8 @@ const SCHEMA_FILES = [
   '010_create_triggers_utils.sql',
   '011_create_blog.sql',
   '012_likes_bookmarks_schema.sql',
-  '013_newsletter_subscribers_schema.sql'
+  '013_newsletter_subscribers_schema.sql',
+  '014_training_calender.sql'
 ];
 
 function cleanSQLStatement(sql: string): string {

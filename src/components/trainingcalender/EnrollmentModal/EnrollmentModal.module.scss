@@ -720,3 +720,49 @@ $breakpoint-xl: 1200px;
     color: var(--text-primary, #111827);
   }
 }
+
+
+/* Add these styles to your EnrollmentModal.module.scss file */
+
+/* Loading spinner icon */
+.spinIcon {
+    animation: spin 1.5s linear infinite;
+    margin-right: 8px;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Style for disabled buttons */
+  .proceedButton[disabled],
+  .backButton[disabled],
+  .submitButton[disabled],
+  .doneButton[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-color: #6b7280;
+  }
+  
+  /* Style for disabled inputs */
+  .formInput[disabled],
+  .formTextarea[disabled],
+  .checkbox[disabled],
+  .radioInput[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-color: #f3f4f6;
+  }
+  
+  /* Style for disabled close button */
+  .closeButton[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* Rest of your existing styles... */

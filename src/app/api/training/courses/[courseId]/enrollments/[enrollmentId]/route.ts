@@ -81,7 +81,7 @@ export async function GET(
     // Check if the user is authorized to view this enrollment
     // Admin can view any enrollment, regular users can only view their own
     const enrollment = result.rows[0];
-    if (user.id !== enrollment.userId && !user.roles?.includes(ROLES.ADMIN)) {
+    if (user.id !== enrollment.userId && !user.role?.includes(ROLES.ADMIN)) {
       return NextResponse.json(
         { error: 'Unauthorized to access this enrollment' },
         { status: 403 }
@@ -142,7 +142,7 @@ export async function PUT(
     
     // Check if the user is authorized to update this enrollment
     // Admin can update any enrollment, regular users can only update specific fields of their own enrollments
-    const isAdmin = user.roles?.includes(ROLES.ADMIN);
+    const isAdmin = user.role?.includes(ROLES.ADMIN);
     const isOwner = user.id === enrollment.userId;
     
     if (!isAdmin && !isOwner) {
@@ -297,7 +297,7 @@ export async function DELETE(
     
     // Check if the user is authorized to delete this enrollment
     // Admin can delete any enrollment, regular users can only cancel their own enrollments
-    const isAdmin = user.roles?.includes(ROLES.ADMIN);
+    const isAdmin = user.role?.includes(ROLES.ADMIN);
     const isOwner = user.id === enrollment.userId;
     
     if (!isAdmin && !isOwner) {

@@ -62,7 +62,7 @@ export async function GET(
     
     // Only allow users to see their own waitlist entries or admins to see any
     const waitlistEntry = result.rows[0];
-    if (user.id !== waitlistEntry.userId && !user.roles?.includes(ROLES.ADMIN)) {
+    if (user.id !== waitlistEntry.userId && !user.role?.includes(ROLES.ADMIN)) {
       return NextResponse.json(
         { error: 'Unauthorized to access this waitlist entry' },
         { status: 403 }

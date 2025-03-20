@@ -14,7 +14,9 @@ import {
   Phone,
   User,
   CheckCircle2,
-  FileText as File
+  FileText as File,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import styles from './EnrollmentModal.module.scss';
 
@@ -48,20 +50,25 @@ interface EnrollmentFormData {
   paymentMethod: 'credit_card' | 'invoice' | 'bank_transfer';
   comments: string;
   agreeTerms: boolean;
+  courseId: string;
 }
 
 interface EnrollmentModalProps {
   course: TrainingCourse;
   onClose: () => void;
   onSubmit: (formData: EnrollmentFormData) => void;
+  isProcessing?: boolean;
+  enrollmentId?: string;
 }
 
 export function EnrollmentModal({ 
   course, 
   onClose, 
-  onSubmit 
+  onSubmit,
+  isProcessing = false,
+  enrollmentId
 }: EnrollmentModalProps) {
-  const [step, setStep] = useState<'details' | 'form' | 'confirmation'>('details');
+  const [step, setStep] = useState<'details' | 'form' | 'confirmation'>(enrollmentId ? 'confirmation' : 'details');
   const [formData, setFormData] = useState<EnrollmentFormData>({
     firstName: '',
     lastName: '',
@@ -70,9 +77,13 @@ export function EnrollmentModal({
     company: '',
     paymentMethod: 'credit_card',
     comments: '',
-    agreeTerms: false
+    agreeTerms: false,
+    courseId: course.id
   });
   const [errors, setErrors] = useState<Partial<Record<keyof EnrollmentFormData, string>>>({});
+  const [generatedEnrollmentId, setGeneratedEnrollmentId] = useState<string>(
+    enrollmentId || `ENR-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`
+  );
 
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -132,12 +143,21 @@ export function EnrollmentModal({
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm()) {
-      onSubmit(formData);
-      setStep('confirmation');
+      try {
+        await onSubmit(formData);
+        // Only transition to confirmation if not already in confirmation state
+        // and if the onSubmit didn't trigger any errors
+        if (step !== 'confirmation') {
+          setStep('confirmation');
+        }
+      } catch (error) {
+        // Error handling is managed in the parent component
+        console.error('Error in form submission:', error);
+      }
     }
   };
 
@@ -187,7 +207,7 @@ export function EnrollmentModal({
               {step === 'form' && 'Complete Registration'}
               {step === 'confirmation' && 'Enrollment Successful'}
             </h3>
-            <button className={styles.closeButton} onClick={onClose}>
+            <button className={styles.closeButton} onClick={onClose} disabled={isProcessing}>
               <X size={20} />
             </button>
           </div>
@@ -244,6 +264,7 @@ export function EnrollmentModal({
                   <button 
                     className={styles.proceedButton}
                     onClick={() => setStep('form')}
+                    disabled={isProcessing}
                   >
                     Proceed to Registration
                     <ChevronRight size={18} />
@@ -274,6 +295,7 @@ export function EnrollmentModal({
                           onChange={handleInputChange}
                           className={`${styles.formInput} ${errors.firstName ? styles.inputError : ''}`}
                           placeholder="Enter your first name"
+                          disabled={isProcessing}
                         />
                       </div>
                       {errors.firstName && <span className={styles.errorMessage}>{errors.firstName}</span>}
@@ -293,6 +315,7 @@ export function EnrollmentModal({
                           onChange={handleInputChange}
                           className={`${styles.formInput} ${errors.lastName ? styles.inputError : ''}`}
                           placeholder="Enter your last name"
+                          disabled={isProcessing}
                         />
                       </div>
                       {errors.lastName && <span className={styles.errorMessage}>{errors.lastName}</span>}
@@ -314,6 +337,7 @@ export function EnrollmentModal({
                           onChange={handleInputChange}
                           className={`${styles.formInput} ${errors.email ? styles.inputError : ''}`}
                           placeholder="Enter your email address"
+                          disabled={isProcessing}
                         />
                       </div>
                       {errors.email && <span className={styles.errorMessage}>{errors.email}</span>}
@@ -333,6 +357,7 @@ export function EnrollmentModal({
                           onChange={handleInputChange}
                           className={`${styles.formInput} ${errors.phone ? styles.inputError : ''}`}
                           placeholder="Enter your phone number"
+                          disabled={isProcessing}
                         />
                       </div>
                       {errors.phone && <span className={styles.errorMessage}>{errors.phone}</span>}
@@ -353,6 +378,7 @@ export function EnrollmentModal({
                         onChange={handleInputChange}
                         className={styles.formInput}
                         placeholder="Enter your company name (optional)"
+                        disabled={isProcessing}
                       />
                     </div>
                   </div>
@@ -374,6 +400,7 @@ export function EnrollmentModal({
                           checked={formData.paymentMethod === 'credit_card'}
                           onChange={handleInputChange}
                           className={styles.radioInput}
+                          disabled={isProcessing}
                         />
                         <span className={styles.radioControl}>
                           <CreditCard size={18} />
@@ -389,6 +416,7 @@ export function EnrollmentModal({
                           checked={formData.paymentMethod === 'invoice'}
                           onChange={handleInputChange}
                           className={styles.radioInput}
+                          disabled={isProcessing}
                         />
                         <span className={styles.radioControl}>
                           <File size={18} />
@@ -404,6 +432,7 @@ export function EnrollmentModal({
                           checked={formData.paymentMethod === 'bank_transfer'}
                           onChange={handleInputChange}
                           className={styles.radioInput}
+                          disabled={isProcessing}
                         />
                         <span className={styles.radioControl}>
                           <Building size={18} />
@@ -425,6 +454,7 @@ export function EnrollmentModal({
                       className={styles.formTextarea}
                       placeholder="Any specific requirements or questions?"
                       rows={3}
+                      disabled={isProcessing}
                     />
                   </div>
                 </div>
@@ -438,6 +468,7 @@ export function EnrollmentModal({
                         checked={formData.agreeTerms}
                         onChange={handleInputChange}
                         className={styles.checkbox}
+                        disabled={isProcessing}
                       />
                       <span className={styles.checkboxText}>
                         I agree to the <a href="#" className={styles.termsLink}>Terms & Conditions</a> and <a href="#" className={styles.termsLink}>Privacy Policy</a>
@@ -451,6 +482,7 @@ export function EnrollmentModal({
                       type="button"
                       className={styles.backButton}
                       onClick={() => setStep('details')}
+                      disabled={isProcessing}
                     >
                       Back
                     </button>
@@ -458,8 +490,16 @@ export function EnrollmentModal({
                     <button
                       type="submit"
                       className={styles.submitButton}
+                      disabled={isProcessing}
                     >
-                      Complete Enrollment
+                      {isProcessing ? (
+                        <>
+                          <Loader2 size={18} className={styles.spinIcon} />
+                          Processing...
+                        </>
+                      ) : (
+                        'Complete Enrollment'
+                      )}
                     </button>
                   </div>
                 </div>
@@ -485,7 +525,7 @@ export function EnrollmentModal({
                 <div className={styles.enrollmentDetails}>
                   <div className={styles.detailItem}>
                     <span className={styles.detailLabel}>Enrollment ID:</span>
-                    <span className={styles.detailValue}>ENR-{Math.floor(Math.random() * 10000).toString().padStart(4, '0')}</span>
+                    <span className={styles.detailValue}>{generatedEnrollmentId}</span>
                   </div>
                   
                   <div className={styles.detailItem}>
@@ -515,6 +555,7 @@ export function EnrollmentModal({
                 <button
                   className={styles.doneButton}
                   onClick={onClose}
+                  disabled={isProcessing}
                 >
                   Done
                 </button>
