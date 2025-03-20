@@ -122,6 +122,7 @@ export function TrainingCalendarTable({
     >
       <div className={styles.tableHeader}>
         <div className={styles.column}>Course Details</div>
+        <div className={styles.column}>Category</div>
         <div className={styles.column}>Schedule</div>
         <div className={styles.column}>Availability</div>
         <div className={styles.column}>Price</div>
@@ -143,6 +144,9 @@ export function TrainingCalendarTable({
                     {course.level}
                   </span>
                 </div>
+              </div>
+              
+              <div className={styles.column}>
                 <div className={styles.courseCategory}>
                   <span className={styles.categoryLabel}>{course.category}</span>
                 </div>

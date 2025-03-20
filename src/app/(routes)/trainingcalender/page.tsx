@@ -1,22 +1,14 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Filter, Book, Clock, MapPin, BadgeCheck } from 'lucide-react';
-
-// import TrainingHeader from '@/components/training/TrainingHeader';
-// import CoursesFilterBar from '@/components/training/CoursesFilterBar';
-// import TrainingCalendarTable from '@/components/training/TrainingCalendarTable';
-// import EnrollmentModal from '@/components/training/EnrollmentModal';
-// import UpcomingHighlights from '@/components/training/UpcomingHighlights';
-// import TrainingStatistics from '@/components/training/TrainingStatistics';
 
 import styles from './page.module.scss';
-import CoursesFilterBar from '@/components/trainingcalender/CoursesFilterBar/CoursesFilterBar';
 import TrainingHeader from '@/components/trainingcalender/TrainingHeader/TrainingHeader';
+import CoursesFilterBar from '@/components/trainingcalender/CoursesFilterBar/CoursesFilterBar';
 import TrainingCalendarTable from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarTable';
-import TrainingStatistics from '@/components/trainingcalender/TrainingStatistics/TrainingStatistics';
-import UpcomingHighlights from '@/components/trainingcalender/UpcomingHighlights/UpcomingHighlights';
 import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal';
+import UpcomingHighlights from '@/components/trainingcalender/UpcomingHighlights/UpcomingHighlights';
+import TrainingStatistics from '@/components/trainingcalender/TrainingStatistics/TrainingStatistics';
 
 // Interface for training course data
 interface TrainingCourse {
@@ -264,8 +256,9 @@ export default function TrainingCalendarPage() {
       />
       
       {/* Main Content */}
-      <div className={styles.mainContent}>
-        <div className={styles.leftColumn}>
+      <div className={styles.contentLayout}>
+        {/* Main Section */}
+        <div className={styles.mainSection}>
           {/* Filter Bar */}
           <CoursesFilterBar 
             onSearch={handleSearch}
@@ -284,7 +277,8 @@ export default function TrainingCalendarPage() {
           />
         </div>
         
-        <div className={styles.rightColumn}>
+        {/* Side Section */}
+        <div className={styles.sideSection}>
           {/* Training Statistics */}
           <TrainingStatistics 
             totalCourses={courses.length}

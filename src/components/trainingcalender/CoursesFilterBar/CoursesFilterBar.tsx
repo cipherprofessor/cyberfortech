@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Filter, Calendar, Monitor, Users, BookOpen } from 'lucide-react';
+import { Search, Filter, ChevronDown, RefreshCw, CheckCircle2 } from 'lucide-react';
 import styles from './CoursesFilterBar.module.scss';
 
 interface CoursesFilterBarProps {
@@ -13,8 +12,8 @@ interface CoursesFilterBarProps {
   selectedLevel: string;
 }
 
-export default function CoursesFilterBar({ 
-  onSearch, 
+export function CoursesFilterBar({
+  onSearch,
   onFilterChange,
   selectedCategory,
   selectedMode,
@@ -22,211 +21,171 @@ export default function CoursesFilterBar({
   selectedLevel
 }: CoursesFilterBarProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
-  
-  // Handle search input change
+  const [category, setCategory] = useState(selectedCategory);
+  const [mode, setMode] = useState(selectedMode);
+  const [month, setMonth] = useState(selectedMonth);
+  const [level, setLevel] = useState(selectedLevel);
+  const [isFiltersChanged, setIsFiltersChanged] = useState(false);
+
+  // Check if filters have been changed from their initial values
+  useEffect(() => {
+    const hasChanged = 
+      category !== selectedCategory || 
+      mode !== selectedMode || 
+      month !== selectedMonth || 
+      level !== selectedLevel;
+    
+    setIsFiltersChanged(hasChanged);
+  }, [category, mode, month, level, selectedCategory, selectedMode, selectedMonth, selectedLevel]);
+
+  // Handle search input change with debounce
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    // Small delay to prevent excessive API calls while typing
+    const timeoutId = setTimeout(() => {
+      onSearch(value);
+    }, 300);
+    
+    return () => clearTimeout(timeoutId);
   };
-  
-  // Handle search form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSearch(searchTerm);
+
+  // Handle filter apply button click
+  const handleApplyFilters = () => {
+    onFilterChange(category, mode, month, level);
   };
-  
-  // Toggle filters visibility
-  const toggleFilters = () => {
-    setShowFilters(!showFilters);
+
+  // Handle reset filters button click
+  const handleResetFilters = () => {
+    setCategory('all');
+    setMode('all');
+    setMonth('all');
+    setLevel('all');
+    setSearchTerm('');
+    onSearch('');
+    onFilterChange('all', 'all', 'all', 'all');
   };
-  
-  // Categories options
-  const categories = [
-    { value: 'all', label: 'All Categories' },
-    { value: 'Security', label: 'Security' },
-    { value: 'Development', label: 'Development' },
-    { value: 'Cloud', label: 'Cloud' },
-    { value: 'Blockchain', label: 'Blockchain' }
-  ];
-  
-  // Modes options
-  const modes = [
-    { value: 'all', label: 'All Modes' },
-    { value: 'online', label: 'Online' },
-    { value: 'in-person', label: 'In-Person' },
-    { value: 'hybrid', label: 'Hybrid' }
-  ];
-  
-  // Months options
-  const months = [
-    { value: 'all', label: 'All Months' },
-    { value: 'jan', label: 'January' },
-    { value: 'feb', label: 'February' },
-    { value: 'mar', label: 'March' },
-    { value: 'apr', label: 'April' },
-    { value: 'may', label: 'May' },
-    { value: 'jun', label: 'June' },
-    { value: 'jul', label: 'July' },
-    { value: 'aug', label: 'August' },
-    { value: 'sep', label: 'September' },
-    { value: 'oct', label: 'October' },
-    { value: 'nov', label: 'November' },
-    { value: 'dec', label: 'December' }
-  ];
-  
-  // Level options
-  const levels = [
-    { value: 'all', label: 'All Levels' },
-    { value: 'beginner', label: 'Beginner' },
-    { value: 'intermediate', label: 'Intermediate' },
-    { value: 'advanced', label: 'Advanced' }
-  ];
 
   return (
-    <motion.div 
-      className={styles.filterBar}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className={styles.searchRow}>
-        <form className={styles.searchForm} onSubmit={handleSubmit}>
-          <div className={styles.inputWrapper}>
-            <Search size={18} className={styles.searchIcon} />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="Search courses, instructors..."
-              className={styles.searchInput}
-            />
-          </div>
-          <button type="submit" className={styles.searchButton}>
-            Search
-          </button>
-        </form>
-        
-        <button 
-          className={`${styles.filterToggle} ${showFilters ? styles.active : ''}`}
-          onClick={toggleFilters}
-        >
-          <Filter size={16} />
-          <span>Filters</span>
-        </button>
-      </div>
+    <div className={styles.filterBar}>
+      <h3 className={styles.filterTitle}>
+        <Filter size={18} />
+        Filter Courses
+      </h3>
       
-      <motion.div 
-        className={styles.filtersContainer}
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ 
-          height: showFilters ? 'auto' : 0,
-          opacity: showFilters ? 1 : 0
-        }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className={styles.filterGroups}>
+      <div className={styles.filterForm}>
+        <div className={styles.searchContainer}>
+          <Search size={18} className={styles.searchIcon} />
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="Search courses by title, instructor, or keyword"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </div>
+        
+        <div className={styles.filterOptionsContainer}>
           <div className={styles.filterGroup}>
-            <div className={styles.filterGroupHeader}>
-              <BookOpen size={16} className={styles.filterIcon} />
-              <span>Category</span>
-            </div>
+            <label htmlFor="category" className={styles.filterLabel}>Category</label>
             <select
+              id="category"
               className={styles.filterSelect}
-              value={selectedCategory}
-              onChange={(e) => onFilterChange(
-                e.target.value, 
-                selectedMode,
-                selectedMonth,
-                selectedLevel
-              )}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
             >
-              {categories.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              <option value="all">All Categories</option>
+              <option value="Security">Security</option>
+              <option value="Cloud">Cloud</option>
+              <option value="Development">Development</option>
+              <option value="Blockchain">Blockchain</option>
+              <option value="AI">Artificial Intelligence</option>
+              <option value="DevOps">DevOps</option>
             </select>
+            <ChevronDown size={16} className={styles.selectIcon} />
           </div>
           
           <div className={styles.filterGroup}>
-            <div className={styles.filterGroupHeader}>
-              <Monitor size={16} className={styles.filterIcon} />
-              <span>Mode</span>
-            </div>
+            <label htmlFor="mode" className={styles.filterLabel}>Course Mode</label>
             <select
+              id="mode"
               className={styles.filterSelect}
-              value={selectedMode}
-              onChange={(e) => onFilterChange(
-                selectedCategory,
-                e.target.value,
-                selectedMonth,
-                selectedLevel
-              )}
+              value={mode}
+              onChange={(e) => setMode(e.target.value)}
             >
-              {modes.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              <option value="all">All Modes</option>
+              <option value="online">Online</option>
+              <option value="in-person">In Person</option>
+              <option value="hybrid">Hybrid</option>
             </select>
+            <ChevronDown size={16} className={styles.selectIcon} />
           </div>
           
           <div className={styles.filterGroup}>
-            <div className={styles.filterGroupHeader}>
-              <Calendar size={16} className={styles.filterIcon} />
-              <span>Month</span>
-            </div>
+            <label htmlFor="month" className={styles.filterLabel}>Month</label>
             <select
+              id="month"
               className={styles.filterSelect}
-              value={selectedMonth}
-              onChange={(e) => onFilterChange(
-                selectedCategory,
-                selectedMode,
-                e.target.value,
-                selectedLevel
-              )}
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
             >
-              {months.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              <option value="all">All Months</option>
+              <option value="jan">January</option>
+              <option value="feb">February</option>
+              <option value="mar">March</option>
+              <option value="apr">April</option>
+              <option value="may">May</option>
+              <option value="jun">June</option>
+              <option value="jul">July</option>
+              <option value="aug">August</option>
+              <option value="sep">September</option>
+              <option value="oct">October</option>
+              <option value="nov">November</option>
+              <option value="dec">December</option>
             </select>
+            <ChevronDown size={16} className={styles.selectIcon} />
           </div>
           
           <div className={styles.filterGroup}>
-            <div className={styles.filterGroupHeader}>
-              <Users size={16} className={styles.filterIcon} />
-              <span>Level</span>
-            </div>
+            <label htmlFor="level" className={styles.filterLabel}>Experience Level</label>
             <select
+              id="level"
               className={styles.filterSelect}
-              value={selectedLevel}
-              onChange={(e) => onFilterChange(
-                selectedCategory,
-                selectedMode,
-                selectedMonth,
-                e.target.value
-              )}
+              value={level}
+              onChange={(e) => setLevel(e.target.value)}
             >
-              {levels.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              <option value="all">All Levels</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
             </select>
+            <ChevronDown size={16} className={styles.selectIcon} />
           </div>
         </div>
         
         <div className={styles.filterActions}>
-          <button 
+          <button
             className={styles.resetButton}
-            onClick={() => onFilterChange('all', 'all', 'all', 'all')}
+            onClick={handleResetFilters}
+            disabled={!isFiltersChanged && searchTerm === ''}
           >
-            Reset Filters
+            <RefreshCw size={16} />
+            Reset
+          </button>
+          
+          <button
+            className={styles.applyButton}
+            onClick={handleApplyFilters}
+            disabled={!isFiltersChanged}
+          >
+            <CheckCircle2 size={16} />
+            Apply Filters
           </button>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
+
+export default CoursesFilterBar;

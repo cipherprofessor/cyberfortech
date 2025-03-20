@@ -8,23 +8,23 @@ $breakpoint-xl: 1200px;
 
 .calendarPage {
   padding: 2rem;
-//   background-color: var(--bg-primary, #0f172a);
+  /* Removed background color to use global CSS */
   min-height: 100vh;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   
   @media (max-width: $breakpoint-md) {
     padding: 1.5rem 1rem;
+    width: 100%;
   }
 }
 
 .mainContent {
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-top: 1.5rem;
-  
-  @media (max-width: $breakpoint-lg) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .leftColumn {
@@ -49,3 +49,41 @@ $breakpoint-xl: 1200px;
     // background-color: var(--bg-primary, #f8fafc);
   }
 }
+
+
+// Additional changes to page.module.scss
+
+.contentLayout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .statsRow {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    @media (max-width: $breakpoint-lg) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  // This section contains both the filter bar and the table
+  .mainSection {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  
+  // This contains the statistics and highlights
+  .sideSection {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    
+    @media (max-width: $breakpoint-lg) {
+      grid-template-columns: 1fr;
+    }
+  }
