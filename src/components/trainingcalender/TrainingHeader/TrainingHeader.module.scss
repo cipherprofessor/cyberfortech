@@ -1,0 +1,214 @@
+
+// Define breakpoints for responsive design
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+.headerContainer {
+  background-color: var(--bg-secondary, #1f2937);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0) 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    padding: 1.25rem;
+  }
+}
+
+.headerContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  @media (min-width: $breakpoint-lg) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.headerInfo {
+  flex: 1;
+}
+
+.headerTitle {
+  margin-bottom: 1.5rem;
+  
+  @media (max-width: $breakpoint-md) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.mainTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary, #f9fafb);
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: 1.5rem;
+  }
+}
+
+.subTitle {
+  font-size: 0.9375rem;
+  color: var(--text-secondary, #9ca3af);
+  margin: 0;
+}
+
+.quickStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.statIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color, #3b82f6);
+  
+  @media (max-width: $breakpoint-md) {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #f9fafb);
+  line-height: 1.2;
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: 1rem;
+  }
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: var(--text-tertiary, #6b7280);
+}
+
+.headerActions {
+  @media (min-width: $breakpoint-lg) {
+    min-width: 16rem;
+  }
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  
+  @media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg) {
+    flex-direction: row;
+  }
+}
+
+.primaryButton, .secondaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  @media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg) {
+    flex: 1;
+  }
+}
+
+.primaryButton {
+  background-color: var(--primary-color, #3b82f6);
+  color: white;
+  border: none;
+  
+  &:hover {
+    background-color: var(--primary-hover, #2563eb);
+  }
+}
+
+.secondaryButton {
+  background-color: transparent;
+  color: var(--text-primary, #f9fafb);
+  border: 1px solid var(--border-color, #374151);
+  
+  &:hover {
+    background-color: var(--bg-hover, #374151);
+  }
+}
+
+// Light mode overrides
+:global(.light) {
+  .headerContainer {
+    background-color: var(--bg-secondary, #f3f4f6);
+    
+    &::before {
+      background: linear-gradient(120deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0) 100%);
+    }
+  }
+  
+  .mainTitle {
+    color: var(--text-primary, #111827);
+  }
+  
+  .subTitle {
+    color: var(--text-secondary, #6b7280);
+  }
+  
+  .statValue {
+    color: var(--text-primary, #111827);
+  }
+  
+  .secondaryButton {
+    color: var(--text-primary, #111827);
+    border: 1px solid var(--border-color, #d1d5db);
+    
+    &:hover {
+      background-color: var(--bg-hover, #e5e7eb);
+    }
+  }
+}

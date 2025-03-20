@@ -1,0 +1,51 @@
+
+// Define breakpoints for responsive design
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+.calendarPage {
+  padding: 2rem;
+//   background-color: var(--bg-primary, #0f172a);
+  min-height: 100vh;
+  
+  @media (max-width: $breakpoint-md) {
+    padding: 1.5rem 1rem;
+  }
+}
+
+.mainContent {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  @media (max-width: $breakpoint-lg) {
+    order: -1;
+  }
+}
+
+// Light mode overrides
+:global(.light) {
+  .calendarPage {
+    // background-color: var(--bg-primary, #f8fafc);
+  }
+}

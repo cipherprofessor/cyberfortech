@@ -1,0 +1,231 @@
+
+// Define breakpoints for responsive design
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+.filterBar {
+  background-color: var(--bg-secondary, #1f2937);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  
+  @media (max-width: $breakpoint-md) {
+    padding: 1rem;
+  }
+}
+
+.filterTitle {
+  color: var(--text-primary, #f9fafb);
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  svg {
+    color: var(--primary-color, #3b82f6);
+  }
+}
+
+.filterForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  
+  @media (min-width: $breakpoint-sm) {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media (min-width: $breakpoint-xl) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.searchContainer {
+  grid-column: 1 / -1;
+  position: relative;
+  
+  @media (min-width: $breakpoint-lg) {
+    grid-column: span 1;
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary, #9ca3af);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.625rem 0.625rem 0.625rem 2.5rem;
+  background-color: var(--bg-primary, #111827);
+  border: 1px solid var(--border-color, #374151);
+  border-radius: 0.375rem;
+  color: var(--text-primary, #f9fafb);
+  font-size: 0.9375rem;
+  
+  &::placeholder {
+    color: var(--text-tertiary, #6b7280);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color, #3b82f6);
+    box-shadow: 0 0 0 1px var(--primary-color, #3b82f6);
+  }
+}
+
+.filterGroup {
+  position: relative;
+  
+  @media (min-width: $breakpoint-lg) {
+    &:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5) {
+      grid-column: span 1;
+    }
+  }
+}
+
+.filterLabel {
+  display: block;
+  color: var(--text-secondary, #9ca3af);
+  font-size: 0.8125rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.filterSelect {
+  width: 100%;
+  padding: 0.625rem;
+  background-color: var(--bg-primary, #111827);
+  border: 1px solid var(--border-color, #374151);
+  border-radius: 0.375rem;
+  color: var(--text-primary, #f9fafb);
+  font-size: 0.9375rem;
+  appearance: none;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color, #3b82f6);
+    box-shadow: 0 0 0 1px var(--primary-color, #3b82f6);
+  }
+}
+
+.selectIcon {
+  position: absolute;
+  right: 0.75rem;
+  top: 60%;
+  transform: translateY(-50%);
+  color: var(--text-secondary, #9ca3af);
+  pointer-events: none;
+}
+
+.filterActions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  
+  @media (min-width: $breakpoint-lg) {
+    grid-column: span 1;
+    margin-top: 1.5rem;
+  }
+}
+
+.resetButton, .applyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1rem;
+  font-size: 0.9375rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  gap: 0.375rem;
+  flex: 1;
+  
+  @media (min-width: $breakpoint-md) {
+    flex: initial;
+  }
+}
+
+.resetButton {
+  background-color: var(--bg-primary, #111827);
+  color: var(--text-primary, #f9fafb);
+  border: 1px solid var(--border-color, #374151);
+  
+  &:hover {
+    background-color: var(--bg-hover, #1f2937);
+  }
+  
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.applyButton {
+  background-color: var(--primary-color, #3b82f6);
+  color: white;
+  border: none;
+  
+  &:hover {
+    background-color: var(--primary-hover, #2563eb);
+  }
+  
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+// Light mode overrides
+:global(.light) {
+  .filterBar {
+    background-color: var(--bg-secondary, #f3f4f6);
+  }
+  
+  .filterTitle {
+    color: var(--text-primary, #111827);
+  }
+  
+  .searchInput {
+    background-color: var(--bg-primary, white);
+    border: 1px solid var(--border-color, #d1d5db);
+    color: var(--text-primary, #111827);
+    
+    &::placeholder {
+      color: var(--text-tertiary, #9ca3af);
+    }
+  }
+  
+  .filterSelect {
+    background-color: var(--bg-primary, white);
+    border: 1px solid var(--border-color, #d1d5db);
+    color: var(--text-primary, #111827);
+  }
+  
+  .resetButton {
+    background-color: var(--bg-primary, white);
+    color: var(--text-primary, #111827);
+    border: 1px solid var(--border-color, #d1d5db);
+    
+    &:hover {
+      background-color: var(--bg-hover, #f3f4f6);
+    }
+  }
+}
