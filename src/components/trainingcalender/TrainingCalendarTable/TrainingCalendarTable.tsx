@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, Users, Monitor, Briefcase, MapPin, Clock, CalendarClock, Zap, Tag, Lock, CheckCircle } from 'lucide-react';
+import { toast } from '@/components/ui/mohsin-toast';
 import styles from './TrainingCalendarTable.module.scss';
 import TrainingCalendarSkeleton from './TrainingCalendarSkeleton/TrainingCalendarSkeleton';
 
@@ -47,6 +48,14 @@ export function TrainingCalendarTable({
     } else {
       setExpandedCourseId(courseId);
     }
+  };
+
+  const handleEnrolledClick = (course: TrainingCourse) => {
+    toast({
+      title: 'Already Enrolled',
+      description: `You are already enrolled in "${course.title}" with status: ${course.enrollmentStatus}`,
+      variant: 'info'
+    });
   };
 
   // Animation variants
@@ -107,10 +116,13 @@ export function TrainingCalendarTable({
       return (
         <button 
           className={`${styles.enrollButton} ${styles.enrolledButton}`}
-          disabled
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEnrolledClick(course);
+          }}
         >
           <CheckCircle size={16} />
-          Already Enrolled
+          Enrolled
         </button>
       );
     }
@@ -145,10 +157,9 @@ export function TrainingCalendarTable({
     );
   };
 
-  if (isLoading) {
-    return (
-        <TrainingCalendarSkeleton rows={7} />
-    );
+  // Skip the loading state when already loaded
+  if (isLoading && courses.length === 0) {
+    return <TrainingCalendarSkeleton rows={7} />;
   }
 
   if (courses.length === 0) {
@@ -394,10 +405,13 @@ export function TrainingCalendarTable({
                     {course.enrollmentStatus ? (
                       <button 
                         className={`${styles.enrollButtonLarge} ${styles.enrolledButtonLarge}`}
-                        disabled
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEnrolledClick(course);
+                        }}
                       >
                         <CheckCircle size={18} />
-                        Already Enrolled in This Course
+                        Enrolled in This Course
                       </button>
                     ) : (
                       <button 
