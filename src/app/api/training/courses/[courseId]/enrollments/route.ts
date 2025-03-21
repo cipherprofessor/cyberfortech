@@ -1,6 +1,6 @@
 // src/app/api/training/courses/[courseId]/enrollments/route.ts
 import { createClient } from '@libsql/client';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { validateUserAccess, nanoid } from '@/lib/clerk';
 import { ROLES } from '@/constants/auth';
 
@@ -18,8 +18,8 @@ interface EnrollmentBody {
 
 // POST - Enroll a user in a course
 export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ courseId: string }> } // Note the Promise type here
+  request: NextRequest,
+  { params }: { params: { courseId: string } }
 ) {
   try {
     const { isAuthorized, user, error } = await validateUserAccess(request);
@@ -31,9 +31,7 @@ export async function POST(
       );
     }
     
-    const resolvedParams = await params; // Await the params
-    const { courseId } = resolvedParams; 
-    // const { courseId } = params;
+    const { courseId } = params;
     const body = await request.json() as EnrollmentBody;
     
     // Start a transaction
@@ -137,8 +135,6 @@ export async function POST(
         ]
       });
       
-      // If the status is confirmed, the trigger will update the course enrollment count
-      
       // Commit the transaction
       await transaction.commit();
       
@@ -174,7 +170,7 @@ export async function POST(
 
 // GET enrollments for a specific course
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { courseId: string } }
 ) {
   try {
@@ -188,7 +184,7 @@ export async function GET(
     }
     
     const { courseId } = params;
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     
     // Pagination parameters
     const page = parseInt(searchParams.get('page') || '1');

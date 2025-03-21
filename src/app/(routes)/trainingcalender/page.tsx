@@ -7,7 +7,7 @@ import styles from './page.module.scss';
 import TrainingHeader from '@/components/trainingcalender/TrainingHeader/TrainingHeader';
 import CoursesFilterBar from '@/components/trainingcalender/CoursesFilterBar/CoursesFilterBar';
 import TrainingCalendarTable from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarTable';
-import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal';
+
 import UpcomingHighlights from '@/components/trainingcalender/UpcomingHighlights/UpcomingHighlights';
 import TrainingStatistics from '@/components/trainingcalender/TrainingStatistics/TrainingStatistics';
 
@@ -26,6 +26,7 @@ import {
   EnrollmentData
 } from '@/services/enrollment-service';
 import { toast } from '@/components/ui/mohsin-toast';
+import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal/EnrollmentModal';
 
 // UI Course type that matches our component expectations
 interface UITrainingCourse {

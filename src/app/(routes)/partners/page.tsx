@@ -7,10 +7,11 @@ import TrainingHeader from '@/components/trainingcalender/TrainingHeader/Trainin
 import CoursesFilterBar from '@/components/trainingcalender/CoursesFilterBar/CoursesFilterBar';
 import TrainingCalendarTable from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarTable';
 
-import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal';
+
 import UpcomingHighlights from '@/components/trainingcalender/UpcomingHighlights/UpcomingHighlights';
 import TrainingStatistics from '@/components/trainingcalender/TrainingStatistics/TrainingStatistics';
 import TrainingCalendarSkeleton from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarSkeleton/TrainingCalendarSkeleton';
+import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal/EnrollmentModal';
 
 // Interface for training course data
 interface TrainingCourse {
