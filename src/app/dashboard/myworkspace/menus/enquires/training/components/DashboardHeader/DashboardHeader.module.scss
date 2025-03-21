@@ -1,0 +1,102 @@
+/* src/app/dashboard/myworkspace/menus/enquires/training/components/DashboardHeader/DashboardHeader.module.scss */
+
+.headerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .headerTitle {
+    h1 {
+      font-size: 1.75rem;
+      color: #0f172a;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.2;
+    }
+  
+    p {
+      font-size: 1rem;
+      color: #64748b;
+      margin: 0.5rem 0 0 0;
+    }
+  }
+  
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+  }
+  
+  .statCard {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  
+    .iconContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 0.5rem;
+      background-color: #f0f9ff;
+      color: #0284c7;
+    }
+  
+    .statInfo {
+      display: flex;
+      flex-direction: column;
+  
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin: 0;
+        line-height: 1.2;
+      }
+  
+      p {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin: 0.25rem 0 0 0;
+      }
+  
+      .positive {
+        color: #22c55e;
+      }
+  
+      .negative {
+        color: #ef4444;
+      }
+    }
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 1280px) {
+    .statsGrid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .statsGrid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .statsGrid {
+      grid-template-columns: 1fr;
+    }
+  }

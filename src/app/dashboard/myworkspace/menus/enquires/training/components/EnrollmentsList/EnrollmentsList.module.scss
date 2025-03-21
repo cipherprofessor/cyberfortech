@@ -1,0 +1,441 @@
+/* src/app/dashboard/myworkspace/menus/enquires/training/components/EnrollmentsList/EnrollmentsList.module.scss */
+
+.enrollmentsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .enrollmentsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin: 0;
+    }
+  
+    p {
+      margin: 0.25rem 0 0 0;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+  
+    .changeCourseButton {
+      padding: 0.5rem 0.75rem;
+      background-color: #f1f5f9;
+      color: #475569;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+  
+      &:hover {
+        background-color: #e2e8f0;
+        color: #0f172a;
+      }
+    }
+  }
+  
+  .courseSelector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 400px;
+    margin: 2rem auto;
+    text-align: center;
+  
+    label {
+      font-size: 0.9rem;
+      color: #475569;
+      font-weight: 500;
+    }
+  
+    .courseSelect {
+      padding: 0.75rem;
+      border-radius: 0.375rem;
+      border: 1px solid #cbd5e1;
+      background-color: white;
+      width: 100%;
+      font-size: 1rem;
+      color: #0f172a;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1rem;
+  
+      &:focus {
+        outline: none;
+        border-color: #93c5fd;
+        box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.5);
+      }
+    }
+  }
+  
+  .enrollmentsTable {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .tableHeader {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 0.7fr;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .headerCell {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+  }
+  
+  .tableBody {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .tableRow {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 0.7fr;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+  
+    &:last-child {
+      border-bottom: none;
+    }
+  
+    &:hover {
+      background-color: #f8fafc;
+    }
+  }
+  
+  .tableCell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .studentInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .studentAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 1rem;
+  
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  .defaultAvatar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #cbd5e1;
+    color: #475569;
+  }
+  
+  .studentDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  
+  .studentName {
+    font-weight: 500;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .studentContact {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+  
+  .dateInfo, .timeInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+  
+  .dateInfo {
+    margin-bottom: 0.25rem;
+  }
+  
+  .statusBadge, .paymentBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    width: fit-content;
+  }
+  
+  .statusBadge {
+    &.confirmed {
+      background-color: #dcfce7;
+      color: #16a34a;
+    }
+  
+    &.pending {
+      background-color: #fef3c7;
+      color: #d97706;
+    }
+  
+    &.cancelled {
+      background-color: #fee2e2;
+      color: #dc2626;
+    }
+  
+    &.completed {
+      background-color: #e0f2fe;
+      color: #0284c7;
+    }
+  
+    &.default {
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+  }
+  
+  .paymentBadge {
+    &.paid {
+      background-color: #dcfce7;
+      color: #16a34a;
+    }
+  
+    &.paymentPending {
+      background-color: #fef3c7;
+      color: #d97706;
+    }
+  
+    &.refunded {
+      background-color: #fee2e2;
+      color: #dc2626;
+    }
+  
+    &.default {
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+  }
+  
+  .paymentInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .paymentAmount {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+  
+  .actionButtons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .actionButton {
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background-color: #e2e8f0;
+      color: #0f172a;
+    }
+  
+    &:first-child {
+      background-color: #e0f2fe;
+      color: #0284c7;
+  
+      &:hover {
+        background-color: #bae6fd;
+      }
+    }
+  }
+  
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .paginationButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover:not(:disabled) {
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .paginationInfo {
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+  
+  /* Loading, Error, and Empty States */
+  .loadingContainer,
+  .errorContainer,
+  .emptyContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3rem;
+    text-align: center;
+  }
+  
+  .loadingSpinner {
+    animation: spin 1.5s linear infinite;
+    color: #0284c7;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .errorIcon {
+    color: #dc2626;
+  }
+  
+  .emptyIcon {
+    color: #94a3b8;
+  }
+  
+  .retryButton,
+  .changeButton {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .retryButton {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: none;
+  
+    &:hover {
+      background-color: #e2e8f0;
+      color: #0f172a;
+    }
+  }
+  
+  .changeButton {
+    background-color: #0284c7;
+    color: white;
+    border: none;
+  
+    &:hover {
+      background-color: #0369a1;
+    }
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .tableHeader {
+      display: none;
+    }
+  
+    .tableRow {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding: 1rem;
+    }
+  
+    .tableCell {
+      padding: 0.5rem 0;
+      
+      &:not(:last-child) {
+        border-bottom: 1px solid #f1f5f9;
+      }
+      
+      &:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 0.25rem;
+      }
+    }
+  }
