@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-import styles from './page.module.scss';
+import styles from './partners.module.scss';
 import TrainingHeader from '@/components/trainingcalender/TrainingHeader/TrainingHeader';
 import CoursesFilterBar from '@/components/trainingcalender/CoursesFilterBar/CoursesFilterBar';
 import TrainingCalendarTable from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarTable';

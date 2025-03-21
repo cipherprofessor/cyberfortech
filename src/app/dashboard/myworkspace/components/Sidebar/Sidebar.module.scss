@@ -270,9 +270,14 @@ $mid-blue:rgb(32,41,71);
   color: #e141bc;
 }
 
-.commicationGrowthIcon {
+.commicationTrainingCalenderIcon {
   @extend %icon-base;
   color: #1E90FF;
+}
+
+.commicationPatnersIcon{
+  @extend %icon-base;
+  color: #ff1ef4b7;
 }
 
 .userAllusersIcon {

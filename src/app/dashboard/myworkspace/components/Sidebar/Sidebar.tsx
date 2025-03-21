@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon, DollarSignIcon, NotebookTabs, SquareKanban, ScanEye, Contact, BookUser, Quote, GraduationCap, Cog, Wrench, MessageCircleQuestion, TableOfContents, DollarSign, ReceiptPoundSterlingIcon, Settings2Icon, PackageIcon, NotebookPenIcon } from 'lucide-react';
+import { LayoutDashboard, Users, BookOpen, Settings, BarChart, MessageCircle, HelpCircle, Menu, User, Book, LockIcon, Bell, PieChartIcon, MailIcon, MailsIcon, MailboxIcon, HelpCircleIcon, HelpingHandIcon, BadgeHelpIcon, UsersIcon, LogsIcon, DollarSignIcon, NotebookTabs, SquareKanban, ScanEye, Contact, BookUser, Quote, GraduationCap, Cog, Wrench, MessageCircleQuestion, TableOfContents, DollarSign, ReceiptPoundSterlingIcon, Settings2Icon, PackageIcon, NotebookPenIcon, Calendar, Handshake } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import styles from './Sidebar.module.scss';
@@ -80,13 +80,13 @@ export function SuperAdminSidebar() {
       ],
     },
     {
-      label: 'Messages',
+      label: 'Enquiries',
       icon: <MessageCircle size={18} className={styles.commicationIcon} />,
       labelClassName: styles.mainLabel,
       subItems: [
-        { label: 'Inbox', href: '/dashboard/myworkspace/menus/messages/inbox', icon: <MailIcon size={16} className={styles.commicationInboxIcon}  />,labelClassName: styles.subLabel },
-        { label: 'Forum', href: '/dashboard/myworkspace/menus/messages/forum', icon: <Quote size={16} className={styles.commicationForumIcon} /> ,labelClassName: styles.subLabel},
-        { label: 'Drafts', href: '/dashboard/myworkspace/menus/messages/drafts', icon: <MailboxIcon size={16} className={styles.commicationGrowthIcon} />,labelClassName: styles.subLabel },
+        { label: 'Contact Us', href: '/dashboard/myworkspace/menus/enquires/contactus', icon: <MailIcon size={16} className={styles.commicationInboxIcon}  />,labelClassName: styles.subLabel },
+        { label: 'Training', href: '/dashboard/myworkspace/menus/enquires/training', icon: <Calendar size={16} className={styles.commicationTrainingCalenderIcon} />,labelClassName: styles.subLabel },
+        { label: 'Partners', href: '/dashboard/myworkspace/menus/enquires/partners', icon: <Handshake size={16} className={styles.commicationPatnersIcon} />,labelClassName: styles.subLabel },
       ],
     },
     {
@@ -108,6 +108,7 @@ export function SuperAdminSidebar() {
         { label: 'Blog Dashboard', href: '/dashboard/myworkspace/menus/users/all', icon: <Contact size={16} className={styles.userAllusersIcon} />,  labelClassName: styles.subLabel },
         { label: 'Blog Management', href: '/dashboard/myworkspace/menus/users/admins', icon: <User size={16} className={styles.userAdminsIcon}/>, labelClassName: styles.subLabel},
         { label: 'Categories', href: '/dashboard/myworkspace/menus/blog/blog_categories', icon: <BookUser size={16} className={styles.userStudentsIcon} />, labelClassName: styles.subLabel},
+        { label: 'Forum', href: '/dashboard/myworkspace/menus/messages/forum', icon: <Quote size={16} className={styles.commicationForumIcon} /> ,labelClassName: styles.subLabel},
         // { label: 'Instructors', href: '/dashboard/myworkspace/menus/users/instructors', icon: <GraduationCap size={16} className={styles.userInstructorsIcon} />, labelClassName: styles.subLabel},
       ],
     },
