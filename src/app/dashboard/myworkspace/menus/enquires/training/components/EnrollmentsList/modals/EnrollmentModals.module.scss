@@ -1,0 +1,691 @@
+/* src/app/dashboard/myworkspace/menus/enquires/training/components/EnrollmentsList/modals/EnrollmentModals.module.scss */
+
+/* Modal Base Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+  }
+  
+  .modalContainer {
+    background-color: var(--bg-primary, #111827);
+    border-radius: 0.75rem;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(75, 85, 99, 0.5);
+      border-radius: 20px;
+      border: 2px solid var(--bg-primary, #111827);
+    }
+  }
+  
+  .modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+    position: sticky;
+    top: 0;
+    background-color: var(--bg-primary, #111827);
+    z-index: 5;
+  }
+  
+  .modalTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary, #f9fafb);
+    margin: 0;
+  }
+  
+  .closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #9ca3af);
+    cursor: pointer;
+    border-radius: 0.375rem;
+    padding: 0.375rem;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: rgba(31, 41, 55, 0.5);
+      color: var(--text-primary, #f9fafb);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .modalContent {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+  }
+  
+  .modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid rgba(75, 85, 99, 0.2);
+    background-color: var(--bg-primary, #111827);
+  }
+  
+  /* Tabs */
+  .modalTabs {
+    display: flex;
+    border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+    background-color: rgba(31, 41, 55, 0.3);
+    overflow-x: auto;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(75, 85, 99, 0.5);
+      border-radius: 10px;
+    }
+  }
+  
+  .tabButton {
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #9ca3af);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    
+    &:hover {
+      color: var(--text-primary, #f9fafb);
+      background-color: rgba(31, 41, 55, 0.5);
+    }
+    
+    &.active {
+      color: var(--text-primary, #f9fafb);
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: var(--primary-color, #3b82f6);
+      }
+    }
+  }
+  
+  .tabContent {
+    padding: 1rem 0;
+  }
+  
+  /* View Enrollment Modal Specific */
+  .courseHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  .courseTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary, #f9fafb);
+    margin: 0;
+  }
+  
+  .courseDescription {
+    color: var(--text-secondary, #9ca3af);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .levelBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  
+  .beginner {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
+  
+  .intermediate {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+  }
+  
+  .advanced {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
+  
+  .detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    background-color: rgba(31, 41, 55, 0.3);
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .detailItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+  
+  .detailLabel {
+    font-size: 0.75rem;
+    color: var(--text-tertiary, #6b7280);
+    font-weight: 500;
+  }
+  
+  .detailValue {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary, #f9fafb);
+    font-weight: 500;
+    
+    svg {
+      color: var(--primary-color, #3b82f6);
+    }
+  }
+  
+  .enrollmentDates {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  
+  .dateItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background-color: rgba(31, 41, 55, 0.3);
+    border-radius: 0.375rem;
+  }
+  
+  .dateLabel {
+    color: var(--text-tertiary, #6b7280);
+    font-weight: 500;
+  }
+  
+  .dateValue {
+    color: var(--text-primary, #f9fafb);
+    font-weight: 500;
+  }
+  
+  /* Student Profile */
+  .studentProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .studentAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  .defaultAvatar {
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color, #3b82f6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  
+  .studentName {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary, #f9fafb);
+    margin: 0;
+    text-align: center;
+  }
+  
+  .studentInfoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .studentInfoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    background-color: rgba(31, 41, 55, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .infoLabel {
+    font-size: 0.75rem;
+    color: var(--text-tertiary, #6b7280);
+    font-weight: 500;
+  }
+  
+  .infoValue {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary, #f9fafb);
+    font-weight: 500;
+    
+    svg {
+      color: var(--primary-color, #3b82f6);
+    }
+  }
+  
+  .commentsSection, .feedbackSection {
+    margin-top: 1.5rem;
+  }
+  
+  .commentsSectionTitle, .feedbackSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #f9fafb);
+    margin: 0 0 0.75rem;
+    
+    svg {
+      color: var(--primary-color, #3b82f6);
+    }
+  }
+  
+  .commentsBox, .feedbackBox {
+    background-color: rgba(31, 41, 55, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    color: var(--text-secondary, #9ca3af);
+    line-height: 1.6;
+  }
+  
+  .ratingDisplay {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  
+  .ratingLabel {
+    color: var(--text-tertiary, #6b7280);
+    font-weight: 500;
+  }
+  
+  .ratingStars {
+    display: flex;
+    gap: 0.25rem;
+  }
+  
+  .starFilled {
+    color: #f59e0b;
+    fill: #f59e0b;
+  }
+  
+  .starEmpty {
+    color: var(--text-tertiary, #6b7280);
+  }
+  
+  /* Status and Timeline */
+  .statusSection {
+    margin-bottom: 2rem;
+  }
+  
+  .statusItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  .statusLabel {
+    color: var(--text-tertiary, #6b7280);
+    font-weight: 500;
+  }
+  
+  .statusValue {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .statusBadge, .paymentBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .confirmed, .completed, .paid {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
+  
+  .pending, .paymentPending {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+  }
+  
+  .cancelled, .refunded {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
+  
+  .default {
+    background-color: rgba(75, 85, 99, 0.2);
+    color: var(--text-secondary, #9ca3af);
+  }
+  
+  .timelineSection {
+    margin-top: 2rem;
+  }
+  
+  .timelineTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #f9fafb);
+    margin: 0 0 1rem;
+  }
+  
+  .timeline {
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 10px;
+      width: 2px;
+      background-color: rgba(75, 85, 99, 0.3);
+    }
+  }
+  
+  .timelineItem {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    position: relative;
+  }
+  
+  .timelineIcon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    
+    svg {
+      background-color: var(--bg-primary, #111827);
+    }
+  }
+  
+  .iconCompleted {
+    color: #10b981;
+  }
+  
+  .iconCancelled {
+    color: #ef4444;
+  }
+  
+  .timelineContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .timelineEvent {
+    color: var(--text-primary, #f9fafb);
+    font-weight: 500;
+  }
+  
+  .timelineDate {
+    color: var(--text-tertiary, #6b7280);
+    font-size: 0.875rem;
+  }
+  
+  /* Edit Form Styles */
+  .editForm {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .formSection {
+    margin-bottom: 1.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #f9fafb);
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+  }
+  
+  .formRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .formLabel {
+    display: block;
+    margin-bottom: 0.375rem;
+    color: var(--text-secondary, #9ca3af);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .inputWithIcon, .textareaWithIcon {
+    position: relative;
+  }
+  
+  .inputIcon, .textareaIcon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary, #6b7280);
+    pointer-events: none;
+  }
+  
+  .textareaIcon {
+    top: 0.75rem;
+    transform: none;
+  }
+  
+  .formInput, .formTextarea, .formSelect {
+    width: 100%;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+    background-color: rgba(31, 41, 55, 0.3);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    border-radius: 0.5rem;
+    color: var(--text-primary, #f9fafb);
+    font-size: 0.9375rem;
+    transition: all 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--primary-color, #3b82f6);
+      box-shadow: 0 0 0 1px var(--primary-color, #3b82f6);
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+  
+  .formTextarea {
+    padding-top: 2rem;
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .formSelect {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+  }
+  
+  .errorAlert {
+    background-color: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    
+    p {
+      color: #ef4444;
+      margin: 0;
+    }
+  }
+  
+  .cancelButton, .saveButton, .closeModalButton {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+  
+  .cancelButton {
+    background-color: transparent;
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    color: var(--text-secondary, #9ca3af);
+    
+    &:hover:not(:disabled) {
+      background-color: rgba(31, 41, 55, 0.3);
+      color: var(--text-primary, #f9fafb);
+    }
+  }
+  
+  .saveButton {
+    background-color: var(--primary-color, #3b82f6);
+    border: none;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: var(--primary-hover, #2563eb);
+    }
+  }
+  
+  .closeModalButton {
+    background-color: transparent;
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    color: var(--text-secondary, #9ca3af);
+    
+    &:hover:not(:disabled) {
+      background-color: rgba(31, 41, 55, 0.3);
+      color: var(--text-primary, #f9fafb);
+    }
+  }
+  
+  .loadingSpinner {
+    animation: spin 1.5s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }

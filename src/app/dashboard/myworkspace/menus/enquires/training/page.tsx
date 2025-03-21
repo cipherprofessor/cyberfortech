@@ -19,11 +19,12 @@ import { Course, CourseFilters } from '@/services/course-service';
 import CreateCourseModal from './components/CreateCourseModal/CreateCourseModal';
 import DashboardHeader from './components/DashboardHeader/DashboardHeader';
 import EditCourseModal from './components/EditCourseModal/EditCourseModal';
-import EnrollmentsList from './components/EnrollmentsList/EnrollmentsList';
+
 import FilterPanel from './components/FilterPanel/FilterPanel';
 import InsightsPanel from './components/InsightsPanel/InsightsPanel';
 import TrainingCoursesList from './components/TrainingCoursesList/TrainingCoursesList';
 import WaitlistPanel from './components/WaitlistPanel/WaitlistPanel';
+import EnrollmentsList from './components/EnrollmentsList/components/EnrollmentsList/EnrollmentsList';
 
 // Tab types for the dashboard sections
 type DashboardTab = 'courses' | 'enrollments' | 'waitlist' | 'insights';
