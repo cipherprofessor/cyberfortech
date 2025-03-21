@@ -26,6 +26,7 @@ export interface Course {
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
+    enrollmentStatus?: string;
   }
   
   export interface CourseFilters {
@@ -188,26 +189,38 @@ export interface Course {
   /**
    * Transform API course to UI display format
    */
-  export function transformCourseForDisplay(course: Course) {
-    return {
-      id: course.id,
-      title: course.title,
-      dates: course.dates,
-      time: course.time,
-      duration: course.duration,
-      mode: course.mode,
-      location: course.location,
-      instructor: course.instructor,
-      availability: course.availability,
-      price: course.price,
-      level: course.level,
-      category: course.category,
-      description: course.description,
-      prerequisites: course.prerequisites,
-      certification: course.certification,
-      language: course.language
-    };
-  }
+ // Update this function in src/services/course-service.ts
+
+/**
+ * Transform a course from API format to display format
+ * Ensures enrollment status is preserved
+ */
+export function transformCourseForDisplay(course: Course): Course {
+  return {
+    id: course.id,
+    title: course.title,
+    description: course.description,
+    dates: course.dates,
+    time: course.time,
+    duration: course.duration,
+    mode: course.mode,
+    location: course.location,
+    instructor: course.instructor,
+    maxCapacity: course.maxCapacity,
+    currentEnrollment: course.currentEnrollment,
+    availability: course.availability,
+    price: course.price,
+    level: course.level,
+    category: course.category,
+    prerequisites: course.prerequisites || [],
+    certification: course.certification,
+    language: course.language,
+    isActive: course.isActive,
+    createdAt: course.createdAt,
+    updatedAt: course.updatedAt,
+    enrollmentStatus: course.enrollmentStatus // Preserve enrollment status
+  };
+}
   
   /**
    * Get all categories

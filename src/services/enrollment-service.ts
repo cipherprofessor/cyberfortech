@@ -148,8 +148,11 @@ export async function getUserEnrollments(
   return response.json();
 }
 
+// Add this optimized function to your enrollment-service.ts file
+
 /**
- * Check if user is enrolled in specific courses
+ * Check if user is enrolled in specific courses - optimized version
+ * Uses a more efficient approach by checking all courses at once
  * @param courseIds Array of course IDs to check
  * @returns Map of courseId to enrollment status
  */
@@ -160,13 +163,21 @@ export async function checkUserEnrollments(
     // If no course IDs provided, return empty map
     if (!courseIds.length) return new Map();
     
+    // Cache map to avoid redundant API calls
+    const enrollmentsMap = new Map<string, string>();
+    
+    // Get unique course IDs
+    const uniqueCourseIds = [...new Set(courseIds)];
+    
     const response = await fetch(
-      `/api/training/user/enrolled-courses?courseIds=${courseIds.join(',')}`,
+      `/api/training/user/enrolled-courses?courseIds=${uniqueCourseIds.join(',')}`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+        // Add cache: 'no-store' to prevent caching and ensure fresh data
+        cache: 'no-store'
       }
     );
     
@@ -176,12 +187,13 @@ export async function checkUserEnrollments(
     }
     
     const data = await response.json();
-    const enrollmentsMap = new Map<string, string>();
     
     // Convert the object to a Map
-    Object.keys(data.enrollments).forEach(courseId => {
-      enrollmentsMap.set(courseId, data.enrollments[courseId]);
-    });
+    if (data.enrollments && typeof data.enrollments === 'object') {
+      Object.keys(data.enrollments).forEach(courseId => {
+        enrollmentsMap.set(courseId, data.enrollments[courseId]);
+      });
+    }
     
     return enrollmentsMap;
   } catch (error) {

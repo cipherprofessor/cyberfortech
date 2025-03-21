@@ -1,30 +1,11 @@
 "use client"
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Monitor, MapPin, Sparkles, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, Monitor, MapPin, Sparkles, ChevronRight, CheckCircle } from 'lucide-react';
 import styles from './UpcomingHighlights.module.scss';
-
-// Interface for training course data
-interface TrainingCourse {
-  id: string;
-  title: string;
-  dates: string;
-  time: string;
-  duration: string;
-  mode: 'online' | 'in-person' | 'hybrid';
-  location?: string;
-  instructor: string;
-  availability: number;
-  price: number;
-  level: 'beginner' | 'intermediate' | 'advanced';
-  category: string;
-  description: string;
-  prerequisites?: string[];
-  certification?: string;
-  language: string;
-}
+import { TrainingCourseWithEnrollment } from './types';
 
 interface UpcomingHighlightsProps {
-  upcomingCourses: TrainingCourse[];
+  upcomingCourses: TrainingCourseWithEnrollment[];
 }
 
 export function UpcomingHighlights({ upcomingCourses }: UpcomingHighlightsProps) {
@@ -99,9 +80,17 @@ export function UpcomingHighlights({ upcomingCourses }: UpcomingHighlightsProps)
               variants={itemVariants}
             >
               <div className={styles.courseHeader}>
-                <span className={`${styles.courseBadge} ${getLevelBadge(course.level)}`}>
-                  {course.level}
-                </span>
+                <div className={styles.badgesContainer}>
+                  <span className={`${styles.courseBadge} ${getLevelBadge(course.level)}`}>
+                    {course.level}
+                  </span>
+                  {course.enrollmentStatus && (
+                    <span className={styles.enrolledBadge}>
+                      <CheckCircle size={14} />
+                      Enrolled
+                    </span>
+                  )}
+                </div>
                 <span className={styles.courseCategory}>{course.category}</span>
               </div>
 

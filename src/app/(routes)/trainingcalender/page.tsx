@@ -7,7 +7,6 @@ import styles from './page.module.scss';
 import TrainingHeader from '@/components/trainingcalender/TrainingHeader/TrainingHeader';
 import CoursesFilterBar from '@/components/trainingcalender/CoursesFilterBar/CoursesFilterBar';
 import TrainingCalendarTable from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarTable';
-
 import UpcomingHighlights from '@/components/trainingcalender/UpcomingHighlights/UpcomingHighlights';
 import TrainingStatistics from '@/components/trainingcalender/TrainingStatistics/TrainingStatistics';
 
@@ -23,25 +22,23 @@ import {
 
 import {
   enrollInCourse,
-  EnrollmentData
-} from '@/services/enrollment-service';
-
-import {
+  EnrollmentData,
   checkUserEnrollments
-} from '@/services/user-enrollment-service';
+} from '@/services/enrollment-service';
 
 import { toast } from '@/components/ui/mohsin-toast';
 import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal/EnrollmentModal';
+import { TrainingCourseWithEnrollment } from '@/components/trainingcalender/UpcomingHighlights/types';
 
 // UI Course type that matches our component expectations
-interface UITrainingCourse {
+export interface UITrainingCourse {
   id: string;
   title: string;
   dates: string;
   time: string;
   duration: string;
   mode: 'online' | 'in-person' | 'hybrid';
-  location?: string;
+  location?: string; // This is optional
   instructor: string;
   availability: number;
   price: number;
@@ -51,7 +48,7 @@ interface UITrainingCourse {
   prerequisites?: string[];
   certification?: string;
   language: string;
-  enrollmentStatus?: string; // Added to track user's enrollment status
+  enrollmentStatus?: string;
 }
 
 // Type for the EnrollmentModal's form data
@@ -74,10 +71,8 @@ export default function TrainingCalendarPage() {
   const [courses, setCourses] = useState<UITrainingCourse[]>([]);
   const [filteredCourses, setFilteredCourses] = useState<UITrainingCourse[]>([]);
   
-  // Combined loading state to prevent premature UI rendering
+  // Use a single loading state to prevent UI from showing stale data
   const [isLoading, setIsLoading] = useState(true);
-  // Separate loading indicator for enrollment check
-  const [isCheckingEnrollments, setIsCheckingEnrollments] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   // Filter state
@@ -105,84 +100,89 @@ export default function TrainingCalendarPage() {
   // Upcoming courses
   const [upcomingCourses, setUpcomingCourses] = useState<UITrainingCourse[]>([]);
 
-  // Function to check enrollment status for courses
-  const checkAndUpdateEnrollmentStatus = async (coursesToCheck: UITrainingCourse[]) => {
-    if (!isAuthenticated || !user || !coursesToCheck.length) {
-      return coursesToCheck;
-    }
-    
-    setIsCheckingEnrollments(true);
-    try {
-      const courseIds = coursesToCheck.map(course => course.id);
-      const enrollmentsMap = await checkUserEnrollments(courseIds);
-      
-      // Create a new array with updated enrollment status
-      return coursesToCheck.map(course => ({
-        ...course,
-        enrollmentStatus: enrollmentsMap.get(course.id) || undefined
-      }));
-    } catch (err) {
-      console.error('Error checking enrollment status:', err);
-      return coursesToCheck;
-    } finally {
-      setIsCheckingEnrollments(false);
-    }
-  };
-
-  // Fetch courses from API
+  // Fetch courses and enrollment status simultaneously
   useEffect(() => {
-    const fetchCoursesData = async () => {
+    let isMounted = true;
+    
+    const fetchCoursesAndEnrollments = async () => {
       setIsLoading(true);
       setError(null);
       
       try {
         // Get API filters - exclude month which we'll handle client-side
         const apiFilters: CourseFilters = { ...filters };
-        delete apiFilters.dateFrom; // We'll handle date filtering on client side
-        delete apiFilters.dateTo;   // for more flexibility with our date format
+        delete apiFilters.dateFrom;
+        delete apiFilters.dateTo;
         
-        // Fetch courses from API
-        const response = await getCourses(apiFilters);
+        // Start course fetch
+        const coursesPromise = getCourses(apiFilters);
         
-        // Transform courses to UI format
-        let uiCourses: UITrainingCourse[] = response.courses.map(transformCourseForDisplay);
+        // Get courses first
+        const coursesResponse = await coursesPromise;
+        const uiCourses: UITrainingCourse[] = coursesResponse.courses.map(transformCourseForDisplay);
+        const upcomingUIcourses = getUpcomingCourses(coursesResponse.courses, 3).map(transformCourseForDisplay);
         
-        // Check enrollment status for all courses (if authenticated)
+        // If user is authenticated, prepare to check enrollments
         if (isAuthenticated && user) {
-          uiCourses = await checkAndUpdateEnrollmentStatus(uiCourses);
+          // Get all course IDs, including upcoming courses
+          const allCourseIds = [...new Set([
+            ...uiCourses.map(course => course.id),
+            ...upcomingUIcourses.map(course => course.id)
+          ])];
+          
+          try {
+            // Check enrollments for all courses at once
+            const enrollmentsMap = await checkUserEnrollments(allCourseIds);
+            
+            // Update all courses with enrollment status
+            uiCourses.forEach(course => {
+              if (enrollmentsMap.has(course.id)) {
+                course.enrollmentStatus = enrollmentsMap.get(course.id);
+              }
+            });
+            
+            // Update upcoming courses with enrollment status
+            upcomingUIcourses.forEach(course => {
+              if (enrollmentsMap.has(course.id)) {
+                course.enrollmentStatus = enrollmentsMap.get(course.id);
+              }
+            });
+          } catch (err) {
+            console.error('Error checking enrollments:', err);
+            // Continue with courses even if enrollment check fails
+          }
         }
         
-        setCourses(uiCourses);
-        
-        // Calculate statistics
-        setStats(calculateCourseStatistics(response.courses));
-        
-        // Get upcoming courses
-        let upcomingUIcourses = getUpcomingCourses(response.courses, 3).map(transformCourseForDisplay);
-        
-        // Check enrollment status for upcoming courses
-        if (isAuthenticated && user) {
-          upcomingUIcourses = await checkAndUpdateEnrollmentStatus(upcomingUIcourses);
+        // Only update state if component is still mounted
+        if (isMounted) {
+          setCourses(uiCourses);
+          setUpcomingCourses(upcomingUIcourses);
+          setStats(calculateCourseStatistics(coursesResponse.courses));
+          applyClientFilters(uiCourses);
         }
-        
-        setUpcomingCourses(upcomingUIcourses);
-        
-        // Apply any client-side filters (month)
-        applyClientFilters(uiCourses);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch courses';
-        setError(errorMessage);
-        toast({
-          title: 'Error',
-          description: errorMessage,
-          variant: 'error'
-        });
+        if (isMounted) {
+          setError(errorMessage);
+          toast({
+            title: 'Error',
+            description: errorMessage,
+            variant: 'error'
+          });
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
     
-    fetchCoursesData();
+    fetchCoursesAndEnrollments();
+    
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+    };
   }, [filters.search, filters.category, filters.mode, filters.level, isAuthenticated, user]);
 
   // Apply client-side filters (for month filtering)
@@ -335,9 +335,6 @@ export default function TrainingCalendarPage() {
     }
   };
 
-  // Combined loading state for UI
-  const isContentLoading = isLoading || isCheckingEnrollments;
-
   return (
     <motion.div 
       className={styles.calendarPage}
@@ -365,10 +362,10 @@ export default function TrainingCalendarPage() {
             selectedLevel={filters.level || 'all'}
           />
           
-          {/* Training Calendar Table - Pass combined loading state */}
+          {/* Training Calendar Table */}
           <TrainingCalendarTable 
             courses={filteredCourses}
-            isLoading={isContentLoading}
+            isLoading={isLoading}
             onEnroll={handleEnroll}
             isAuthenticated={isAuthenticated}
           />
@@ -386,10 +383,10 @@ export default function TrainingCalendarPage() {
             advancedCourses={stats.advancedCourses}
           />
           
-          {/* Upcoming Highlights */}
+          {/* Upcoming Highlights - Make sure it accepts UITrainingCourse[] type */}
           <UpcomingHighlights 
-            upcomingCourses={upcomingCourses} 
-          />
+  upcomingCourses={upcomingCourses as unknown as TrainingCourseWithEnrollment[]} 
+/>
         </div>
       </div>
       

@@ -289,3 +289,40 @@ $breakpoint-xl: 1200px;
     color: var(--text-secondary, #4b5563);
   }
 }
+
+
+/* Add these styles to your UpcomingHighlights.module.scss file */
+
+.badgesContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.enrolledBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border-radius: 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Update your existing courseBadge styles if needed */
+.courseBadge {
+  white-space: nowrap;
+}
+
+/* Update courseHeader to use flex layout */
+.courseHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
