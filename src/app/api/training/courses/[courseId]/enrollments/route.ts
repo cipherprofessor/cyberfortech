@@ -19,7 +19,7 @@ interface EnrollmentBody {
 // POST - Enroll a user in a course
 export async function POST(
   request: Request,
-  { params }: { params: { courseId: string } }
+  { params }: { params: Promise<{ courseId: string }> } // Note the Promise type here
 ) {
   try {
     const { isAuthorized, user, error } = await validateUserAccess(request);
@@ -31,7 +31,9 @@ export async function POST(
       );
     }
     
-    const { courseId } = params;
+    const resolvedParams = await params; // Await the params
+    const { courseId } = resolvedParams; 
+    // const { courseId } = params;
     const body = await request.json() as EnrollmentBody;
     
     // Start a transaction

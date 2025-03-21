@@ -1,3 +1,5 @@
+// src/app/dashboard/myworkspace/menus/enquires/training/components/EnrollmentsList/EnrollmentsList.tsx
+
 "use client"
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -14,59 +16,66 @@ import {
   Circle,
   DollarSign,
   Mail,
-  Phone
+  Phone,
+  Filter
 } from 'lucide-react';
 import styles from './EnrollmentsList.module.scss';
 
-import {  CourseFilters } from '@/services/course-service';
-import { getCourseEnrollments } from '@/services/enrollment-service';
+// Import service functions
+import { getUserEnrollments } from '@/services/enrollment-service'; 
 
 interface EnrollmentsListProps {
-  filters: CourseFilters;
+  filters: any;
 }
 
 export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
   const [enrollments, setEnrollments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [courseId, setCourseId] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
     total: 0,
     totalPages: 0
   });
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+  const [showCourseFilter, setShowCourseFilter] = useState(false);
 
   // Fetch enrollments
   useEffect(() => {
-    // If courseId is not provided, don't fetch enrollments yet
-    if (!courseId) {
-      setIsLoading(false);
-      return;
-    }
-
-    const fetchEnrollments = async () => {
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        const response = await getCourseEnrollments(
-          courseId, 
-          pagination.page, 
-          pagination.limit
-        );
-        setEnrollments(response.enrollments);
-        setPagination(response.pagination);
-      } catch (err) {
-        setError('Failed to fetch enrollments. Please try again.');
-        console.error('Error fetching enrollments:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
     fetchEnrollments();
-  }, [courseId, pagination.page, pagination.limit]);
+  }, [pagination.page, filters, selectedCourseId]);
+
+  // Fetch all enrollments or filter by course if selected
+  const fetchEnrollments = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Get all user enrollments (for admin view)
+      const response = await getUserEnrollments(pagination.page, pagination.limit);
+      
+      // If a course is selected, filter enrollments
+      let filteredEnrollments = response.enrollments;
+      if (selectedCourseId) {
+        filteredEnrollments = response.enrollments.filter(
+          enrollment => enrollment.courseId === selectedCourseId
+        );
+      }
+      
+      setEnrollments(filteredEnrollments);
+      setPagination({
+        ...pagination,
+        total: response.pagination.total,
+        totalPages: response.pagination.totalPages
+      });
+    } catch (err) {
+      setError('Failed to fetch enrollments. Please try again.');
+      console.error('Error fetching enrollments:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -74,6 +83,26 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
       ...prev,
       page: newPage
     }));
+  };
+
+  // Toggle course filter
+  const handleToggleCourseFilter = () => {
+    setShowCourseFilter(!showCourseFilter);
+  };
+
+  // Select a course
+  const handleSelectCourse = (courseId: string | null) => {
+    setSelectedCourseId(courseId);
+    setShowCourseFilter(false);
+  };
+
+  // Format date
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   // Render status badge
@@ -149,15 +178,6 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
     }
   };
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -184,34 +204,6 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
     );
   }
 
-  // No course selected yet
-  if (!courseId) {
-    return (
-      <div className={styles.enrollmentsContainer}>
-        <div className={styles.enrollmentsHeader}>
-          <h2>Course Enrollments</h2>
-          <p>Select a course to view its enrollments</p>
-        </div>
-        
-        <div className={styles.courseSelector}>
-          <label htmlFor="courseSelect">Select Course</label>
-          <select 
-            id="courseSelect"
-            value={courseId || ''}
-            onChange={(e) => setCourseId(e.target.value)}
-            className={styles.courseSelect}
-          >
-            <option value="" disabled>Select a course</option>
-            {/* Placeholder for course options - would be fetched from API */}
-            <option value="course-001">Cybersecurity Fundamentals</option>
-            <option value="course-002">Advanced Penetration Testing</option>
-            <option value="course-003">Cloud Security Architecture</option>
-          </select>
-        </div>
-      </div>
-    );
-  }
-
   // Error state
   if (error) {
     return (
@@ -220,7 +212,7 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
         <p>{error}</p>
         <button 
           className={styles.retryButton}
-          onClick={() => window.location.reload()}
+          onClick={() => fetchEnrollments()}
         >
           Retry
         </button>
@@ -234,13 +226,15 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
       <div className={styles.emptyContainer}>
         <Users size={48} className={styles.emptyIcon} />
         <h3>No Enrollments Found</h3>
-        <p>There are no enrollments for this course yet.</p>
-        <button 
-          className={styles.changeButton}
-          onClick={() => setCourseId(null)}
-        >
-          Select Another Course
-        </button>
+        <p>There are no enrollments{selectedCourseId ? ' for this course' : ''} yet.</p>
+        {selectedCourseId && (
+          <button 
+            className={styles.changeButton}
+            onClick={() => setSelectedCourseId(null)}
+          >
+            View All Enrollments
+          </button>
+        )}
       </div>
     );
   }
@@ -254,12 +248,39 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
         </div>
         
         <button 
-          className={styles.changeCourseButton}
-          onClick={() => setCourseId(null)}
+          className={styles.filterButton}
+          onClick={handleToggleCourseFilter}
         >
-          Change Course
+          <Filter size={16} />
+          {selectedCourseId ? 'Change Course' : 'Filter by Course'}
         </button>
       </div>
+      
+      {/* Course Filter Dropdown */}
+      {showCourseFilter && (
+        <div className={styles.courseFilterDropdown}>
+          <button
+            className={`${styles.courseOption} ${selectedCourseId === null ? styles.active : ''}`}
+            onClick={() => handleSelectCourse(null)}
+          >
+            Show All Enrollments
+          </button>
+          
+          {/* List of courses would come here - this would be dynamic in a real app */}
+          <button
+            className={`${styles.courseOption} ${selectedCourseId === 'course-001' ? styles.active : ''}`}
+            onClick={() => handleSelectCourse('course-001')}
+          >
+            Cybersecurity Fundamentals
+          </button>
+          <button
+            className={`${styles.courseOption} ${selectedCourseId === 'course-002' ? styles.active : ''}`}
+            onClick={() => handleSelectCourse('course-002')}
+          >
+            Advanced Penetration Testing
+          </button>
+        </div>
+      )}
       
       <motion.div 
         className={styles.enrollmentsTable}
@@ -269,6 +290,7 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
       >
         <div className={styles.tableHeader}>
           <div className={styles.headerCell}>Student</div>
+          <div className={styles.headerCell}>Course</div>
           <div className={styles.headerCell}>Enrollment Date</div>
           <div className={styles.headerCell}>Status</div>
           <div className={styles.headerCell}>Payment</div>
@@ -282,7 +304,7 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
               className={styles.tableRow}
               variants={itemVariants}
             >
-              <div className={styles.tableCell}>
+              <div className={styles.tableCell} data-label="Student">
                 <div className={styles.studentInfo}>
                   <div className={styles.studentAvatar}>
                     {enrollment.author?.avatarUrl ? (
@@ -307,7 +329,13 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
                 </div>
               </div>
               
-              <div className={styles.tableCell}>
+              <div className={styles.tableCell} data-label="Course">
+                <div className={styles.courseInfo}>
+                  <div className={styles.courseTitle}>{enrollment.courseTitle}</div>
+                </div>
+              </div>
+              
+              <div className={styles.tableCell} data-label="Enrollment Date">
                 <div className={styles.dateInfo}>
                   <Calendar size={14} />
                   <span>{formatDate(enrollment.enrollmentDate)}</span>
@@ -323,11 +351,11 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
                 </div>
               </div>
               
-              <div className={styles.tableCell}>
+              <div className={styles.tableCell} data-label="Status">
                 {renderStatusBadge(enrollment.status)}
               </div>
               
-              <div className={styles.tableCell}>
+              <div className={styles.tableCell} data-label="Payment">
                 <div className={styles.paymentInfo}>
                   {renderPaymentBadge(enrollment.paymentStatus)}
                   {enrollment.paymentAmount && (
@@ -339,7 +367,7 @@ export default function EnrollmentsList({ filters }: EnrollmentsListProps) {
                 </div>
               </div>
               
-              <div className={styles.tableCell}>
+              <div className={styles.tableCell} data-label="Actions">
                 <div className={styles.actionButtons}>
                   <button className={styles.actionButton}>
                     View
