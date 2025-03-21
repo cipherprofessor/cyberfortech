@@ -122,7 +122,7 @@ export async function GET(request: Request) {
     const courses = result.rows.map(row => ({
       ...row,
       // Parse JSON strings to arrays
-      prerequisites: row.prerequisites ? JSON.parse(row.prerequisites) : [],
+      prerequisites: row.prerequisites ? JSON.parse(String(row.prerequisites)) : [],
       // Calculate availability
       availability: Number(row.maxCapacity) - Number(row.currentEnrollment),
       // Convert prices to numbers

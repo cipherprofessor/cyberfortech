@@ -75,7 +75,7 @@ export async function GET(
     const course = {
       ...result.rows[0],
       // Parse JSON strings to arrays
-      prerequisites: result.rows[0].prerequisites ? JSON.parse(result.rows[0].prerequisites) : [],
+      prerequisites: result.rows[0].prerequisites ? JSON.parse(String(result.rows[0].prerequisites)) : [],
       // Calculate availability
       availability: Number(result.rows[0].maxCapacity) - Number(result.rows[0].currentEnrollment),
       // Convert numeric fields
@@ -236,7 +236,7 @@ export async function PUT(
     
     const updatedCourse = {
       ...result.rows[0],
-      prerequisites: result.rows[0].prerequisites ? JSON.parse(result.rows[0].prerequisites) : [],
+      prerequisites: result.rows[0].prerequisites ? JSON.parse(String(result.rows[0].prerequisites)) : [],
       availability: Number(result.rows[0].maxCapacity) - Number(result.rows[0].currentEnrollment),
       price: Number(result.rows[0].price),
       maxCapacity: Number(result.rows[0].maxCapacity),
