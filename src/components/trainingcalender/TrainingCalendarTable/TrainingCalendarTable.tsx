@@ -1,7 +1,7 @@
 "use client"
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, Users, Monitor, Briefcase, MapPin, Clock, CalendarClock, Zap, Tag } from 'lucide-react';
+import { ChevronRight, Users, Monitor, Briefcase, MapPin, Clock, CalendarClock, Zap, Tag, Lock, CheckCircle } from 'lucide-react';
 import styles from './TrainingCalendarTable.module.scss';
 import TrainingCalendarSkeleton from './TrainingCalendarSkeleton/TrainingCalendarSkeleton';
 
@@ -23,18 +23,21 @@ interface TrainingCourse {
   prerequisites?: string[];
   certification?: string;
   language: string;
+  enrollmentStatus?: string; // Added to track user's enrollment status
 }
 
 interface TrainingCalendarTableProps {
   courses: TrainingCourse[];
   isLoading: boolean;
   onEnroll: (course: TrainingCourse) => void;
+  isAuthenticated: boolean;
 }
 
 export function TrainingCalendarTable({ 
   courses, 
   isLoading, 
-  onEnroll 
+  onEnroll,
+  isAuthenticated
 }: TrainingCalendarTableProps) {
   const [expandedCourseId, setExpandedCourseId] = useState<string | null>(null);
 
@@ -95,6 +98,51 @@ export function TrainingCalendarTable({
       default:
         return <Monitor size={16} />;
     }
+  };
+
+  // Function to render the appropriate enrollment button based on status
+  const renderEnrollButton = (course: TrainingCourse) => {
+    // If user is already enrolled
+    if (course.enrollmentStatus) {
+      return (
+        <button 
+          className={`${styles.enrollButton} ${styles.enrolledButton}`}
+          disabled
+        >
+          <CheckCircle size={16} />
+          Already Enrolled
+        </button>
+      );
+    }
+    
+    // If user is not authenticated
+    if (!isAuthenticated) {
+      return (
+        <button 
+          className={`${styles.enrollButton} ${styles.loginButton}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onEnroll(course);
+          }}
+        >
+          <Lock size={16} />
+          Login to Enroll
+        </button>
+      );
+    }
+    
+    // Default case - user is authenticated but not enrolled
+    return (
+      <button 
+        className={styles.enrollButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          onEnroll(course);
+        }}
+      >
+        Enroll Now
+      </button>
+    );
   };
 
   if (isLoading) {
@@ -186,15 +234,7 @@ export function TrainingCalendarTable({
               
               <div className={styles.column}>
                 <div className={styles.actionButtons}>
-                  <button 
-                    className={styles.enrollButton}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEnroll(course);
-                    }}
-                  >
-                    Enroll Now
-                  </button>
+                  {renderEnrollButton(course)}
                   <button 
                     className={styles.expandButton}
                     onClick={(e) => {
@@ -256,15 +296,7 @@ export function TrainingCalendarTable({
               </div>
               
               <div className={styles.mobileActions}>
-                <button 
-                  className={styles.mobileEnrollButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEnroll(course);
-                  }}
-                >
-                  Enroll Now
-                </button>
+                {renderEnrollButton(course)}
                 <button 
                   className={styles.mobileExpandButton}
                   onClick={(e) => {
@@ -359,15 +391,25 @@ export function TrainingCalendarTable({
                   </div>
                   
                   <div className={styles.expandedActions}>
-                    <button 
-                      className={styles.enrollButtonLarge}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEnroll(course);
-                      }}
-                    >
-                      Enroll in this Course
-                    </button>
+                    {course.enrollmentStatus ? (
+                      <button 
+                        className={`${styles.enrollButtonLarge} ${styles.enrolledButtonLarge}`}
+                        disabled
+                      >
+                        <CheckCircle size={18} />
+                        Already Enrolled in This Course
+                      </button>
+                    ) : (
+                      <button 
+                        className={styles.enrollButtonLarge}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEnroll(course);
+                        }}
+                      >
+                        Enroll in this Course
+                      </button>
+                    )}
                   </div>
                 </div>
               </motion.div>

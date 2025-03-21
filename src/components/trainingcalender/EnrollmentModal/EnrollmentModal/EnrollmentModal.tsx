@@ -42,7 +42,6 @@ export function EnrollmentModal({
     email: '',
     phone: '',
     company: '',
-    paymentMethod: 'credit_card',
     comments: '',
     agreeTerms: false,
     courseId: course.id

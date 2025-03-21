@@ -2,10 +2,7 @@
 "use client"
 import { CheckCircle2 } from 'lucide-react';
 import styles from './ConfirmationStep.module.scss';
-import { TrainingCourse } from '@/app/(routes)/trainingcalender/traininghooks';
-import { EnrollmentFormData } from '../types';
-
-
+import { EnrollmentFormData, TrainingCourse } from '../types';
 
 interface ConfirmationStepProps {
   formData: EnrollmentFormData;
@@ -57,12 +54,7 @@ export const ConfirmationStep: React.FC<ConfirmationStepProps> = ({
             <span className={styles.detailValue}>{enrollmentId}</span>
           </div>
           
-          <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Payment Method:</span>
-            <span className={styles.detailValue}>
-              {formatPaymentMethod(formData.paymentMethod)}
-            </span>
-          </div>
+
           
           <div className={styles.detailItem}>
             <span className={styles.detailLabel}>Amount:</span>

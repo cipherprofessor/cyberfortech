@@ -10,7 +10,7 @@ $breakpoint-xl: 1200px;
 // Modal base styles
 .modalOverlay {
   position: fixed;
-  top: 0;
+  top: 60;
   left: 0;
   right: 0;
   bottom: 0;
@@ -24,10 +24,10 @@ $breakpoint-xl: 1200px;
 }
 
 .modalContainer {
-  background-color: var(--bg-primary, #111827);
+  background-color: rgb(25, 25, 28);
   border-radius: 0.75rem;
   width: 100%;
-  max-width: 700px;
+  max-width: 900px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -57,26 +57,28 @@ $breakpoint-xl: 1200px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border-color, #374151);
+  padding: 1.5rem 1.75rem;
+  border-bottom: 1px solid rgba(75, 75, 78, 0.3);
   position: sticky;
   top: 0;
-  background-color: var(--bg-primary, #111827);
+  background-color: rgb(25, 25, 28);
   z-index: 10;
+  backdrop-filter: blur(8px);
   
   @media (max-width: $breakpoint-md) {
-    padding: 1rem;
+    padding: 1.25rem 1.5rem;
   }
 }
 
 .modalTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 700;
   color: var(--text-primary, #f9fafb);
   margin: 0;
+  letter-spacing: -0.01em;
   
   @media (max-width: $breakpoint-md) {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
   }
 }
 

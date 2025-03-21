@@ -52,6 +52,20 @@ CREATE TABLE IF NOT EXISTS training_enrollments (
     UNIQUE(course_id, user_id, is_deleted)
 );
 
+CREATE TABLE IF NOT EXISTS training_enrollment_details (
+  enrollment_id TEXT PRIMARY KEY,
+  first_name TEXT,
+  last_name TEXT,
+  email TEXT,
+  phone TEXT,
+  company TEXT,
+  comments TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (enrollment_id) REFERENCES training_enrollments(id)
+);
+
+
 -- Create course waitlist table
 CREATE TABLE IF NOT EXISTS training_waitlist (
     id TEXT PRIMARY KEY,
@@ -110,6 +124,8 @@ CREATE INDEX IF NOT EXISTS idx_training_enrollments_status ON training_enrollmen
 CREATE INDEX IF NOT EXISTS idx_training_waitlist_course ON training_waitlist(course_id);
 CREATE INDEX IF NOT EXISTS idx_training_waitlist_user ON training_waitlist(user_id);
 CREATE INDEX IF NOT EXISTS idx_training_instructors_user ON training_instructors(user_id);
+-- Create index for faster lookups
+CREATE INDEX IF NOT EXISTS idx_enrollment_details_enrollment_id ON training_enrollment_details(enrollment_id);
 
 -- Drop existing triggers
 DROP TRIGGER IF EXISTS trig_training_courses_updated_at;
@@ -182,5 +198,19 @@ BEGIN
     WHERE id = NEW.course_id;
 END;
 
+
+-- Create trigger for updated_at timestamp
+CREATE TRIGGER IF NOT EXISTS trig_training_enrollment_details_updated_at 
+AFTER UPDATE ON training_enrollment_details 
+FOR EACH ROW 
+WHEN (NEW.updated_at <= OLD.updated_at OR NEW.updated_at IS NULL)
+BEGIN
+  UPDATE training_enrollment_details SET updated_at = CURRENT_TIMESTAMP WHERE enrollment_id = OLD.enrollment_id;
+END;
+
+
+
+
 -- Insert version record
 INSERT OR REPLACE INTO schema_versions (version, name) VALUES (6, '006_create_training_courses');
+INSERT OR REPLACE INTO schema_versions (version, name) VALUES (9, '009_add_enrollment_details');

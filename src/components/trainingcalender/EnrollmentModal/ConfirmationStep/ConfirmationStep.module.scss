@@ -23,11 +23,13 @@ $breakpoint-xl: 1200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   background-color: rgba(16, 185, 129, 0.15);
   border-radius: 50%;
   color: #10b981;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.3);
+  margin-top: 1rem;
 }
 
 .confirmationTitle {
@@ -51,12 +53,14 @@ $breakpoint-xl: 1200px;
 
 .enrollmentDetails {
   width: 100%;
-  background-color: var(--bg-secondary, #1f2937);
-  border-radius: 0.5rem;
-  padding: 1.25rem;
+  background-color: rgba(45, 45, 48, 0.7);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(75, 75, 78, 0.3);
 }
 
 .detailItem {

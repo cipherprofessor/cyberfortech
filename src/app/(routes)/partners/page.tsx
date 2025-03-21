@@ -1,20 +1,41 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/hooks/useAuth'; // Import or create an auth hook
 
 import styles from './partners.module.scss';
 import TrainingHeader from '@/components/trainingcalender/TrainingHeader/TrainingHeader';
 import CoursesFilterBar from '@/components/trainingcalender/CoursesFilterBar/CoursesFilterBar';
 import TrainingCalendarTable from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarTable';
 
-
 import UpcomingHighlights from '@/components/trainingcalender/UpcomingHighlights/UpcomingHighlights';
 import TrainingStatistics from '@/components/trainingcalender/TrainingStatistics/TrainingStatistics';
-import TrainingCalendarSkeleton from '@/components/trainingcalender/TrainingCalendarTable/TrainingCalendarSkeleton/TrainingCalendarSkeleton';
+
+// Import our services
+import { 
+  getCourses, 
+  transformCourseForDisplay, 
+  calculateCourseStatistics,
+  getUpcomingCourses,
+  CourseFilters,
+  Course
+} from '@/services/course-service';
+
+import {
+  enrollInCourse,
+  EnrollmentData
+} from '@/services/enrollment-service';
+
+import {
+  getUserEnrollmentsByCourseIds
+} from '@/services/user-enrollment-service';
+
+import { toast } from '@/components/ui/mohsin-toast';
 import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal/EnrollmentModal';
 
-// Interface for training course data
-interface TrainingCourse {
+
+// UI Course type that matches our component expectations
+interface UITrainingCourse {
   id: string;
   title: string;
   dates: string;
@@ -31,157 +52,249 @@ interface TrainingCourse {
   prerequisites?: string[];
   certification?: string;
   language: string;
+  enrollmentStatus?: string; // Added to track user's enrollment status
+}
+
+// Type for the EnrollmentModal's form data
+interface ModalEnrollmentFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  comments: string;
+  agreeTerms: boolean;
+  courseId: string;
 }
 
 export default function TrainingCalendarPage() {
-  const [courses, setCourses] = useState<TrainingCourse[]>([]);
-  const [filteredCourses, setFilteredCourses] = useState<TrainingCourse[]>([]);
+  // Get auth state
+  const { isAuthenticated, user } = useAuth();
+  
+  // State for courses and UI
+  const [courses, setCourses] = useState<UITrainingCourse[]>([]);
+  const [filteredCourses, setFilteredCourses] = useState<UITrainingCourse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedMode, setSelectedMode] = useState('all');
-  const [selectedMonth, setSelectedMonth] = useState('all');
-  const [selectedLevel, setSelectedLevel] = useState('all');
+  const [error, setError] = useState<string | null>(null);
+  
+  // Filter state
+  const [filters, setFilters] = useState<CourseFilters>({
+    page: 1,
+    limit: 50 // Get more courses to allow client-side filtering
+  });
+  
+  // Modal state
   const [showEnrollModal, setShowEnrollModal] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<TrainingCourse | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<UITrainingCourse | null>(null);
+  const [isEnrolling, setIsEnrolling] = useState(false);
+  
+  // Statistics state
+  const [stats, setStats] = useState({
+    totalCourses: 0,
+    onlineCourses: 0,
+    hybridCourses: 0,
+    inPersonCourses: 0,
+    beginnerCourses: 0,
+    intermediateCourses: 0,
+    advancedCourses: 0
+  });
+  
+  // Upcoming courses
+  const [upcomingCourses, setUpcomingCourses] = useState<UITrainingCourse[]>([]);
 
-  // Simulated fetch of training courses data
+  // Fetch courses from API
   useEffect(() => {
-    // This would be an API call in a real application
-    const fetchCourses = async () => {
+    const fetchCoursesData = async () => {
       setIsLoading(true);
+      setError(null);
       
-      // Simulated delay for API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Sample training course data
-      const sampleCourses: TrainingCourse[] = [
-        {
-          id: 'course-001',
-          title: 'Cybersecurity Fundamentals',
-          dates: '22 Mar - 20 Apr',
-          time: '19:00 - 23:00 IST',
-          duration: '4 weeks',
-          mode: 'online',
-          instructor: 'John Smith',
-          availability: 15,
-          price: 599,
-          level: 'beginner',
-          category: 'Security',
-          description: 'Learn the essential concepts and practices of cybersecurity.',
-          prerequisites: ['Basic IT knowledge'],
-          certification: 'CyberFort Security Fundamentals',
-          language: 'English'
-        },
-        {
-          id: 'course-002',
-          title: 'Advanced Penetration Testing',
-          dates: '23 Mar - 03 May',
-          time: '09:00 - 13:00 IST',
-          duration: '6 weeks',
-          mode: 'online',
-          instructor: 'Sarah Johnson',
-          availability: 5,
-          price: 1299,
-          level: 'advanced',
-          category: 'Security',
-          description: 'Master the art of ethical hacking and penetration testing.',
-          prerequisites: ['Basic network knowledge', 'Linux command line experience'],
-          certification: 'CyberFort Advanced Penetration Tester',
-          language: 'English'
-        },
-        {
-          id: 'course-003',
-          title: 'Cloud Security Architecture',
-          dates: '29 Mar - 20 Apr',
-          time: '19:00 - 23:00 IST',
-          duration: '4 weeks',
-          mode: 'hybrid',
-          location: 'New York & Online',
-          instructor: 'Michael Chen',
-          availability: 20,
-          price: 899,
-          level: 'intermediate',
-          category: 'Cloud',
-          description: 'Design and implement secure cloud architectures.',
-          prerequisites: ['Cloud computing basics', 'Basic security knowledge'],
-          certification: 'CyberFort Cloud Security Architect',
-          language: 'English'
-        },
-        // More course data...
-      ];
-      
-      setCourses(sampleCourses);
-      setFilteredCourses(sampleCourses);
-      setIsLoading(false);
+      try {
+        // Get API filters - exclude month which we'll handle client-side
+        const apiFilters: CourseFilters = { ...filters };
+        delete apiFilters.dateFrom; // We'll handle date filtering on client side
+        delete apiFilters.dateTo;   // for more flexibility with our date format
+        
+        // Fetch courses from API
+        const response = await getCourses(apiFilters);
+        
+        // Transform courses to UI format
+        const uiCourses: UITrainingCourse[] = response.courses.map(transformCourseForDisplay);
+        
+        // If user is authenticated, fetch their enrollments and update course enrollment status
+        if (isAuthenticated && user) {
+          await updateCoursesWithEnrollmentStatus(uiCourses);
+        }
+        
+        setCourses(uiCourses);
+        
+        // Calculate statistics
+        setStats(calculateCourseStatistics(response.courses));
+        
+        // Get upcoming courses
+        setUpcomingCourses(getUpcomingCourses(response.courses, 3).map(transformCourseForDisplay));
+        
+        // Apply any client-side filters (month)
+        applyClientFilters(uiCourses);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch courses';
+        setError(errorMessage);
+        toast({
+          title: 'Error',
+          description: errorMessage,
+          variant: 'error'
+        });
+      } finally {
+        setIsLoading(false);
+      }
     };
     
-    fetchCourses();
-  }, []);
+    fetchCoursesData();
+  }, [filters.search, filters.category, filters.mode, filters.level, isAuthenticated, user]);
 
-  // Filter courses based on search term and filters
-  useEffect(() => {
-    let result = [...courses];
-    
-    // Apply search term filter
-    if (searchTerm) {
-      result = result.filter(course => 
-        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    // Apply category filter
-    if (selectedCategory !== 'all') {
-      result = result.filter(course => course.category === selectedCategory);
-    }
-    
-    // Apply mode filter
-    if (selectedMode !== 'all') {
-      result = result.filter(course => course.mode === selectedMode);
-    }
-    
-    // Apply level filter
-    if (selectedLevel !== 'all') {
-      result = result.filter(course => course.level === selectedLevel);
-    }
-    
-    // Apply month filter
-    if (selectedMonth !== 'all') {
-      // Extract month from the start date
-      result = result.filter(course => {
-        const dateStr = course.dates.split(' - ')[0]; // Get the start date
-        const month = dateStr.split(' ')[1]; // Get the month abbreviation
-        return month.toLowerCase() === selectedMonth.toLowerCase();
+  // Update courses with user's enrollment status
+  const updateCoursesWithEnrollmentStatus = async (courseList: UITrainingCourse[]) => {
+    try {
+      // Get all course IDs
+      const courseIds = courseList.map(course => course.id);
+      
+      // Get user enrollments by course IDs
+      const enrollmentMap = await getUserEnrollmentsByCourseIds(courseIds);
+      
+      // Update course enrollment status
+      return courseList.map(course => {
+        if (enrollmentMap.has(course.id)) {
+          return {
+            ...course,
+            enrollmentStatus: enrollmentMap.get(course.id)
+          };
+        }
+        return course;
       });
+    } catch (error) {
+      console.error('Error updating courses with enrollment status:', error);
+      return courseList;
+    }
+  };
+
+  // Apply client-side filters (for month filtering)
+  const applyClientFilters = (coursesToFilter: UITrainingCourse[]) => {
+    let result = [...coursesToFilter];
+    
+    // Filter by month if specified
+    if (filters.dateFrom) {
+      const monthStr = filters.dateFrom.toLowerCase();
+      if (monthStr !== 'all') {
+        result = result.filter(course => {
+          const dateStr = course.dates.split(' - ')[0]; // Get the start date
+          const courseMonth = dateStr.split(' ')[1]; // Get the month abbreviation
+          return courseMonth.toLowerCase() === monthStr;
+        });
+      }
     }
     
     setFilteredCourses(result);
-  }, [courses, searchTerm, selectedCategory, selectedMode, selectedMonth, selectedLevel]);
-
-  // Function to handle course enrollment
-  const handleEnroll = (course: TrainingCourse) => {
-    setSelectedCourse(course);
-    setShowEnrollModal(true);
   };
 
-  // Function to handle search term change
+  // Handle search term change
   const handleSearch = (term: string) => {
-    setSearchTerm(term);
+    setFilters(prev => ({ ...prev, search: term }));
   };
 
-  // Function to handle filter changes
+  // Handle filter changes
   const handleFilterChange = (
     category: string,
     mode: string,
     month: string,
     level: string
   ) => {
-    setSelectedCategory(category);
-    setSelectedMode(mode);
-    setSelectedMonth(month);
-    setSelectedLevel(level);
+    setFilters(prev => ({
+      ...prev,
+      category: category !== 'all' ? category : undefined,
+      mode: mode !== 'all' ? mode : undefined,
+      level: level !== 'all' ? level : undefined,
+      dateFrom: month !== 'all' ? month : undefined
+    }));
+  };
+
+  // Handle course enrollment
+  const handleEnroll = (course: UITrainingCourse) => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      toast({
+        title: 'Authentication Required',
+        description: 'Please login to enroll in courses',
+        variant: 'warning'
+      });
+      return;
+    }
+    
+    // Check if user is already enrolled in this course
+    if (course.enrollmentStatus) {
+      toast({
+        title: 'Already Enrolled',
+        description: `You are already enrolled in ${course.title} (Status: ${course.enrollmentStatus})`,
+        variant: 'info'
+      });
+      return;
+    }
+    
+    setSelectedCourse(course);
+    setShowEnrollModal(true);
+  };
+
+  // Handle enrollment submission - receives form data from the modal
+  const handleEnrollmentSubmit = async (formData: ModalEnrollmentFormData) => {
+    if (!selectedCourse) return;
+    
+    setIsEnrolling(true);
+    
+    try {
+      // Transform the form data from the modal to the format expected by the enrollment service
+      const enrollmentData: EnrollmentData = {
+        courseId: formData.courseId,
+        // Set initial status values
+        status: 'pending',
+        paymentStatus: 'pending',
+        // Store user details in metadata
+        metadata: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          comments: formData.comments
+        }
+      };
+      
+      // Call the enrollment service
+      await enrollInCourse(formData.courseId, enrollmentData);
+      
+      toast({
+        title: 'Enrollment Successful',
+        description: `You've been enrolled in ${selectedCourse.title}. Check your email for confirmation.`,
+        variant: 'default'
+      });
+      
+      // Refresh course data to update availability
+      const response = await getCourses(filters);
+      const uiCourses: UITrainingCourse[] = response.courses.map(transformCourseForDisplay);
+      
+      // Update courses with enrollment status
+      const updatedCourses = await updateCoursesWithEnrollmentStatus(uiCourses);
+      setCourses(updatedCourses);
+      applyClientFilters(updatedCourses);
+      
+      setShowEnrollModal(false);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to enroll in course';
+      toast({
+        title: 'Enrollment Failed',
+        description: errorMessage,
+        variant: 'error'
+      });
+    } finally {
+      setIsEnrolling(false);
+    }
   };
 
   // Animation variants
@@ -212,43 +325,40 @@ export default function TrainingCalendarPage() {
       <div className={styles.contentLayout}>
         {/* Main Section */}
         <div className={styles.mainSection}>
-          {/* Filter Bar */}
+          {/* Filter Bar - Using your existing component */}
           <CoursesFilterBar 
             onSearch={handleSearch}
             onFilterChange={handleFilterChange}
-            selectedCategory={selectedCategory}
-            selectedMode={selectedMode}
-            selectedMonth={selectedMonth}
-            selectedLevel={selectedLevel}
+            selectedCategory={filters.category || 'all'}
+            selectedMode={filters.mode || 'all'}
+            selectedMonth={filters.dateFrom || 'all'}
+            selectedLevel={filters.level || 'all'}
           />
           
-          {/* Training Calendar Table or Skeleton */}
-          {isLoading ? (
-            <TrainingCalendarSkeleton rows={5} />
-          ) : (
-            <TrainingCalendarTable 
-              courses={filteredCourses}
-              isLoading={false}
-              onEnroll={handleEnroll}
-            />
-          )}
+          {/* Training Calendar Table */}
+          <TrainingCalendarTable 
+            courses={filteredCourses}
+            isLoading={isLoading}
+            onEnroll={handleEnroll}
+            isAuthenticated={isAuthenticated}
+          />
         </div>
         
         {/* Side Section */}
         <div className={styles.sideSection}>
-          {/* Training Statistics */}
+          {/* Training Statistics - Using your existing component */}
           <TrainingStatistics 
-            totalCourses={courses.length}
-            onlineCourses={courses.filter(c => c.mode === 'online').length}
-            hybridCourses={courses.filter(c => c.mode === 'hybrid').length}
-            beginnerCourses={courses.filter(c => c.level === 'beginner').length}
-            intermediateCourses={courses.filter(c => c.level === 'intermediate').length}
-            advancedCourses={courses.filter(c => c.level === 'advanced').length}
+            totalCourses={stats.totalCourses}
+            onlineCourses={stats.onlineCourses}
+            hybridCourses={stats.hybridCourses}
+            beginnerCourses={stats.beginnerCourses}
+            intermediateCourses={stats.intermediateCourses}
+            advancedCourses={stats.advancedCourses}
           />
           
           {/* Upcoming Highlights */}
           <UpcomingHighlights 
-            upcomingCourses={courses.slice(0, 3)} 
+            upcomingCourses={upcomingCourses} 
           />
         </div>
       </div>
@@ -258,11 +368,8 @@ export default function TrainingCalendarPage() {
         <EnrollmentModal 
           course={selectedCourse}
           onClose={() => setShowEnrollModal(false)}
-          onSubmit={(formData) => {
-            console.log('Enrollment data:', formData);
-            setShowEnrollModal(false);
-            // In a real app, this would submit to an API
-          }}
+          onSubmit={handleEnrollmentSubmit}
+          isProcessing={isEnrolling}
         />
       )}
     </motion.div>

@@ -2,18 +2,28 @@
 import { createClient } from '@libsql/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { validateUserAccess, nanoid } from '@/lib/clerk';
-import { ROLES } from '@/constants/auth';
+import { Row } from '@libsql/client';
 
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL!,
   authToken: process.env.TURSO_AUTH_TOKEN!,
 });
 
+interface EnrollmentMetadata {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  comments?: string;
+}
+
 interface EnrollmentBody {
   paymentId?: string;
   paymentAmount?: number;
   status?: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   paymentStatus?: 'pending' | 'paid' | 'refunded';
+  metadata?: string | EnrollmentMetadata; // Could be string or object
 }
 
 // POST - Enroll a user in a course
@@ -33,6 +43,21 @@ export async function POST(
     
     const { courseId } = params;
     const body = await request.json() as EnrollmentBody;
+    
+    // Parse metadata if it's a string
+    let metadata: EnrollmentMetadata | null = null;
+    
+    if (body.metadata) {
+      if (typeof body.metadata === 'string') {
+        try {
+          metadata = JSON.parse(body.metadata);
+        } catch (e) {
+          console.error('Error parsing metadata:', e);
+        }
+      } else {
+        metadata = body.metadata as EnrollmentMetadata;
+      }
+    }
     
     // Start a transaction
     const transaction = await client.transaction();
@@ -135,6 +160,51 @@ export async function POST(
         ]
       });
       
+      // Create enrollment details table if it doesn't exist (pass empty args array)
+      await transaction.execute({
+        sql: `
+          CREATE TABLE IF NOT EXISTS training_enrollment_details (
+            enrollment_id TEXT PRIMARY KEY,
+            first_name TEXT,
+            last_name TEXT,
+            email TEXT,
+            phone TEXT,
+            company TEXT,
+            comments TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (enrollment_id) REFERENCES training_enrollments(id)
+          )
+        `,
+        args: [] // Add empty args array
+      });
+      
+      // If we have metadata, store it in the details table
+      if (metadata) {
+        await transaction.execute({
+          sql: `
+            INSERT INTO training_enrollment_details (
+              enrollment_id,
+              first_name,
+              last_name,
+              email,
+              phone,
+              company,
+              comments
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+          `,
+          args: [
+            enrollmentId,
+            metadata.firstName || user.firstName || '',
+            metadata.lastName || user.lastName || '',
+            metadata.email || user.email || '',
+            metadata.phone || '',
+            metadata.company || '',
+            metadata.comments || ''
+          ]
+        });
+      }
+      
       // Commit the transaction
       await transaction.commit();
       
@@ -149,7 +219,8 @@ export async function POST(
         paymentAmount,
         enrollmentDate: new Date().toISOString(),
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        metadata
       };
       
       return NextResponse.json(enrollment, { status: 201 });
@@ -168,7 +239,7 @@ export async function POST(
   }
 }
 
-// GET enrollments for a specific course
+// GET - Fetch enrollments for a specific course
 export async function GET(
   request: NextRequest,
   { params }: { params: { courseId: string } }
@@ -217,7 +288,7 @@ export async function GET(
     const total = Number(countResult.rows[0].total);
     const totalPages = Math.ceil(total / limit);
     
-    // Get enrollments with user information
+    // Get enrollments with user information and form details
     const result = await client.execute({
       sql: `
         SELECT 
@@ -239,9 +310,16 @@ export async function GET(
           u.last_name as lastName,
           u.full_name as fullName,
           u.email,
-          u.avatar_url as avatarUrl
+          u.avatar_url as avatarUrl,
+          d.first_name as formFirstName,
+          d.last_name as formLastName,
+          d.email as formEmail,
+          d.phone as formPhone,
+          d.company as formCompany,
+          d.comments as formComments
         FROM training_enrollments e
         LEFT JOIN users u ON e.user_id = u.id
+        LEFT JOIN training_enrollment_details d ON e.id = d.enrollment_id
         WHERE e.course_id = ? AND e.is_deleted = FALSE
         ORDER BY e.enrollment_date DESC
         LIMIT ? OFFSET ?
@@ -249,11 +327,41 @@ export async function GET(
       args: [courseId, limit, offset]
     });
     
-    const enrollments = result.rows.map(row => ({
-      ...row,
-      paymentAmount: row.paymentAmount ? Number(row.paymentAmount) : null,
-      rating: row.rating ? Number(row.rating) : null
-    }));
+    // Process the enrollments to include form data as metadata
+    // Fixed: Use Row type from libsql client instead of custom EnrollmentRow interface
+    const enrollments = result.rows.map((row: Row) => {
+      // Cast row to any to simplify property access
+      const rowObj = row as any;
+      
+      const enrollment: any = {
+        ...rowObj,
+        paymentAmount: rowObj.paymentAmount ? Number(rowObj.paymentAmount) : null,
+        rating: rowObj.rating ? Number(rowObj.rating) : null
+      };
+      
+      // Add form data as metadata if available
+      if (rowObj.formFirstName || rowObj.formLastName || rowObj.formEmail || 
+          rowObj.formPhone || rowObj.formCompany || rowObj.formComments) {
+        enrollment.metadata = {
+          firstName: rowObj.formFirstName,
+          lastName: rowObj.formLastName,
+          email: rowObj.formEmail,
+          phone: rowObj.formPhone,
+          company: rowObj.formCompany,
+          comments: rowObj.formComments
+        };
+        
+        // Remove duplicate form fields
+        delete enrollment.formFirstName;
+        delete enrollment.formLastName;
+        delete enrollment.formEmail;
+        delete enrollment.formPhone;
+        delete enrollment.formCompany;
+        delete enrollment.formComments;
+      }
+      
+      return enrollment;
+    });
     
     return NextResponse.json({
       enrollments,

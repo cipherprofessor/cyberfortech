@@ -9,10 +9,13 @@ $breakpoint-xl: 1200px;
 
 // Enrollment Form
 .enrollmentForm {
+    top: 1500px;
+//   margin-top: 500px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+//   gap: 2rem;
   padding: 15px;
+  margin: 20px;
 }
 
 .formSection {
@@ -74,9 +77,9 @@ $breakpoint-xl: 1200px;
 .formInput, .formTextarea {
   width: 100%;
   padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-  background-color: var(--bg-secondary, #1f2937);
-  border: 1px solid var(--border-color, #374151);
-  border-radius: 0.375rem;
+  background-color: rgba(45, 45, 48, 0.7);
+  border: 1px solid rgba(75, 75, 78, 0.5);
+  border-radius: 0.5rem;
   color: var(--text-primary, #f9fafb);
   font-size: 0.9375rem;
   transition: all 0.2s ease;
@@ -265,9 +268,14 @@ $breakpoint-xl: 1200px;
   background-color: var(--primary-color, #3b82f6);
   color: white;
   border: none;
+  padding: 0.85rem 1.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
   
   &:hover:not([disabled]) {
     background-color: var(--primary-hover, #2563eb);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
   
   &[disabled] {

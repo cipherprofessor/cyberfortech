@@ -5,8 +5,6 @@ import { User, Mail, Phone, Building, CreditCard, FileText as File, Loader2 } fr
 import styles from './RegistrationFormStep.module.scss';
 import { EnrollmentFormData, EnrollmentStep, FormErrors } from '../types';
 
-
-
 interface RegistrationFormStepProps {
   formData: EnrollmentFormData;
   onFormChange: (data: EnrollmentFormData) => void;
@@ -59,18 +57,10 @@ export const RegistrationFormStep: React.FC<RegistrationFormStepProps> = ({
       newErrors.firstName = 'First name is required';
     }
     
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
-    }
-    
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
     }
     
     if (!formData.agreeTerms) {
@@ -119,7 +109,7 @@ export const RegistrationFormStep: React.FC<RegistrationFormStepProps> = ({
             
             <div className={styles.formGroup}>
               <label htmlFor="lastName" className={styles.formLabel}>
-                Last Name <span className={styles.required}>*</span>
+                Last Name
               </label>
               <div className={styles.inputWithIcon}>
                 <User size={16} className={styles.inputIcon} />
@@ -161,7 +151,7 @@ export const RegistrationFormStep: React.FC<RegistrationFormStepProps> = ({
             
             <div className={styles.formGroup}>
               <label htmlFor="phone" className={styles.formLabel}>
-                Phone <span className={styles.required}>*</span>
+                Phone
               </label>
               <div className={styles.inputWithIcon}>
                 <Phone size={16} className={styles.inputIcon} />
@@ -201,62 +191,7 @@ export const RegistrationFormStep: React.FC<RegistrationFormStepProps> = ({
         </div>
         
         <div className={styles.formSection}>
-          <h4 className={styles.sectionTitle}>Payment Information</h4>
-          
-          <div className={styles.formGroup}>
-            <label className={styles.formLabel}>
-              Payment Method <span className={styles.required}>*</span>
-            </label>
-            <div className={styles.paymentMethods}>
-              <label className={`${styles.paymentMethod} ${formData.paymentMethod === 'credit_card' ? styles.selected : ''}`}>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="credit_card"
-                  checked={formData.paymentMethod === 'credit_card'}
-                  onChange={handleInputChange}
-                  className={styles.radioInput}
-                  disabled={isProcessing}
-                />
-                <span className={styles.radioControl}>
-                  <CreditCard size={18} />
-                  Credit Card
-                </span>
-              </label>
-              
-              <label className={`${styles.paymentMethod} ${formData.paymentMethod === 'invoice' ? styles.selected : ''}`}>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="invoice"
-                  checked={formData.paymentMethod === 'invoice'}
-                  onChange={handleInputChange}
-                  className={styles.radioInput}
-                  disabled={isProcessing}
-                />
-                <span className={styles.radioControl}>
-                  <File size={18} />
-                  Invoice
-                </span>
-              </label>
-              
-              <label className={`${styles.paymentMethod} ${formData.paymentMethod === 'bank_transfer' ? styles.selected : ''}`}>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="bank_transfer"
-                  checked={formData.paymentMethod === 'bank_transfer'}
-                  onChange={handleInputChange}
-                  className={styles.radioInput}
-                  disabled={isProcessing}
-                />
-                <span className={styles.radioControl}>
-                  <Building size={18} />
-                  Bank Transfer
-                </span>
-              </label>
-            </div>
-          </div>
+          <h4 className={styles.sectionTitle}>Additional Information</h4>
           
           <div className={styles.formGroup}>
             <label htmlFor="comments" className={styles.formLabel}>

@@ -27,7 +27,6 @@ export interface TrainingCourse {
     email: string;
     phone: string;
     company: string;
-    paymentMethod: 'credit_card' | 'invoice' | 'bank_transfer';
     comments: string;
     agreeTerms: boolean;
     courseId: string;

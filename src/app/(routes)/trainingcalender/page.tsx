@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-
+import { useAuth } from '@/hooks/useAuth'; // Import or create an auth hook
 
 import styles from './page.module.scss';
 import TrainingHeader from '@/components/trainingcalender/TrainingHeader/TrainingHeader';
@@ -25,8 +25,14 @@ import {
   enrollInCourse,
   EnrollmentData
 } from '@/services/enrollment-service';
+
+import {
+  checkUserEnrollments
+} from '@/services/user-enrollment-service';
+
 import { toast } from '@/components/ui/mohsin-toast';
 import EnrollmentModal from '@/components/trainingcalender/EnrollmentModal/EnrollmentModal/EnrollmentModal';
+
 
 // UI Course type that matches our component expectations
 interface UITrainingCourse {
@@ -46,6 +52,7 @@ interface UITrainingCourse {
   prerequisites?: string[];
   certification?: string;
   language: string;
+  enrollmentStatus?: string; // Added to track user's enrollment status
 }
 
 // Type for the EnrollmentModal's form data
@@ -55,13 +62,15 @@ interface ModalEnrollmentFormData {
   email: string;
   phone: string;
   company: string;
-  paymentMethod: 'credit_card' | 'invoice' | 'bank_transfer';
   comments: string;
   agreeTerms: boolean;
   courseId: string;
 }
 
 export default function TrainingCalendarPage() {
+  // Get auth state
+  const { isAuthenticated, user } = useAuth();
+  
   // State for courses and UI
   const [courses, setCourses] = useState<UITrainingCourse[]>([]);
   const [filteredCourses, setFilteredCourses] = useState<UITrainingCourse[]>([]);
@@ -111,13 +120,40 @@ export default function TrainingCalendarPage() {
         // Transform courses to UI format
         const uiCourses: UITrainingCourse[] = response.courses.map(transformCourseForDisplay);
         
+        // If user is authenticated, check enrollments
+        if (isAuthenticated && user) {
+          const courseIds = uiCourses.map(course => course.id);
+          const enrollmentsMap = await checkUserEnrollments(courseIds);
+          
+          // Update courses with enrollment status
+          uiCourses.forEach(course => {
+            if (enrollmentsMap.has(course.id)) {
+              course.enrollmentStatus = enrollmentsMap.get(course.id);
+            }
+          });
+        }
+        
         setCourses(uiCourses);
         
         // Calculate statistics
         setStats(calculateCourseStatistics(response.courses));
         
         // Get upcoming courses
-        setUpcomingCourses(getUpcomingCourses(response.courses, 3).map(transformCourseForDisplay));
+        const upcomingUIcourses = getUpcomingCourses(response.courses, 3).map(transformCourseForDisplay);
+        
+        // Update upcoming courses with enrollment status
+        if (isAuthenticated && user) {
+          const upcomingCourseIds = upcomingUIcourses.map(course => course.id);
+          const enrollmentsMap = await checkUserEnrollments(upcomingCourseIds);
+          
+          upcomingUIcourses.forEach(course => {
+            if (enrollmentsMap.has(course.id)) {
+              course.enrollmentStatus = enrollmentsMap.get(course.id);
+            }
+          });
+        }
+        
+        setUpcomingCourses(upcomingUIcourses);
         
         // Apply any client-side filters (month)
         applyClientFilters(uiCourses);
@@ -135,7 +171,7 @@ export default function TrainingCalendarPage() {
     };
     
     fetchCoursesData();
-  }, [filters.search, filters.category, filters.mode, filters.level]);
+  }, [filters.search, filters.category, filters.mode, filters.level, isAuthenticated, user]);
 
   // Apply client-side filters (for month filtering)
   const applyClientFilters = (coursesToFilter: UITrainingCourse[]) => {
@@ -179,6 +215,26 @@ export default function TrainingCalendarPage() {
 
   // Handle course enrollment
   const handleEnroll = (course: UITrainingCourse) => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      toast({
+        title: 'Authentication Required',
+        description: 'Please login to enroll in courses',
+        variant: 'warning'
+      });
+      return;
+    }
+    
+    // Check if user is already enrolled in this course
+    if (course.enrollmentStatus) {
+      toast({
+        title: 'Already Enrolled',
+        description: `You are already enrolled in ${course.title} (Status: ${course.enrollmentStatus})`,
+        variant: 'info'
+      });
+      return;
+    }
+    
     setSelectedCourse(course);
     setShowEnrollModal(true);
   };
@@ -190,17 +246,13 @@ export default function TrainingCalendarPage() {
     setIsEnrolling(true);
     
     try {
-      // Transform the form data from the modal to the format expected by the enrollment service
+      // Transform the form data from the modal for the enrollment service
       const enrollmentData: EnrollmentData = {
         courseId: formData.courseId,
-        // Generate a payment ID if the method is credit card
-        paymentId: formData.paymentMethod === 'credit_card' ? `cc-${Date.now()}` : undefined,
-        // Include the payment method for reference
-        paymentMethod: formData.paymentMethod,
         // Set initial status values
         status: 'pending',
         paymentStatus: 'pending',
-        // Store user details in metadata if you need them later
+        // Store user details in metadata
         metadata: {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -220,11 +272,19 @@ export default function TrainingCalendarPage() {
         variant: 'default'
       });
       
-      // Refresh course data to update availability
-      const response = await getCourses(filters);
-      const uiCourses: UITrainingCourse[] = response.courses.map(transformCourseForDisplay);
-      setCourses(uiCourses);
-      applyClientFilters(uiCourses);
+      // Update courses to show enrollment status
+      const updatedCourses = courses.map(course => {
+        if (course.id === selectedCourse.id) {
+          return {
+            ...course,
+            enrollmentStatus: 'pending'
+          };
+        }
+        return course;
+      });
+      
+      setCourses(updatedCourses);
+      applyClientFilters(updatedCourses);
       
       setShowEnrollModal(false);
     } catch (err) {
@@ -282,6 +342,7 @@ export default function TrainingCalendarPage() {
             courses={filteredCourses}
             isLoading={isLoading}
             onEnroll={handleEnroll}
+            isAuthenticated={isAuthenticated}
           />
         </div>
         
